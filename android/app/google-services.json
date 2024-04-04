@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "716441948392",
+    "firebase_url": "https://thrivers-8aa27-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "thrivers-8aa27",
+    "storage_bucket": "thrivers-8aa27.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:716441948392:android:45550b9be4c5485dc5f95d",
+        "android_client_info": {
+          "package_name": "com.example.thrivers"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBW7ZLk_VRUC3ZmqB5IAa3_sQDXwGn4yss"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
