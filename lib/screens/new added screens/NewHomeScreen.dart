@@ -21,6 +21,8 @@ import 'package:thrivers/screens/new%20added%20screens/chatgptSettings.dart';
 import 'package:thrivers/screens/new%20added%20screens/chatgptscreen.dart';
 import 'package:thrivers/screens/new%20added%20screens/thriverLandingScreen.dart';
 import 'package:thrivers/screens/new%20added%20screens/user_list_screen_admin.dart';
+import 'package:thrivers/screens/new%20added%20screens/AdminAboutMePage.dart';
+
 
 
 
@@ -325,6 +327,7 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
                 BrevoScreen(),
                 ChatGptScreen(),
                 ChatGptSettingsScreen(),
+                // AdminAboutMePage(),
                 // DSemo(),
                 /*AddChallenges(),
                 AddSolutionsScreen,
@@ -392,6 +395,7 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
                               child: InkWell(
                                 onTap: () async {
                                   // sideMenu.changePage(2);
+                                  page.jumpToPage(1);
                                 },
                                 child: Container(
                                   margin: EdgeInsets.all(10),
@@ -561,6 +565,7 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
       ),
     );
   }
+
 
   Widget SideMenuScreen(){
     return SideMenu(
