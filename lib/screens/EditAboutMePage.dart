@@ -25,9 +25,9 @@ import 'package:toastification/toastification.dart';
 import '../model/challenges_table_model.dart';
 
 class EditAboutMEScreen extends StatefulWidget {
-  var aboutMeData, refreshPage, AdminName, tabindex;
+  var aboutMeData, refreshPage, AdminName, tabindex, page;
 
-  EditAboutMEScreen({this.aboutMeData, this.refreshPage, this.AdminName, this.tabindex});
+  EditAboutMEScreen({this.aboutMeData, this.refreshPage, this.AdminName, this.tabindex, this.page});
 
   @override
   State<EditAboutMEScreen> createState() => _EditAboutMEScreenState();
@@ -73,6 +73,8 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
   TextEditingController NotesSolutiontextcontroller = TextEditingController();
   TextEditingController challengesNameTextEditingController = TextEditingController();
   TextEditingController SolutionNameTextEditingController = TextEditingController();
+  TextEditingController challengesOriginalDescriptionTextEditingController = TextEditingController();
+  TextEditingController SolutionsOriginalDescriptionTextEditingController = TextEditingController();
 
 
   List<SolutionModel> solutions = [];
@@ -513,6 +515,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                     // cursorColor: primaryColorOfApp,
                     onChanged: (value) {
                       _previewProvider.updateName(value);
+                      AboutMeLabeltextController.text = value;
                     },
                     style: GoogleFonts.montserrat(
                         textStyle: Theme
@@ -943,7 +946,8 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                     'Location': LocationController.text,
                     'Employee_Number': EmployeeNumberController.text,
                     'Line_Manager': LineManagerController.text,
-                    // 'About_Me_Label': AboutMeLabeltextController.text,
+                    'AB_Status' : "Drafted",
+                    'About_Me_Label': nameController.text,
                     // 'My_Circumstance': mycircumstancesController.text,
                     // 'My_Strength': MystrengthsController.text,
                     // 'My_Organisation': myOrganisationController.text,
@@ -1058,45 +1062,45 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
 
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                            child: Text("Title: ", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,fontWeight: FontWeight.w600)),
-                          ),
-
-                          TextField(
-                            controller: AboutMeLabeltextController,
-                            onChanged: (value) {
-                              _previewProvider.updatetitle(value);
-                            },
-                            style: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black),
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(10),
-                              // labelText: "Name",
-                              hintText: "About Me Label",
-                              errorStyle: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.bodyLarge,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.redAccent),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black),
-                                  borderRadius: BorderRadius.circular(15)),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black12),
-                                  borderRadius: BorderRadius.circular(15)),
-                              labelStyle: GoogleFonts.montserrat(
-                                  textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .bodyLarge,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black),
-                            ),
-                          ),
+                          // Padding(
+                          //   padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                          //   child: Text("Title: ", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,fontWeight: FontWeight.w600)),
+                          // ),
+                          //
+                          // TextField(
+                          //   controller: AboutMeLabeltextController,
+                          //   onChanged: (value) {
+                          //     _previewProvider.updatetitle(value);
+                          //   },
+                          //   style: GoogleFonts.montserrat(
+                          //       textStyle: Theme
+                          //           .of(context)
+                          //           .textTheme
+                          //           .bodyLarge,
+                          //       fontWeight: FontWeight.w400,
+                          //       color: Colors.black),
+                          //   decoration: InputDecoration(
+                          //     contentPadding: EdgeInsets.all(10),
+                          //     // labelText: "Name",
+                          //     hintText: "About Me Label",
+                          //     errorStyle: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.bodyLarge,
+                          //         fontWeight: FontWeight.w400,
+                          //         color: Colors.redAccent),
+                          //     focusedBorder: OutlineInputBorder(
+                          //         borderSide: BorderSide(color: Colors.black),
+                          //         borderRadius: BorderRadius.circular(15)),
+                          //     border: OutlineInputBorder(
+                          //         borderSide: BorderSide(color: Colors.black12),
+                          //         borderRadius: BorderRadius.circular(15)),
+                          //     labelStyle: GoogleFonts.montserrat(
+                          //         textStyle: Theme
+                          //             .of(context)
+                          //             .textTheme
+                          //             .bodyLarge,
+                          //         fontWeight: FontWeight.w400,
+                          //         color: Colors.black),
+                          //   ),
+                          // ),
 
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
@@ -1771,21 +1775,16 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                     RelatedChallengesdocuments = userAboutMEProvider.combinedResults.toList();
                                     DocumentSnapshot document = RelatedChallengesdocuments[i];
 
-                                    return GestureDetector(
-                                      onTap: (){
-                                        NewViewDialog(document['Label'],document['Description'],document['Impact'],document['Final_description'], document['Keywords'],document['tags'],document['id'],);
-                                      },
-                                      child: Container(
-                                          margin: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-                                          padding: EdgeInsets.all(12),
-                                          width: 470,
-                                          // height: 300,
-                                          decoration: BoxDecoration(
-                                            border: Border.all(color: Colors.black26),
-                                            borderRadius: BorderRadius.circular(20),
-                                          ),
-                                          child: RecommendedChallengesListTile(document, i, RelatedChallengesdocuments)
-                                      ),
+                                    return (userAboutMEProvider.isEditChallengeListAdded[document['id']] == true) ? Container() :  Container(
+                                        margin: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                                        padding: EdgeInsets.all(12),
+                                        width: 470,
+                                        // height: 300,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(color: Colors.black26),
+                                          borderRadius: BorderRadius.circular(20),
+                                        ),
+                                        child: RecommendedChallengesListTile(document, i, RelatedChallengesdocuments)
                                     );
                                   },
                                 ),
@@ -1804,7 +1803,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                           children: [
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text("Basket of challenges:",
+                              child: Text("Basket of challenges (${userAboutMEProvider.editchallengess.length}):",
                                 overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.montserrat(
                                     textStyle: Theme.of(context).textTheme.titleLarge,
@@ -1856,14 +1855,14 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                       columnSpacing: 15,
                                       columns: [
 
-                                        DataColumn(
-                                          label: Container(
-                                            // color: Colors.blue,
-                                            // width: 60,
-                                            child: Text('Id.',textAlign: TextAlign.center,),
-                                          ),
-
-                                        ),
+                                        // DataColumn(
+                                        //   label: Container(
+                                        //     // color: Colors.blue,
+                                        //     // width: 60,
+                                        //     child: Text('Id.',textAlign: TextAlign.center,),
+                                        //   ),
+                                        //
+                                        // ),
                                         DataColumn(
                                           label: Container(
                                             // width: 180,
@@ -1894,15 +1893,15 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                         // print(jsonString);
                                         return DataRow(
                                           cells: [
-                                            DataCell(
-                                                Container(
-                                                  // width: 60,
-                                                  //   child: Text("${index + 1}.", style: GoogleFonts.montserrat(
-                                                    child: Text("${challenge.id}.", style: GoogleFonts.montserrat(
-                                                        textStyle: Theme.of(context).textTheme.bodySmall,
-                                                        fontWeight: FontWeight.w600,
-                                                        color: Colors.black),))
-                                            ),
+                                            // DataCell(
+                                            //     Container(
+                                            //       // width: 60,
+                                            //       //   child: Text("${index + 1}.", style: GoogleFonts.montserrat(
+                                            //         child: Text("${challenge.id}.", style: GoogleFonts.montserrat(
+                                            //             textStyle: Theme.of(context).textTheme.bodySmall,
+                                            //             fontWeight: FontWeight.w600,
+                                            //             color: Colors.black),))
+                                            // ),
                                             DataCell(
                                                 Container(
                                                   child: Text(challenge.label,
@@ -1950,7 +1949,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                     IconButton(
                                                       onPressed: () {
 
-                                                        NewViewDialog(challenge.label,challenge.description,challenge.Impact,challenge.Final_description, challenge.Keywords,challenge.tags,challenge.id,);
+                                                        NewViewDialog(challenge.label,challenge.description,challenge.Impact,challenge.Final_description, challenge.Keywords,challenge.tags,challenge.id,challenge, userAboutMEProvider.isEditChallengeListAdded,userAboutMEProvider.EditRecommendedChallengeAdd);
                                                         print("challenge.isConfirmed: ${challenge.isConfirmed}");
                                                       },
                                                       icon: Icon(Icons.visibility, color: Colors.blue),
@@ -2153,84 +2152,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                     //           fontSize: 30,
                     //           color: Colors.black)),
                     // ),
-
-                    SizedBox(height: 10,),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        InkWell(
-                          onTap:(){
-                            showSolutionSelectors();
-                          },
-                          child:Container(
-                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                            // width: MediaQuery.of(context).size.width * .2,
-                            width: MediaQuery.of(context).size.width * .15,
-
-                            // height: 60,
-                            decoration: BoxDecoration(
-                              color:Colors.blue ,
-                              border: Border.all(
-                                  color:Colors.blue ,
-                                  width: 1.0),
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            child: Center(
-                              // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                              child: Text(
-                                'Browse',
-                                style: GoogleFonts.montserrat(
-                                  textStyle:
-                                  Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleSmall,
-                                  fontWeight: FontWeight.bold,
-                                  color:Colors.white ,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 15,),
-                        InkWell(
-                          onTap:(){
-                            showAddThriverDialogBox();
-                          },
-                          child:Container(
-                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                            // width: MediaQuery.of(context).size.width * .2,
-                            width: MediaQuery.of(context).size.width * .15,
-
-                            // height: 60,
-                            decoration: BoxDecoration(
-                              // color:Colors.blue ,
-                              border: Border.all(
-                                  color:Colors.blue ,
-                                  width: 1.0),
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            child: Center(
-                              // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                              child: Text(
-                                'Create My Own',
-                                style: GoogleFonts.montserrat(
-                                  textStyle:
-                                  Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleSmall,
-                                  fontWeight: FontWeight.bold,
-                                  color:Colors.blue ,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 15,),
-
-                      ],
-                    ),
+                    // SizedBox(height: 10,),
 
 
                     SizedBox(height: 10,),
@@ -2238,30 +2160,28 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
-                          child: Container(
-                            height: MediaQuery.of(context).size.height * .6,
-                            // width: MediaQuery.of(context).size.width * .46,
-                            decoration: BoxDecoration(
-                              border: (userAboutMEProvider.combinedSolutionsResults.isEmpty) ?  Border.all(color: Colors.black) : Border.all(color: Colors.black),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-                                  child: Text("Suggested Solutions (${userAboutMEProvider.combinedSolutionsResults.length}):",
-                                    style: GoogleFonts.montserrat(
-                                        textStyle: Theme.of(context).textTheme.titleLarge,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black),
-                                  ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+                                child: Text("Suggested Solutions (${userAboutMEProvider.combinedSolutionsResults.length}):",
+                                  style: GoogleFonts.montserrat(
+                                      textStyle: Theme.of(context).textTheme.titleLarge,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black),
                                 ),
-
-                                SizedBox(height: 10,),
-
-                                Container(
+                              ),
+                              SizedBox(height: 10,),
+                              Container(
+                                height: MediaQuery.of(context).size.height * .6,
+                                // width: MediaQuery.of(context).size.width * .46,
+                                decoration: BoxDecoration(
+                                  border: (userAboutMEProvider.combinedSolutionsResults.isEmpty) ?  Border.all(color: Colors.black) : Border.all(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Container(
                                   height: MediaQuery.of(context).size.height * .5,
                                   // width: MediaQuery.of(context).size.width * .46,
                                   child: ListView.builder(
@@ -2281,7 +2201,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                           // ViewSolutionsDialog(document.reference,document.id, document['Name'], document['Description'], document['Category']
                                           //     ,document['Keywords'],document['Created Date'],document['Created By'],document['tags'],document['Modified By']
                                           //     ,document['Modified Date'],document['id']);
-                                          NewViewDialog(document['Name'],document['Description'],document['Impact'],document['Final_description'], document['Keywords'],document['tags'],document['id'],);
+                                          NewViewDialog(document['Name'],document['Description'],document['Impact'],document['Final_description'], document['Keywords'],document['tags'],document['id'],document,userAboutMEProvider.isEditSolutionListAdded,userAboutMEProvider.EditRecommendedSolutionAdd);
                                         },
                                         child: Container(
                                             margin: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
@@ -2298,178 +2218,195 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                     },
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
 
                         SizedBox(width: 20,),
 
                         Expanded(
-                          child: Consumer<UserAboutMEProvider>(
-                            builder: (context, userAboutMEProvider, _) {
-
-                              return (userAboutMEProvider.editsolutionss.isEmpty) ?
-                              Container(
-                                height: MediaQuery.of(context).size.height * .6,
-                                // width: MediaQuery.of(context).size.width * .46,
-                                child: Center(child: Text("No Solutions Added Yet", style:
-                                GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.displaySmall,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black),),),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.black),
-                                  borderRadius: BorderRadius.circular(20),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+                                child: Text("Basket of Solutions (${userAboutMEProvider.editsolutionss.length}): ",
+                                  style: GoogleFonts.montserrat(
+                                      textStyle: Theme.of(context).textTheme.titleLarge,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black),
                                 ),
-                              ) : Container(
-                                height: MediaQuery.of(context).size.height * .6,
-                                // width: MediaQuery.of(context).size.width * .46,
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.black),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                // width: MediaQuery.of(context).size.width,
-                                child:SingleChildScrollView(
-                                  child: DataTable(
-                                    dataRowMaxHeight:60 ,
-                                    headingTextStyle: GoogleFonts.montserrat(
-                                        textStyle: Theme.of(context).textTheme.titleMedium,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black),
-                                    columnSpacing: 15,
-                                    columns: [
-                                      DataColumn(
-                                        label: Container(
-                                          // color: Colors.blue,
-                                          // width: 60,
-                                          child: Text('Id.',textAlign: TextAlign.center,),
-                                        ),
+                              ),
 
-                                      ),
-                                      DataColumn(
-                                        label: Container(
-                                          // width: 180,
-                                          child: Text('Label',),
-                                        ),
-                                      ),
-                                      DataColumn(
-                                        label: Text('Impact',),
-                                      ),
-                                      DataColumn(
-                                        label: Container(
-                                          // width: 400,
-                                            child: Text('Description')
-                                        ),
-                                      ),
-                                      DataColumn(
-                                          label: Container(
-                                            // width: 140,
-                                              child: Text('Confirm/Cancel')
-                                          )
-                                      ),
+                              SizedBox(height: 10,),
+                              Consumer<UserAboutMEProvider>(
+                                builder: (context, userAboutMEProvider, _) {
 
-
-                                    ],
-
-                                    rows: userAboutMEProvider.editsolutionss.map((solution) {
-                                      int index = userAboutMEProvider.editsolutionss.indexOf(solution);
-
-
-                                      // print(jsonString);
-
-                                      return DataRow(
-                                        cells: [
-                                          DataCell(
-                                              Container(
-                                                // width: 60,
-                                                child: Text("${solution.id}.", style: GoogleFonts.montserrat(
-                                                  // child: Text("${index + 1}.", style: GoogleFonts.montserrat(
-                                                      textStyle: Theme.of(context).textTheme.bodySmall,
-                                                      fontWeight: FontWeight.w600,
-                                                      color: Colors.black),))),
-                                          DataCell(
-                                              Container(
-                                                // width: 180,
-                                                  child: Text(solution.label,
-                                                      overflow: TextOverflow.ellipsis,maxLines: 2,
-                                                      style: GoogleFonts.montserrat(
-                                                          textStyle: Theme.of(context).textTheme.bodySmall,
-                                                          fontWeight: FontWeight.w600,
-                                                          color: Colors.black)
-                                                  ))),
-                                          DataCell(
-                                              Container(
-                                                // width: 400,
-                                                  child: Text(solution.Impact,
-                                                      overflow: TextOverflow.ellipsis,maxLines: 2,
-                                                      style: GoogleFonts.montserrat(
-                                                          textStyle: Theme.of(context).textTheme.bodySmall,
-                                                          fontWeight: FontWeight.w600,
-                                                          color: Colors.black)
-                                                  ))),
-                                          DataCell(
-                                              Container(
-                                                // width: 400,
-                                                  child: Text(solution.Final_description,
-                                                      overflow: TextOverflow.ellipsis,maxLines: 2,
-                                                      style: GoogleFonts.montserrat(
-                                                          textStyle: Theme.of(context).textTheme.bodySmall,
-                                                          fontWeight: FontWeight.w600,
-                                                          color: Colors.black)
-                                                  ))),
-                                          DataCell(
-                                            Container(
-                                              // height: 100,
-                                              margin: EdgeInsets.all(5),
-                                              // width: 140,
-                                              child: (solution.isConfirmed==true) ?
-                                              Text('Confirmed',
-                                                style: TextStyle(color: Colors.green),
-                                              )
-                                                  :
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                children: [
-                                                  IconButton(
-                                                    onPressed: () {
-                                                      NewViewDialog(solution.label, solution.description, solution.Impact, solution.Final_description, solution.Keywords, solution.tags, solution.id);
-                                                    },
-                                                    icon: Icon(Icons.visibility, color: Colors.blue),
-                                                  ),
-                                                  SizedBox(width: 15,),
-                                                  IconButton(
-                                                    onPressed: () {
-                                                      showconfirmSolutionsDialogBox(solution.id, solution.label,solution.description, solution.Source, solution.Status,solution.tags,solution.CreatedBy,
-                                                          solution.CreatedDate,solution.ModifiedBy,solution.ModifiedDate,solution.OriginalDescription,solution.Impact,solution.Final_description,
-                                                          solution.Category,solution.Keywords,"","", index,userAboutMEProvider.editsolutionss,solution.notes,solution.attachment,solution.InPlace,solution.Provider);
-                                                      print("solution.isConfirmed: ${solution.isConfirmed}");
-                                                    },
-                                                    icon: Icon(Icons.check, color: Colors.green),
-                                                  ),
-                                                  SizedBox(width: 15,),
-                                                  IconButton(
-                                                    onPressed: () {
-                                                      userAboutMEProvider.removeEditSolution(index,solution);
-                                                    },
-                                                    icon: Icon(Icons.close, color: Colors.red),
-                                                  )
-                                                  //      :
-
-
-                                                ],
-                                              ),
+                                  return (userAboutMEProvider.editsolutionss.isEmpty) ?
+                                  Container(
+                                    height: MediaQuery.of(context).size.height * .6,
+                                    // width: MediaQuery.of(context).size.width * .46,
+                                    child: Center(child: Text("No Solutions Added Yet", style:
+                                    GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.displaySmall,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black),),),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.black),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ) : Container(
+                                    height: MediaQuery.of(context).size.height * .6,
+                                    // width: MediaQuery.of(context).size.width * .46,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.black),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    // width: MediaQuery.of(context).size.width,
+                                    child:SingleChildScrollView(
+                                      child: DataTable(
+                                        dataRowMaxHeight:60 ,
+                                        headingTextStyle: GoogleFonts.montserrat(
+                                            textStyle: Theme.of(context).textTheme.titleMedium,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.black),
+                                        columnSpacing: 15,
+                                        columns: [
+                                          // DataColumn(
+                                          //   label: Container(
+                                          //     // color: Colors.blue,
+                                          //     // width: 60,
+                                          //     child: Text('Id.',textAlign: TextAlign.center,),
+                                          //   ),
+                                          //
+                                          // ),
+                                          DataColumn(
+                                            label: Container(
+                                              // width: 180,
+                                              child: Text('Label',),
                                             ),
+                                          ),
+                                          DataColumn(
+                                            label: Text('Impact',),
+                                          ),
+                                          DataColumn(
+                                            label: Container(
+                                              // width: 400,
+                                                child: Text('Description')
+                                            ),
+                                          ),
+                                          DataColumn(
+                                              label: Container(
+                                                // width: 140,
+                                                  child: Text('Confirm/Cancel')
+                                              )
                                           ),
 
 
                                         ],
-                                      );
-                                    }).toList(),
-                                  ),
-                                ),
 
-                              );
-                            },
+                                        rows: userAboutMEProvider.editsolutionss.map((solution) {
+                                          int index = userAboutMEProvider.editsolutionss.indexOf(solution);
+
+
+                                          // print(jsonString);
+
+                                          return DataRow(
+                                            cells: [
+                                              // DataCell(
+                                              //     Container(
+                                              //       // width: 60,
+                                              //       child: Text("${solution.id}.", style: GoogleFonts.montserrat(
+                                              //         // child: Text("${index + 1}.", style: GoogleFonts.montserrat(
+                                              //             textStyle: Theme.of(context).textTheme.bodySmall,
+                                              //             fontWeight: FontWeight.w600,
+                                              //             color: Colors.black),))),
+                                              DataCell(
+                                                  Container(
+                                                    // width: 180,
+                                                      child: Text(solution.label,
+                                                          overflow: TextOverflow.ellipsis,maxLines: 2,
+                                                          style: GoogleFonts.montserrat(
+                                                              textStyle: Theme.of(context).textTheme.bodySmall,
+                                                              fontWeight: FontWeight.w600,
+                                                              color: Colors.black)
+                                                      ))),
+                                              DataCell(
+                                                  Container(
+                                                    // width: 400,
+                                                      child: Text(solution.Impact,
+                                                          overflow: TextOverflow.ellipsis,maxLines: 2,
+                                                          style: GoogleFonts.montserrat(
+                                                              textStyle: Theme.of(context).textTheme.bodySmall,
+                                                              fontWeight: FontWeight.w600,
+                                                              color: Colors.black)
+                                                      ))),
+                                              DataCell(
+                                                  Container(
+                                                    // width: 400,
+                                                      child: Text(solution.Final_description,
+                                                          overflow: TextOverflow.ellipsis,maxLines: 2,
+                                                          style: GoogleFonts.montserrat(
+                                                              textStyle: Theme.of(context).textTheme.bodySmall,
+                                                              fontWeight: FontWeight.w600,
+                                                              color: Colors.black)
+                                                      ))),
+                                              DataCell(
+                                                Container(
+                                                  // height: 100,
+                                                  margin: EdgeInsets.all(5),
+                                                  // width: 140,
+                                                  child: (solution.isConfirmed==true) ?
+                                                  Text('Confirmed',
+                                                    style: TextStyle(color: Colors.green),
+                                                  )
+                                                      :
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    children: [
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          NewViewDialog(solution.label, solution.description, solution.Impact, solution.Final_description, solution.Keywords, solution.tags, solution.id,solution,userAboutMEProvider.isEditSolutionListAdded,userAboutMEProvider.EditRecommendedSolutionAdd);
+                                                        },
+                                                        icon: Icon(Icons.visibility, color: Colors.blue),
+                                                      ),
+                                                      SizedBox(width: 8,),
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          showconfirmSolutionsDialogBox(solution.id, solution.label,solution.description, solution.Source, solution.Status,solution.tags,solution.CreatedBy,
+                                                              solution.CreatedDate,solution.ModifiedBy,solution.ModifiedDate,solution.OriginalDescription,solution.Impact,solution.Final_description,
+                                                              solution.Category,solution.Keywords,"","", index,userAboutMEProvider.editsolutionss,solution.notes,solution.attachment,solution.InPlace,solution.Provider);
+                                                          print("solution.isConfirmed: ${solution.isConfirmed}");
+                                                        },
+                                                        icon: Icon(Icons.check, color: Colors.green),
+                                                      ),
+                                                      SizedBox(width: 8,),
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          userAboutMEProvider.removeEditSolution(index,solution);
+                                                        },
+                                                        icon: Icon(Icons.close, color: Colors.red),
+                                                      )
+                                                      //      :
+
+
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+
+
+                                            ],
+                                          );
+                                        }).toList(),
+                                      ),
+                                    ),
+
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                         ),
 
@@ -2478,9 +2415,9 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
 
                     SizedBox(height: 20,),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SizedBox(height: 5, width: 5,),
+
                         // InkWell(
                         //   onTap: () async {
                         //     // page.animateToPage(2, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
@@ -2510,6 +2447,84 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                         //     ),
                         //   ),
                         // ),
+
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            InkWell(
+                              onTap:(){
+                                showSolutionSelectors();
+                              },
+                              child:Container(
+                                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                                // width: MediaQuery.of(context).size.width * .2,
+                                width: MediaQuery.of(context).size.width * .22,
+
+                                // height: 60,
+                                decoration: BoxDecoration(
+                                  color:Colors.blue ,
+                                  border: Border.all(
+                                      color:Colors.blue ,
+                                      width: 1.0),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                child: Center(
+                                  // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                  child: Text(
+                                    'Browse additional solutions',
+                                    style: GoogleFonts.montserrat(
+                                      textStyle:
+                                      Theme
+                                          .of(context)
+                                          .textTheme
+                                          .titleSmall,
+                                      fontWeight: FontWeight.bold,
+                                      color:Colors.white ,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 15,),
+                            InkWell(
+                              onTap:(){
+                                showAddThriverDialogBox();
+                              },
+                              child:Container(
+                                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                                // width: MediaQuery.of(context).size.width * .2,
+                                width: MediaQuery.of(context).size.width * .15,
+
+                                // height: 60,
+                                decoration: BoxDecoration(
+                                  // color:Colors.blue ,
+                                  border: Border.all(
+                                      color:Colors.blue ,
+                                      width: 1.0),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                child: Center(
+                                  // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                  child: Text(
+                                    'Create My Own',
+                                    style: GoogleFonts.montserrat(
+                                      textStyle:
+                                      Theme
+                                          .of(context)
+                                          .textTheme
+                                          .titleSmall,
+                                      fontWeight: FontWeight.bold,
+                                      color:Colors.blue ,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 15,),
+
+                          ],
+                        ),
+
                         SizedBox(height: 5, width: 5,),
                         InkWell(
                           onTap: () async {
@@ -2554,31 +2569,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                             ProgressDialog.show(context, "Saving", Icons.save);
                             await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
                             ProgressDialog.hide();
-                            selectedEmail = null;
-                            nameController.clear();
-                            employerController.clear();
-                            divisionOrSectionController.clear();
-                            RoleController.clear();
-                            LocationController.clear();
-                            EmployeeNumberController.clear();
-                            LineManagerController.clear();
-                            mycircumstancesController.clear();
-                            MystrengthsController.clear();
-                            mycircumstancesController.clear();
-                            RefineController.clear();
-                            solutionsList.clear();
-                            _userAboutMEProvider.solutionss.clear();
-                            _userAboutMEProvider.editsolutionss.clear();
-                            _userAboutMEProvider.challengess.clear();
-                            _userAboutMEProvider.editchallengess.clear();
-                            _userAboutMEProvider.combinedSolutionsResults.clear();
-                            _userAboutMEProvider.combinedResults.clear();
-                            widget.refreshPage();
-                            _navigateToTab(0);
-                            Navigator.pop(context);
-                            setState(() {
-
-                            });
+                            _navigateToTab(5);
                           },
                           child: Container(
                             padding: EdgeInsets.symmetric(horizontal: 15),
@@ -2593,7 +2584,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                             ),
                             child: Center(
                               child: Text(
-                                'Save',
+                                'Finish',
                                 style: GoogleFonts.montserrat(
                                     textStyle: Theme.of(context).textTheme.titleSmall,
                                     fontWeight: FontWeight.bold,
@@ -2604,8 +2595,6 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                           ),
 
                         ),
-
-
                       ],
                     ),
                   ],
@@ -2860,25 +2849,86 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                   fontSize: 20,
                                   color: Colors.black)),
                         ),
+                        // Padding(
+                        //   padding: const EdgeInsets.symmetric(
+                        //       vertical: 10.0, horizontal: 5),
+                        //   child: Row(
+                        //     mainAxisAlignment: MainAxisAlignment.start,
+                        //     children: [
+                        //       Text("Title: ",
+                        //           style: GoogleFonts.montserrat(textStyle: Theme
+                        //               .of(context)
+                        //               .textTheme
+                        //               .titleMedium,)),
+                        //       Text("${previewProvider.title==null ? "" : previewProvider.title}",
+                        //           style: GoogleFonts.montserrat(textStyle: Theme
+                        //               .of(context)
+                        //               .textTheme
+                        //               .bodyLarge,fontWeight: FontWeight.w700)),
+                        //     ],
+                        //   ),
+                        // ),
+
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 5),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text("Title: ",
-                                  style: GoogleFonts.montserrat(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleMedium,)),
-                              Text("${previewProvider.title==null ? "" : previewProvider.title}",
-                                  style: GoogleFonts.montserrat(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .bodyLarge,fontWeight: FontWeight.w700)),
+                              // Text("Title: ",
+                              //     style: GoogleFonts.montserrat(textStyle: Theme
+                              //         .of(context)
+                              //         .textTheme
+                              //         .titleMedium,)),
+                              // Text("${previewProvider.title==null ? "" : previewProvider.title}",
+                              //     style: GoogleFonts.montserrat(textStyle: Theme
+                              //         .of(context)
+                              //         .textTheme
+                              //         .bodyLarge,fontWeight: FontWeight.w700)),
+
+                              Text("Title: ", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
+
+                              Expanded(
+                                child: TextField(
+                                  controller: AboutMeLabeltextController,
+                                  onChanged: (value) {
+                                    _previewProvider.updatetitle(value);
+                                  },
+                                  style: GoogleFonts.montserrat(
+                                      textStyle: Theme
+                                          .of(context)
+                                          .textTheme
+                                          .bodyLarge,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black),
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.all(10),
+                                    // labelText: "Name",
+                                    hintText: "About Me Title",
+                                    errorStyle: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.bodyLarge,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.redAccent),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(15)),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black12),
+                                        borderRadius: BorderRadius.circular(15)),
+                                    labelStyle: GoogleFonts.montserrat(
+                                        textStyle: Theme
+                                            .of(context)
+                                            .textTheme
+                                            .bodyLarge,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black),
+                                  ),
+                                ),
+                              ),
+
                             ],
                           ),
                         ),
+
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 5),
@@ -3436,6 +3486,81 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                     ),
                   ),
 
+                  SizedBox(height: 10,),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      InkWell(
+                        onTap: () async {
+                          var createdAt = DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now());
+
+                          Map<String, dynamic> AboutMEDatas = {
+                            'About_Me_Label': AboutMeLabeltextController.text + " $createdAt",
+                            'AB_Status' : "Submitted"
+                          };
+
+                          String solutionJson = json.encode(AboutMEDatas);
+                          print(solutionJson);
+
+                          ProgressDialog.show(context, "Submiting", Icons.save);
+                          await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
+                          ProgressDialog.hide();
+                          downloadAboutMePdf(challengesList,solutionsList);
+                          selectedEmail = null;
+                          nameController.clear();
+                          employerController.clear();
+                          divisionOrSectionController.clear();
+                          RoleController.clear();
+                          LocationController.clear();
+                          EmployeeNumberController.clear();
+                          LineManagerController.clear();
+                          mycircumstancesController.clear();
+                          MystrengthsController.clear();
+                          mycircumstancesController.clear();
+                          RefineController.clear();
+                          solutionsList.clear();
+                          _userAboutMEProvider.solutionss.clear();
+                          _userAboutMEProvider.editsolutionss.clear();
+                          _userAboutMEProvider.challengess.clear();
+                          _userAboutMEProvider.editchallengess.clear();
+                          _userAboutMEProvider.combinedSolutionsResults.clear();
+                          _userAboutMEProvider.combinedResults.clear();
+                          widget.refreshPage();
+                          Navigator.pop(context);
+                          setState(() {
+                            widget.page.jumpToPage(1);
+                          });
+                        },
+                        child:Container(
+                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                          width: MediaQuery.of(context).size.width * .15,
+                          decoration: BoxDecoration(
+                            color:Colors.blue ,
+                            border: Border.all(
+                                color:Colors.blue ,
+                                width: 1.0),
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Submited',
+                              style: GoogleFonts.montserrat(
+                                textStyle:
+                                Theme
+                                    .of(context)
+                                    .textTheme
+                                    .titleSmall,
+                                fontWeight: FontWeight.bold,
+                                color:Colors.white ,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+
                 ],
               ),
             ),
@@ -3904,39 +4029,61 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                       //
                       // ),
 
-                      InkWell(
-                        onTap: (){
-                          userAboutMEProvider.EditRecommendedChallengeAdd(true, i, documentsss![i]);
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                          width: MediaQuery.of(context).size.width * .05,
-                          // width: MediaQuery.of(context).size.width * .15,
-
-                          // height: 60,
-                          decoration: BoxDecoration(
-                            color: Colors.blue ,
-                            border: Border.all(
-                                color:Colors.blue ,
-                                width: 1.0),
-                            borderRadius: BorderRadius.circular(8.0),
+                      Row(
+                        children: [
+                          IconButton(
+                              onPressed: (){
+                                NewViewDialog(challengesData['Label'],challengesData['Description'],challengesData['Impact'],challengesData['Final_description'], challengesData['Keywords'],challengesData['tags'],challengesData['id'],challengesData,userAboutMEProvider.isEditChallengeListAdded,userAboutMEProvider.EditRecommendedChallengeAdd);
+                              },
+                              icon: Icon(Icons.info_outline, color: Colors.blue,)
                           ),
-                          child: Center(
-                            // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                            child: Text(
-                              'Add',
-                              style: GoogleFonts.montserrat(
-                                textStyle:
-                                Theme
-                                    .of(context)
-                                    .textTheme
-                                    .titleSmall,
-                                fontWeight: FontWeight.bold,
-                                color:Colors.white ,
+                          SizedBox(width: 8),
+                          (userAboutMEProvider.isEditChallengeListAdded[challengesData['id']] == true) ? Text(
+                            'Added',
+                            style: GoogleFonts.montserrat(
+                              textStyle:
+                              Theme
+                                  .of(context)
+                                  .textTheme
+                                  .titleSmall,
+                              fontStyle: FontStyle.italic,
+                              color:Colors.green ,
+                            ),
+                          ) : InkWell(
+                            onTap: (){
+                              userAboutMEProvider.EditRecommendedChallengeAdd(true, documentsss![i]);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                              width: MediaQuery.of(context).size.width * .05,
+                              // width: MediaQuery.of(context).size.width * .15,
+
+                              // height: 60,
+                              decoration: BoxDecoration(
+                                color: Colors.blue ,
+                                border: Border.all(
+                                    color:Colors.blue ,
+                                    width: 1.0),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Center(
+                                // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                child: Text(
+                                  'Add',
+                                  style: GoogleFonts.montserrat(
+                                    textStyle:
+                                    Theme
+                                        .of(context)
+                                        .textTheme
+                                        .titleSmall,
+                                    fontWeight: FontWeight.bold,
+                                    color:Colors.white ,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
 
                     ],
@@ -4093,39 +4240,63 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                       //     userAboutMEProvider.isRecommendedClickedBoxSolutions(value, i, documentsss![i] );
                       //   },
                       // ),
-                      InkWell(
-                        onTap: (){
-                          userAboutMEProvider.EditRecommendedSolutionAdd(true, i, documentsss![i]);
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                          width: MediaQuery.of(context).size.width * .05,
-                          // width: MediaQuery.of(context).size.width * .15,
 
-                          // height: 60,
-                          decoration: BoxDecoration(
-                            color: Colors.blue ,
-                            border: Border.all(
-                                color:Colors.blue ,
-                                width: 1.0),
-                            borderRadius: BorderRadius.circular(8.0),
+                      Row(
+                        children: [
+                          IconButton(
+                              onPressed: (){
+                                NewViewDialog(solutionsData['Name'],solutionsData['Description'],solutionsData['Impact'],solutionsData['Final_description'], solutionsData['Keywords'],solutionsData['tags'],solutionsData['id'],solutionsData,userAboutMEProvider.isEditSolutionListAdded,userAboutMEProvider.EditRecommendedSolutionAdd);
+                              },
+                              icon: Icon(Icons.info_outline, color: Colors.blue,)
                           ),
-                          child: Center(
-                            // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                            child: Text(
-                              'Add',
-                              style: GoogleFonts.montserrat(
-                                textStyle:
-                                Theme
-                                    .of(context)
-                                    .textTheme
-                                    .titleSmall,
-                                fontWeight: FontWeight.bold,
-                                color:Colors.white ,
+                          SizedBox(width: 8),
+
+                          (userAboutMEProvider.isEditSolutionListAdded[solutionsData['id']] == true) ? Text(
+                            'Added',
+                            style: GoogleFonts.montserrat(
+                              textStyle:
+                              Theme
+                                  .of(context)
+                                  .textTheme
+                                  .titleSmall,
+                              fontStyle: FontStyle.italic,
+                              color:Colors.green ,
+                            ),
+                          ) : InkWell(
+                            onTap: (){
+                              userAboutMEProvider.EditRecommendedSolutionAdd(true, documentsss![i]);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                              width: MediaQuery.of(context).size.width * .05,
+                              // width: MediaQuery.of(context).size.width * .15,
+
+                              // height: 60,
+                              decoration: BoxDecoration(
+                                color: Colors.blue ,
+                                border: Border.all(
+                                    color:Colors.blue ,
+                                    width: 1.0),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Center(
+                                // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                child: Text(
+                                  'Add',
+                                  style: GoogleFonts.montserrat(
+                                    textStyle:
+                                    Theme
+                                        .of(context)
+                                        .textTheme
+                                        .titleSmall,
+                                    fontWeight: FontWeight.bold,
+                                    color:Colors.white ,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
                     ],
                   ),
@@ -4408,7 +4579,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                             return Divider();
                           },
                           itemBuilder: (BuildContext context, int index) {
-                            return ChallengesListTile(challengesProvider.challengesdocuments[index], index, challengesProvider.challengesdocuments);
+                            return ChallengesListTile(index, challengesProvider.challengesdocuments);
                           },
                         ),
                       ),
@@ -4649,8 +4820,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                               return Divider();
                             },
                             itemBuilder: (BuildContext context, int index) {
-                              return ThriversListTile(
-                                  addKeywordProvider.documents[index], index, addKeywordProvider.documents);
+                              return ThriversListTile(index, addKeywordProvider.documents);
                             },
                           ),
                         ),
@@ -4873,6 +5043,116 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
+
+                              Padding(
+                                /// Original Description
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextField(
+                                        controller: challengesOriginalDescriptionTextEditingController,
+                                        // cursorColor: primaryColorOfApp,
+                                        onChanged: (value) {
+
+                                        },
+                                        style: GoogleFonts.montserrat(
+                                            textStyle: Theme
+                                                .of(context)
+                                                .textTheme
+                                                .bodyLarge,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.black),
+                                        decoration: InputDecoration(
+                                          //errorText: userAccountSearchErrorText,
+                                          contentPadding: EdgeInsets.all(25),
+                                          labelText: "Original Description",
+                                          hintText: "Original Description",
+
+
+                                          errorStyle: GoogleFonts.montserrat(
+                                              textStyle: Theme
+                                                  .of(context)
+                                                  .textTheme
+                                                  .bodyLarge,
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.redAccent),
+
+                                          focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.black),
+                                              borderRadius: BorderRadius.circular(15)),
+                                          border: OutlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.black12),
+                                              borderRadius: BorderRadius.circular(15)),
+                                          //hintText: "e.g Abouzied",
+                                          labelStyle: GoogleFonts.montserrat(
+                                              textStyle: Theme
+                                                  .of(context)
+                                                  .textTheme
+                                                  .bodyLarge,
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.black),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 10,),
+                                    InkWell(
+                                      // onTap: () async {
+                                      //   var defaulttext ="";
+                                      //   // defaulttext ="1."+ "$q1"+" "+originaltextEditingController.text.toString();
+                                      //   defaulttext =  q2;
+                                      //   defaulttext =  defaulttext + " where yyy is "+finaltextcontroller.text.toString();
+                                      //   var defaulttextq3 ="";
+                                      //   // defaulttext ="1."+ "$q1"+" "+originaltextEditingController.text.toString();
+                                      //   defaulttextq3 =  q3;
+                                      //   defaulttextq3 =  defaulttextq3 + " where yyy is "+finaltextcontroller.text.toString();
+                                      //
+                                      //   var defaulttextq4 ="";
+                                      //   // defaulttext ="1."+ "$q1"+" "+originaltextEditingController.text.toString();
+                                      //   defaulttextq4 =  q4;
+                                      //   defaulttextq4 =  defaulttextq4 + " where yyy is "+finaltextcontroller.text.toString();
+                                      //   defaulttextq4 =  defaulttextq4 + " and select tags from "+"${resultString}";
+                                      //
+                                      //
+                                      //   var defaulttextq5 ="";
+                                      //   defaulttextq5 =  q5;
+                                      //   defaulttextq5 =  defaulttextq5 + " where yyy is "+finaltextcontroller.text.toString();
+                                      //
+                                      //   // defaulttext =defaulttext +" 3."+ "  $q3 "+originaltextEditingController.text.toString();
+                                      //   // defaulttext =defaulttext +" 4."+ "  $q4 "+originaltextEditingController.text.toString();
+                                      //   // defaulttext =defaulttext +" 5."+ "  $q5 "+originaltextEditingController.text.toString();
+                                      //   await getChatResponsenew(defaulttext,defaulttextq3,defaulttextq4,defaulttextq5);
+                                      //
+                                      // },
+                                      child: Container(
+                                        width: MediaQuery.of(context).size.width * .1,
+                                        padding: EdgeInsets.symmetric(horizontal: 15),
+                                        height: 60,
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue,
+                                          border: Border.all(
+                                              color: Colors.blue,
+                                              width: 2.0),
+                                          borderRadius: BorderRadius.circular(15.0),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            'Generate',
+                                            style: GoogleFonts.montserrat(
+                                                textStyle:
+                                                Theme
+                                                    .of(context)
+                                                    .textTheme
+                                                    .titleSmall,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
 
                               Padding(
                                 /// Name
@@ -5955,6 +6235,115 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                             children: <Widget>[
 
 
+                              Padding(
+                                /// Original Description
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextField(
+                                        controller: SolutionsOriginalDescriptionTextEditingController,
+                                        // cursorColor: primaryColorOfApp,
+                                        onChanged: (value) {
+
+                                        },
+                                        style: GoogleFonts.montserrat(
+                                            textStyle: Theme
+                                                .of(context)
+                                                .textTheme
+                                                .bodyLarge,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.black),
+                                        decoration: InputDecoration(
+                                          //errorText: userAccountSearchErrorText,
+                                          contentPadding: EdgeInsets.all(25),
+                                          labelText: "Original Description",
+                                          hintText: "Original Description",
+
+
+                                          errorStyle: GoogleFonts.montserrat(
+                                              textStyle: Theme
+                                                  .of(context)
+                                                  .textTheme
+                                                  .bodyLarge,
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.redAccent),
+
+                                          focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.black),
+                                              borderRadius: BorderRadius.circular(15)),
+                                          border: OutlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.black12),
+                                              borderRadius: BorderRadius.circular(15)),
+                                          //hintText: "e.g Abouzied",
+                                          labelStyle: GoogleFonts.montserrat(
+                                              textStyle: Theme
+                                                  .of(context)
+                                                  .textTheme
+                                                  .bodyLarge,
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.black),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 10,),
+                                    InkWell(
+                                      // onTap: () async {
+                                      //   var defaulttext ="";
+                                      //   // defaulttext ="1."+ "$q1"+" "+originaltextEditingController.text.toString();
+                                      //   defaulttext =  q2;
+                                      //   defaulttext =  defaulttext + " where yyy is "+finaltextcontroller.text.toString();
+                                      //   var defaulttextq3 ="";
+                                      //   // defaulttext ="1."+ "$q1"+" "+originaltextEditingController.text.toString();
+                                      //   defaulttextq3 =  q3;
+                                      //   defaulttextq3 =  defaulttextq3 + " where yyy is "+finaltextcontroller.text.toString();
+                                      //
+                                      //   var defaulttextq4 ="";
+                                      //   // defaulttext ="1."+ "$q1"+" "+originaltextEditingController.text.toString();
+                                      //   defaulttextq4 =  q4;
+                                      //   defaulttextq4 =  defaulttextq4 + " where yyy is "+finaltextcontroller.text.toString();
+                                      //   defaulttextq4 =  defaulttextq4 + " and select tags from "+"${resultString}";
+                                      //
+                                      //
+                                      //   var defaulttextq5 ="";
+                                      //   defaulttextq5 =  q5;
+                                      //   defaulttextq5 =  defaulttextq5 + " where yyy is "+finaltextcontroller.text.toString();
+                                      //
+                                      //   // defaulttext =defaulttext +" 3."+ "  $q3 "+originaltextEditingController.text.toString();
+                                      //   // defaulttext =defaulttext +" 4."+ "  $q4 "+originaltextEditingController.text.toString();
+                                      //   // defaulttext =defaulttext +" 5."+ "  $q5 "+originaltextEditingController.text.toString();
+                                      //   await getChatResponsenew(defaulttext,defaulttextq3,defaulttextq4,defaulttextq5);
+                                      //
+                                      // },
+                                      child: Container(
+                                        width: MediaQuery.of(context).size.width * .1,
+                                        padding: EdgeInsets.symmetric(horizontal: 15),
+                                        height: 60,
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue,
+                                          border: Border.all(
+                                              color: Colors.blue,
+                                              width: 2.0),
+                                          borderRadius: BorderRadius.circular(15.0),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            'Generate',
+                                            style: GoogleFonts.montserrat(
+                                                textStyle:
+                                                Theme
+                                                    .of(context)
+                                                    .textTheme
+                                                    .titleSmall,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
 
 
                               Padding(
@@ -6715,233 +7104,226 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
   }
 
 
-  Widget ChallengesListTile(DocumentSnapshot<Object?> challengesDetails, i, documents) {
+  Widget ChallengesListTile( i, documents) {
 
     return Consumer<UserAboutMEProvider>(
         builder: (c,userAboutMEProvider, _){
-          return  GestureDetector(
-            onTap: (){
-              ViewChallengesDialog(challengesDetails.reference,challengesDetails.id, challengesDetails['Label'], challengesDetails['Description'], challengesDetails['Category']
-                  ,challengesDetails['Keywords'],challengesDetails['Created Date'],challengesDetails['Created By'],challengesDetails['tags'],challengesDetails['Modified By']
-                  ,challengesDetails['Modified Date'],challengesDetails['id']);
-            },
-            child: Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(width: 10,),
-                  // Text(challengesDetails.id,style: Theme.of(context).textTheme.bodySmall),
-                  // Text("${i+1}.",style: Theme.of(context).textTheme.bodySmall),
-                  // Text("CH0${challengesDetails['id']}",style: Theme.of(context).textTheme.bodySmall),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 2.0),
-                    child: Text("${i + 1}.",style: Theme.of(context).textTheme.bodyLarge),
+          return Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(width: 10,),
+                // Text(documents![i].id,style: Theme.of(context).textTheme.bodySmall),
+                // Text("${i+1}.",style: Theme.of(context).textTheme.bodySmall),
+                // Text("CH0${challengesDetails['id']}",style: Theme.of(context).textTheme.bodySmall),
+                Padding(
+                  padding: const EdgeInsets.only(top: 2.0),
+                  child: Text("${i + 1}.",style: Theme.of(context).textTheme.bodyLarge),
+                ),
+                SizedBox(width: 20,),
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(documents![i]['Label'],style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis),
+                      Text(documents![i]['Final_description'],style: Theme.of(context).textTheme.subtitle1?.copyWith(color: Colors.grey,overflow: TextOverflow.ellipsis),maxLines: 2,),
+                      SizedBox(height: 10),
+                    ],
                   ),
-                  SizedBox(width: 20,),
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(challengesDetails['Label'],style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis),
-                        Text(challengesDetails['Final_description'],style: Theme.of(context).textTheme.subtitle1?.copyWith(color: Colors.grey,overflow: TextOverflow.ellipsis),maxLines: 2,),
-                        SizedBox(height: 10),
-                      ],
+                ),
+                SizedBox(width: 30),
+
+                // Center(
+                //   child: Checkbox(
+                //     activeColor: Colors.blue,
+                //     value: userAboutMEProvider.isCheckedForTileChallenge(documents![i]), // Use the state from the provider
+                //     onChanged: (value) {
+                //       userAboutMEProvider.isClickedBoxChallenge(value, i, documents![i]);
+                //     },
+                //   ),
+                // )
+                Row(
+                  children: [
+                    IconButton(
+                        onPressed: (){
+                          NewViewDialog(documents![i]['Label'],documents![i]['Description'],documents![i]['Impact'],documents![i]['Final_description'], documents![i]['Keywords'],documents![i]['tags'],documents![i]['id'],documents![i], userAboutMEProvider.isEditChallengeListAdded,userAboutMEProvider.EditRecommendedChallengeAdd);
+                        },
+                        icon: Icon(Icons.info_outline, color: Colors.blue,)
                     ),
-                  ),
-                  SizedBox(width: 30),
-
-                  // Center(
-                  //   child: Checkbox(
-                  //     activeColor: Colors.blue,
-                  //     value: userAboutMEProvider.isCheckedForTileChallenge(challengesDetails), // Use the state from the provider
-                  //     onChanged: (value) {
-                  //       userAboutMEProvider.isClickedBoxChallenge(value, i, challengesDetails);
-                  //     },
-                  //   ),
-                  // )
-                  InkWell(
-                    onTap: (){
-                      userAboutMEProvider.EditRecommendedChallengeAdd(true, i, documents![i]);
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                      width: MediaQuery.of(context).size.width * .05,
-                      // width: MediaQuery.of(context).size.width * .15,
-
-                      // height: 60,
-                      decoration: BoxDecoration(
-                        color: Colors.blue ,
-                        border: Border.all(
-                            color:Colors.blue ,
-                            width: 1.0),
-                        borderRadius: BorderRadius.circular(8.0),
+                    SizedBox(width: 8),
+                    (userAboutMEProvider.isEditChallengeListAdded[documents![i]['id']] == true) ? Text(
+                      'Added',
+                      style: GoogleFonts.montserrat(
+                        textStyle:
+                        Theme
+                            .of(context)
+                            .textTheme
+                            .titleSmall,
+                        fontStyle: FontStyle.italic,
+                        color:Colors.green ,
                       ),
-                      child: Center(
-                        // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                        child: Text(
-                          'Add',
-                          style: GoogleFonts.montserrat(
-                            textStyle:
-                            Theme
-                                .of(context)
-                                .textTheme
-                                .titleSmall,
-                            fontWeight: FontWeight.bold,
-                            color:Colors.white ,
+                    ) : InkWell(
+                      onTap: (){
+                        userAboutMEProvider.EditRecommendedChallengeAdd(true, documents![i]);
+                        toastification.show(context: context,
+                            title: Text('${documents![i]['Label']} added successfully'),
+                            autoCloseDuration: Duration(milliseconds: 2500),
+                            alignment: Alignment.center,
+                            backgroundColor: Colors.green,
+                            foregroundColor: Colors.white,
+                            icon: Icon(Icons.check_circle, color: Colors.white,),
+                            animationDuration: Duration(milliseconds: 1000),
+                            showProgressBar: false
+                        );
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                        width: MediaQuery.of(context).size.width * .05,
+                        // width: MediaQuery.of(context).size.width * .15,
+
+                        // height: 60,
+                        decoration: BoxDecoration(
+                          color: Colors.blue ,
+                          border: Border.all(
+                              color:Colors.blue ,
+                              width: 1.0),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Center(
+                          // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                          child: Text(
+                            'Add',
+                            style: GoogleFonts.montserrat(
+                              textStyle:
+                              Theme
+                                  .of(context)
+                                  .textTheme
+                                  .titleSmall,
+                              fontWeight: FontWeight.bold,
+                              color:Colors.white ,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
+                ),
 
 
-                ],
-              ),
+              ],
             ),
           );
         });
   }
 
-  Widget ThriversListTile(DocumentSnapshot<Object?> thriversDetails, i, documentsss) {
+  Widget ThriversListTile(i, documentsss) {
 
     return Consumer<UserAboutMEProvider>(
         builder: (c,userAboutMEProvider, _){
-          return GestureDetector(
-            onTap: (){
-              ViewSolutionsDialog(thriversDetails.reference,thriversDetails.id, thriversDetails['Name'], thriversDetails['Description'], thriversDetails['Category']
-                  ,thriversDetails['Keywords'],thriversDetails['Created Date'],thriversDetails['Created By'],thriversDetails['tags'],thriversDetails['Modified By']
-                  ,thriversDetails['Modified Date'],thriversDetails['id']);
-            },
-            child: Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(width: 10,),
+          return Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(width: 10,),
 
-                  // Text(thriversDetails.id,style: Theme.of(context).textTheme.bodySmall),
-                  // Text("${i+1}.",style: Theme.of(context).textTheme.bodySmall),
+                Padding(
+                  padding: const EdgeInsets.only(top: 2.0),
+                  child: Text("${i + 1}.",style: Theme.of(context).textTheme.bodyLarge),
+                ),
 
-                  // Padding(
-                  //   padding: const EdgeInsets.all(5.0),
-                  //   child: Text("SH0${thriversDetails['id']}",style: Theme.of(context).textTheme.bodySmall),
-                  // ),
+                SizedBox(width: 20,),
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(documentsss![i]['Name'],style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis),
+                      Text(documentsss![i]['Final_description'],style: Theme.of(context).textTheme.subtitle1?.copyWith(color: Colors.grey,overflow: TextOverflow.ellipsis),maxLines: 2,),
+                      SizedBox(height: 10),
 
-                  Padding(
-                    padding: const EdgeInsets.only(top: 2.0),
-                    child: Text("${i + 1}.",style: Theme.of(context).textTheme.bodyLarge),
+                    ],
                   ),
+                ),
 
-                  SizedBox(width: 20,),
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(thriversDetails['Name'],style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis),
-                        Text(thriversDetails['Final_description'],style: Theme.of(context).textTheme.subtitle1?.copyWith(color: Colors.grey,overflow: TextOverflow.ellipsis),maxLines: 2,),
-                        SizedBox(height: 10),
+                SizedBox(width: 20,),
 
-                      ],
+
+                Row(
+                  children: [
+                    IconButton(
+                        onPressed: (){
+                          NewViewDialog(documentsss![i]['Name'],documentsss![i]['Description'],documentsss![i]['Impact'],documentsss![i]['Final_description'], documentsss![i]['Keywords'],documentsss![i]['tags'],documentsss![i]['id'],documentsss![i], userAboutMEProvider.isEditSolutionListAdded,userAboutMEProvider.EditRecommendedSolutionAdd);
+                        },
+                        icon: Icon(Icons.info_outline, color: Colors.blue,)
                     ),
-                  ),
-
-                  SizedBox(width: 20,),
-
-                  // Center(
-                  //   child: Checkbox(
-                  //     activeColor: Colors.blue,
-                  //     value: userAboutMEProvider.isCheckedForTileSoltuions(thriversDetails), // Use the state from the provider
-                  //     onChanged: (value) {
-                  //       userAboutMEProvider.isClickedBoxSolution(value, i, thriversDetails);
-                  //     },
-                  //   ),
-                  // )
-                  InkWell(
-                    onTap: (){
-                      userAboutMEProvider.EditRecommendedSolutionAdd(true, i, documentsss![i]);
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                      width: MediaQuery.of(context).size.width * .05,
-                      // width: MediaQuery.of(context).size.width * .15,
-
-                      // height: 60,
-                      decoration: BoxDecoration(
-                        color: Colors.blue ,
-                        border: Border.all(
-                            color:Colors.blue ,
-                            width: 1.0),
-                        borderRadius: BorderRadius.circular(8.0),
+                    SizedBox(width: 8),
+                    (userAboutMEProvider.isEditSolutionListAdded[documentsss![i]['id']] == true) ? Text(
+                      'Added',
+                      style: GoogleFonts.montserrat(
+                        textStyle:
+                        Theme
+                            .of(context)
+                            .textTheme
+                            .titleSmall,
+                        fontStyle: FontStyle.italic,
+                        color:Colors.green ,
                       ),
-                      child: Center(
-                        // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                        child: Text(
-                          'Add',
-                          style: GoogleFonts.montserrat(
-                            textStyle:
-                            Theme
-                                .of(context)
-                                .textTheme
-                                .titleSmall,
-                            fontWeight: FontWeight.bold,
-                            color:Colors.white ,
+                    ) : InkWell(
+                      onTap: (){
+                        userAboutMEProvider.EditRecommendedSolutionAdd(true,documentsss![i]);
+                        toastification.show(context: context,
+                            title: Text('${documentsss![i]['Name']} added successfully'),
+                            autoCloseDuration: Duration(milliseconds: 2500),
+                            alignment: Alignment.center,
+                            backgroundColor: Colors.green,
+                            foregroundColor: Colors.white,
+                            icon: Icon(Icons.check_circle, color: Colors.white,),
+                            animationDuration: Duration(milliseconds: 1000),
+                            showProgressBar: false
+                        );
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                        width: MediaQuery.of(context).size.width * .05,
+                        // width: MediaQuery.of(context).size.width * .15,
+
+                        // height: 60,
+                        decoration: BoxDecoration(
+                          color: Colors.blue ,
+                          border: Border.all(
+                              color:Colors.blue ,
+                              width: 1.0),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Center(
+                          // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                          child: Text(
+                            'Add',
+                            style: GoogleFonts.montserrat(
+                              textStyle:
+                              Theme
+                                  .of(context)
+                                  .textTheme
+                                  .titleSmall,
+                              fontWeight: FontWeight.bold,
+                              color:Colors.white ,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
+                ),
 
-                ],
-              ),
+
+              ],
             ),
           );
         });
-    // return CheckboxListTile(
-    //
-    //   title: Row(
-    //       mainAxisAlignment: MainAxisAlignment.start,
-    //       crossAxisAlignment: CrossAxisAlignment.start,
-    //       children: [
-    //         SizedBox(width: 10,),
-    //         // Text(thriversDetails.id,style: Theme.of(context).textTheme.bodySmall),
-    //         // Text("${i+1}.",style: Theme.of(context).textTheme.bodySmall),
-    //         Padding(
-    //           padding: const EdgeInsets.all(5.0),
-    //           child: Text("SH0${thriversDetails['id']}",style: Theme.of(context).textTheme.bodySmall),
-    //         ),
-    //         SizedBox(width: 20,),
-    //         Expanded(
-    //           child: Column(
-    //             mainAxisSize: MainAxisSize.min,
-    //             crossAxisAlignment: CrossAxisAlignment.start,
-    //             children: [
-    //               Text(thriversDetails['Name'],style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis),
-    //               Text(thriversDetails['Description'],style: Theme.of(context).textTheme.subtitle1?.copyWith(color: Colors.grey,overflow: TextOverflow.ellipsis),maxLines: 2,),
-    //               SizedBox(height: 10),
-    //
-    //             ],
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //   value: selectedSolutions.contains(thriversDetails),
-    //   onChanged: (bool? value) {
-    //     setState(() {
-    //       if (value != null && value) {
-    //         selectedSolutions.add(SolutionModel(id: "SH0${thriversDetails['id']}", label: thriversDetails['Name'], description: thriversDetails['Description'], notes: "notes", attachments: "attachments", provider: "provider", inPlace: false, priority: "priority"));
-    //
-    //         print("selectedSolutions: ${selectedSolutions[0].id}");
-    //         // print("selectedSolutions: ${selectedSolutions[1].id}");
-    //         // print("selectedSolutions: ${selectedSolutions[2].id}");
-    //       } else {
-    //         selectedSolutions.remove(thriversDetails);
-    //       }
-    //     });
-    //   },
-    // );
+
 
   }
 
@@ -8007,7 +8389,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
     );
   }
 
-  void NewViewDialog(Name, Description, Impact, FinalDescription, keywords, tags, insideId) {
+  void NewViewDialog(Name, Description, Impact, FinalDescription, keywords, tags, insideId,document,isTrueOrFalse,AddButton,){
 
 
     final DateFormat formatter = DateFormat("MMMM d, yyyy 'at' h:mm:ss a 'UTC'Z");
@@ -8033,7 +8415,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                     .width * 0.08, vertical: MediaQuery
                     .of(context)
                     .size
-                    .height * 0.08),
+                    .height * 0.04),
                 icon: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -8049,12 +8431,12 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                   width: double.maxFinite,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Row(
+                    child: Column(
                       children: [
                         Flexible(
-                          flex: 2,
+                          // flex: 2,
                           child: Container(
-                            height: 400,
+                            // height: 400,
                             padding: EdgeInsets.all(20),
                             decoration: BoxDecoration(
                                 border: Border.all(color: Colors.grey),
@@ -8073,12 +8455,62 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                             style: GoogleFonts.montserrat(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 20,
-                                                color: Colors.black)),
+                                                color: Colors.black)
+                                        ),
                                         // IconButton(onPressed: (){
                                         //   Navigator.pop(context);
                                         // },
                                         //     icon:Icon(Icons.close)
                                         // ),
+                                        Consumer<UserAboutMEProvider>(
+                                            builder: (c,userAboutMEProvider, _){
+                                              return
+                                                (isTrueOrFalse[insideId] == true) ? Text(
+                                                  'Added',
+                                                  style: GoogleFonts.montserrat(
+                                                    textStyle:
+                                                    Theme
+                                                        .of(context)
+                                                        .textTheme
+                                                        .titleSmall,
+                                                    fontStyle: FontStyle.italic,
+                                                    color:Colors.green ,
+                                                  ),
+                                                ) : InkWell(
+                                                  onTap: (){
+                                                    AddButton(true, document);
+                                                  },
+                                                  child: Container(
+                                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                    width: MediaQuery.of(context).size.width * .05,
+                                                    // width: MediaQuery.of(context).size.width * .15,
+
+                                                    // height: 60,
+                                                    decoration: BoxDecoration(
+                                                      color:Colors.blue ,
+                                                      border: Border.all(
+                                                          color:Colors.blue ,
+                                                          width: 1.0),
+                                                      borderRadius: BorderRadius.circular(8.0),
+                                                    ),
+                                                    child: Center(
+                                                      // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                      child: Text(
+                                                        'Add',
+                                                        style: GoogleFonts.montserrat(
+                                                          textStyle:
+                                                          Theme
+                                                              .of(context)
+                                                              .textTheme
+                                                              .titleSmall,
+                                                          fontWeight: FontWeight.bold,
+                                                          color:Colors.white ,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                            })
                                       ],
                                     ),
                                     SizedBox(height: 5,),
@@ -8096,6 +8528,22 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                     ),
                                     SizedBox(height: 10,),
 
+                                    (Impact==""|| Impact==null) ? Container() :  Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        // Text("Impact: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                                        Flexible(child: Text(Impact,  style: GoogleFonts.montserrat(
+                                            fontWeight: FontWeight.w500,
+                                            fontStyle: FontStyle.italic,
+                                            fontSize: 20,
+                                            color: Colors.grey),
+                                          maxLines: null,)),
+                                      ],
+                                    ),
+
+                                    SizedBox(height: 10,),
+
                                     (Description==""|| Description==null) ? Container() :  Row(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -8103,27 +8551,14 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                         // Text("Description: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
                                         Flexible(child: Text(Description,  style: GoogleFonts.montserrat(
                                           // fontWeight: FontWeight.w600,
-                                            fontSize: 20,
+                                            fontSize: 16,
                                             color: Colors.black),
                                           maxLines: null,)),
                                       ],
                                     ),
 
                                     SizedBox(height: 10,),
-                                    (Impact==""|| Impact==null) ? Container() :  Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        // Text("Impact: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
-                                        Flexible(child: Text(Impact,  style: GoogleFonts.montserrat(
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 20,
-                                            color: Colors.black),
-                                          maxLines: null,)),
-                                      ],
-                                    ),
 
-                                    SizedBox(height: 10,),
 
 
 
@@ -8147,23 +8582,40 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                     children: addKeywordProvider.keywords.map((item){
                                                       print("item: $item");
                                                       print("addKeywordProvider.keywords: ${addKeywordProvider.keywords}");
-                                                      return Container(
-                                                        height: 50,
-                                                        // width: 200,
-                                                        margin: EdgeInsets.only(bottom: 10),
-                                                        padding: EdgeInsets.all(8),
-                                                        decoration: BoxDecoration(
-                                                            borderRadius: BorderRadius.circular(15),
-                                                            color: Colors.lightGreen
-                                                        ),
-                                                        child: Row(
-                                                          mainAxisSize: MainAxisSize.min,
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Text(item, style: TextStyle(
-                                                                fontWeight: FontWeight.w700
-                                                            ),),
-                                                          ],
+                                                      return InkWell(
+                                                        onTap: (){
+                                                          if(_tabController.index == 2){
+                                                            searchChallengescontroller.text = item;
+                                                            _challengesProvider.loadDataForPageSearchFilter(item);
+                                                            // Navigator.pop(context);
+                                                            showChallengesSelector();
+                                                          }
+                                                          if(_tabController.index == 3){
+                                                            searchbyCatcontroller.text = item;
+                                                            _addKeywordProvider.loadDataForPageSearchFilter(searchbyCatcontroller.text.toString());
+                                                            // Navigator.pop(context);
+                                                            showSolutionSelectors();
+                                                          }
+                                                        },
+                                                        child: Container(
+                                                          height: 50,
+                                                          // width: 200,
+                                                          margin: EdgeInsets.only(bottom: 10),
+                                                          padding: EdgeInsets.all(8),
+                                                          decoration: BoxDecoration(
+                                                              borderRadius: BorderRadius.circular(15),
+                                                              color: Color(0xFF00ACC1)
+                                                          ),
+                                                          child: Row(
+                                                            mainAxisSize: MainAxisSize.min,
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              Text(item, style: TextStyle(
+                                                                  fontWeight: FontWeight.w700,
+                                                                  color: Colors.white
+                                                              ),),
+                                                            ],
+                                                          ),
                                                         ),
                                                       );
                                                     }).toList(),
@@ -8194,22 +8646,40 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                     alignment: WrapAlignment.start,
                                                     runAlignment: WrapAlignment.start,
                                                     children: addKeywordProvider.ProviderEditTags.map((item){
-                                                      return Container(
-                                                        height: 50,
-                                                        // width: 200,
-                                                        padding: EdgeInsets.all(8),
-                                                        decoration: BoxDecoration(
-                                                            borderRadius: BorderRadius.circular(15),
-                                                            color: Colors.blue
-                                                        ),
-                                                        child: Row(
-                                                          mainAxisSize: MainAxisSize.min,
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Text(item, style: TextStyle(
-                                                                fontWeight: FontWeight.w700
-                                                            ),),
-                                                          ],
+                                                      return InkWell(
+                                                        onTap: (){
+                                                          if(_tabController.index == 2){
+                                                            searchChallengescontroller.text = item;
+                                                            _challengesProvider.loadDataForPageSearchFilter(item);
+                                                            // Navigator.pop(context);
+                                                            showChallengesSelector();
+                                                          }
+                                                          if(_tabController.index == 3){
+                                                            searchbyCatcontroller.text = item;
+                                                            _addKeywordProvider.loadDataForPageSearchFilter(searchbyCatcontroller.text.toString());
+                                                            // Navigator.pop(context);
+                                                            showSolutionSelectors();
+                                                          }
+
+                                                        },
+                                                        child: Container(
+                                                          height: 50,
+                                                          // width: 200,
+                                                          padding: EdgeInsets.all(8),
+                                                          decoration: BoxDecoration(
+                                                              borderRadius: BorderRadius.circular(15),
+                                                              color: Colors.teal
+                                                          ),
+                                                          child: Row(
+                                                            mainAxisSize: MainAxisSize.min,
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              Text(item, style: TextStyle(
+                                                                  fontWeight: FontWeight.w700,
+                                                                  color: Colors.white
+                                                              ),),
+                                                            ],
+                                                          ),
                                                         ),
                                                       );
                                                     }).toList(),
@@ -8226,11 +8696,11 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                             ),
                           ),
                         ),
-                        SizedBox(width: 15,),
+                        SizedBox(height: 15,),
                         Flexible(
-                          flex: 1,
+                          // flex: 1,
                           child: Container(
-                            height: 400,
+                            // height: 400,
                             padding: EdgeInsets.all(15),
                             decoration: BoxDecoration(
                                 border: Border.all(color: Colors.grey),
@@ -8313,40 +8783,100 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                                           color: Colors.black)),
                                                                 ),
                                                                 SizedBox(width: 5,),
-                                                                InkWell(
-                                                                  onTap: (){
-                                                                    _userAboutMEProvider.EditRecommendedSolutionAdd(true, i, relatedSolutions![i]);
-                                                                  },
-                                                                  child: Container(
-                                                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                                                    width: MediaQuery.of(context).size.width * .05,
-                                                                    // width: MediaQuery.of(context).size.width * .15,
+                                                                // InkWell(
+                                                                //   onTap: (){
+                                                                //     _userAboutMEProvider.isRecommendedAddedSolutions(true, relatedSolutions![i]);
+                                                                //   },
+                                                                //   child: Container(
+                                                                //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                //     width: MediaQuery.of(context).size.width * .05,
+                                                                //     // width: MediaQuery.of(context).size.width * .15,
+                                                                //
+                                                                //     // height: 60,
+                                                                //     decoration: BoxDecoration(
+                                                                //       color:Colors.blue ,
+                                                                //       border: Border.all(
+                                                                //           color:Colors.blue ,
+                                                                //           width: 1.0),
+                                                                //       borderRadius: BorderRadius.circular(8.0),
+                                                                //     ),
+                                                                //     child: Center(
+                                                                //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                //       child: Text(
+                                                                //         'Add',
+                                                                //         style: GoogleFonts.montserrat(
+                                                                //           textStyle:
+                                                                //           Theme
+                                                                //               .of(context)
+                                                                //               .textTheme
+                                                                //               .titleSmall,
+                                                                //           fontWeight: FontWeight.bold,
+                                                                //           color:Colors.white ,
+                                                                //         ),
+                                                                //       ),
+                                                                //     ),
+                                                                //   ),
+                                                                // ),
+                                                                Consumer<UserAboutMEProvider>(
+                                                                    builder: (c,userAboutMEProvider, _){
+                                                                      return
+                                                                        (userAboutMEProvider.isRecommendedSolutionsCheckedMap[solutionData['id']] == true) ? Text(
+                                                                          'Added',
+                                                                          style: GoogleFonts.montserrat(
+                                                                            textStyle:
+                                                                            Theme
+                                                                                .of(context)
+                                                                                .textTheme
+                                                                                .titleSmall,
+                                                                            fontStyle: FontStyle.italic,
+                                                                            color:Colors.green ,
+                                                                          ),
+                                                                        ) : InkWell(
+                                                                          onTap: (){
+                                                                            // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
+                                                                            userAboutMEProvider.isRecommendedAddedSolutions(true, relatedSolutions![i]);
+                                                                            toastification.show(context: context,
+                                                                                title: Text('${solutionData['Name']} added successfully'),
+                                                                                autoCloseDuration: Duration(milliseconds: 2500),
+                                                                                alignment: Alignment.center,
+                                                                                backgroundColor: Colors.green,
+                                                                                foregroundColor: Colors.white,
+                                                                                icon: Icon(Icons.check_circle, color: Colors.white,),
+                                                                                animationDuration: Duration(milliseconds: 1000),
+                                                                                showProgressBar: false
+                                                                            );
+                                                                          },
+                                                                          child: Container(
+                                                                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                            width: MediaQuery.of(context).size.width * .05,
+                                                                            // width: MediaQuery.of(context).size.width * .15,
 
-                                                                    // height: 60,
-                                                                    decoration: BoxDecoration(
-                                                                      color:Colors.blue ,
-                                                                      border: Border.all(
-                                                                          color:Colors.blue ,
-                                                                          width: 1.0),
-                                                                      borderRadius: BorderRadius.circular(8.0),
-                                                                    ),
-                                                                    child: Center(
-                                                                      // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                                                      child: Text(
-                                                                        'Add',
-                                                                        style: GoogleFonts.montserrat(
-                                                                          textStyle:
-                                                                          Theme
-                                                                              .of(context)
-                                                                              .textTheme
-                                                                              .titleSmall,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          color:Colors.white ,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
+                                                                            // height: 60,
+                                                                            decoration: BoxDecoration(
+                                                                              color:Colors.blue ,
+                                                                              border: Border.all(
+                                                                                  color:Colors.blue ,
+                                                                                  width: 1.0),
+                                                                              borderRadius: BorderRadius.circular(8.0),
+                                                                            ),
+                                                                            child: Center(
+                                                                              // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                              child: Text(
+                                                                                'Add',
+                                                                                style: GoogleFonts.montserrat(
+                                                                                  textStyle:
+                                                                                  Theme
+                                                                                      .of(context)
+                                                                                      .textTheme
+                                                                                      .titleSmall,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                  color:Colors.white ,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        );
+                                                                    })
                                                               ],
                                                             ),
                                                             SizedBox(height: 5,),
@@ -8369,7 +8899,6 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                       },
                                     ),
                                   ),
-
                                   SizedBox(height: 20,),
                                   Container(
                                     height: 170 ,
@@ -8440,40 +8969,102 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                                           fontSize: 18,
                                                                           color: Colors.black)),
                                                                 ),
-                                                                InkWell(
-                                                                  onTap: (){
-                                                                    _userAboutMEProvider.EditRecommendedChallengeAdd(true, i, relatedChallenges![i]);
-                                                                  },
-                                                                  child: Container(
-                                                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                                                    width: MediaQuery.of(context).size.width * .05,
-                                                                    // width: MediaQuery.of(context).size.width * .15,
+                                                                // InkWell(
+                                                                //   onTap: (){
+                                                                //     _userAboutMEProvider.isRecommendedAddedChallenge(true,  relatedChallenges![i]);
+                                                                //   },
+                                                                //   child: Container(
+                                                                //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                //     width: MediaQuery.of(context).size.width * .05,
+                                                                //     // width: MediaQuery.of(context).size.width * .15,
+                                                                //
+                                                                //     // height: 60,
+                                                                //     decoration: BoxDecoration(
+                                                                //       color:Colors.blue ,
+                                                                //       border: Border.all(
+                                                                //           color:Colors.blue ,
+                                                                //           width: 1.0),
+                                                                //       borderRadius: BorderRadius.circular(8.0),
+                                                                //     ),
+                                                                //     child: Center(
+                                                                //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                //       child: Text(
+                                                                //         'Add',
+                                                                //         style: GoogleFonts.montserrat(
+                                                                //           textStyle:
+                                                                //           Theme
+                                                                //               .of(context)
+                                                                //               .textTheme
+                                                                //               .titleSmall,
+                                                                //           fontWeight: FontWeight.bold,
+                                                                //           color:Colors.white ,
+                                                                //         ),
+                                                                //       ),
+                                                                //     ),
+                                                                //   ),
+                                                                // ),
+                                                                Consumer<UserAboutMEProvider>(
+                                                                    builder: (c,userAboutMEProvider, _){
+                                                                      return
+                                                                        (userAboutMEProvider.isEditChallengeListAdded[challengesData['id']] == true) ? Text(
+                                                                          'Added',
+                                                                          style: GoogleFonts.montserrat(
+                                                                            textStyle:
+                                                                            Theme
+                                                                                .of(context)
+                                                                                .textTheme
+                                                                                .titleSmall,
+                                                                            fontStyle: FontStyle.italic,
+                                                                            color:Colors.green ,
+                                                                          ),
+                                                                        ) : InkWell(
+                                                                          onTap: (){
+                                                                            // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
+                                                                            userAboutMEProvider.EditRecommendedChallengeAdd(true, relatedChallenges![i]);
+                                                                            toastification.show(context: context,
+                                                                                title: Text('${challengesData['Label']} added successfully'),
+                                                                                autoCloseDuration: Duration(milliseconds: 2500),
+                                                                                alignment: Alignment.center,
+                                                                                backgroundColor: Colors.green,
+                                                                                foregroundColor: Colors.white,
+                                                                                icon: Icon(Icons.check_circle, color: Colors.white,),
+                                                                                animationDuration: Duration(milliseconds: 1000),
+                                                                                showProgressBar: false
+                                                                            );
 
-                                                                    // height: 60,
-                                                                    decoration: BoxDecoration(
-                                                                      color:Colors.blue ,
-                                                                      border: Border.all(
-                                                                          color:Colors.blue ,
-                                                                          width: 1.0),
-                                                                      borderRadius: BorderRadius.circular(8.0),
-                                                                    ),
-                                                                    child: Center(
-                                                                      // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                                                      child: Text(
-                                                                        'Add',
-                                                                        style: GoogleFonts.montserrat(
-                                                                          textStyle:
-                                                                          Theme
-                                                                              .of(context)
-                                                                              .textTheme
-                                                                              .titleSmall,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          color:Colors.white ,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
+                                                                          },
+                                                                          child: Container(
+                                                                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                            width: MediaQuery.of(context).size.width * .05,
+                                                                            // width: MediaQuery.of(context).size.width * .15,
+
+                                                                            // height: 60,
+                                                                            decoration: BoxDecoration(
+                                                                              color:Colors.blue ,
+                                                                              border: Border.all(
+                                                                                  color:Colors.blue ,
+                                                                                  width: 1.0),
+                                                                              borderRadius: BorderRadius.circular(8.0),
+                                                                            ),
+                                                                            child: Center(
+                                                                              // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                              child: Text(
+                                                                                'Add',
+                                                                                style: GoogleFonts.montserrat(
+                                                                                  textStyle:
+                                                                                  Theme
+                                                                                      .of(context)
+                                                                                      .textTheme
+                                                                                      .titleSmall,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                  color:Colors.white ,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        );
+                                                                    })
+
                                                               ],
                                                             ),
                                                             SizedBox(height: 5,),
@@ -8515,7 +9106,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
     );
   }
 
-  void ViewChallengesDialog(documentReference,Id, Name, Description, newvalues, keywords, createdat,createdby,tags, modifiedBy,modifiedDate,insideId) {
+  void ViewChallengesDialog(documentReference,Id, Name, Description, newvalues, keywords, createdat,createdby,tags, modifiedBy,modifiedDate,insideId,documents,i) {
 
 
     DateTime dateTime = createdat.toDate();
@@ -8525,6 +9116,9 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
 
 
     String formattedDate = formatter.format(dateTime);
+
+    print("ViewChallengesDialog: $insideId");
+    print("ViewChallengesDialog: ${insideId.runtimeType}");
 
 
     List<TextEditingController> textControllers = [];
@@ -8543,7 +9137,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                     .width * 0.08, vertical: MediaQuery
                     .of(context)
                     .size
-                    .height * 0.08),
+                    .height * 0.04),
                 icon: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -8556,555 +9150,735 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                 ),
                 iconPadding: EdgeInsets.only(top: 8, right: 16),
                 content:   SizedBox(
-                  width: double.maxFinite,
-                  child: StatefulBuilder(
-                      builder: (context,innerState) {
-                        return FutureBuilder (
-                            future: fetchDetails(documentReference),
-                            builder: (ctx, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                              if (snapshot.connectionState == ConnectionState.done) {
-                                // If we got an error
-                                if (snapshot.hasError) {
-                                  return Text(
-                                      snapshot.error.toString(),
-                                      style: GoogleFonts.montserrat(
-                                          textStyle:
-                                          Theme.of(context).textTheme.bodyLarge,
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.black)
-                                  );
+                    width: double.maxFinite,
+                    child: Consumer<
+                        UserAboutMEProvider>(
+                        builder: (c, userAboutMEProvider, _) {
+                          return StatefulBuilder(
+                              builder: (context,innerState) {
+                                return FutureBuilder (
+                                    future: fetchDetails(documentReference),
+                                    builder: (ctx, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                                      if (snapshot.connectionState == ConnectionState.done) {
+                                        // If we got an error
+                                        if (snapshot.hasError) {
+                                          return Text(
+                                              snapshot.error.toString(),
+                                              style: GoogleFonts.montserrat(
+                                                  textStyle:
+                                                  Theme.of(context).textTheme.bodyLarge,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.black)
+                                          );
 
-                                  // if we got our data
-                                }
-                                else if (snapshot.hasData) {
-                                  DocumentSnapshot? doc = snapshot.data;
+                                          // if we got our data
+                                        }
+                                        else if (snapshot.hasData) {
+                                          DocumentSnapshot? doc = snapshot.data;
 
-                                  var name = doc?.get("Label");
-                                  var Description = doc?.get("Description");
-                                  var OriginalDescription = doc?.get('Original Description');
-                                  var FinalDescription = doc?.get('Final_description');
-                                  var Impact = doc?.get('Impact');
+                                          var name = userAboutMEProvider.previewname==null ? doc?.get("Label") : userAboutMEProvider.previewname;
+                                          var Description = userAboutMEProvider.previewDescription==null ? doc?.get("Description") : userAboutMEProvider.previewDescription;
+                                          var OriginalDescription = doc?.get('Original Description');
+                                          var FinalDescription = userAboutMEProvider.previewFinalDescription==null ? doc?.get('Final_description') : userAboutMEProvider.previewFinalDescription;
+                                          var Impact = userAboutMEProvider.previewImpact==null ? doc?.get('Impact') : userAboutMEProvider.previewImpact;
 
-                                  var Category = doc?.get("Category");
-                                  var Source = (doc?.get("Source") == "" ||doc?.get("Source") == null )?"MTH RfA email 20240130":doc?.get("Source");
-                                  var Status = (doc?.get("Challenge Status") == "" ||doc?.get("Challenge Status") == null ) ? 'New' : doc?.get("Challenge Status");
+                                          var Category = doc?.get("Category");
+                                          var Source = (doc?.get("Source") == "" ||doc?.get("Source") == null )?"MTH RfA email 20240130":doc?.get("Source");
+                                          var Status = (doc?.get("Challenge Status") == "" ||doc?.get("Challenge Status") == null ) ? 'New' : doc?.get("Challenge Status");
 
-                                  editKeywordssss = doc?.get("Keywords");
-                                  edittags = doc?.get("tags");
+                                          editKeywordssss =userAboutMEProvider.previewKeywordssss.isEmpty ? doc?.get("Keywords") : userAboutMEProvider.previewKeywordssss;
+                                          edittags = userAboutMEProvider.previewtags.isEmpty ? doc?.get("tags") : userAboutMEProvider.previewtags;
 
-                                  _challengesProvider.addkeywordsList(editKeywordssss);
-                                  _challengesProvider.addProviderEditTagsList(edittags);
+                                          _challengesProvider.addkeywordsList(editKeywordssss);
+                                          _challengesProvider.addProviderEditTagsList(edittags);
 
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Flexible(
-                                          flex: 2,
-                                          child: Container(
-                                            height: 400,
-                                            padding: EdgeInsets.all(20),
-                                            decoration: BoxDecoration(
-                                                border: Border.all(color: Colors.grey),
-                                                borderRadius: BorderRadius.circular(20)
-                                            ),
-                                            child: SingleChildScrollView(
-                                              child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: <Widget>[
-                                                    // (Source==""|| Source==null) ? Container() :  Row(
-                                                    //   mainAxisAlignment: MainAxisAlignment.start,
-                                                    //   crossAxisAlignment: CrossAxisAlignment.start,
-                                                    //   children: [
-                                                    //     Text("Source: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
-                                                    //     Text(Source, style: TextStyle(fontSize: 20,),),
-                                                    //
-                                                    //   ],
-                                                    // ),
-                                                    // SizedBox(height: 10,),
-                                                    // (Status==""|| Status==null) ? Container() :  Row(
-                                                    //   mainAxisAlignment: MainAxisAlignment.start,
-                                                    //   crossAxisAlignment: CrossAxisAlignment.start,
-                                                    //   children: [
-                                                    //     Text("Challenge Status: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
-                                                    //     Text(Status, style: TextStyle(fontSize: 20, ),),
-                                                    //
-                                                    //   ],
-                                                    // ),
-                                                    // SizedBox(height: 10,),
-                                                    (name==""|| name==null) ? Container() : Row(
-                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                      children: [
-                                                        // Text("Label: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
-                                                        Text(name,
-                                                            style: GoogleFonts.montserrat(
-                                                                fontWeight: FontWeight.bold,
-                                                                fontSize: 20,
-                                                                color: Colors.black)),
-                                                        // IconButton(onPressed: (){
-                                                        //   Navigator.pop(context);
-                                                        // },
-                                                        //     icon:Icon(Icons.close)
-                                                        // ),
-                                                      ],
+                                          return Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                Flexible(
+                                                  child: Container(
+                                                    // height: 400,
+                                                    padding: EdgeInsets.all(20),
+                                                    decoration: BoxDecoration(
+                                                        border: Border.all(color: Colors.grey),
+                                                        borderRadius: BorderRadius.circular(20)
                                                     ),
-                                                    SizedBox(height: 5,),
-                                                    (FinalDescription==""|| FinalDescription==null) ? Container() :  Row(
-                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        // Text("Description: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
-                                                        Flexible(child: Text(FinalDescription,  style: GoogleFonts.montserrat(
-                                                            fontWeight: FontWeight.w500,
-                                                            fontSize: 20,
-                                                            color: Colors.black),
-                                                          maxLines: null,)),
-                                                      ],
-                                                    ),
-                                                    SizedBox(height: 10,),
-
-                                                    (Description==""|| Description==null) ? Container() :  Row(
-                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        // Text("Description: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
-                                                        Flexible(child: Text(Description,  style: GoogleFonts.montserrat(
-                                                          // fontWeight: FontWeight.w600,
-                                                            fontSize: 20,
-                                                            color: Colors.black),
-                                                          maxLines: null,)),
-                                                      ],
-                                                    ),
-
-                                                    SizedBox(height: 10,),
-                                                    (Impact==""|| Impact==null) ? Container() :  Row(
-                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        // Text("Impact: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
-                                                        Flexible(child: Text(Impact,  style: GoogleFonts.montserrat(
-                                                            fontWeight: FontWeight.w700,
-                                                            fontSize: 20,
-                                                            color: Colors.black),
-                                                          maxLines: null,)),
-                                                      ],
-                                                    ),
-
-                                                    SizedBox(height: 10,),
-
-
-
-                                                    (_challengesProvider.keywords==""|| _challengesProvider.keywords==null||_challengesProvider.keywords.isEmpty) ? Container() :
-                                                    Row(
-                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        // Text("Category: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
-                                                        Flexible(
-                                                          child: Consumer<ChallengesProvider>(
-                                                              builder: (c,addKeywordProvider, _){
-                                                                return Align(
-                                                                  alignment: Alignment.centerLeft,
-                                                                  child: Wrap(
-                                                                    spacing: 10,
-                                                                    runSpacing: 10,
-                                                                    crossAxisAlignment: WrapCrossAlignment.start,
-                                                                    alignment: WrapAlignment.start,
-                                                                    runAlignment: WrapAlignment.start,
-                                                                    children: addKeywordProvider.keywords.map((item){
-                                                                      print("item: $item");
-                                                                      print("addKeywordProvider.keywords: ${addKeywordProvider.keywords}");
-                                                                      return InkWell(
-                                                                        onTap: (){
-                                                                          searchChallengescontroller.text = item;
-                                                                          _challengesProvider.loadDataForPageSearchFilter(item);
-                                                                          Navigator.pop(context);
-                                                                        },
-                                                                        child: Container(
-                                                                          height: 50,
-                                                                          // width: 200,
-                                                                          margin: EdgeInsets.only(bottom: 10),
-                                                                          padding: EdgeInsets.all(8),
-                                                                          decoration: BoxDecoration(
-                                                                              borderRadius: BorderRadius.circular(15),
-                                                                              color: Colors.lightGreen
-                                                                          ),
-                                                                          child: Row(
-                                                                            mainAxisSize: MainAxisSize.min,
-                                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                            children: [
-                                                                              Text(item, style: TextStyle(
-                                                                                  fontWeight: FontWeight.w700
-                                                                              ),),
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                      );
-                                                                    }).toList(),
-                                                                  ),
-                                                                );
-                                                              }),
-                                                        ),
-                                                      ],
-                                                    ),
-
-                                                    SizedBox(height: 10),
-
-                                                    (_challengesProvider.ProviderEditTags==""|| _challengesProvider.ProviderEditTags==null||_challengesProvider.ProviderEditTags.isEmpty) ? Container() :  Row(
-                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        // Text("Tags: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
-
-                                                        Flexible(
-                                                          child: Consumer<ChallengesProvider>(
-                                                              builder: (c,addKeywordProvider, _){
-                                                                return Align(
-                                                                  alignment: Alignment.centerLeft,
-                                                                  child: Wrap(
-                                                                    spacing: 10,
-                                                                    runSpacing: 10,
-                                                                    crossAxisAlignment: WrapCrossAlignment.start,
-                                                                    alignment: WrapAlignment.start,
-                                                                    runAlignment: WrapAlignment.start,
-                                                                    children: addKeywordProvider.ProviderEditTags.map((item){
-                                                                      return InkWell(
-                                                                        onTap: (){
-                                                                          searchChallengescontroller.text = item;
-                                                                          _challengesProvider.loadDataForPageSearchFilter(item);
-                                                                          Navigator.pop(context);
-                                                                        },
-                                                                        child: Container(
-                                                                          height: 50,
-                                                                          // width: 200,
-                                                                          padding: EdgeInsets.all(8),
-                                                                          decoration: BoxDecoration(
-                                                                              borderRadius: BorderRadius.circular(15),
-                                                                              color: Colors.blue
-                                                                          ),
-                                                                          child: Row(
-                                                                            mainAxisSize: MainAxisSize.min,
-                                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                            children: [
-                                                                              Text(item, style: TextStyle(
-                                                                                  fontWeight: FontWeight.w700
-                                                                              ),),
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                      );
-                                                                    }).toList(),
-                                                                  ),
-                                                                );
-
-                                                              }),
-                                                        ),
-                                                      ],
-                                                    ),
-
-                                                  ]
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(width: 15,),
-                                        Flexible(
-                                          flex: 1,
-                                          child: Container(
-                                            height: 400,
-                                            padding: EdgeInsets.all(15),
-                                            decoration: BoxDecoration(
-                                                border: Border.all(color: Colors.grey),
-                                                borderRadius: BorderRadius.circular(20)
-                                            ),
-                                            child: SingleChildScrollView(
-                                              child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  Container(
-                                                    height: 170 ,
-                                                    child: FutureBuilder(
-                                                      future: getRelatedSolutions(tags, keywords),
-                                                      builder: (context, snapshot) {
-                                                        if (snapshot.connectionState == ConnectionState.waiting) {
-                                                          return Container(
-                                                              width: 330,
-                                                              child: Container(
-                                                                  height: 20, // Adjust the height as needed
-                                                                  width: 20,
-                                                                  child: Center(
-                                                                      child: CircularProgressIndicator()
-                                                                  )
-                                                              )
-                                                          ); // Display a loading indicator while fetching data
-                                                        } else if (snapshot.hasError) {
-                                                          return Text('Error: ${snapshot.error}');
-                                                        } else {
-                                                          // List<DocumentSnapshot<Object?>>? relatedSolutions = snapshot.data;
-                                                          List<DocumentSnapshot<Map<String, dynamic>>>? relatedSolutions = snapshot.data?.cast<DocumentSnapshot<Map<String, dynamic>>>();
-
-                                                          // print("relatedSolutions: $relatedSolutions");
-
-                                                          return Column(
-                                                            mainAxisAlignment: MainAxisAlignment.start,
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              Padding(
-                                                                padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-                                                                child: Text("Related Solutions (${relatedSolutions?.length})",
-                                                                    style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                                    child: SingleChildScrollView(
+                                                      child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          children: <Widget>[
+                                                            (name==""|| name==null) ? Container() : Row(
+                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                              children: [
+                                                                Text(name,
+                                                                    style: GoogleFonts.montserrat(
+                                                                        fontWeight: FontWeight.bold,
                                                                         fontSize: 20,
                                                                         color: Colors.black)
                                                                 ),
-                                                              ),
-                                                              Expanded(
-                                                                child: ListView.builder(
-                                                                  scrollDirection: Axis.horizontal,
-                                                                  shrinkWrap: true,
-                                                                  itemCount: relatedSolutions?.length,
-                                                                  itemBuilder: (c, i) {
-                                                                    // relatedSolutionlength = relatedSolutions?.length;
-                                                                    // print("relatedSolutionlength: $relatedSolutionlength");
-                                                                    var solutionData = relatedSolutions?[i].data() as Map<String, dynamic>;
-                                                                    print("solutionData: ${solutionData}");
-                                                                    return Container(
-                                                                      margin: EdgeInsets.symmetric(horizontal: 15),
-                                                                      padding: EdgeInsets.all(12),
-                                                                      width: 330,
-                                                                      decoration: BoxDecoration(
-                                                                        border: Border.all(color: Colors.black),
-                                                                        borderRadius: BorderRadius.circular(20),
-                                                                      ),
-                                                                      child: SingleChildScrollView(
-                                                                        child: Column(
-                                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                          children: [
-                                                                            Row(
-                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                                              children: [
-                                                                                Flexible(
-                                                                                  child: Text("${solutionData['Name']}",
-                                                                                      maxLines: null,
-                                                                                      style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                                                                                          fontSize: 18,
-                                                                                          color: Colors.black)),
-                                                                                ),
-                                                                                SizedBox(width: 5,),
-                                                                                InkWell(
-                                                                                  onTap: (){
-                                                                                    _userAboutMEProvider.EditRecommendedSolutionAdd(true, i, relatedSolutions![i]);
-                                                                                  },
-                                                                                  child: Container(
-                                                                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                                                                    width: MediaQuery.of(context).size.width * .05,
-                                                                                    // width: MediaQuery.of(context).size.width * .15,
+                                                                Consumer<UserAboutMEProvider>(
+                                                                    builder: (c,userAboutMEProvider, _){
+                                                                      return
+                                                                        (userAboutMEProvider.isEditChallengeListAdded[insideId] == true) ? Text(
+                                                                          'Added',
+                                                                          style: GoogleFonts.montserrat(
+                                                                            textStyle:
+                                                                            Theme
+                                                                                .of(context)
+                                                                                .textTheme
+                                                                                .titleSmall,
+                                                                            fontStyle: FontStyle.italic,
+                                                                            color:Colors.green ,
+                                                                          ),
+                                                                        ) : InkWell(
+                                                                          onTap: (){
+                                                                            userAboutMEProvider.EditRecommendedChallengeAdd(true, documents);
+                                                                            toastification.show(context: context,
+                                                                                title: Text('${name} added successfully'),
+                                                                                autoCloseDuration: Duration(milliseconds: 2500),
+                                                                                alignment: Alignment.center,
+                                                                                backgroundColor: Colors.green,
+                                                                                foregroundColor: Colors.white,
+                                                                                icon: Icon(Icons.check_circle, color: Colors.white,),
+                                                                                animationDuration: Duration(milliseconds: 1000),
+                                                                                showProgressBar: false
+                                                                            );
+                                                                          },
+                                                                          child: Container(
+                                                                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                            width: MediaQuery.of(context).size.width * .05,
+                                                                            // width: MediaQuery.of(context).size.width * .15,
 
-                                                                                    // height: 60,
-                                                                                    decoration: BoxDecoration(
-                                                                                      color: Colors.blue ,
-                                                                                      border: Border.all(
-                                                                                          color:Colors.blue ,
-                                                                                          width: 1.0),
-                                                                                      borderRadius: BorderRadius.circular(8.0),
-                                                                                    ),
-                                                                                    child: Center(
-                                                                                      // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                                                                      child: Text(
-                                                                                        'Add',
-                                                                                        style: GoogleFonts.montserrat(
-                                                                                          textStyle:
-                                                                                          Theme
-                                                                                              .of(context)
-                                                                                              .textTheme
-                                                                                              .titleSmall,
-                                                                                          fontWeight: FontWeight.bold,
-                                                                                          color:Colors.white ,
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
+                                                                            // height: 60,
+                                                                            decoration: BoxDecoration(
+                                                                              color:Colors.blue ,
+                                                                              border: Border.all(
+                                                                                  color:Colors.blue ,
+                                                                                  width: 1.0),
+                                                                              borderRadius: BorderRadius.circular(8.0),
+                                                                            ),
+                                                                            child: Center(
+                                                                              // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                              child: Text(
+                                                                                'Add',
+                                                                                style: GoogleFonts.montserrat(
+                                                                                  textStyle:
+                                                                                  Theme
+                                                                                      .of(context)
+                                                                                      .textTheme
+                                                                                      .titleSmall,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                  color:Colors.white ,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        );
+                                                                    })
+                                                                ,
+                                                              ],
+                                                            ),
+                                                            SizedBox(height: 5,),
+                                                            (FinalDescription==""|| FinalDescription==null) ? Container() :  Row(
+                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                              children: [
+                                                                // Text("Description: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                                                                Flexible(child: Text(FinalDescription,  style: GoogleFonts.montserrat(
+                                                                    fontWeight: FontWeight.w500,
+                                                                    fontSize: 20,
+                                                                    color: Colors.black),
+                                                                  maxLines: null,)),
+                                                              ],
+                                                            ),
+                                                            SizedBox(height: 10,),
+
+                                                            (Impact==""|| Impact==null) ? Container() :  Row(
+                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                              children: [
+                                                                // Text("Impact: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                                                                Flexible(child: Text(Impact,  style: GoogleFonts.montserrat(
+                                                                    fontWeight: FontWeight.w500,
+                                                                    fontSize: 20,
+                                                                    fontStyle: FontStyle.italic,
+                                                                    color: Colors.grey),
+                                                                  maxLines: null,)),
+                                                              ],
+                                                            ),
+
+                                                            SizedBox(height: 10,),
+
+                                                            (Description==""|| Description==null) ? Container() :  Row(
+                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                              children: [
+                                                                // Text("Description: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                                                                Flexible(child: Text(Description,  style: GoogleFonts.montserrat(
+                                                                  // fontWeight: FontWeight.w600,
+                                                                    fontSize: 16,
+                                                                    color: Colors.black),
+                                                                  maxLines: null,)),
+                                                              ],
+                                                            ),
+
+                                                            SizedBox(height: 10,),
+
+
+
+
+                                                            (_challengesProvider.keywords==""|| _challengesProvider.keywords==null||_challengesProvider.keywords.isEmpty) ? Container() :
+                                                            Row(
+                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                              children: [
+                                                                // Text("Category: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                                                                Flexible(
+                                                                  child: Consumer<ChallengesProvider>(
+                                                                      builder: (c,addKeywordProvider, _){
+                                                                        return Align(
+                                                                          alignment: Alignment.centerLeft,
+                                                                          child: Wrap(
+                                                                            spacing: 10,
+                                                                            runSpacing: 10,
+                                                                            crossAxisAlignment: WrapCrossAlignment.start,
+                                                                            alignment: WrapAlignment.start,
+                                                                            runAlignment: WrapAlignment.start,
+                                                                            children: addKeywordProvider.keywords.map((item){
+                                                                              print("item: $item");
+                                                                              print("addKeywordProvider.keywords: ${addKeywordProvider.keywords}");
+                                                                              return InkWell(
+                                                                                onTap: (){
+                                                                                  searchChallengescontroller.text = item;
+                                                                                  _challengesProvider.loadDataForPageSearchFilter(item);
+                                                                                  Navigator.pop(context);
+                                                                                },
+                                                                                child: Container(
+                                                                                  height: 50,
+                                                                                  // width: 200,
+                                                                                  margin: EdgeInsets.only(bottom: 10),
+                                                                                  padding: EdgeInsets.all(8),
+                                                                                  decoration: BoxDecoration(
+                                                                                      borderRadius: BorderRadius.circular(15),
+                                                                                      color: Color(0xFF00ACC1)
+                                                                                  ),
+                                                                                  child: Row(
+                                                                                    mainAxisSize: MainAxisSize.min,
+                                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                    children: [
+                                                                                      Text(item, style: TextStyle(
+                                                                                          fontWeight: FontWeight.w700,
+                                                                                          color: Colors.white
+                                                                                      ),),
+                                                                                    ],
                                                                                   ),
                                                                                 ),
-                                                                              ],
-                                                                            ),
-                                                                            SizedBox(height: 5,),
-                                                                            // Icon(Icons.add, color: Colors.blue, size: 24,),
-                                                                            Text("${solutionData['Final_description']}",
-                                                                                maxLines: 3,
-                                                                                style: GoogleFonts.montserrat(
-                                                                                    fontSize: 15,
-                                                                                    color: Colors.black)),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    );
-                                                                  },
+                                                                              );
+                                                                            }).toList(),
+                                                                          ),
+                                                                        );
+                                                                      }),
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          );
-                                                        }
-                                                      },
-                                                    ),
-                                                  ),
+                                                              ],
+                                                            ),
 
-                                                  SizedBox(height: 20,),
-                                                  Container(
-                                                    height: 170 ,
-                                                    child: FutureBuilder(
-                                                      future: getRelatedChallenges(tags, keywords),
-                                                      builder: (context, snapshot) {
-                                                        if (snapshot.connectionState == ConnectionState.waiting) {
-                                                          return Container(
-                                                              width: 330,
-                                                              child: Container(
-                                                                  height: 20, // Adjust the height as needed
-                                                                  width: 20,
-                                                                  child: Center(
-                                                                      child: CircularProgressIndicator()
-                                                                  )
-                                                              )
-                                                          ); // Display a loading indicator while fetching data
-                                                        } else if (snapshot.hasError) {
-                                                          return Text('Error: ${snapshot.error}');
-                                                        } else {
-                                                          // List<DocumentSnapshot<Object?>>? relatedSolutions = snapshot.data;
-                                                          List<DocumentSnapshot<Map<String, dynamic>>>? relatedChallenges = snapshot.data?.cast<DocumentSnapshot<Map<String, dynamic>>>();
+                                                            SizedBox(height: 10),
 
-                                                          // print("relatedSolutions: $relatedSolutions");
+                                                            (_challengesProvider.ProviderEditTags==""|| _challengesProvider.ProviderEditTags==null||_challengesProvider.ProviderEditTags.isEmpty) ? Container() :  Row(
+                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                              children: [
+                                                                // Text("Tags: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
 
-                                                          return Column(
-                                                            mainAxisAlignment: MainAxisAlignment.start,
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              Padding(
-                                                                padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-                                                                child: Text("Related Challenges (${relatedChallenges?.length})",
-                                                                    style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                                                                        fontSize: 20,
-                                                                        color: Colors.black)
-                                                                ),
-                                                              ),
-                                                              Expanded(
-                                                                child: ListView.builder(
-                                                                  scrollDirection: Axis.horizontal,
-                                                                  shrinkWrap: true,
-                                                                  itemCount: relatedChallenges?.length,
-                                                                  itemBuilder: (c, i) {
-                                                                    // relatedSolutionlength = relatedChallenges?.length;
-                                                                    // print("relatedSolutionlength: $relatedSolutionlength");
-                                                                    var challengesData = relatedChallenges?[i].data() as Map<String, dynamic>;
-                                                                    print("solutionData: ${challengesData}");
-                                                                    return Container(
-                                                                      margin: EdgeInsets.symmetric(horizontal: 15),
-                                                                      padding: EdgeInsets.all(12),
-                                                                      width: 330,
-                                                                      decoration: BoxDecoration(
-                                                                        border: Border.all(color: Colors.black),
-                                                                        borderRadius: BorderRadius.circular(20),
-                                                                      ),
-                                                                      child: SingleChildScrollView(
-                                                                        child: Column(
-                                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                          children: [
-                                                                            Row(
-                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                                              children: [
-                                                                                Flexible(
-                                                                                  child: Text("${challengesData['Label']}",
-                                                                                      style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                                                                                          fontSize: 18,
-                                                                                          color: Colors.black)),
-                                                                                ),
-                                                                                InkWell(
-                                                                                  onTap: (){
-                                                                                    _userAboutMEProvider.EditRecommendedChallengeAdd(true, i, relatedChallenges![i]);
-                                                                                  },
-                                                                                  child: Container(
-                                                                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                                                                    width: MediaQuery.of(context).size.width * .05,
-                                                                                    // width: MediaQuery.of(context).size.width * .15,
-
-                                                                                    // height: 60,
-                                                                                    decoration: BoxDecoration(
-                                                                                      color:Colors.blue ,
-                                                                                      border: Border.all(
-                                                                                          color:Colors.blue ,
-                                                                                          width: 1.0),
-                                                                                      borderRadius: BorderRadius.circular(8.0),
-                                                                                    ),
-                                                                                    child: Center(
-                                                                                      // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                                                                      child: Text(
-                                                                                        'Add',
-                                                                                        style: GoogleFonts.montserrat(
-                                                                                          textStyle:
-                                                                                          Theme
-                                                                                              .of(context)
-                                                                                              .textTheme
-                                                                                              .titleSmall,
-                                                                                          fontWeight: FontWeight.bold,
-                                                                                          color:Colors.white ,
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
+                                                                Flexible(
+                                                                  child: Consumer<ChallengesProvider>(
+                                                                      builder: (c,addKeywordProvider, _){
+                                                                        return Align(
+                                                                          alignment: Alignment.centerLeft,
+                                                                          child: Wrap(
+                                                                            spacing: 10,
+                                                                            runSpacing: 10,
+                                                                            crossAxisAlignment: WrapCrossAlignment.start,
+                                                                            alignment: WrapAlignment.start,
+                                                                            runAlignment: WrapAlignment.start,
+                                                                            children: addKeywordProvider.ProviderEditTags.map((item){
+                                                                              return InkWell(
+                                                                                onTap: (){
+                                                                                  searchChallengescontroller.text = item;
+                                                                                  _challengesProvider.loadDataForPageSearchFilter(item);
+                                                                                  Navigator.pop(context);
+                                                                                },
+                                                                                child: Container(
+                                                                                  height: 50,
+                                                                                  // width: 200,
+                                                                                  padding: EdgeInsets.all(8),
+                                                                                  decoration: BoxDecoration(
+                                                                                      borderRadius: BorderRadius.circular(15),
+                                                                                      color: Colors.teal
+                                                                                  ),
+                                                                                  child: Row(
+                                                                                    mainAxisSize: MainAxisSize.min,
+                                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                    children: [
+                                                                                      Text(item, style: TextStyle(
+                                                                                          fontWeight: FontWeight.w700,
+                                                                                          color: Colors.white
+                                                                                      ),),
+                                                                                    ],
                                                                                   ),
                                                                                 ),
-                                                                              ],
-                                                                            ),
-                                                                            SizedBox(height: 5,),
-                                                                            // Text("${challengesData['Label']}",
-                                                                            //     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                                                                            //         fontSize: 18,
-                                                                            //         color: Colors.black)),
-                                                                            Text("${challengesData['Final_description']}",
-                                                                                maxLines: 3,
-                                                                                style: GoogleFonts.montserrat(
-                                                                                    fontSize: 15,
-                                                                                    color: Colors.black)),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    );
-                                                                  },
+                                                                              );
+                                                                            }).toList(),
+                                                                          ),
+                                                                        );
+
+                                                                      }),
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          );
-                                                        }
-                                                      },
+                                                              ],
+                                                            ),
+
+                                                          ]
+                                                      ),
                                                     ),
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                                SizedBox(height: 15,),
+                                                Flexible(
+                                                  child: Container(
+                                                    // height: 400,
+                                                    padding: EdgeInsets.all(15),
+                                                    decoration: BoxDecoration(
+                                                        border: Border.all(color: Colors.grey),
+                                                        borderRadius: BorderRadius.circular(20)
+                                                    ),
+                                                    child: SingleChildScrollView(
+                                                      child: Column(
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        mainAxisSize: MainAxisSize.max,
+                                                        children: [
+                                                          Container(
+                                                            height: 170 ,
+                                                            child: FutureBuilder(
+                                                              future: getRelatedSolutions(tags, keywords),
+                                                              builder: (context, snapshot) {
+                                                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                                                  return Container(
+                                                                      width: MediaQuery.of(context).size.width,
+                                                                      child: Container(
+                                                                          height: 20, // Adjust the height as needed
+                                                                          width: 20,
+                                                                          child: Center(
+                                                                              child: CircularProgressIndicator()
+                                                                          )
+                                                                      )
+                                                                  ); // Display a loading indicator while fetching data
+                                                                } else if (snapshot.hasError) {
+                                                                  return Text('Error: ${snapshot.error}');
+                                                                } else {
+                                                                  // List<DocumentSnapshot<Object?>>? relatedSolutions = snapshot.data;
+                                                                  List<DocumentSnapshot<Map<String, dynamic>>>? relatedSolutions = snapshot.data?.cast<DocumentSnapshot<Map<String, dynamic>>>();
+
+                                                                  // print("relatedSolutions: $relatedSolutions");
+
+                                                                  return Column(
+                                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                    children: [
+                                                                      Padding(
+                                                                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+                                                                        child: Text("Related Solutions (${relatedSolutions?.length})",
+                                                                            style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                                                                fontSize: 20,
+                                                                                color: Colors.black)
+                                                                        ),
+                                                                      ),
+                                                                      Expanded(
+                                                                        child: ListView.builder(
+                                                                          scrollDirection: Axis.horizontal,
+                                                                          shrinkWrap: true,
+                                                                          itemCount: relatedSolutions?.length,
+                                                                          itemBuilder: (c, i) {
+                                                                            // relatedSolutionlength = relatedSolutions?.length;
+                                                                            // print("relatedSolutionlength: $relatedSolutionlength");
+                                                                            var solutionData = relatedSolutions?[i].data() as Map<String, dynamic>;
+                                                                            print("solutionData: ${solutionData}");
+                                                                            return Container(
+                                                                              margin: EdgeInsets.symmetric(horizontal: 15),
+                                                                              padding: EdgeInsets.all(12),
+                                                                              width: 330,
+                                                                              decoration: BoxDecoration(
+                                                                                border: Border.all(color: Colors.black),
+                                                                                borderRadius: BorderRadius.circular(20),
+                                                                              ),
+                                                                              child: SingleChildScrollView(
+                                                                                child: Column(
+                                                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                  children: [
+                                                                                    Row(
+                                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                      children: [
+                                                                                        Flexible(
+                                                                                          child: Text("${solutionData['Name']}",
+                                                                                              maxLines: null,
+                                                                                              style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                                                                                  fontSize: 18,
+                                                                                                  color: Colors.black)),
+                                                                                        ),
+                                                                                        SizedBox(width: 5,),
+                                                                                        // InkWell(
+                                                                                        //   onTap: (){
+                                                                                        //     _userAboutMEProvider.isRecommendedAddedSolutions(true, relatedSolutions![i]);
+                                                                                        //   },
+                                                                                        //   child: Container(
+                                                                                        //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                                        //     width: MediaQuery.of(context).size.width * .05,
+                                                                                        //     // width: MediaQuery.of(context).size.width * .15,
+                                                                                        //
+                                                                                        //     // height: 60,
+                                                                                        //     decoration: BoxDecoration(
+                                                                                        //       color: Colors.blue ,
+                                                                                        //       border: Border.all(
+                                                                                        //           color:Colors.blue ,
+                                                                                        //           width: 1.0),
+                                                                                        //       borderRadius: BorderRadius.circular(8.0),
+                                                                                        //     ),
+                                                                                        //     child: Center(
+                                                                                        //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                                        //       child: Text(
+                                                                                        //         'Add',
+                                                                                        //         style: GoogleFonts.montserrat(
+                                                                                        //           textStyle:
+                                                                                        //           Theme
+                                                                                        //               .of(context)
+                                                                                        //               .textTheme
+                                                                                        //               .titleSmall,
+                                                                                        //           fontWeight: FontWeight.bold,
+                                                                                        //           color:Colors.white ,
+                                                                                        //         ),
+                                                                                        //       ),
+                                                                                        //     ),
+                                                                                        //   ),
+                                                                                        // ),
+                                                                                        Consumer<UserAboutMEProvider>(
+                                                                                            builder: (c,userAboutMEProvider, _){
+                                                                                              return
+                                                                                                (userAboutMEProvider.isEditSolutionListAdded[solutionData['id']] == true) ? Text(
+                                                                                                  'Added',
+                                                                                                  style: GoogleFonts.montserrat(
+                                                                                                    textStyle:
+                                                                                                    Theme
+                                                                                                        .of(context)
+                                                                                                        .textTheme
+                                                                                                        .titleSmall,
+                                                                                                    fontStyle: FontStyle.italic,
+                                                                                                    color:Colors.green ,
+                                                                                                  ),
+                                                                                                ) : InkWell(
+                                                                                                  onTap: (){
+                                                                                                    // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
+                                                                                                    userAboutMEProvider.EditRecommendedSolutionAdd(true, relatedSolutions![i]);
+                                                                                                    toastification.show(context: context,
+                                                                                                        title: Text('${solutionData['Name']} added successfully'),
+                                                                                                        autoCloseDuration: Duration(milliseconds: 2500),
+                                                                                                        alignment: Alignment.center,
+                                                                                                        backgroundColor: Colors.green,
+                                                                                                        foregroundColor: Colors.white,
+                                                                                                        icon: Icon(Icons.check_circle, color: Colors.white,),
+                                                                                                        animationDuration: Duration(milliseconds: 1000),
+                                                                                                        showProgressBar: false
+                                                                                                    );
+
+                                                                                                  },
+                                                                                                  child: Container(
+                                                                                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                                                    width: MediaQuery.of(context).size.width * .05,
+                                                                                                    // width: MediaQuery.of(context).size.width * .15,
+
+                                                                                                    // height: 60,
+                                                                                                    decoration: BoxDecoration(
+                                                                                                      color:Colors.blue ,
+                                                                                                      border: Border.all(
+                                                                                                          color:Colors.blue ,
+                                                                                                          width: 1.0),
+                                                                                                      borderRadius: BorderRadius.circular(8.0),
+                                                                                                    ),
+                                                                                                    child: Center(
+                                                                                                      // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                                                      child: Text(
+                                                                                                        'Add',
+                                                                                                        style: GoogleFonts.montserrat(
+                                                                                                          textStyle:
+                                                                                                          Theme
+                                                                                                              .of(context)
+                                                                                                              .textTheme
+                                                                                                              .titleSmall,
+                                                                                                          fontWeight: FontWeight.bold,
+                                                                                                          color:Colors.white ,
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                );
+                                                                                            })
+                                                                                      ],
+                                                                                    ),
+                                                                                    SizedBox(height: 5,),
+                                                                                    // Icon(Icons.add, color: Colors.blue, size: 24,),
+                                                                                    Text("${solutionData['Final_description']}",
+                                                                                        maxLines: 3,
+                                                                                        style: GoogleFonts.montserrat(
+                                                                                            fontSize: 15,
+                                                                                            color: Colors.black)),
+                                                                                  ],
+                                                                                ),
+                                                                              ),
+                                                                            );
+                                                                          },
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  );
+                                                                }
+                                                              },
+                                                            ),
+                                                          ),
+
+                                                          SizedBox(height: 20,),
+                                                          Container(
+                                                            height: 170 ,
+                                                            child: FutureBuilder(
+                                                              future: getRelatedChallenges(tags, keywords),
+                                                              builder: (context, snapshot) {
+                                                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                                                  return Container(
+                                                                      width: MediaQuery.of(context).size.width,
+                                                                      child: Container(
+                                                                          height: 20, // Adjust the height as needed
+                                                                          width: 20,
+                                                                          child: Center(
+                                                                              child: CircularProgressIndicator()
+                                                                          )
+                                                                      )
+                                                                  ); // Display a loading indicator while fetching data
+                                                                } else if (snapshot.hasError) {
+                                                                  return Text('Error: ${snapshot.error}');
+                                                                } else {
+                                                                  // List<DocumentSnapshot<Object?>>? relatedSolutions = snapshot.data;
+
+                                                                  List<DocumentSnapshot<Map<String, dynamic>>>? relatedChallenges = snapshot.data?.cast<DocumentSnapshot<Map<String, dynamic>>>();
+
+                                                                  // print("relatedSolutions: $relatedSolutions");
+
+                                                                  return Column(
+                                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                    children: [
+                                                                      Padding(
+                                                                        padding: const EdgeInsets.symmetric(
+                                                                            horizontal: 15.0, vertical: 8),
+                                                                        child: Text("Related Challenges (${relatedChallenges?.length})",
+                                                                            style: GoogleFonts.montserrat(
+                                                                                fontWeight: FontWeight.bold,
+                                                                                fontSize: 20,
+                                                                                color: Colors.black)
+                                                                        ),
+                                                                      ),
+                                                                      Expanded(
+                                                                        child: ListView.builder(
+                                                                          scrollDirection: Axis.horizontal,
+                                                                          shrinkWrap: true,
+                                                                          itemCount: relatedChallenges?.length,
+                                                                          itemBuilder: (c, i) {
+                                                                            // relatedSolutionlength = relatedChallenges?.length;
+                                                                            // print("relatedSolutionlength: $relatedSolutionlength");
+                                                                            var challengesData = relatedChallenges?[i].data() as Map<String, dynamic>;
+                                                                            print(
+                                                                                "solutionData: ${challengesData}");
+                                                                            return InkWell(
+                                                                              onTap: (){
+                                                                                userAboutMEProvider.updateChallengePreview(
+                                                                                    challengesData['Label'],
+                                                                                    challengesData['Description'],
+                                                                                    challengesData['Final_description'],
+                                                                                    challengesData['Impact'],
+                                                                                    challengesData['Keywords'],
+                                                                                    challengesData['tags']);
+                                                                                // NewViewDialog(challengesData['Label'], challengesData['Description'], challengesData['Impact'],
+                                                                                //     challengesData['Final_description'], challengesData['Keywords'], challengesData['tags'],
+                                                                                //     challengesData['id'], challengesData, userAboutMEProvider.isRecommendedChallengeCheckedMap);
+                                                                              },
+                                                                              child: Container(
+                                                                                margin: EdgeInsets.symmetric(horizontal: 15),
+                                                                                padding: EdgeInsets.all(12),
+                                                                                width: 330,
+                                                                                decoration: BoxDecoration(
+                                                                                  border: Border.all(
+                                                                                      color: Colors.black),
+                                                                                  borderRadius: BorderRadius.circular(20),
+                                                                                ),
+                                                                                child: SingleChildScrollView(
+                                                                                  child: Column(
+                                                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Row(
+                                                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                        children: [
+                                                                                          Flexible(
+                                                                                            child: Text(
+                                                                                                "${challengesData['Label']}",
+                                                                                                style: GoogleFonts.montserrat(
+                                                                                                    fontWeight: FontWeight.bold,
+                                                                                                    fontSize: 18,
+                                                                                                    color: Colors.black)),
+                                                                                          ),
+                                                                                          // InkWell(
+                                                                                          //   onTap: (){
+                                                                                          //     _userAboutMEProvider.isRecommendedAddedChallenge(true,  relatedChallenges![i]);
+                                                                                          //   },
+                                                                                          //   child: Container(
+                                                                                          //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                                          //     width: MediaQuery.of(context).size.width * .05,
+                                                                                          //     // width: MediaQuery.of(context).size.width * .15,
+                                                                                          //
+                                                                                          //     // height: 60,
+                                                                                          //     decoration: BoxDecoration(
+                                                                                          //       color:Colors.blue ,
+                                                                                          //       border: Border.all(
+                                                                                          //           color:Colors.blue ,
+                                                                                          //           width: 1.0),
+                                                                                          //       borderRadius: BorderRadius.circular(8.0),
+                                                                                          //     ),
+                                                                                          //     child: Center(
+                                                                                          //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                                          //       child: Text(
+                                                                                          //         'Add',
+                                                                                          //         style: GoogleFonts.montserrat(
+                                                                                          //           textStyle:
+                                                                                          //           Theme
+                                                                                          //               .of(context)
+                                                                                          //               .textTheme
+                                                                                          //               .titleSmall,
+                                                                                          //           fontWeight: FontWeight.bold,
+                                                                                          //           color:Colors.white ,
+                                                                                          //         ),
+                                                                                          //       ),
+                                                                                          //     ),
+                                                                                          //   ),
+                                                                                          // ),
+
+                                                                                          (userAboutMEProvider.isEditChallengeListAdded[challengesData['id']] == true)
+                                                                                              ? Text('Added',
+                                                                                            style: GoogleFonts.montserrat(
+                                                                                              textStyle: Theme.of(context).textTheme.titleSmall,
+                                                                                              fontStyle: FontStyle.italic,
+                                                                                              color: Colors.green,
+                                                                                            ),
+                                                                                          )
+                                                                                              : InkWell(
+                                                                                            onTap: () {
+                                                                                              // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
+                                                                                              userAboutMEProvider.EditRecommendedChallengeAdd(true, relatedChallenges![i]);
+                                                                                              toastification.show(
+                                                                                                  context: context,
+                                                                                                  title: Text('${challengesData['Label']} added successfully'),
+                                                                                                  autoCloseDuration: Duration(milliseconds: 2500),
+                                                                                                  alignment: Alignment.center,
+                                                                                                  backgroundColor: Colors.green,
+                                                                                                  foregroundColor: Colors.white,
+                                                                                                  icon: Icon(Icons.check_circle,
+                                                                                                    color: Colors.white,),
+                                                                                                  animationDuration: Duration(milliseconds: 1000),
+                                                                                                  showProgressBar: false
+                                                                                              );
+                                                                                            },
+                                                                                            child: Container(
+                                                                                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                                              width: MediaQuery.of(context).size.width * .05,
+                                                                                              // width: MediaQuery.of(context).size.width * .15,
+
+                                                                                              // height: 60,
+                                                                                              decoration: BoxDecoration(
+                                                                                                color: Colors.blue,
+                                                                                                border: Border.all(
+                                                                                                    color: Colors.blue,
+                                                                                                    width: 1.0),
+                                                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                                              ),
+                                                                                              child: Center(
+                                                                                                // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                                                child: Text('Add',
+                                                                                                  style: GoogleFonts.montserrat(
+                                                                                                    textStyle:
+                                                                                                    Theme.of(
+                                                                                                        context).textTheme.titleSmall,
+                                                                                                    fontWeight: FontWeight.bold,
+                                                                                                    color: Colors.white,
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ],
+                                                                                      ),
+                                                                                      SizedBox(
+                                                                                        height: 5,),
+                                                                                      // Text("${challengesData['Label']}",
+                                                                                      //     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                                                                      //         fontSize: 18,
+                                                                                      //         color: Colors.black)),
+                                                                                      Text("${challengesData['Final_description']}",
+                                                                                          maxLines: 3,
+                                                                                          style: GoogleFonts.montserrat(
+                                                                                              fontSize: 15,
+                                                                                              color: Colors.black)
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            );
+                                                                          },
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  );
+
+                                                                }
+                                                              },
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+
+                                              ],
                                             ),
+                                          );
+                                        }
+                                      }
+                                      return Container(
+                                        width: MediaQuery.of(context).size.width * .6,
+                                        height: MediaQuery.of(context).size.height * .5,
+
+                                        child: Center(
+                                          child: CircularProgressIndicator(
+                                            color: primaryColorOfApp,
                                           ),
                                         ),
-
-                                      ],
-                                    ),
-                                  );
-                                }
-                              }
-                              return Container(
-                                width: MediaQuery.of(context).size.width * .6,
-                                height: MediaQuery.of(context).size.height * .5,
-
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    color: primaryColorOfApp,
-                                  ),
-                                ),
-                              );
-                            });
-                      }),
+                                      );
+                                    });
+                              });
+                        })
                 )
             ),
           );
@@ -9113,7 +9887,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
     );
   }
 
-  void ViewSolutionsDialog(documentReference,Id, Name, Description, newvalues, keywords, createdat,createdby,tags, modifiedBy,modifiedDate,insideId) {
+  void ViewSolutionsDialog(documentReference,Id, Name, Description, newvalues, keywords, createdat, createdby,tags, modifiedBy,modifiedDate,insideId,documentsss){
 
 
     DateTime dateTime = createdat.toDate();
@@ -9141,7 +9915,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                     .width * 0.08, vertical: MediaQuery
                     .of(context)
                     .size
-                    .height * 0.08),
+                    .height * 0.04),
                 icon: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -9195,12 +9969,12 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
 
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                                    child: Row(
+                                    child: Column(
                                       children: [
                                         Flexible(
-                                          flex: 2,
+                                          // flex: 2,
                                           child: Container(
-                                            height: 400,
+                                            // height: 400,
                                             padding: EdgeInsets.all(20),
                                             decoration: BoxDecoration(
                                                 border: Border.all(color: Colors.grey),
@@ -9245,6 +10019,69 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                         // },
                                                         //     icon:Icon(Icons.close)
                                                         // ),
+
+
+
+                                                        Consumer<UserAboutMEProvider>(
+                                                            builder: (c,userAboutMEProvider, _){
+                                                              return
+                                                                (userAboutMEProvider.isEditSolutionListAdded[insideId] == true) ? Text(
+                                                                  'Added',
+                                                                  style: GoogleFonts.montserrat(
+                                                                    textStyle:
+                                                                    Theme
+                                                                        .of(context)
+                                                                        .textTheme
+                                                                        .titleSmall,
+                                                                    fontStyle: FontStyle.italic,
+                                                                    color:Colors.green ,
+                                                                  ),
+                                                                ) : InkWell(
+                                                                  onTap: (){
+                                                                    userAboutMEProvider.EditRecommendedSolutionAdd(true,documentsss);
+                                                                    toastification.show(context: context,
+                                                                        title: Text('${name} added successfully'),
+                                                                        autoCloseDuration: Duration(milliseconds: 2500),
+                                                                        alignment: Alignment.center,
+                                                                        backgroundColor: Colors.green,
+                                                                        foregroundColor: Colors.white,
+                                                                        icon: Icon(Icons.check_circle, color: Colors.white,),
+                                                                        animationDuration: Duration(milliseconds: 1000),
+                                                                        showProgressBar: false
+                                                                    );
+                                                                  },
+                                                                  child: Container(
+                                                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                    width: MediaQuery.of(context).size.width * .05,
+                                                                    // width: MediaQuery.of(context).size.width * .15,
+
+                                                                    // height: 60,
+                                                                    decoration: BoxDecoration(
+                                                                      color:Colors.blue ,
+                                                                      border: Border.all(
+                                                                          color:Colors.blue ,
+                                                                          width: 1.0),
+                                                                      borderRadius: BorderRadius.circular(8.0),
+                                                                    ),
+                                                                    child: Center(
+                                                                      // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                      child: Text(
+                                                                        'Add',
+                                                                        style: GoogleFonts.montserrat(
+                                                                          textStyle:
+                                                                          Theme
+                                                                              .of(context)
+                                                                              .textTheme
+                                                                              .titleSmall,
+                                                                          fontWeight: FontWeight.bold,
+                                                                          color:Colors.white ,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                            })
+
                                                       ],
                                                     ),
                                                     SizedBox(height: 5,),
@@ -9263,6 +10100,22 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
 
                                                     SizedBox(height: 5,),
 
+                                                    (Impact==""|| Impact==null) ? Container() :  Row(
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        // Text("Impact: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                                                        Flexible(child: Text(Impact,  style: GoogleFonts.montserrat(
+                                                            fontWeight: FontWeight.w500,
+                                                            fontStyle: FontStyle.italic,
+                                                            fontSize: 20,
+                                                            color: Colors.grey),
+                                                          maxLines: null,)),
+                                                      ],
+                                                    ),
+
+                                                    SizedBox(height: 10,),
+
 
                                                     (Description==""|| Description==null) ? Container() :  Row(
                                                       mainAxisAlignment: MainAxisAlignment.start,
@@ -9271,27 +10124,14 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                         // Text("Description: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
                                                         Flexible(child: Text(Description,  style: GoogleFonts.montserrat(
                                                           // fontWeight: FontWeight.w400,
-                                                            fontSize: 20,
+                                                            fontSize: 16,
                                                             color: Colors.black),
                                                           maxLines: null,)),
                                                       ],
                                                     ),
 
                                                     SizedBox(height: 10,),
-                                                    (Impact==""|| Impact==null) ? Container() :  Row(
-                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        // Text("Impact: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
-                                                        Flexible(child: Text(Impact,  style: GoogleFonts.montserrat(
-                                                            fontWeight: FontWeight.w700,
-                                                            fontSize: 20,
-                                                            color: Colors.black),
-                                                          maxLines: null,)),
-                                                      ],
-                                                    ),
 
-                                                    SizedBox(height: 10,),
 
 
 
@@ -9328,14 +10168,16 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                                           padding: EdgeInsets.all(8),
                                                                           decoration: BoxDecoration(
                                                                               borderRadius: BorderRadius.circular(15),
-                                                                              color: Colors.lightGreen
+                                                                              // color: Colors.lightGreen
+                                                                              color: Color(0xFF00ACC1)
                                                                           ),
                                                                           child: Row(
                                                                             mainAxisSize: MainAxisSize.min,
                                                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                             children: [
                                                                               Text(item, style: TextStyle(
-                                                                                  fontWeight: FontWeight.w700
+                                                                                  fontWeight: FontWeight.w700,
+                                                                                  color: Colors.white
                                                                               ),),
                                                                             ],
                                                                           ),
@@ -9382,14 +10224,15 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                                           padding: EdgeInsets.all(8),
                                                                           decoration: BoxDecoration(
                                                                               borderRadius: BorderRadius.circular(15),
-                                                                              color: Colors.blue
+                                                                              color: Colors.teal
                                                                           ),
                                                                           child: Row(
                                                                             mainAxisSize: MainAxisSize.min,
                                                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                             children: [
                                                                               Text(item, style: TextStyle(
-                                                                                  fontWeight: FontWeight.w700
+                                                                                  fontWeight: FontWeight.w700,
+                                                                                  color: Colors.white
                                                                               ),),
                                                                             ],
                                                                           ),
@@ -9409,11 +10252,11 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                             ),
                                           ),
                                         ),
-                                        SizedBox(width: 15,),
+                                        SizedBox(height: 15,),
                                         Flexible(
-                                          flex: 1,
+                                          // flex: 1,
                                           child: Container(
-                                            height: 400,
+                                            // height: 400,
                                             padding: EdgeInsets.all(15),
                                             decoration: BoxDecoration(
                                                 border: Border.all(color: Colors.grey),
@@ -9432,7 +10275,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                       builder: (context, snapshot) {
                                                         if (snapshot.connectionState == ConnectionState.waiting) {
                                                           return Container(
-                                                              width: 330,
+                                                              width: MediaQuery.of(context).size.width,
                                                               child: Container(
                                                                   height: 20, // Adjust the height as needed
                                                                   width: 20,
@@ -9496,42 +10339,107 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                                                           color: Colors.black)),
                                                                                 ),
                                                                                 SizedBox(width: 5,),
-                                                                                InkWell(
-                                                                                  onTap: (){
-                                                                                    _userAboutMEProvider.EditRecommendedSolutionAdd(true, i, relatedSolutions![i]);
-                                                                                  },
-                                                                                  child: Container(
-                                                                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                                                                    width: MediaQuery.of(context).size.width * .05,
-                                                                                    // width: MediaQuery.of(context).size.width * .15,
 
-                                                                                    // height: 60,
-                                                                                    decoration: BoxDecoration(
-                                                                                      color:Colors.blue ,
-                                                                                      border: Border.all(
-                                                                                          color:Colors.blue ,
-                                                                                          width: 1.0),
-                                                                                      borderRadius: BorderRadius.circular(8.0),
-                                                                                    ),
-                                                                                    child: Center(
-                                                                                      // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                                                                      child: Text(
-                                                                                        'Add',
-                                                                                        style: GoogleFonts.montserrat(
-                                                                                          textStyle:
-                                                                                          Theme
-                                                                                              .of(context)
-                                                                                              .textTheme
-                                                                                              .titleSmall,
-                                                                                          fontWeight: FontWeight.bold,
-                                                                                          color:Colors.white ,
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                  ),
-                                                                                ),
+                                                                                // InkWell(
+                                                                                //   onTap: (){
+                                                                                //     _userAboutMEProvider.isRecommendedAddedSolutions(true,relatedSolutions![i]);
+                                                                                //   },
+                                                                                //   child: Container(
+                                                                                //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                                //     width: MediaQuery.of(context).size.width * .05,
+                                                                                //     // width: MediaQuery.of(context).size.width * .15,
+                                                                                //
+                                                                                //     // height: 60,
+                                                                                //     decoration: BoxDecoration(
+                                                                                //       color:Colors.blue ,
+                                                                                //       border: Border.all(
+                                                                                //           color:Colors.blue ,
+                                                                                //           width: 1.0),
+                                                                                //       borderRadius: BorderRadius.circular(8.0),
+                                                                                //     ),
+                                                                                //     child: Center(
+                                                                                //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                                //       child: Text(
+                                                                                //         'Add',
+                                                                                //         style: GoogleFonts.montserrat(
+                                                                                //           textStyle:
+                                                                                //           Theme
+                                                                                //               .of(context)
+                                                                                //               .textTheme
+                                                                                //               .titleSmall,
+                                                                                //           fontWeight: FontWeight.bold,
+                                                                                //           color:Colors.white ,
+                                                                                //         ),
+                                                                                //       ),
+                                                                                //     ),
+                                                                                //   ),
+                                                                                // ),
+
+                                                                                Consumer<UserAboutMEProvider>(
+                                                                                    builder: (c,userAboutMEProvider, _){
+                                                                                      return
+                                                                                        (userAboutMEProvider.isEditSolutionListAdded[solutionData['id']] == true) ? Text(
+                                                                                          'Added',
+                                                                                          style: GoogleFonts.montserrat(
+                                                                                            textStyle:
+                                                                                            Theme
+                                                                                                .of(context)
+                                                                                                .textTheme
+                                                                                                .titleSmall,
+                                                                                            fontStyle: FontStyle.italic,
+                                                                                            color:Colors.green ,
+                                                                                          ),
+                                                                                        ) : InkWell(
+                                                                                          onTap: (){
+                                                                                            // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
+                                                                                            userAboutMEProvider.EditRecommendedSolutionAdd(true, relatedSolutions![i]);
+                                                                                            toastification.show(context: context,
+                                                                                                title: Text('${solutionData['Name']} added successfully'),
+                                                                                                autoCloseDuration: Duration(milliseconds: 2500),
+                                                                                                alignment: Alignment.center,
+                                                                                                backgroundColor: Colors.green,
+                                                                                                foregroundColor: Colors.white,
+                                                                                                icon: Icon(Icons.check_circle, color: Colors.white,),
+                                                                                                animationDuration: Duration(milliseconds: 1000),
+                                                                                                showProgressBar: false
+                                                                                            );
+
+                                                                                          },
+                                                                                          child: Container(
+                                                                                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                                            width: MediaQuery.of(context).size.width * .05,
+                                                                                            // width: MediaQuery.of(context).size.width * .15,
+
+                                                                                            // height: 60,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color:Colors.blue ,
+                                                                                              border: Border.all(
+                                                                                                  color:Colors.blue ,
+                                                                                                  width: 1.0),
+                                                                                              borderRadius: BorderRadius.circular(8.0),
+                                                                                            ),
+                                                                                            child: Center(
+                                                                                              // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                                              child: Text(
+                                                                                                'Add',
+                                                                                                style: GoogleFonts.montserrat(
+                                                                                                  textStyle:
+                                                                                                  Theme
+                                                                                                      .of(context)
+                                                                                                      .textTheme
+                                                                                                      .titleSmall,
+                                                                                                  fontWeight: FontWeight.bold,
+                                                                                                  color:Colors.white ,
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                        );
+                                                                                    })
+
                                                                               ],
                                                                             ),
+
                                                                             SizedBox(height: 5,),
                                                                             // Icon(Icons.add, color: Colors.blue, size: 24,),
                                                                             Text("${solutionData['Final_description']}",
@@ -9552,7 +10460,6 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                       },
                                                     ),
                                                   ),
-
                                                   SizedBox(height: 20,),
                                                   Container(
                                                     height: 170 ,
@@ -9561,7 +10468,8 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                       builder: (context, snapshot) {
                                                         if (snapshot.connectionState == ConnectionState.waiting) {
                                                           return Container(
-                                                              width: 330,
+                                                              width: MediaQuery.of(context).size.width,
+                                                              // width: 330,
                                                               child: Container(
                                                                   height: 20, // Adjust the height as needed
                                                                   width: 20,
@@ -9623,40 +10531,103 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                                                           fontSize: 18,
                                                                                           color: Colors.black)),
                                                                                 ),
-                                                                                InkWell(
-                                                                                  onTap: (){
-                                                                                    _userAboutMEProvider.EditRecommendedChallengeAdd(true, i, relatedChallenges![i]);
-                                                                                  },
-                                                                                  child: Container(
-                                                                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                                                                    width: MediaQuery.of(context).size.width * .05,
-                                                                                    // width: MediaQuery.of(context).size.width * .15,
+                                                                                // InkWell(
+                                                                                //   onTap: (){
+                                                                                //     _userAboutMEProvider.isRecommendedAddedChallenge(true, relatedChallenges![i]);
+                                                                                //   },
+                                                                                //   child: Container(
+                                                                                //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                                //     width: MediaQuery.of(context).size.width * .05,
+                                                                                //     // width: MediaQuery.of(context).size.width * .15,
+                                                                                //
+                                                                                //     // height: 60,
+                                                                                //     decoration: BoxDecoration(
+                                                                                //       color:Colors.blue ,
+                                                                                //       border: Border.all(
+                                                                                //           color:Colors.blue ,
+                                                                                //           width: 1.0),
+                                                                                //       borderRadius: BorderRadius.circular(8.0),
+                                                                                //     ),
+                                                                                //     child: Center(
+                                                                                //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                                //       child: Text(
+                                                                                //         'Add',
+                                                                                //         style: GoogleFonts.montserrat(
+                                                                                //           textStyle:
+                                                                                //           Theme
+                                                                                //               .of(context)
+                                                                                //               .textTheme
+                                                                                //               .titleSmall,
+                                                                                //           fontWeight: FontWeight.bold,
+                                                                                //           color:Colors.white ,
+                                                                                //         ),
+                                                                                //       ),
+                                                                                //     ),
+                                                                                //   ),
+                                                                                // ),
 
-                                                                                    // height: 60,
-                                                                                    decoration: BoxDecoration(
-                                                                                      color:Colors.blue ,
-                                                                                      border: Border.all(
-                                                                                          color:Colors.blue ,
-                                                                                          width: 1.0),
-                                                                                      borderRadius: BorderRadius.circular(8.0),
-                                                                                    ),
-                                                                                    child: Center(
-                                                                                      // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                                                                      child: Text(
-                                                                                        'Add',
-                                                                                        style: GoogleFonts.montserrat(
-                                                                                          textStyle:
-                                                                                          Theme
-                                                                                              .of(context)
-                                                                                              .textTheme
-                                                                                              .titleSmall,
-                                                                                          fontWeight: FontWeight.bold,
-                                                                                          color:Colors.white ,
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                  ),
-                                                                                ),
+                                                                                Consumer<UserAboutMEProvider>(
+                                                                                    builder: (c,userAboutMEProvider, _){
+                                                                                      return
+                                                                                        (userAboutMEProvider.isEditChallengeListAdded[challengesData['id']] == true) ? Text(
+                                                                                          'Added',
+                                                                                          style: GoogleFonts.montserrat(
+                                                                                            textStyle:
+                                                                                            Theme
+                                                                                                .of(context)
+                                                                                                .textTheme
+                                                                                                .titleSmall,
+                                                                                            fontStyle: FontStyle.italic,
+                                                                                            color:Colors.green ,
+                                                                                          ),
+                                                                                        ) : InkWell(
+                                                                                          onTap: (){
+                                                                                            // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
+                                                                                            userAboutMEProvider.EditRecommendedChallengeAdd(true, relatedChallenges![i]);
+                                                                                            toastification.show(context: context,
+                                                                                                title: Text('${challengesData['Label']} added successfully'),
+                                                                                                autoCloseDuration: Duration(milliseconds: 2500),
+                                                                                                alignment: Alignment.center,
+                                                                                                backgroundColor: Colors.green,
+                                                                                                foregroundColor: Colors.white,
+                                                                                                icon: Icon(Icons.check_circle, color: Colors.white,),
+                                                                                                animationDuration: Duration(milliseconds: 1000),
+                                                                                                showProgressBar: false
+                                                                                            );
+
+                                                                                          },
+                                                                                          child: Container(
+                                                                                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                                            width: MediaQuery.of(context).size.width * .05,
+                                                                                            // width: MediaQuery.of(context).size.width * .15,
+
+                                                                                            // height: 60,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color:Colors.blue ,
+                                                                                              border: Border.all(
+                                                                                                  color:Colors.blue ,
+                                                                                                  width: 1.0),
+                                                                                              borderRadius: BorderRadius.circular(8.0),
+                                                                                            ),
+                                                                                            child: Center(
+                                                                                              // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                                              child: Text(
+                                                                                                'Add',
+                                                                                                style: GoogleFonts.montserrat(
+                                                                                                  textStyle:
+                                                                                                  Theme
+                                                                                                      .of(context)
+                                                                                                      .textTheme
+                                                                                                      .titleSmall,
+                                                                                                  fontWeight: FontWeight.bold,
+                                                                                                  color:Colors.white ,
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                        );
+                                                                                    })
+
                                                                               ],
                                                                             ),
                                                                             SizedBox(height: 5,),

@@ -1320,7 +1320,7 @@ class EditAboutMe{
 
                       InkWell(
                         onTap: (){
-                          userAboutMEProvider.EditRecommendedChallengeAdd(true, i, documentsss![i]);
+                          userAboutMEProvider.EditRecommendedChallengeAdd(true, documentsss![i]);
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
@@ -1509,7 +1509,7 @@ class EditAboutMe{
                       // ),
                       InkWell(
                         onTap: (){
-                          userAboutMEProvider.EditRecommendedSolutionAdd(true, i, documentsss![i]);
+                          userAboutMEProvider.EditRecommendedSolutionAdd(true,  documentsss![i]);
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),

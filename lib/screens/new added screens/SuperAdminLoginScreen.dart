@@ -34,7 +34,7 @@ class _SuperAdminLoginScreenState extends State<SuperAdminLoginScreen> {
       appBar: AppBar(
         backgroundColor: Colors.blue,
 
-        leading: null,
+        leading: Container(),
 
         title: Center(
           child: Text("SOLUTIONS", style: GoogleFonts.montserrat(
@@ -55,7 +55,6 @@ class _SuperAdminLoginScreenState extends State<SuperAdminLoginScreen> {
         child: Center(
           child: Container(
             width: 400,
-
             height: 400,
             child: Card(
               color: Colors.blue,
@@ -163,7 +162,10 @@ class _SuperAdminLoginScreenState extends State<SuperAdminLoginScreen> {
 
                             await ApiRepository().saveLoginState(userNameTextEditingController.text);
 
-                            context.go('/admin', extra: userNameTextEditingController.text.toString());
+                            // context.go('/admin', extra: userNameTextEditingController.text.toString());
+                            context.go('/', extra: userNameTextEditingController.text.toString());
+
+                            // context.pushReplacementNamed('/admin', extra: userNameTextEditingController.text.toString());
 
 
                             // Navigator.push(

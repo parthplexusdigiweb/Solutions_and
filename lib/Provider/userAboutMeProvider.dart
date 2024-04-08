@@ -610,7 +610,7 @@ class UserAboutMEProvider with ChangeNotifier{
 
   }
 
-  void EditRecommendedChallengeAdd(bool value, int index, DocumentSnapshot<Object?> ChallengesDetails) {
+  void EditRecommendedChallengeAdd(bool value, DocumentSnapshot<Object?> ChallengesDetails) {
     if (isEditChallengeListAdded[ChallengesDetails['id']] != value) {
       // Checkbox is checked, add to the list
       editchallengess.add(ChallengesModel(
@@ -645,7 +645,7 @@ class UserAboutMEProvider with ChangeNotifier{
 
   }
 
-  void EditRecommendedSolutionAdd(bool value, int index, DocumentSnapshot<Object?> SolutionDetails) {
+  void EditRecommendedSolutionAdd(bool value, DocumentSnapshot<Object?> SolutionDetails) {
     if (isEditSolutionListAdded[SolutionDetails['id']] != value) {
       // Checkbox is checked, add to the list
       editsolutionss.add(SolutionModel(
@@ -677,9 +677,6 @@ class UserAboutMEProvider with ChangeNotifier{
     notifyListeners();
 
   }
-
-
-
 
   void manuallyAddChallenge(ChallengesDetails){
 

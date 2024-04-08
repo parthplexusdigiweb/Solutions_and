@@ -69,7 +69,8 @@ Future<Widget> _buildAdminScreen(BuildContext context, GoRouterState state) asyn
   var username = await ApiRepository().getSavedUsername(); // Implement getSavedUsername() to retrieve the username if logged in
   if (loggedIn) {
     return NewHomeScreenTabs(AdminName: username);
-  } else {
+  }
+  else {
     return SuperAdminLoginScreen();
   }
 }
@@ -79,12 +80,55 @@ final GoRouter _router = GoRouter(
   routes: <RouteBase>[
     GoRoute(
       path: '/',
+      // builder: (BuildContext context, GoRouterState state) {
+      //   // return  NewHomeScreenTabs();
+      //   // return  LandingScreen();
+      //   // return  ThriverLandingScreen();
+      //   return  SuperAdminLoginScreen();
+      //   // return  socketConnection();
+      // },
+      ///
+      // builder: (BuildContext context, GoRouterState state) {
+      //   return FutureBuilder<bool>(
+      //     future: ApiRepository().isLoggedIn(),
+      //     builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+      //       if (snapshot.connectionState == ConnectionState.waiting) {
+      //         // Loading state
+      //         return CircularProgressIndicator();
+      //       } else {
+      //         // Check if user is logged in
+      //         if (snapshot.hasData && snapshot.data!) {
+      //           // User is logged in, navigate to the dashboard
+      //           return FutureBuilder<Widget>(
+      //             future: _buildAdminScreen(context, state),
+      //             builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+      //               if (snapshot.connectionState == ConnectionState.waiting) {
+      //                 return CircularProgressIndicator();
+      //               } else {
+      //                 return snapshot.data ?? Container(); // Return an empty container if snapshot.data is null
+      //               }
+      //             },
+      //           );
+      //         } else {
+      //           // User is not logged in, show the login page
+      //           return SuperAdminLoginScreen();
+      //         }
+      //       }
+      //     },
+      //   );
+      // },
       builder: (BuildContext context, GoRouterState state) {
-        // return  NewHomeScreenTabs();
-        // return  LandingScreen();
-        // return  ThriverLandingScreen();
-        return  SuperAdminLoginScreen();
-        // return  socketConnection();
+        return FutureBuilder<Widget>(
+          future: _buildAdminScreen(context, state),
+          builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            } else {
+              return snapshot.data ??
+                  Container(); // Return an empty container if snapshot.data is null
+            }
+          },
+        );
       },
       routes: <RouteBase>[
         GoRoute(
@@ -102,6 +146,7 @@ final GoRouter _router = GoRouter(
           },
         ),
 
+        ///admin
         // GoRoute(
         //   path: 'admin',
         //   builder: (BuildContext context, GoRouterState state) {
@@ -112,22 +157,25 @@ final GoRouter _router = GoRouter(
         //     // return  HomeScreenTabs();
         //     // return  NewHomeScreenTabs();
         //   },
-        //
         // ),
 
-        GoRoute(
-          path: 'admin',
-          builder: (BuildContext context, GoRouterState state) => FutureBuilder<Widget>(
-            future: _buildAdminScreen(context, state),
-            builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              } else {
-                return snapshot.data ?? Container(); // Return an empty container if snapshot.data is null
-              }
-            },
-          ),
-        ),
+        // GoRoute(
+        //   path: 'admin',
+        //   builder: (BuildContext context, GoRouterState state){
+        //     return FutureBuilder<Widget>(
+        //       future: _buildAdminScreen(context, state),
+        //       builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+        //         if (snapshot.connectionState == ConnectionState.waiting) {
+        //           return CircularProgressIndicator();
+        //         } else {
+        //           return snapshot.data ??
+        //               Container(); // Return an empty container if snapshot.data is null
+        //         }
+        //       },
+        //     );
+        //   },
+        // ),
+
         GoRoute(
           path: 'userRegister',
           builder: (BuildContext context, GoRouterState state) {
@@ -135,6 +183,7 @@ final GoRouter _router = GoRouter(
           },
 
         ),
+
         GoRoute(
           path: 'userLogin',
           builder: (BuildContext context, GoRouterState state) {
@@ -142,6 +191,7 @@ final GoRouter _router = GoRouter(
           },
 
         ),
+
         GoRoute(
           path: 'userhome',
           builder: (BuildContext context, GoRouterState state) {
@@ -149,6 +199,7 @@ final GoRouter _router = GoRouter(
           },
 
         ),
+
       ],
     ),
   ],
@@ -176,6 +227,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       //home: LandingScreen(),
+
     );
   }
 }

@@ -82,7 +82,7 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
         backgroundColor: Colors.grey.withOpacity(0.2),
         centerTitle: true,
         // title: Text("THRIVERS", style: GoogleFonts.montserrat(
-        title: Text("SOLUTIONS", style: GoogleFonts.montserrat(
+        title: Text("Solution Inclusion", style: GoogleFonts.montserrat(
             textStyle: Theme.of(context).textTheme.headlineLarge,
             fontWeight: FontWeight.bold,
             color: Colors.black),),
@@ -371,22 +371,22 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text("Let's Create ,",style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        color: primaryColorOfApp,
-                        fontWeight: FontWeight.bold,
-
-                      ),),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.0,bottom: 10),
-                      child: Text("What would you like to create Today",style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.w300
-
-                      ),),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.all(10.0),
+                    //   child: Text("Let's Create ,",style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    //     color: primaryColorOfApp,
+                    //     fontWeight: FontWeight.bold,
+                    //
+                    //   ),),
+                    // ),
+                    // Padding(
+                    //   padding: EdgeInsets.only(left: 10.0,bottom: 10),
+                    //   child: Text("What would you like to create Today",style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    //       color: Colors.grey,
+                    //       fontWeight: FontWeight.w300
+                    //
+                    //   ),),
+                    // ),
                     Column(
                       children: [
                         Row(
@@ -838,8 +838,13 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
                   TextButton(
                     onPressed: () {
                       // Perform logout logic here
-                      ApiRepository().logout();
-                      context.go('/');
+                      setState(() {
+                        ApiRepository().logout();
+                        Navigator.pop(context);
+                        context.go('/');
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SuperAdminLoginScreen()));
+                      });
+
                       // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SuperAdminLoginScreen()));
                     },
                     child: Text('Logout'),
