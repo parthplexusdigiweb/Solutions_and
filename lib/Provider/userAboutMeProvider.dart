@@ -749,7 +749,8 @@ class UserAboutMEProvider with ChangeNotifier{
       HiddenStrengths: ChallengesDetails['Hidden Strengths'],
     ));
 
-    print("ChallengesData:${challengess}");
+    print("ChallengesData:${challengess.first.Keywords}");
+    print("ChallengesData:${challengess.first.tags}");
 
     notifyListeners();
 

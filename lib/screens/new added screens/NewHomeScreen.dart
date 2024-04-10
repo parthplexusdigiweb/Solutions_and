@@ -639,7 +639,7 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
           SideMenuItem(
             priority: 1,
             // title: 'Thriver',
-            title: 'About Me',
+            title: 'My Reports',
             onTap: (page, _) {
               sideMenu.changePage(page);
               Navigator.pop(context);

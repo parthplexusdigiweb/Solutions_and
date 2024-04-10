@@ -1431,7 +1431,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Expanded(
+                                Flexible(
                                   child: Text(
                                     "4. What I find challenging about [My Organisation] and workplace environment that gets in the way of me performing to my best: ",
                                     style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,),
@@ -2724,7 +2724,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 5),
-                          child: Text("1. Personal Info",
+                          child: Text("1. Employee data",
                               style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
                                   fontSize: 20,
                                   color: Colors.black)),
@@ -2892,7 +2892,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 5),
-                          child: Text("2. Details",
+                          child: Text("2. Insight about me",
                               style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
                                   fontSize: 20,
                                   color: Colors.black)),
@@ -3063,7 +3063,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 5),
-                          child: Text("3. Challenge",
+                          child: Text("3. Challenges",
                               style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
                                   fontSize: 20,
                                   color: Colors.black)),
@@ -8534,7 +8534,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                           child: Column(
                             children: [
                               Flexible(
-                                // flex: 2,
+                                flex: 2,
                                 child: Container(
                                   // height: 400,
                                   padding: EdgeInsets.all(20),
@@ -8698,7 +8698,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                                 }
                                                               },
                                                               child: Container(
-                                                                height: 50,
+                                                                height: 30,
                                                                 // width: 200,
                                                                 margin: EdgeInsets.only(bottom: 10),
                                                                 padding: EdgeInsets.all(8),
@@ -8713,6 +8713,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                                   children: [
                                                                     Text(item, style: TextStyle(
                                                                         fontWeight: FontWeight.w700,
+                                                                        fontSize: 10,
                                                                         color: Colors.white
                                                                     ),),
                                                                   ],
@@ -8764,7 +8765,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
 
                                                               },
                                                               child: Container(
-                                                                height: 50,
+                                                                height: 30,
                                                                 // width: 200,
                                                                 padding: EdgeInsets.all(8),
                                                                 decoration: BoxDecoration(
@@ -8778,6 +8779,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                                   children: [
                                                                     Text(item, style: TextStyle(
                                                                         fontWeight: FontWeight.w700,
+                                                                        fontSize: 10,
                                                                         color: Colors.white
                                                                     ),),
                                                                   ],
@@ -9532,7 +9534,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                           child: Column(
                             children: [
                               Flexible(
-                                // flex: 2,
+                                flex: 2,
                                 child: Container(
                                   // height: 400,
                                   padding: EdgeInsets.all(20),
@@ -9696,7 +9698,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                                 }
                                                               },
                                                               child: Container(
-                                                                height: 50,
+                                                                height: 30,
                                                                 // width: 200,
                                                                 margin: EdgeInsets.only(bottom: 10),
                                                                 padding: EdgeInsets.all(8),
@@ -9711,6 +9713,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                                   children: [
                                                                     Text(item, style: TextStyle(
                                                                         fontWeight: FontWeight.w700,
+                                                                        fontSize: 10,
                                                                         color: Colors.white
                                                                     ),),
                                                                   ],
@@ -9762,7 +9765,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
 
                                                               },
                                                               child: Container(
-                                                                height: 50,
+                                                                height: 30,
                                                                 // width: 200,
                                                                 padding: EdgeInsets.all(8),
                                                                 decoration: BoxDecoration(
@@ -9776,6 +9779,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                                   children: [
                                                                     Text(item, style: TextStyle(
                                                                         fontWeight: FontWeight.w700,
+                                                                        fontSize: 10,
                                                                         color: Colors.white
                                                                     ),),
                                                                   ],
