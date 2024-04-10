@@ -103,19 +103,68 @@ class UserAboutMEProvider with ChangeNotifier{
 
   List<dynamic> previewKeywordssss = [];
   List<dynamic> previewtags = [];
+  List<dynamic> editpreviewKeywordssss = [];
+  List<dynamic> editpreviewtags = [];
 
-  var previewname, previewDescription, previewFinalDescription, previewImpact;
+  var previewname, previewDescription, previewFinalDescription, previewImpact, previewId, preview;
 
- updateChallengePreview(name, Description, FinalDescription, Impact,Keywordssss,tags){
+ updateChallengePreview(name, Description, FinalDescription, Impact,Keywordssss,tags,Id,isTrueOrFalse, document){
    previewname = name;
    previewDescription = Description;
    previewFinalDescription = FinalDescription;
    previewImpact = Impact;
    previewKeywordssss = Keywordssss;
    previewtags = tags;
+   previewId = Id;
+   preview = document;
+   isRecommendedChallengeCheckedMap = isTrueOrFalse;
+   // isRecommendedAddedChallenge = AddButton;
    notifyListeners();
  }
 
+ updateSolutionPreview(name, Description, FinalDescription, Impact,Keywordssss,tags,Id,isTrueOrFalse, document){
+   previewname = name;
+   previewDescription = Description;
+   previewFinalDescription = FinalDescription;
+   previewImpact = Impact;
+   previewKeywordssss = Keywordssss;
+   previewtags = tags;
+   previewId = Id;
+   preview = document;
+   isRecommendedSolutionsCheckedMap = isTrueOrFalse;
+   // isRecommendedAddedChallenge = AddButton;
+   notifyListeners();
+ }
+
+  var editpreviewname, editpreviewDescription, editpreviewFinalDescription, editpreviewImpact, editpreviewId, editpreview;
+
+  updateEditChallengePreview(name, Description, FinalDescription, Impact,Keywordssss,tags,Id,isTrueOrFalse, document){
+    editpreviewname = name;
+    editpreviewDescription = Description;
+    editpreviewFinalDescription = FinalDescription;
+    editpreviewImpact = Impact;
+    editpreviewKeywordssss = Keywordssss;
+    editpreviewtags = tags;
+    editpreviewId = Id;
+    editpreview = document;
+    isEditChallengeListAdded = isTrueOrFalse;
+    // isRecommendedAddedChallenge = AddButton;
+    notifyListeners();
+  }
+
+  updateEditSolutionPreview(name, Description, FinalDescription, Impact,Keywordssss,tags,Id,isTrueOrFalse, document){
+    editpreviewname = name;
+    editpreviewDescription = Description;
+    editpreviewFinalDescription = FinalDescription;
+    editpreviewImpact = Impact;
+    editpreviewKeywordssss = Keywordssss;
+    editpreviewtags = tags;
+    editpreviewId = Id;
+    editpreview = document;
+    isEditSolutionListAdded = isTrueOrFalse;
+    // isRecommendedAddedChallenge = AddButton;
+    notifyListeners();
+  }
 
   Future<List<DocumentSnapshot>> getRelatedChallenges(List<dynamic> tags, List<dynamic> keywords) async {
     // Assuming your Firestore collection is named "solutions"
@@ -468,7 +517,7 @@ class UserAboutMEProvider with ChangeNotifier{
     // Do something with index or values if needed
   }
 
-  void isRecommendedAddedChallenge(bool value, DocumentSnapshot<Object?> ChallengesDetails) {
+  void isRecommendedAddedChallenge(bool value, ChallengesDetails) {
     if (isRecommendedChallengeCheckedMap[ChallengesDetails['id']] != value) {
       // Checkbox is checked, add to the list
       challengess.add(ChallengesModel(
@@ -503,7 +552,7 @@ class UserAboutMEProvider with ChangeNotifier{
 
   }
 
-  void isRecommendedAddedSolutions(bool value, DocumentSnapshot<Object?> thriversDetails) {
+  void isRecommendedAddedSolutions(bool value, thriversDetails) {
 
     if (isRecommendedSolutionsCheckedMap[thriversDetails['id']] != value) {
       solutionss.add(SolutionModel(
@@ -610,7 +659,7 @@ class UserAboutMEProvider with ChangeNotifier{
 
   }
 
-  void EditRecommendedChallengeAdd(bool value, DocumentSnapshot<Object?> ChallengesDetails) {
+  void EditRecommendedChallengeAdd(bool value, ChallengesDetails) {
     if (isEditChallengeListAdded[ChallengesDetails['id']] != value) {
       // Checkbox is checked, add to the list
       editchallengess.add(ChallengesModel(
@@ -645,7 +694,7 @@ class UserAboutMEProvider with ChangeNotifier{
 
   }
 
-  void EditRecommendedSolutionAdd(bool value, DocumentSnapshot<Object?> SolutionDetails) {
+  void EditRecommendedSolutionAdd(bool value, SolutionDetails) {
     if (isEditSolutionListAdded[SolutionDetails['id']] != value) {
       // Checkbox is checked, add to the list
       editsolutionss.add(SolutionModel(
@@ -679,7 +728,6 @@ class UserAboutMEProvider with ChangeNotifier{
   }
 
   void manuallyAddChallenge(ChallengesDetails){
-
     challengess.add(ChallengesModel(
       id: ChallengesDetails['id'],
       label: ChallengesDetails['Label'],
@@ -708,7 +756,6 @@ class UserAboutMEProvider with ChangeNotifier{
   }
 
   void EditmanuallyAddChallenge(ChallengesDetails){
-
     editchallengess.add(ChallengesModel(
       id: ChallengesDetails['id'],
       label: ChallengesDetails['Label'],
@@ -737,7 +784,6 @@ class UserAboutMEProvider with ChangeNotifier{
   }
 
   void manuallyAddSolution(SolutionDetails){
-
     solutionss.add(SolutionModel(
       id: SolutionDetails['id'],
       label: SolutionDetails['Name'],
@@ -764,7 +810,6 @@ class UserAboutMEProvider with ChangeNotifier{
   }
 
   void EditmanuallyAddSolution(SolutionDetails){
-
     editsolutionss.add(SolutionModel(
       id: SolutionDetails['id'],
       label: SolutionDetails['Name'],

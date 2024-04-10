@@ -74,7 +74,7 @@ class _SuperAdminLoginScreenState extends State<SuperAdminLoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text("Admin Login",style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      Text("Login",style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
 
@@ -96,8 +96,8 @@ class _SuperAdminLoginScreenState extends State<SuperAdminLoginScreen> {
                             ),
                             //errorText: userAccountSearchErrorText,
                             contentPadding: EdgeInsets.all(25),
-                            hintText: "Enter your Username",
-                            labelText: "Enter your Username",
+                            hintText: "Enter your email",
+                            labelText: "Enter your email",
                             errorStyle: GoogleFonts.poppins(textStyle: Theme.of(context).textTheme.bodyLarge,fontWeight:FontWeight.w400,color: Colors.redAccent),
                             focusedBorder:  OutlineInputBorder(borderSide:  BorderSide(color: Colors.white,width: 3),borderRadius: BorderRadius.circular(0)),
                             border:  OutlineInputBorder(borderSide:  BorderSide(color: Colors.white12,width: 3),borderRadius: BorderRadius.circular(0)),

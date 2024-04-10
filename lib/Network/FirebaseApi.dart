@@ -311,10 +311,10 @@ class ApiRepository{
     return prefs.getString('adminusername');
   }
 
-  void logout() async {
+   logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('adminusername');
-    // Navigate back to login screen
+    print("Logout");// Navigate back to login screen
   }
 
 

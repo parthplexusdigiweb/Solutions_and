@@ -804,58 +804,87 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
             // icon: const Icon(Icons.email_outlined),
             icon: const Icon(Icons.settings_suggest),
           ),
+          ///
           // SideMenuItem(
-          //   priority: 11,
-          //   title: 'Import',
+          //   priority: 12,
+          //   title: 'Log Out',
           //   //badgeColor: Colors.amber,
           //   // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
-          //   tooltipContent: "Import",
-          //   onTap: (page, _) {
-          //     sideMenu.changePage(page);
-          //     Navigator.pop(context);
+          //   tooltipContent: "Log Out",
+          //   onTap: (page, _) async { // Make onTap callback async
+          //     showDialog(
+          //       context: context,
+          //       builder: (context) => AlertDialog(
+          //         title: Text('Logout Confirmation'),
+          //         content: Text('Are you sure you want to log out?'),
+          //         actions: [
+          //           TextButton(
+          //             onPressed: () {
+          //               Navigator.of(context).pop(); // Close the dialog
+          //             },
+          //             child: Text('Cancel'),
+          //           ),
+          //           TextButton(
+          //             onPressed: () async { // Make logout button callback async
+          //               // Perform logout logic here
+          //               await ApiRepository().logout(); // Await logout operation
+          //               // Navigate to the login screen after successful logout
+          //               Navigator.pop(context); // Close the dialog
+          //               context.go('/'); // Navigate to login screen
+          //               // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SuperAdminLoginScreen()));
+          //             },
+          //             child: Text('Logout'),
+          //           ),
+          //         ],
+          //       ),
+          //     );
           //   },
           //   // icon: const Icon(Icons.email_outlined),
-          //   icon: const Icon(Icons.settings_suggest),
+          //   icon: const Icon(Icons.logout),
           // ),
+          ///
           SideMenuItem(
             priority: 12,
             title: 'Log Out',
             //badgeColor: Colors.amber,
             // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
             tooltipContent: "Log Out",
-            onTap: (page, _) {
-              // sideMenu.changePage(page);
-              showDialog(context: context, builder: (context) => AlertDialog(
-                title: Text('Logout Confirmation'),
-                content: Text('Are you sure you want to log out?'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(); // Close the dialog
-                    },
-                    child: Text('Cancel'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // Perform logout logic here
-                      setState(() {
-                        ApiRepository().logout();
-                        Navigator.pop(context);
-                        context.go('/');
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SuperAdminLoginScreen()));
-                      });
-
-                      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SuperAdminLoginScreen()));
-                    },
-                    child: Text('Logout'),
-                  ),
-                ],
-              )
+            onTap: (page, _) async { // Make onTap callback async
+              print("Logout button tapped"); // Debugging: Check if the logout button is tapped
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('Logout Confirmation'),
+                  content: Text('Are you sure you want to log out?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Close the dialog
+                      },
+                      child: Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () async { // Make logout button callback async
+                        print("Logout confirmed"); // Debugging: Check if logout button is confirmed
+                        // Perform logout logic here
+                        await ApiRepository().logout(); // Await logout operation
+                        print("Logout completed"); // Debugging: Check if logout operation is completed
+                        // Navigate to the login screen after successful logout
+                        Navigator.pop(context); // Close the dialog
+                        print("Dialog closed"); // Debugging: Check if dialog is closed
+                        context.go('/'); // Navigate to login screen
+                        print("Navigated to login screen"); // Debugging: Check if navigation is triggered
+                      },
+                      child: Text('Logout'),
+                    ),
+                  ],
+                ),
               );
             },
             // icon: const Icon(Icons.email_outlined),
             icon: const Icon(Icons.logout),
           ),
+
           // SideMenuItem(
           //   priority: 5,
           //   onTap:(page){

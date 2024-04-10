@@ -204,7 +204,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("My Report", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.headlineMedium,)),
+                        Text("My Reports", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.headlineMedium,)),
 
                         Align(
                           alignment: Alignment.topRight,
@@ -1313,14 +1313,15 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                 children: [
                                   TabBar(
                                     physics: NeverScrollableScrollPhysics(),
+                                    unselectedLabelStyle: Theme.of(context).textTheme.bodySmall?.copyWith(),
                                     controller: _tabController,
                                     tabs: [
-                                      Tab(text: "Employee data"),
-                                      Tab(text: "Insights about me"),
-                                      Tab(text: "My Challenges"),
-                                      Tab(text: "My Solutions"),
-                                      Tab(text: "Assesment Assistant"),
-                                      Tab(text: "Generate report"),
+                                      Tab(icon: Icon(Icons.add_box_outlined),text: "Employee data"),
+                                      Tab(icon: Icon(Icons.person_add_outlined),text: "Insights about me"),
+                                      Tab(icon: Icon(Icons.edit_attributes),text: "My attributes"),
+                                      Tab(icon: Icon(Icons.sync_problem),text: "My challenges"),
+                                      Tab(icon: Icon(Icons.checklist_rtl),text: "My solutions"),
+                                      Tab(icon: Icon(Icons.insert_drive_file),text: "My report"),
                                     ],
                                   ),
                                   Expanded(
@@ -1330,9 +1331,9 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                       children: [
                                         AboutmeFormpage(),
                                         Detailspage(),
+                                        AssesmentAssistant(),
                                         AddChallengesPage(),
                                         AddSolutionsPage(),
-                                        AssesmentAssistant(),
                                         PreviewPage(),
                                       ],
                                     ),
@@ -1343,7 +1344,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
 
                       ),
                         icon: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             InkWell(
                               onTap: (){
@@ -1364,19 +1365,26 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                 _userAboutMEProvider.challengess.clear();
                                 _userAboutMEProvider.combinedSolutionsResults.clear();
                                 _userAboutMEProvider.combinedResults.clear();
+                                _userAboutMEProvider.isRecommendedChallengeCheckedMap.clear();
+                                _userAboutMEProvider.isRecommendedSolutionsCheckedMap.clear();
                                 _navigateToTab(0);
                                 setState(() {
-
                                 });
-                                Navigator.pop(context);                              },
-                                child: Text("Home",
-                                  style: TextStyle(
-                                    decoration: TextDecoration.underline
-                                  ),
+                                Navigator.pop(context);
+                                },
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.home),
+                                    Text("Home ",
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(),
+                                    ),
+                                  ],
                                 )),
                           ],
                         ),
-                        iconPadding: EdgeInsets.only(right: 15,top: 15),
+                        iconPadding: EdgeInsets.only(left: 15,top: 15),
                       );
                   })
 
@@ -1453,7 +1461,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                         Expanded(
                                           child: Text(
                                             // 'Thrivers',
-                                            'Employee Data',
+                                            'Employee data',
                                             overflow: TextOverflow.ellipsis,
                                             style: GoogleFonts.montserrat(
                                                 textStyle:
@@ -1499,121 +1507,11 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        Icon(Icons.input ,color: Colors.black,size: 30,),
+                                        Icon(Icons.person_add_outlined ,color: Colors.black,size: 30,),
                                         SizedBox(width: 5,),
                                         Expanded(
                                           child: Text(
-                                            'Insight About Me',
-                                            overflow: TextOverflow.ellipsis,
-                                            style: GoogleFonts.montserrat(
-                                                textStyle:
-                                                Theme.of(context).textTheme.titleLarge,
-                                                color: Colors.black),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: InkWell(
-                                onTap: () async {
-                                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').orderBy('AB_id', descending: true).limit(1).get();
-
-                                  // Check if there are any documents
-
-                                  print("querySnapshot :${querySnapshot}");
-                                  print("querySnapshot :${querySnapshot.docs.length}");
-
-                                  if (querySnapshot.docs.isNotEmpty) {
-                                    // Get the last document
-                                    DocumentSnapshot lastDocument = querySnapshot.docs.first;
-                                    print("lastDocument :$lastDocument");
-                                    showEditAboutMeDialogBox(lastDocument,2);
-                                  }
-                                  },
-                                child: Container(
-                                  margin: EdgeInsets.all(10),
-                                  height: 60,
-
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(color:primaryColorOfApp, width: 1.0),
-                                    borderRadius: BorderRadius.circular(20.0),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        // Icon(Icons.person_outline_outlined,color: Colors.black,size: 30,),
-                                        Icon(Icons.sync_problem,color: Colors.black,size: 30,),
-                                        SizedBox(width: 5,),
-                                        Expanded(
-                                          child: Text(
-                                            // 'User',
-                                            'My Challenges',
-                                            overflow: TextOverflow.ellipsis,
-                                            style: GoogleFonts.montserrat(
-                                                textStyle:
-                                                Theme.of(context).textTheme.titleLarge,
-                                                color: Colors.black),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-
-                              ),
-                            ),
-                            Expanded(
-                              child: InkWell(
-                                onTap: () async {
-                                  // sideMenu.changePage(6);
-                                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').orderBy('AB_id', descending: true).limit(1).get();
-
-                                  // Check if there are any documents
-
-                                  print("querySnapshot :${querySnapshot}");
-                                  print("querySnapshot :${querySnapshot.docs.length}");
-
-                                  if (querySnapshot.docs.isNotEmpty) {
-                                    // Get the last document
-                                    DocumentSnapshot lastDocument = querySnapshot.docs.first;
-                                    print("lastDocument :$lastDocument");
-                                    showEditAboutMeDialogBox(lastDocument,3);
-                                  }
-                                },
-                                child: Container(
-                                  margin: EdgeInsets.all(10),
-                                  height: 60,
-
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(color:primaryColorOfApp, width: 1.0),
-                                    borderRadius: BorderRadius.circular(20.0),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        // Icon(Icons.article,color: Colors.black,size: 30,),
-                                        Icon(Icons.checklist_rtl,color: Colors.black,size: 30,),
-                                        SizedBox(width: 5,),
-
-                                        Expanded(
-                                          child: Text(
-                                            // 'Solutions',
-                                            'My Solutions',
+                                            'Insight about me',
                                             overflow: TextOverflow.ellipsis,
                                             style: GoogleFonts.montserrat(
                                                 textStyle:
@@ -1647,7 +1545,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                     // Get the last document
                                     DocumentSnapshot lastDocument = querySnapshot.docs.first;
                                     print("lastDocument :$lastDocument");
-                                    showEditAboutMeDialogBox(lastDocument,4);
+                                    showEditAboutMeDialogBox(lastDocument,2);
                                   }
                                 },
                                 child: Container(
@@ -1665,12 +1563,123 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children: [
                                         // Icon(Icons.person_outline_outlined,color: Colors.black,size: 30,),
-                                        Icon(Icons.assistant_outlined,color: Colors.black,size: 30,),
+                                        Icon(Icons.edit_attributes,color: Colors.black,size: 30,),
                                         SizedBox(width: 5,),
                                         Expanded(
                                           child: Text(
                                             // 'User',
-                                            'Assesment Assistance',
+                                            'My attributes',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.montserrat(
+                                                textStyle:
+                                                Theme.of(context).textTheme.titleLarge,
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+
+                              ),
+                            ),
+
+                            Expanded(
+                              child: InkWell(
+                                onTap: () async {
+                                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').orderBy('AB_id', descending: true).limit(1).get();
+
+                                  // Check if there are any documents
+
+                                  print("querySnapshot :${querySnapshot}");
+                                  print("querySnapshot :${querySnapshot.docs.length}");
+
+                                  if (querySnapshot.docs.isNotEmpty) {
+                                    // Get the last document
+                                    DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                                    print("lastDocument :$lastDocument");
+                                    showEditAboutMeDialogBox(lastDocument,3);
+                                  }
+                                  },
+                                child: Container(
+                                  margin: EdgeInsets.all(10),
+                                  height: 60,
+
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        // Icon(Icons.person_outline_outlined,color: Colors.black,size: 30,),
+                                        Icon(Icons.sync_problem,color: Colors.black,size: 30,),
+                                        SizedBox(width: 5,),
+                                        Expanded(
+                                          child: Text(
+                                            // 'User',
+                                            'My challenges',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.montserrat(
+                                                textStyle:
+                                                Theme.of(context).textTheme.titleLarge,
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: InkWell(
+                                onTap: () async {
+                                  // sideMenu.changePage(6);
+                                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').orderBy('AB_id', descending: true).limit(1).get();
+
+                                  // Check if there are any documents
+
+                                  print("querySnapshot :${querySnapshot}");
+                                  print("querySnapshot :${querySnapshot.docs.length}");
+
+                                  if (querySnapshot.docs.isNotEmpty) {
+                                    // Get the last document
+                                    DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                                    print("lastDocument :$lastDocument");
+                                    showEditAboutMeDialogBox(lastDocument,4);
+                                  }
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.all(10),
+                                  height: 60,
+
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        // Icon(Icons.article,color: Colors.black,size: 30,),
+                                        Icon(Icons.checklist_rtl,color: Colors.black,size: 30,),
+                                        SizedBox(width: 5,),
+
+                                        Expanded(
+                                          child: Text(
+                                            // 'Solutions',
+                                            'My solutions',
                                             overflow: TextOverflow.ellipsis,
                                             style: GoogleFonts.montserrat(
                                                 textStyle:
@@ -1724,7 +1733,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                         Expanded(
                                           child: Text(
                                             // 'Solutions',
-                                            'Generate Report',
+                                            'My reports',
                                             overflow: TextOverflow.ellipsis,
                                             style: GoogleFonts.montserrat(
                                                 textStyle:
@@ -1736,7 +1745,6 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                     ),
                                   ),
                                 ),
-
                               ),
                             ),
                           ],
@@ -1761,12 +1769,12 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
                                   // Icon(Icons.person_outline_outlined,color: Colors.black,size: 30,),
-                                  Icon(Icons.archive_outlined,color: Colors.black,size: 30,),
+                                  Icon(Icons.library_books_outlined,color: Colors.black,size: 30,),
                                   SizedBox(width: 5,),
                                   Expanded(
                                     child: Text(
                                       // 'User',
-                                      'Archive',
+                                      'My library',
                                       overflow: TextOverflow.ellipsis,
                                       style: GoogleFonts.montserrat(
                                           textStyle:
@@ -2587,9 +2595,9 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                   String solutionJson = json.encode(AboutMEDatas);
                   print(solutionJson);
 
-                  ProgressDialog.show(context, "Creating About Me", Icons.chair);
+                  // ProgressDialog.show(context, "Creating About Me", Icons.chair);
                   documentId = await ApiRepository().createAboutMe(AboutMEDatas);
-                  ProgressDialog.hide();
+                  // ProgressDialog.hide();
                   if (documentId != null) {
                     _navigateToTab(1);
                     print("Document ID: $documentId");
@@ -2712,11 +2720,20 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
 
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                          child: Text("1. About me and my circumstances:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
+                          child: Row(
+                            children: [
+                              Text("1. About me and my circumstances: ", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
+                              IconButton(
+                                  icon: Icon(Icons.info_outline,),
+                                onPressed: (){},
+                                tooltip: "- Anything you want to share about eg\n- Your family circumstances\n- Where you live\n- Your education and professional qualifications\n- Your life stages or life events\n- Your ethnicity, faith, identification\n- What matters most to you in life",
+                              )
+                            ],
+                          ),
                         ),
                         TextField(
                           controller: mycircumstancesController,
-                          maxLines: 3,
+                          maxLines: 6,
                           // cursorColor: primaryColorOfApp,
                           // onChanged: (value) {
                           //   if (value.isNotEmpty) {
@@ -2781,7 +2798,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                             contentPadding: EdgeInsets.all(10),
                             // labelText: "Name",
                             // hintText: "Anything you want to share about eg\nYour family circumstances\nWhere you live\nYour education and professional qualifications\nYour life stages or life events\nYour ethnicity, faith, identification\nWhat matters most to you in life",
-                            hintText: "Anything you want to share about eg, Your family circumstances, Where you live, Your education and professional qualifications, Your life stages or life events, Your ethnicity, faith, identification, What matters most to you in life",
+                            hintText: "- Anything you want to share about eg\n- Your family circumstances\n- Where you live\n- Your education and professional qualifications\n- Your life stages or life events\n- Your ethnicity, faith, identification\n- What matters most to you in life",
                             errorStyle: GoogleFonts.montserrat(
                                 textStyle: Theme
                                     .of(context)
@@ -2811,7 +2828,16 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
 
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                          child: Text("2. My strengths that I want to have the opportunity to use in my role:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
+                          child: Row(
+                            children: [
+                              Text("2. My strengths that I want to have the opportunity to use in my role:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
+                              IconButton(
+                                icon: Icon(Icons.info_outline,),
+                                onPressed: (){},
+                                tooltip: "What do you view as your strengths, passions and values that you hope and want to be able to deploy in your role at work - create a list",
+                              )
+                            ],
+                          ),
                         ),
                         TextField(
                           controller: MystrengthsController,
@@ -2889,7 +2915,16 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
 
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                          child: Text("3. What I value about [my organisation] and workplace environment that helps me perform to my best:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
+                          child: Row(
+                            children: [
+                              Text("3. What I value about [my organisation] and workplace environment that helps me perform to my best:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
+                              IconButton(
+                                icon: Icon(Icons.info_outline,),
+                                onPressed: (){},
+                                tooltip: "What do you like about your organisation and the work environment that helps you be your best?\nThese could be e.g. a policy or process, something about the culture or environment - create a list.",
+                              )
+                            ],
+                          ),
                         ),
                         TextField(
                           controller: myOrganisationController,
@@ -2961,7 +2996,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(10),
                             // labelText: "Name",
-                            hintText: "What things does your organisation do that helps you; what do you appreciate exists; it could be a policy, something about the culture or environment that you would like to show your appreciation for and maye would like to see more of - create a list",
+                            hintText: "What do you like about your organisation and the work environment that helps you be your best? These could be e.g. a policy or process, something about the culture or environment - create a list.",
                             errorStyle: GoogleFonts.montserrat(
                                 textStyle: Theme
                                     .of(context)
@@ -2988,7 +3023,16 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                         SizedBox(height: 10,),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                          child: Text("4. What I find challenging about [My Organisation] and the workplace environment that makes it harder for me to perform my best:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
+                          child: Row(
+                            children: [
+                              Flexible(child: Text("4. What I find challenging about [My Organisation] and workplace environment that gets in the way of me performing to my best:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,))),
+                              IconButton(
+                                icon: Icon(Icons.info_outline,),
+                                onPressed: (){},
+                                tooltip: "What is it about your organisation and the work environment that gets in the way of you being your best?\nThese could be a policy or process, something about the culture or environment - create a list.",
+                              )
+                            ],
+                          ),
                         ),
                         TextField(
                           controller: myOrganisation2Controller,
@@ -3060,7 +3104,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(10),
                             // labelText: "Name",
-                            hintText: "What things does your organisation do that hinders you; what do you wish didn’t exists; it could be a policy, something about the culture or environment that makes work harder for you and if possible you would like to see less of - create a list",
+                            hintText: "What is it about your organisation and the work environment that gets in the way of you being your best? These could be a policy or process, something about the culture or environment - create a list.",
                             errorStyle: GoogleFonts.montserrat(
                                 textStyle: Theme
                                     .of(context)
@@ -3183,7 +3227,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                           ProgressDialog.show(context, "Saving", Icons.save);
                           await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
                           ProgressDialog.hide();
-                          await _navigateToTab(2);
+                          await _navigateToTab(3);
                         }
                       },
                       child: Container(
@@ -3242,6 +3286,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                           style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
                               fontSize: 15,
                               color: Colors.black)),
+
                       // Checkbox(
                       //   activeColor: Colors.blue,
                       //   value: userAboutMEProvider.isRecommendedcCheckedForTileChallenge(documentsss![i]), // Use the state from the provider
@@ -3258,17 +3303,13 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                               onPressed: (){
                                 NewViewDialog(challengesData['Label'],challengesData['Description'],challengesData['Impact'],challengesData['Final_description'], challengesData['Keywords'],challengesData['tags'],challengesData['id'],challengesData, userAboutMEProvider.isRecommendedChallengeCheckedMap,userAboutMEProvider.isRecommendedAddedChallenge);
                               },
-                              icon: Icon(Icons.info_outline, color: Colors.blue,)
+                              icon: Icon(Icons.visibility, color: Colors.blue,)
                           ),
                           SizedBox(width: 8),
-                          (userAboutMEProvider.isRecommendedChallengeCheckedMap[challengesData['id']] == true) ? Text(
-                            'Added',
-                            style: GoogleFonts.montserrat(
-                              textStyle:
-                              Theme
-                                  .of(context)
-                                  .textTheme
-                                  .titleSmall,
+                          (userAboutMEProvider.isRecommendedChallengeCheckedMap[challengesData['id']] == true) ?
+                          Text('Added',
+                            style: GoogleFonts.montserrat(textStyle:
+                              Theme.of(context).textTheme.titleSmall,
                               fontStyle: FontStyle.italic,
                               color:Colors.green ,
                             ),
@@ -3277,7 +3318,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                               userAboutMEProvider.isRecommendedAddedChallenge(true,  documentsss![i]);
                               toastification.show(
                                 context: context,
-                                  title: Text('${challengesData['Label']} added successfully'),
+                                  title: Text('${challengesData['Label']} added to basket'),
                                 autoCloseDuration:const Duration(seconds: 3),
                                   alignment: Alignment.bottomCenter,
                                   backgroundColor: Colors.green,
@@ -3546,9 +3587,9 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
 
                           IconButton(
                               onPressed: (){
-                                NewViewDialog(solutionsData['Name'],solutionsData['Description'],solutionsData['Impact'],solutionsData['Final_description'], solutionsData['Keywords'],solutionsData['tags'],solutionsData['id'],solutionsData,userAboutMEProvider.isRecommendedSolutionsCheckedMap,userAboutMEProvider.isRecommendedAddedSolutions);
+                                NewSolViewDialog(solutionsData['Name'],solutionsData['Description'],solutionsData['Impact'],solutionsData['Final_description'], solutionsData['Keywords'],solutionsData['tags'],solutionsData['id'],solutionsData,userAboutMEProvider.isRecommendedSolutionsCheckedMap,userAboutMEProvider.isRecommendedAddedSolutions);
                               },
-                              icon: Icon(Icons.info_outline, color: Colors.blue,)
+                              icon: Icon(Icons.visibility, color: Colors.blue,)
                           ),
                           SizedBox(width: 8),
 
@@ -3567,7 +3608,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                             onTap: (){
                               userAboutMEProvider.isRecommendedAddedSolutions(true, documentsss![i]);
                               toastification.show(context: context,
-                                  title: Text('${solutionsData['Name']} added successfully'),
+                                  title: Text('${solutionsData['Name']} added to basket'),
                                   autoCloseDuration: Duration(milliseconds: 2500),
                                   alignment: Alignment.center,
                                   backgroundColor: Colors.green,
@@ -3970,7 +4011,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                             children: [
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                child: Text("Suggested Challenges (${userAboutMEProvider.combinedResults.length}):",
+                                child: Text("Suggested challenges (${userAboutMEProvider.combinedResults.length}):",
                                   overflow: TextOverflow.ellipsis,
                                   style: GoogleFonts.montserrat(
                                       textStyle: Theme.of(context).textTheme.titleLarge,
@@ -4731,7 +4772,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                             await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
                             ProgressDialog.hide();
 
-                            await _navigateToTab(3);
+                            await _navigateToTab(4);
 
                           },
                           child: Container(
@@ -4769,7 +4810,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
     );
   }
 
-  Widget AddSolutionsPage(){
+  Widget AddSolutionsPage() {
     return Container(
       height: MediaQuery.of(context).size.height,
       child: SingleChildScrollView(
@@ -4791,6 +4832,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
 
 
                     SizedBox(height: 10,),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -4801,7 +4843,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                             children: [
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-                                child: Text("Suggested Solutions (${userAboutMEProvider.combinedSolutionsResults.length}):",
+                                child: Text("Suggested solutions (${userAboutMEProvider.combinedSolutionsResults.length}):",
                                   style: GoogleFonts.montserrat(
                                       textStyle: Theme.of(context).textTheme.titleLarge,
                                       fontWeight: FontWeight.bold,
@@ -5017,7 +5059,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                                     children: [
                                                       IconButton(
                                                         onPressed: () {
-                                                         NewViewDialog(solution.label, solution.description, solution.Impact, solution.Final_description, solution.Keywords, solution.tags, solution.id,solution,userAboutMEProvider.isRecommendedSolutionsCheckedMap,userAboutMEProvider.isRecommendedAddedSolutions);
+                                                          NewSolViewDialog(solution.label, solution.description, solution.Impact, solution.Final_description, solution.Keywords, solution.tags, solution.id,solution,userAboutMEProvider.isRecommendedSolutionsCheckedMap,userAboutMEProvider.isRecommendedAddedSolutions);
                                                         },
                                                         icon: Icon(Icons.visibility, color: Colors.blue),
                                                       ),
@@ -5551,7 +5593,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                 ),
                                 child: Center(
                                   child: Text(
-                                    'Finish',
+                                    'Save and next',
                                     style: GoogleFonts.montserrat(
                                         textStyle: Theme.of(context).textTheme.titleSmall,
                                         fontWeight: FontWeight.bold,
@@ -8608,7 +8650,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                                                           onTap: (){
                                                                             userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
                                                                             toastification.show(context: context,
-                                                                                title: Text('${name} added successfully'),
+                                                                                title: Text('${name} added to basket'),
                                                                                 autoCloseDuration: Duration(milliseconds: 2500),
                                                                                 alignment: Alignment.center,
                                                                                 backgroundColor: Colors.green,
@@ -8955,7 +8997,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                                                                                     // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
                                                                                                     userAboutMEProvider.isRecommendedAddedSolutions(true, relatedSolutions![i]);
                                                                                                     toastification.show(context: context,
-                                                                                                        title: Text('${solutionData['Name']} added successfully'),
+                                                                                                        title: Text('${solutionData['Name']} added to basket'),
                                                                                                         autoCloseDuration: Duration(milliseconds: 2500),
                                                                                                         alignment: Alignment.center,
                                                                                                         backgroundColor: Colors.green,
@@ -9159,7 +9201,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                                                                               userAboutMEProvider.isRecommendedAddedChallenge(true, relatedChallenges![i]);
                                                                                               toastification.show(
                                                                                                   context: context,
-                                                                                                  title: Text('${challengesData['Label']} added successfully'),
+                                                                                                  title: Text('${challengesData['Label']} added to basket'),
                                                                                                   autoCloseDuration: Duration(milliseconds: 2500),
                                                                                                   alignment: Alignment.center,
                                                                                                   backgroundColor: Colors.green,
@@ -9265,8 +9307,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
 
     // String formattedDate = formatter.format(dateTime);
 
-    _challengesProvider.addkeywordsList(keywords);
-    _challengesProvider.addProviderEditTagsList(tags);
+
 
     List<TextEditingController> textControllers = [];
     for(int i=0;i<6;i++){
@@ -9277,698 +9318,1567 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
         builder: (BuildContext context) {
           return Theme(
             data: Theme.of(context).copyWith(dialogBackgroundColor: Colors.white),
-            child: AlertDialog(
-                insetPadding: EdgeInsets.symmetric(horizontal: MediaQuery
-                    .of(context)
-                    .size
-                    .width * 0.08, vertical: MediaQuery
-                    .of(context)
-                    .size
-                    .height * 0.04),
-                icon: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    InkWell(
-                        onTap: (){
-                          Navigator.pop(context);
-                        },
-                        child: Icon(Icons.close)),
-                  ],
-                ),
-                iconPadding: EdgeInsets.only(top: 8, right: 16),
-                content:   SizedBox(
-                  width: double.maxFinite,
-                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child:  Consumer<UserAboutMEProvider>(
+                builder: (c,userAboutMEProvider, _){
+                  if(userAboutMEProvider.previewname != null || userAboutMEProvider.previewDescription != null ||userAboutMEProvider.previewFinalDescription != null ||
+                      userAboutMEProvider.previewId != null ||userAboutMEProvider.previewImpact != null ||userAboutMEProvider.previewKeywordssss.isNotEmpty ||
+                      userAboutMEProvider.previewtags.isNotEmpty || userAboutMEProvider.preview !=null ){
+                    Name = userAboutMEProvider.previewname;
+                    Description = userAboutMEProvider.previewDescription;
+                    FinalDescription = userAboutMEProvider.previewFinalDescription;
+                    insideId = userAboutMEProvider.previewId;
+                    Impact = userAboutMEProvider.previewImpact;
+                    keywords = userAboutMEProvider.previewKeywordssss;
+                    tags = userAboutMEProvider.previewtags;
+                    document = userAboutMEProvider.preview;
+                  }
+                  _challengesProvider.addkeywordsList(keywords);
+                  _challengesProvider.addProviderEditTagsList(tags);
+                  return  AlertDialog(
+                      insetPadding: EdgeInsets.symmetric(horizontal: MediaQuery
+                          .of(context)
+                          .size
+                          .width * 0.08, vertical: MediaQuery
+                          .of(context)
+                          .size
+                          .height * 0.04),
+                      icon: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          InkWell(
+                              onTap: (){
+                                userAboutMEProvider.previewname = null;
+                                userAboutMEProvider.previewDescription = null;
+                                userAboutMEProvider.previewFinalDescription = null;
+                                userAboutMEProvider.previewId = null;
+                                userAboutMEProvider.previewImpact = null;
+                                userAboutMEProvider.previewKeywordssss.clear();
+                                userAboutMEProvider.previewtags.clear();
+                                userAboutMEProvider.preview = null;
+                                Navigator.pop(context);
+                              },
+                              child: Icon(Icons.close)),
+                        ],
+                      ),
+                      iconPadding: EdgeInsets.only(top: 8, right: 16),
+                      content:   SizedBox(
+                        width: double.maxFinite,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Column(
+                            children: [
+                              Flexible(
+                                // flex: 2,
+                                child: Container(
+                                  // height: 400,
+                                  padding: EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(20)
+                                  ),
+                                  child: SingleChildScrollView(
                                     child: Column(
-                                      children: [
-                                        Flexible(
-                                          // flex: 2,
-                                          child: Container(
-                                            // height: 400,
-                                            padding: EdgeInsets.all(20),
-                                            decoration: BoxDecoration(
-                                                border: Border.all(color: Colors.grey),
-                                                borderRadius: BorderRadius.circular(20)
-                                            ),
-                                            child: SingleChildScrollView(
-                                              child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: <Widget>[
-                                                    (Name==""|| Name==null) ? Container() : Row(
-                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                      children: [
-                                                        // Text("Label: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
-                                                        Text(Name,
-                                                            style: GoogleFonts.montserrat(
-                                                                fontWeight: FontWeight.bold,
-                                                            fontSize: 20,
-                                                            color: Colors.black)
-                                                        ),
-                                                        // IconButton(onPressed: (){
-                                                        //   Navigator.pop(context);
-                                                        // },
-                                                        //     icon:Icon(Icons.close)
-                                                        // ),
-                                                        Consumer<UserAboutMEProvider>(
-                                                            builder: (c,userAboutMEProvider, _){
-                                                              return
-                                                                (isTrueOrFalse[insideId] == true) ? Text(
-                                                                  'Added',
-                                                                  style: GoogleFonts.montserrat(
-                                                                    textStyle:
-                                                                    Theme
-                                                                        .of(context)
-                                                                        .textTheme
-                                                                        .titleSmall,
-                                                                    fontStyle: FontStyle.italic,
-                                                                    color:Colors.green ,
-                                                                  ),
-                                                                ) : InkWell(
-                                                                  onTap: (){
-                                                                    AddButton(true, document);
-                                                                  },
-                                                                  child: Container(
-                                                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                                                    width: MediaQuery.of(context).size.width * .05,
-                                                                    // width: MediaQuery.of(context).size.width * .15,
-
-                                                                    // height: 60,
-                                                                    decoration: BoxDecoration(
-                                                                      color:Colors.blue ,
-                                                                      border: Border.all(
-                                                                          color:Colors.blue ,
-                                                                          width: 1.0),
-                                                                      borderRadius: BorderRadius.circular(8.0),
-                                                                    ),
-                                                                    child: Center(
-                                                                      // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                                                      child: Text(
-                                                                        'Add',
-                                                                        style: GoogleFonts.montserrat(
-                                                                          textStyle:
-                                                                          Theme
-                                                                              .of(context)
-                                                                              .textTheme
-                                                                              .titleSmall,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          color:Colors.white ,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                );
-                                                            })
-                                                      ],
-                                                    ),
-                                                    SizedBox(height: 5,),
-                                                    (FinalDescription==""|| FinalDescription==null) ? Container() :  Row(
-                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        // Text("Description: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
-                                                        Flexible(child: Text(FinalDescription,  style: GoogleFonts.montserrat(
-                                                            fontWeight: FontWeight.w500,
-                                                            fontSize: 20,
-                                                            color: Colors.black),
-                                                          maxLines: null,)),
-                                                      ],
-                                                    ),
-                                                    SizedBox(height: 10,),
-
-                                                    (Impact==""|| Impact==null) ? Container() :  Row(
-                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        // Text("Impact: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
-                                                        Flexible(child: Text(Impact,  style: GoogleFonts.montserrat(
-                                                            fontWeight: FontWeight.w500,
-                                                            fontStyle: FontStyle.italic,
-                                                            fontSize: 20,
-                                                            color: Colors.grey),
-                                                          maxLines: null,)),
-                                                      ],
-                                                    ),
-
-                                                    SizedBox(height: 10,),
-
-                                                    (Description==""|| Description==null) ? Container() :  Row(
-                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        // Text("Description: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
-                                                        Flexible(child: Text(Description,  style: GoogleFonts.montserrat(
-                                                            // fontWeight: FontWeight.w600,
-                                                            fontSize: 16,
-                                                            color: Colors.black),
-                                                          maxLines: null,)),
-                                                      ],
-                                                    ),
-
-                                                    SizedBox(height: 10,),
-
-
-
-
-                                                    (_challengesProvider.keywords==""|| _challengesProvider.keywords==null||_challengesProvider.keywords.isEmpty) ? Container() :
-                                                    Row(
-                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        // Text("Category: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
-                                                        Flexible(
-                                                          child: Consumer<ChallengesProvider>(
-                                                              builder: (c,addKeywordProvider, _){
-                                                                return Align(
-                                                                  alignment: Alignment.centerLeft,
-                                                                  child: Wrap(
-                                                                    spacing: 10,
-                                                                    runSpacing: 10,
-                                                                    crossAxisAlignment: WrapCrossAlignment.start,
-                                                                    alignment: WrapAlignment.start,
-                                                                    runAlignment: WrapAlignment.start,
-                                                                    children: addKeywordProvider.keywords.map((item){
-                                                                      print("item: $item");
-                                                                      print("addKeywordProvider.keywords: ${addKeywordProvider.keywords}");
-                                                                      return InkWell(
-                                                                        onTap: (){
-                                                                          if(_tabController.index == 2){
-                                                                            searchChallengescontroller.text = item;
-                                                                            _challengesProvider.loadDataForPageSearchFilter(item);
-                                                                            // Navigator.pop(context);
-                                                                            showChallengesSelector();
-                                                                          }
-                                                                          if(_tabController.index == 3){
-                                                                            searchbyCatcontroller.text = item;
-                                                                            _addKeywordProvider.loadDataForPageSearchFilter(searchbyCatcontroller.text.toString());
-                                                                            // Navigator.pop(context);
-                                                                            showSolutionSelectors();
-                                                                          }
-                                                                        },
-                                                                        child: Container(
-                                                                          height: 50,
-                                                                          // width: 200,
-                                                                          margin: EdgeInsets.only(bottom: 10),
-                                                                          padding: EdgeInsets.all(8),
-                                                                          decoration: BoxDecoration(
-                                                                              borderRadius: BorderRadius.circular(15),
-                                                                              color: Color(0xFF00ACC1)
-                                                                          ),
-                                                                          child: Row(
-                                                                            mainAxisSize: MainAxisSize.min,
-                                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                            children: [
-                                                                              Text(item, style: TextStyle(
-                                                                                  fontWeight: FontWeight.w700,
-                                                                                color: Colors.white
-                                                                              ),),
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                      );
-                                                                    }).toList(),
-                                                                  ),
-                                                                );
-                                                              }),
-                                                        ),
-                                                      ],
-                                                    ),
-
-                                                    SizedBox(height: 10),
-
-                                                    (_challengesProvider.ProviderEditTags==""|| _challengesProvider.ProviderEditTags==null||_challengesProvider.ProviderEditTags.isEmpty) ? Container() :  Row(
-                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        // Text("Tags: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
-
-                                                        Flexible(
-                                                          child: Consumer<ChallengesProvider>(
-                                                              builder: (c,addKeywordProvider, _){
-                                                                return Align(
-                                                                  alignment: Alignment.centerLeft,
-                                                                  child: Wrap(
-                                                                    spacing: 10,
-                                                                    runSpacing: 10,
-                                                                    crossAxisAlignment: WrapCrossAlignment.start,
-                                                                    alignment: WrapAlignment.start,
-                                                                    runAlignment: WrapAlignment.start,
-                                                                    children: addKeywordProvider.ProviderEditTags.map((item){
-                                                                      return InkWell(
-                                                                        onTap: (){
-                                                                          if(_tabController.index == 2){
-                                                                            searchChallengescontroller.text = item;
-                                                                            _challengesProvider.loadDataForPageSearchFilter(item);
-                                                                            // Navigator.pop(context);
-                                                                            showChallengesSelector();
-                                                                          }
-                                                                          if(_tabController.index == 3){
-                                                                            searchbyCatcontroller.text = item;
-                                                                            _addKeywordProvider.loadDataForPageSearchFilter(searchbyCatcontroller.text.toString());
-                                                                            // Navigator.pop(context);
-                                                                            showSolutionSelectors();
-                                                                          }
-
-                                                                        },
-                                                                        child: Container(
-                                                                          height: 50,
-                                                                          // width: 200,
-                                                                          padding: EdgeInsets.all(8),
-                                                                          decoration: BoxDecoration(
-                                                                              borderRadius: BorderRadius.circular(15),
-                                                                              color: Colors.teal
-                                                                          ),
-                                                                          child: Row(
-                                                                            mainAxisSize: MainAxisSize.min,
-                                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                            children: [
-                                                                              Text(item, style: TextStyle(
-                                                                                  fontWeight: FontWeight.w700,
-                                                                                 color: Colors.white
-                                                                              ),),
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                      );
-                                                                    }).toList(),
-                                                                  ),
-                                                                );
-
-                                                              }),
-                                                        ),
-                                                      ],
-                                                    ),
-
-                                                  ]
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          (Name==""|| Name==null) ?  Container() :
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              // Text("Label: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                                              Text(Name,
+                                                  style: GoogleFonts.montserrat(
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 20,
+                                                      color: Colors.black)
                                               ),
+                                              // IconButton(onPressed: (){
+                                              //   Navigator.pop(context);
+                                              // },
+                                              //     icon:Icon(Icons.close)
+                                              // ),
+                                              Consumer<UserAboutMEProvider>(
+                                                  builder: (c,userAboutMEProvider, _){
+                                                    return
+                                                      (isTrueOrFalse[insideId] == true) ? Text(
+                                                        'Added',
+                                                        style: GoogleFonts.montserrat(
+                                                          textStyle:
+                                                          Theme
+                                                              .of(context)
+                                                              .textTheme
+                                                              .titleSmall,
+                                                          fontStyle: FontStyle.italic,
+                                                          color:Colors.green ,
+                                                        ),
+                                                      ) : InkWell(
+                                                        onTap: (){
+                                                          AddButton(true, document);
+                                                        },
+                                                        child: Container(
+                                                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                          width: MediaQuery.of(context).size.width * .05,
+                                                          // width: MediaQuery.of(context).size.width * .15,
+
+                                                          // height: 60,
+                                                          decoration: BoxDecoration(
+                                                            color:Colors.blue ,
+                                                            border: Border.all(
+                                                                color:Colors.blue ,
+                                                                width: 1.0),
+                                                            borderRadius: BorderRadius.circular(8.0),
+                                                          ),
+                                                          child: Center(
+                                                            // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                            child: Text(
+                                                              'Add',
+                                                              style: GoogleFonts.montserrat(
+                                                                textStyle:
+                                                                Theme
+                                                                    .of(context)
+                                                                    .textTheme
+                                                                    .titleSmall,
+                                                                fontWeight: FontWeight.bold,
+                                                                color:Colors.white ,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                  })
+                                            ],
+                                          ),
+                                          SizedBox(height: 5,),
+                                          (FinalDescription==""|| FinalDescription==null) ? Container() :
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              // Text("Description: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                                              Flexible(child: Text(FinalDescription,  style: GoogleFonts.montserrat(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 20,
+                                                  color: Colors.black),
+                                                maxLines: null,)),
+                                            ],
+                                          ),
+                                          SizedBox(height: 10,),
+
+                                          (Impact==""|| Impact==null) ? Container() :
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              // Text("Impact: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                                              Flexible(child: Text(Impact,  style: GoogleFonts.montserrat(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontStyle: FontStyle.italic,
+                                                  fontSize: 20,
+                                                  color: Colors.grey),
+                                                maxLines: null,)),
+                                            ],
+                                          ),
+
+                                          SizedBox(height: 10,),
+
+                                          (Description==""|| Description==null) ? Container() :
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              // Text("Description: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                                              Flexible(child: Text(Description,  style: GoogleFonts.montserrat(
+                                                // fontWeight: FontWeight.w600,
+                                                  fontSize: 16,
+                                                  color: Colors.black),
+                                                maxLines: null,)),
+                                            ],
+                                          ),
+
+                                          SizedBox(height: 10,),
+
+
+
+
+                                          (_challengesProvider.keywords==""|| _challengesProvider.keywords==null||_challengesProvider.keywords.isEmpty) ? Container() :
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              // Text("Category: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                                              Flexible(
+                                                child: Consumer<ChallengesProvider>(
+                                                    builder: (c,addKeywordProvider, _){
+                                                      return Align(
+                                                        alignment: Alignment.centerLeft,
+                                                        child: Wrap(
+                                                          spacing: 10,
+                                                          runSpacing: 10,
+                                                          crossAxisAlignment: WrapCrossAlignment.start,
+                                                          alignment: WrapAlignment.start,
+                                                          runAlignment: WrapAlignment.start,
+                                                          children: addKeywordProvider.keywords.map((item){
+                                                            print("item: $item");
+                                                            print("addKeywordProvider.keywords: ${addKeywordProvider.keywords}");
+                                                            return InkWell(
+                                                              onTap: (){
+                                                                if(_tabController.index == 2){
+                                                                  searchChallengescontroller.text = item;
+                                                                  _challengesProvider.loadDataForPageSearchFilter(item);
+                                                                  // Navigator.pop(context);
+                                                                  showChallengesSelector();
+                                                                }
+                                                                if(_tabController.index == 3){
+                                                                  searchbyCatcontroller.text = item;
+                                                                  _addKeywordProvider.loadDataForPageSearchFilter(searchbyCatcontroller.text.toString());
+                                                                  // Navigator.pop(context);
+                                                                  showSolutionSelectors();
+                                                                }
+                                                              },
+                                                              child: Container(
+                                                                height: 50,
+                                                                // width: 200,
+                                                                margin: EdgeInsets.only(bottom: 10),
+                                                                padding: EdgeInsets.all(8),
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius: BorderRadius.circular(15),
+                                                                    // color: Color(0xFF00ACC1)
+                                                                    color: Colors.grey
+                                                                ),
+                                                                child: Row(
+                                                                  mainAxisSize: MainAxisSize.min,
+                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                  children: [
+                                                                    Text(item, style: TextStyle(
+                                                                        fontWeight: FontWeight.w700,
+                                                                        color: Colors.white
+                                                                    ),),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            );
+                                                          }).toList(),
+                                                        ),
+                                                      );
+                                                    }),
+                                              ),
+                                            ],
+                                          ),
+
+                                          SizedBox(height: 10),
+
+                                          (_challengesProvider.ProviderEditTags==""|| _challengesProvider.ProviderEditTags==null||_challengesProvider.ProviderEditTags.isEmpty) ? Container() :  Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              // Text("Tags: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+
+                                              Flexible(
+                                                child: Consumer<ChallengesProvider>(
+                                                    builder: (c,addKeywordProvider, _){
+                                                      return Align(
+                                                        alignment: Alignment.centerLeft,
+                                                        child: Wrap(
+                                                          spacing: 10,
+                                                          runSpacing: 10,
+                                                          crossAxisAlignment: WrapCrossAlignment.start,
+                                                          alignment: WrapAlignment.start,
+                                                          runAlignment: WrapAlignment.start,
+                                                          children: addKeywordProvider.ProviderEditTags.map((item){
+                                                            return InkWell(
+                                                              onTap: (){
+                                                                if(_tabController.index == 2){
+                                                                  searchChallengescontroller.text = item;
+                                                                  _challengesProvider.loadDataForPageSearchFilter(item);
+                                                                  // Navigator.pop(context);
+                                                                  showChallengesSelector();
+                                                                }
+                                                                if(_tabController.index == 3){
+                                                                  searchbyCatcontroller.text = item;
+                                                                  _addKeywordProvider.loadDataForPageSearchFilter(searchbyCatcontroller.text.toString());
+                                                                  // Navigator.pop(context);
+                                                                  showSolutionSelectors();
+                                                                }
+
+                                                              },
+                                                              child: Container(
+                                                                height: 50,
+                                                                // width: 200,
+                                                                padding: EdgeInsets.all(8),
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius: BorderRadius.circular(15),
+                                                                    color: Colors.grey
+                                                                ),
+                                                                child: Row(
+                                                                  mainAxisSize: MainAxisSize.min,
+                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                  children: [
+                                                                    Text(item, style: TextStyle(
+                                                                        fontWeight: FontWeight.w700,
+                                                                        color: Colors.white
+                                                                    ),),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            );
+                                                          }).toList(),
+                                                        ),
+                                                      );
+
+                                                    }),
+                                              ),
+                                            ],
+                                          ),
+
+                                          SizedBox(height: 10,),
+                                          Container(
+                                            height: 170 ,
+                                            child: FutureBuilder(
+                                              future: getRelatedChallenges(tags, keywords),
+                                              builder: (context, snapshot) {
+                                                print("tagstags: $tags");
+                                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                                  return Container(
+                                                      width: 330,
+                                                      child: Container(
+                                                          height: 20, // Adjust the height as needed
+                                                          width: 20,
+                                                          child: Center(
+                                                              child: CircularProgressIndicator()
+                                                          )
+                                                      )
+                                                  ); // Display a loading indicator while fetching data
+                                                } else if (snapshot.hasError) {
+                                                  return Text('Error: ${snapshot.error}');
+                                                } else {
+                                                  // List<DocumentSnapshot<Object?>>? relatedSolutions = snapshot.data;
+                                                  List<DocumentSnapshot<Map<String, dynamic>>>? relatedChallenges = snapshot.data?.cast<DocumentSnapshot<Map<String, dynamic>>>();
+
+                                                  // print("relatedSolutions: $relatedSolutions");
+
+                                                  return Column(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Padding(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+                                                        child: Text("Related Challenges (${relatedChallenges?.length}):",
+                                                            style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                                                fontSize: 20,
+                                                                color: Colors.black)
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        child: ListView.builder(
+                                                          scrollDirection: Axis.horizontal,
+                                                          shrinkWrap: true,
+                                                          itemCount: relatedChallenges?.length,
+                                                          itemBuilder: (c, i) {
+                                                            // relatedSolutionlength = relatedChallenges?.length;
+                                                            // print("relatedSolutionlength: $relatedSolutionlength");
+                                                            var challengesData = relatedChallenges?[i].data() as Map<String, dynamic>;
+                                                            print("solutionData: ${challengesData}");
+                                                            return Container(
+                                                              margin: EdgeInsets.symmetric(horizontal: 15),
+                                                              padding: EdgeInsets.all(12),
+                                                              width: 330,
+                                                              decoration: BoxDecoration(
+                                                                border: Border.all(color: Colors.orange),
+                                                                borderRadius: BorderRadius.circular(20),
+                                                              ),
+                                                              child: SingleChildScrollView(
+                                                                child: Column(
+                                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Row(
+                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                      children: [
+                                                                        Flexible(
+                                                                          child: Text("${challengesData['Label']}",
+                                                                              style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                                                                  fontSize: 18,
+                                                                                  color: Colors.black)),
+                                                                        ),
+                                                                        // InkWell(
+                                                                        //   onTap: (){
+                                                                        //     _userAboutMEProvider.isRecommendedAddedChallenge(true,  relatedChallenges![i]);
+                                                                        //   },
+                                                                        //   child: Container(
+                                                                        //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                        //     width: MediaQuery.of(context).size.width * .05,
+                                                                        //     // width: MediaQuery.of(context).size.width * .15,
+                                                                        //
+                                                                        //     // height: 60,
+                                                                        //     decoration: BoxDecoration(
+                                                                        //       color:Colors.blue ,
+                                                                        //       border: Border.all(
+                                                                        //           color:Colors.blue ,
+                                                                        //           width: 1.0),
+                                                                        //       borderRadius: BorderRadius.circular(8.0),
+                                                                        //     ),
+                                                                        //     child: Center(
+                                                                        //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                        //       child: Text(
+                                                                        //         'Add',
+                                                                        //         style: GoogleFonts.montserrat(
+                                                                        //           textStyle:
+                                                                        //           Theme
+                                                                        //               .of(context)
+                                                                        //               .textTheme
+                                                                        //               .titleSmall,
+                                                                        //           fontWeight: FontWeight.bold,
+                                                                        //           color:Colors.white ,
+                                                                        //         ),
+                                                                        //       ),
+                                                                        //     ),
+                                                                        //   ),
+                                                                        // ),
+                                                                        Row(
+                                                                          children: [
+                                                                            IconButton(
+                                                                                onPressed: (){
+                                                                                  userAboutMEProvider.updateChallengePreview(
+                                                                                      challengesData['Label'],
+                                                                                      challengesData['Description'],
+                                                                                      challengesData['Final_Description'],
+                                                                                      challengesData['Impact'],
+                                                                                      challengesData['Keywords'],
+                                                                                      challengesData['tags'],
+                                                                                      challengesData['id'],
+                                                                                      isTrueOrFalse,
+                                                                                      challengesData
+                                                                                  );
+                                                                                },
+                                                                                icon: Icon(Icons.visibility, color: Colors.blue,)
+                                                                            ),
+                                                                            SizedBox(width: 5,),
+
+                                                                            (userAboutMEProvider.isRecommendedChallengeCheckedMap[challengesData['id']] == true) ? Text(
+                                                                              'Added',
+                                                                              style: GoogleFonts.montserrat(
+                                                                                textStyle:
+                                                                                Theme.of(context).textTheme.titleSmall,
+                                                                                fontStyle: FontStyle.italic,
+                                                                                color:Colors.green,
+                                                                              ),
+                                                                            ) : InkWell(
+                                                                              onTap: (){
+                                                                                // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
+                                                                                userAboutMEProvider.isRecommendedAddedChallenge(true, relatedChallenges![i]);
+                                                                                toastification.show(context: context,
+                                                                                    title: Text('${challengesData['Label']} added to basket'),
+                                                                                    autoCloseDuration: Duration(milliseconds: 2500),
+                                                                                    alignment: Alignment.center,
+                                                                                    backgroundColor: Colors.green,
+                                                                                    foregroundColor: Colors.white,
+                                                                                    icon: Icon(Icons.check_circle, color: Colors.white,),
+                                                                                    animationDuration: Duration(milliseconds: 1000),
+                                                                                    showProgressBar: false
+                                                                                );
+                                                                              },
+                                                                              child: Container(
+                                                                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                                width: MediaQuery.of(context).size.width * .05,
+                                                                                // width: MediaQuery.of(context).size.width * .15,
+
+                                                                                // height: 60,
+                                                                                decoration: BoxDecoration(
+                                                                                  color:Colors.blue ,
+                                                                                  border: Border.all(
+                                                                                      color:Colors.blue ,
+                                                                                      width: 1.0),
+                                                                                  borderRadius: BorderRadius.circular(8.0),
+                                                                                ),
+                                                                                child: Center(
+                                                                                  // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                                  child: Text(
+                                                                                    'Add',
+                                                                                    style: GoogleFonts.montserrat(
+                                                                                      textStyle:
+                                                                                      Theme
+                                                                                          .of(context)
+                                                                                          .textTheme
+                                                                                          .titleSmall,
+                                                                                      fontWeight: FontWeight.bold,
+                                                                                      color:Colors.white ,
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        )
+
+                                                                      ],
+                                                                    ),
+                                                                    SizedBox(height: 5,),
+                                                                    // Text("${challengesData['Label']}",
+                                                                    //     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                                                    //         fontSize: 18,
+                                                                    //         color: Colors.black)),
+                                                                    Text("${challengesData['Final_description']}",
+                                                                        maxLines: 3,
+                                                                        style: GoogleFonts.montserrat(
+                                                                            fontSize: 15,
+                                                                            color: Colors.black)
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                }
+                                              },
                                             ),
+                                          ),
+                                        ]
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              SizedBox(height: 15,),
+
+                              Flexible(
+                                // flex: 1,
+                                child: Container(
+                                  // height: 400,
+                                  padding: EdgeInsets.all(15),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(20)
+                                  ),
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Container(
+                                          height: 170 ,
+                                          width: MediaQuery.of(context).size.width,
+                                          child: FutureBuilder(
+                                            future: getRelatedSolutions(tags, keywords),
+                                            builder: (context, snapshot) {
+                                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                                return Container(
+                                                    width: 330,
+                                                    child: Container(
+                                                        height: 20, // Adjust the height as needed
+                                                        width: 20,
+                                                        child: Center(
+                                                            child: CircularProgressIndicator()
+                                                        )
+                                                    )
+                                                ); // Display a loading indicator while fetching data
+                                              } else if (snapshot.hasError) {
+                                                return Text('Error: ${snapshot.error}');
+                                              } else {
+                                                // List<DocumentSnapshot<Object?>>? relatedSolutions = snapshot.data;
+                                                List<DocumentSnapshot<Map<String, dynamic>>>? relatedSolutions = snapshot.data?.cast<DocumentSnapshot<Map<String, dynamic>>>();
+
+                                                // print("relatedSolutions: $relatedSolutions");
+
+                                                return Column(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+                                                      child: Text("Suggested solutions (${relatedSolutions?.length})",
+                                                          style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                                              fontSize: 20,
+                                                              color: Colors.black)
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: ListView.builder(
+                                                        scrollDirection: Axis.horizontal,
+                                                        shrinkWrap: true,
+                                                        itemCount: relatedSolutions?.length,
+                                                        itemBuilder: (c, i) {
+                                                          // relatedSolutionlength = relatedSolutions?.length;
+                                                          // print("relatedSolutionlength: $relatedSolutionlength");
+                                                          var solutionData = relatedSolutions?[i].data() as Map<String, dynamic>;
+                                                          print("solutionData: ${solutionData}");
+                                                          return Container(
+                                                            margin: EdgeInsets.symmetric(horizontal: 15),
+                                                            padding: EdgeInsets.all(12),
+                                                            width: 330,
+                                                            decoration: BoxDecoration(
+                                                              border: Border.all(color: Colors.green),
+                                                              borderRadius: BorderRadius.circular(20),
+                                                            ),
+                                                            child: SingleChildScrollView(
+                                                              child: Column(
+                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                    children: [
+                                                                      Flexible(
+                                                                        child: Text("${solutionData['Name']}",
+                                                                            maxLines: null,
+                                                                            style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                                                                fontSize: 18,
+                                                                                color: Colors.black)),
+                                                                      ),
+                                                                      SizedBox(width: 5,),
+                                                                      // InkWell(
+                                                                      //   onTap: (){
+                                                                      //     _userAboutMEProvider.isRecommendedAddedSolutions(true, relatedSolutions![i]);
+                                                                      //   },
+                                                                      //   child: Container(
+                                                                      //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                      //     width: MediaQuery.of(context).size.width * .05,
+                                                                      //     // width: MediaQuery.of(context).size.width * .15,
+                                                                      //
+                                                                      //     // height: 60,
+                                                                      //     decoration: BoxDecoration(
+                                                                      //       color:Colors.blue ,
+                                                                      //       border: Border.all(
+                                                                      //           color:Colors.blue ,
+                                                                      //           width: 1.0),
+                                                                      //       borderRadius: BorderRadius.circular(8.0),
+                                                                      //     ),
+                                                                      //     child: Center(
+                                                                      //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                      //       child: Text(
+                                                                      //         'Add',
+                                                                      //         style: GoogleFonts.montserrat(
+                                                                      //           textStyle:
+                                                                      //           Theme
+                                                                      //               .of(context)
+                                                                      //               .textTheme
+                                                                      //               .titleSmall,
+                                                                      //           fontWeight: FontWeight.bold,
+                                                                      //           color:Colors.white ,
+                                                                      //         ),
+                                                                      //       ),
+                                                                      //     ),
+                                                                      //   ),
+                                                                      // ),
+
+                                                                      Row(
+                                                                        children: [
+                                                                          IconButton(
+                                                                              onPressed: (){
+                                                                                userAboutMEProvider.updateSolutionPreview(
+                                                                                    solutionData['Name'],
+                                                                                    solutionData['Description'],
+                                                                                    solutionData['Final_Description'],
+                                                                                    solutionData['Impact'],
+                                                                                    solutionData['Keywords'],
+                                                                                    solutionData['tags'],
+                                                                                    solutionData['id'],
+                                                                                    isTrueOrFalse,
+                                                                                    solutionData
+                                                                                );
+                                                                              },
+
+                                                                              icon: Icon(Icons.visibility, color: Colors.blue,)
+                                                                          ),
+                                                                          SizedBox(width: 5,),
+
+                                                                          Consumer<UserAboutMEProvider>(
+                                                                              builder: (c,userAboutMEProvider, _){
+                                                                                return
+                                                                                  (userAboutMEProvider.isRecommendedSolutionsCheckedMap[solutionData['id']] == true) ? Text(
+                                                                                    'Added',
+                                                                                    style: GoogleFonts.montserrat(
+                                                                                      textStyle:
+                                                                                      Theme
+                                                                                          .of(context)
+                                                                                          .textTheme
+                                                                                          .titleSmall,
+                                                                                      fontStyle: FontStyle.italic,
+                                                                                      color:Colors.green ,
+                                                                                    ),
+                                                                                  ) : InkWell(
+                                                                                    onTap: (){
+                                                                                      // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
+                                                                                      userAboutMEProvider.isRecommendedAddedSolutions(true, relatedSolutions![i]);
+                                                                                      toastification.show(context: context,
+                                                                                          title: Text('${solutionData['Name']} added to basket'),
+                                                                                          autoCloseDuration: Duration(milliseconds: 2500),
+                                                                                          alignment: Alignment.center,
+                                                                                          backgroundColor: Colors.green,
+                                                                                          foregroundColor: Colors.white,
+                                                                                          icon: Icon(Icons.check_circle, color: Colors.white,),
+                                                                                          animationDuration: Duration(milliseconds: 1000),
+                                                                                          showProgressBar: false
+                                                                                      );
+                                                                                    },
+                                                                                    child: Container(
+                                                                                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                                      width: MediaQuery.of(context).size.width * .05,
+                                                                                      // width: MediaQuery.of(context).size.width * .15,
+
+                                                                                      // height: 60,
+                                                                                      decoration: BoxDecoration(
+                                                                                        color:Colors.blue ,
+                                                                                        border: Border.all(
+                                                                                            color:Colors.blue ,
+                                                                                            width: 1.0),
+                                                                                        borderRadius: BorderRadius.circular(8.0),
+                                                                                      ),
+                                                                                      child: Center(
+                                                                                        // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                                        child: Text(
+                                                                                          'Add',
+                                                                                          style: GoogleFonts.montserrat(
+                                                                                            textStyle:
+                                                                                            Theme
+                                                                                                .of(context)
+                                                                                                .textTheme
+                                                                                                .titleSmall,
+                                                                                            fontWeight: FontWeight.bold,
+                                                                                            color:Colors.white ,
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ),
+                                                                                  );
+                                                                              }),
+                                                                        ],
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                  SizedBox(height: 5,),
+                                                                  // Icon(Icons.add, color: Colors.blue, size: 24,),
+                                                                  Text("${solutionData['Final_description']}",
+                                                                      maxLines: 3,
+                                                                      style: GoogleFonts.montserrat(
+                                                                          fontSize: 15,
+                                                                          color: Colors.black)),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              }
+                                            },
                                           ),
                                         ),
-                                        SizedBox(height: 15,),
-                                        Flexible(
-                                          // flex: 1,
-                                          child: Container(
-                                            // height: 400,
-                                            padding: EdgeInsets.all(15),
-                                            decoration: BoxDecoration(
-                                                border: Border.all(color: Colors.grey),
-                                                borderRadius: BorderRadius.circular(20)
-                                            ),
-                                            child: SingleChildScrollView(
-                                              child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  Container(
-                                                    height: 170 ,
-                                                    child: FutureBuilder(
-                                                      future: getRelatedSolutions(tags, keywords),
-                                                      builder: (context, snapshot) {
-                                                        if (snapshot.connectionState == ConnectionState.waiting) {
-                                                          return Container(
-                                                              width: 330,
-                                                              child: Container(
-                                                                  height: 20, // Adjust the height as needed
-                                                                  width: 20,
-                                                                  child: Center(
-                                                                      child: CircularProgressIndicator()
-                                                                  )
-                                                              )
-                                                          ); // Display a loading indicator while fetching data
-                                                        } else if (snapshot.hasError) {
-                                                          return Text('Error: ${snapshot.error}');
-                                                        } else {
-                                                          // List<DocumentSnapshot<Object?>>? relatedSolutions = snapshot.data;
-                                                          List<DocumentSnapshot<Map<String, dynamic>>>? relatedSolutions = snapshot.data?.cast<DocumentSnapshot<Map<String, dynamic>>>();
 
-                                                          // print("relatedSolutions: $relatedSolutions");
 
-                                                          return Column(
-                                                            mainAxisAlignment: MainAxisAlignment.start,
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              Padding(
-                                                                padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-                                                                child: Text("Related Solutions (${relatedSolutions?.length})",
-                                                                    style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                                                                        fontSize: 20,
-                                                                        color: Colors.black)
-                                                                ),
-                                                              ),
-                                                              Expanded(
-                                                                child: ListView.builder(
-                                                                  scrollDirection: Axis.horizontal,
-                                                                  shrinkWrap: true,
-                                                                  itemCount: relatedSolutions?.length,
-                                                                  itemBuilder: (c, i) {
-                                                                    // relatedSolutionlength = relatedSolutions?.length;
-                                                                    // print("relatedSolutionlength: $relatedSolutionlength");
-                                                                    var solutionData = relatedSolutions?[i].data() as Map<String, dynamic>;
-                                                                    print("solutionData: ${solutionData}");
-                                                                    return Container(
-                                                                      margin: EdgeInsets.symmetric(horizontal: 15),
-                                                                      padding: EdgeInsets.all(12),
-                                                                      width: 330,
-                                                                      decoration: BoxDecoration(
-                                                                        border: Border.all(color: Colors.black),
-                                                                        borderRadius: BorderRadius.circular(20),
-                                                                      ),
-                                                                      child: SingleChildScrollView(
-                                                                        child: Column(
-                                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                          children: [
-                                                                            Row(
-                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                                              children: [
-                                                                                Flexible(
-                                                                                  child: Text("${solutionData['Name']}",
-                                                                                      maxLines: null,
-                                                                                      style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                                                                                          fontSize: 18,
-                                                                                          color: Colors.black)),
-                                                                                ),
-                                                                                SizedBox(width: 5,),
-                                                                                // InkWell(
-                                                                                //   onTap: (){
-                                                                                //     _userAboutMEProvider.isRecommendedAddedSolutions(true, relatedSolutions![i]);
-                                                                                //   },
-                                                                                //   child: Container(
-                                                                                //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                                                                //     width: MediaQuery.of(context).size.width * .05,
-                                                                                //     // width: MediaQuery.of(context).size.width * .15,
-                                                                                //
-                                                                                //     // height: 60,
-                                                                                //     decoration: BoxDecoration(
-                                                                                //       color:Colors.blue ,
-                                                                                //       border: Border.all(
-                                                                                //           color:Colors.blue ,
-                                                                                //           width: 1.0),
-                                                                                //       borderRadius: BorderRadius.circular(8.0),
-                                                                                //     ),
-                                                                                //     child: Center(
-                                                                                //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                                                                //       child: Text(
-                                                                                //         'Add',
-                                                                                //         style: GoogleFonts.montserrat(
-                                                                                //           textStyle:
-                                                                                //           Theme
-                                                                                //               .of(context)
-                                                                                //               .textTheme
-                                                                                //               .titleSmall,
-                                                                                //           fontWeight: FontWeight.bold,
-                                                                                //           color:Colors.white ,
-                                                                                //         ),
-                                                                                //       ),
-                                                                                //     ),
-                                                                                //   ),
-                                                                                // ),
-                                                                                Consumer<UserAboutMEProvider>(
-                                                                                    builder: (c,userAboutMEProvider, _){
-                                                                                      return
-                                                                                        (userAboutMEProvider.isRecommendedSolutionsCheckedMap[solutionData['id']] == true) ? Text(
-                                                                                          'Added',
-                                                                                          style: GoogleFonts.montserrat(
-                                                                                            textStyle:
-                                                                                            Theme
-                                                                                                .of(context)
-                                                                                                .textTheme
-                                                                                                .titleSmall,
-                                                                                            fontStyle: FontStyle.italic,
-                                                                                            color:Colors.green ,
-                                                                                          ),
-                                                                                        ) : InkWell(
-                                                                                          onTap: (){
-                                                                                            // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
-                                                                                            userAboutMEProvider.isRecommendedAddedSolutions(true, relatedSolutions![i]);
-                                                                                            toastification.show(context: context,
-                                                                                                title: Text('${solutionData['Name']} added successfully'),
-                                                                                                autoCloseDuration: Duration(milliseconds: 2500),
-                                                                                                alignment: Alignment.center,
-                                                                                                backgroundColor: Colors.green,
-                                                                                                foregroundColor: Colors.white,
-                                                                                                icon: Icon(Icons.check_circle, color: Colors.white,),
-                                                                                                animationDuration: Duration(milliseconds: 1000),
-                                                                                                showProgressBar: false
-                                                                                            );
-                                                                                          },
-                                                                                          child: Container(
-                                                                                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                                                                            width: MediaQuery.of(context).size.width * .05,
-                                                                                            // width: MediaQuery.of(context).size.width * .15,
-
-                                                                                            // height: 60,
-                                                                                            decoration: BoxDecoration(
-                                                                                              color:Colors.blue ,
-                                                                                              border: Border.all(
-                                                                                                  color:Colors.blue ,
-                                                                                                  width: 1.0),
-                                                                                              borderRadius: BorderRadius.circular(8.0),
-                                                                                            ),
-                                                                                            child: Center(
-                                                                                              // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                                                                              child: Text(
-                                                                                                'Add',
-                                                                                                style: GoogleFonts.montserrat(
-                                                                                                  textStyle:
-                                                                                                  Theme
-                                                                                                      .of(context)
-                                                                                                      .textTheme
-                                                                                                      .titleSmall,
-                                                                                                  fontWeight: FontWeight.bold,
-                                                                                                  color:Colors.white ,
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ),
-                                                                                        );
-                                                                                    })
-                                                                              ],
-                                                                            ),
-                                                                            SizedBox(height: 5,),
-                                                                            // Icon(Icons.add, color: Colors.blue, size: 24,),
-                                                                            Text("${solutionData['Final_description']}",
-                                                                                maxLines: 3,
-                                                                                style: GoogleFonts.montserrat(
-                                                                                    fontSize: 15,
-                                                                                    color: Colors.black)),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    );
-                                                                  },
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          );
-                                                        }
-                                                      },
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 20,),
-                                                  Container(
-                                                    height: 170 ,
-                                                    child: FutureBuilder(
-                                                      future: getRelatedChallenges(tags, keywords),
-                                                      builder: (context, snapshot) {
-                                                        if (snapshot.connectionState == ConnectionState.waiting) {
-                                                          return Container(
-                                                              width: 330,
-                                                              child: Container(
-                                                                  height: 20, // Adjust the height as needed
-                                                                  width: 20,
-                                                                  child: Center(
-                                                                      child: CircularProgressIndicator()
-                                                                  )
-                                                              )
-                                                          ); // Display a loading indicator while fetching data
-                                                        } else if (snapshot.hasError) {
-                                                          return Text('Error: ${snapshot.error}');
-                                                        } else {
-                                                          // List<DocumentSnapshot<Object?>>? relatedSolutions = snapshot.data;
-                                                          List<DocumentSnapshot<Map<String, dynamic>>>? relatedChallenges = snapshot.data?.cast<DocumentSnapshot<Map<String, dynamic>>>();
-
-                                                          // print("relatedSolutions: $relatedSolutions");
-
-                                                          return Column(
-                                                            mainAxisAlignment: MainAxisAlignment.start,
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              Padding(
-                                                                padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-                                                                child: Text("Related Challenges (${relatedChallenges?.length})",
-                                                                    style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                                                                        fontSize: 20,
-                                                                        color: Colors.black)
-                                                                ),
-                                                              ),
-                                                              Expanded(
-                                                                child: ListView.builder(
-                                                                  scrollDirection: Axis.horizontal,
-                                                                  shrinkWrap: true,
-                                                                  itemCount: relatedChallenges?.length,
-                                                                  itemBuilder: (c, i) {
-                                                                    // relatedSolutionlength = relatedChallenges?.length;
-                                                                    // print("relatedSolutionlength: $relatedSolutionlength");
-                                                                    var challengesData = relatedChallenges?[i].data() as Map<String, dynamic>;
-                                                                    print("solutionData: ${challengesData}");
-                                                                    return Container(
-                                                                      margin: EdgeInsets.symmetric(horizontal: 15),
-                                                                      padding: EdgeInsets.all(12),
-                                                                      width: 330,
-                                                                      decoration: BoxDecoration(
-                                                                        border: Border.all(color: Colors.black),
-                                                                        borderRadius: BorderRadius.circular(20),
-                                                                      ),
-                                                                      child: SingleChildScrollView(
-                                                                        child: Column(
-                                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                          children: [
-                                                                            Row(
-                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                                              children: [
-                                                                                Flexible(
-                                                                                  child: Text("${challengesData['Label']}",
-                                                                                      style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                                                                                          fontSize: 18,
-                                                                                          color: Colors.black)),
-                                                                                ),
-                                                                                // InkWell(
-                                                                                //   onTap: (){
-                                                                                //     _userAboutMEProvider.isRecommendedAddedChallenge(true,  relatedChallenges![i]);
-                                                                                //   },
-                                                                                //   child: Container(
-                                                                                //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                                                                //     width: MediaQuery.of(context).size.width * .05,
-                                                                                //     // width: MediaQuery.of(context).size.width * .15,
-                                                                                //
-                                                                                //     // height: 60,
-                                                                                //     decoration: BoxDecoration(
-                                                                                //       color:Colors.blue ,
-                                                                                //       border: Border.all(
-                                                                                //           color:Colors.blue ,
-                                                                                //           width: 1.0),
-                                                                                //       borderRadius: BorderRadius.circular(8.0),
-                                                                                //     ),
-                                                                                //     child: Center(
-                                                                                //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                                                                //       child: Text(
-                                                                                //         'Add',
-                                                                                //         style: GoogleFonts.montserrat(
-                                                                                //           textStyle:
-                                                                                //           Theme
-                                                                                //               .of(context)
-                                                                                //               .textTheme
-                                                                                //               .titleSmall,
-                                                                                //           fontWeight: FontWeight.bold,
-                                                                                //           color:Colors.white ,
-                                                                                //         ),
-                                                                                //       ),
-                                                                                //     ),
-                                                                                //   ),
-                                                                                // ),
-                                                                                Consumer<UserAboutMEProvider>(
-                                                                                    builder: (c,userAboutMEProvider, _){
-                                                                                      return
-                                                                                        (userAboutMEProvider.isRecommendedChallengeCheckedMap[challengesData['id']] == true) ? Text(
-                                                                                          'Added',
-                                                                                          style: GoogleFonts.montserrat(
-                                                                                            textStyle:
-                                                                                            Theme
-                                                                                                .of(context)
-                                                                                                .textTheme
-                                                                                                .titleSmall,
-                                                                                            fontStyle: FontStyle.italic,
-                                                                                            color:Colors.green ,
-                                                                                          ),
-                                                                                        ) : InkWell(
-                                                                                          onTap: (){
-                                                                                            // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
-                                                                                            userAboutMEProvider.isRecommendedAddedChallenge(true, relatedChallenges![i]);
-                                                                                            toastification.show(context: context,
-                                                                                                title: Text('${challengesData['Label']} added successfully'),
-                                                                                                autoCloseDuration: Duration(milliseconds: 2500),
-                                                                                                alignment: Alignment.center,
-                                                                                                backgroundColor: Colors.green,
-                                                                                                foregroundColor: Colors.white,
-                                                                                                icon: Icon(Icons.check_circle, color: Colors.white,),
-                                                                                                animationDuration: Duration(milliseconds: 1000),
-                                                                                                showProgressBar: false
-                                                                                            );
-
-                                                                                          },
-                                                                                          child: Container(
-                                                                                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                                                                            width: MediaQuery.of(context).size.width * .05,
-                                                                                            // width: MediaQuery.of(context).size.width * .15,
-
-                                                                                            // height: 60,
-                                                                                            decoration: BoxDecoration(
-                                                                                              color:Colors.blue ,
-                                                                                              border: Border.all(
-                                                                                                  color:Colors.blue ,
-                                                                                                  width: 1.0),
-                                                                                              borderRadius: BorderRadius.circular(8.0),
-                                                                                            ),
-                                                                                            child: Center(
-                                                                                              // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                                                                              child: Text(
-                                                                                                'Add',
-                                                                                                style: GoogleFonts.montserrat(
-                                                                                                  textStyle:
-                                                                                                  Theme
-                                                                                                      .of(context)
-                                                                                                      .textTheme
-                                                                                                      .titleSmall,
-                                                                                                  fontWeight: FontWeight.bold,
-                                                                                                  color:Colors.white ,
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ),
-                                                                                        );
-                                                                                    })
-
-                                                                              ],
-                                                                            ),
-                                                                            SizedBox(height: 5,),
-                                                                            // Text("${challengesData['Label']}",
-                                                                            //     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                                                                            //         fontSize: 18,
-                                                                            //         color: Colors.black)),
-                                                                            Text("${challengesData['Final_description']}",
-                                                                                maxLines: 3,
-                                                                                style: GoogleFonts.montserrat(
-                                                                                    fontSize: 15,
-                                                                                    color: Colors.black)),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    );
-                                                                  },
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          );
-                                                        }
-                                                      },
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        )
                                       ],
                                     ),
                                   ),
-                )
-            ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                  );
+                })
+          );
+          // });
+        }
+    );
+  }
+
+  void NewSolViewDialog(Name, Description, Impact, FinalDescription, keywords, tags, insideId,document,isTrueOrFalse,AddButton){
+
+
+    final DateFormat formatter = DateFormat("MMMM d, yyyy 'at' h:mm:ss a 'UTC'Z");
+
+    // String formattedDate = formatter.format(dateTime);
+
+
+
+    List<TextEditingController> textControllers = [];
+    for(int i=0;i<6;i++){
+      textControllers.add(TextEditingController());
+    }
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Theme(
+            data: Theme.of(context).copyWith(dialogBackgroundColor: Colors.white),
+            child:  Consumer<UserAboutMEProvider>(
+                builder: (c,userAboutMEProvider, _){
+                  if(userAboutMEProvider.previewname != null || userAboutMEProvider.previewDescription != null ||userAboutMEProvider.previewFinalDescription != null ||
+                      userAboutMEProvider.previewId != null ||userAboutMEProvider.previewImpact != null ||userAboutMEProvider.previewKeywordssss.isNotEmpty ||
+                      userAboutMEProvider.previewtags.isNotEmpty || userAboutMEProvider.preview !=null ){
+                    Name = userAboutMEProvider.previewname;
+                    Description = userAboutMEProvider.previewDescription;
+                    FinalDescription = userAboutMEProvider.previewFinalDescription;
+                    insideId = userAboutMEProvider.previewId;
+                    Impact = userAboutMEProvider.previewImpact;
+                    keywords = userAboutMEProvider.previewKeywordssss;
+                    tags = userAboutMEProvider.previewtags;
+                    document = userAboutMEProvider.preview;
+                  }
+                  _challengesProvider.addkeywordsList(keywords);
+                  _challengesProvider.addProviderEditTagsList(tags);
+                  return  AlertDialog(
+                      insetPadding: EdgeInsets.symmetric(horizontal: MediaQuery
+                          .of(context)
+                          .size
+                          .width * 0.08, vertical: MediaQuery
+                          .of(context)
+                          .size
+                          .height * 0.04),
+                      icon: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          InkWell(
+                              onTap: (){
+                                userAboutMEProvider.previewname = null;
+                                userAboutMEProvider.previewDescription = null;
+                                userAboutMEProvider.previewFinalDescription = null;
+                                userAboutMEProvider.previewId = null;
+                                userAboutMEProvider.previewImpact = null;
+                                userAboutMEProvider.previewKeywordssss.clear();
+                                userAboutMEProvider.previewtags.clear();
+                                userAboutMEProvider.preview = null;
+                                Navigator.pop(context);
+                              },
+                              child: Icon(Icons.close)),
+                        ],
+                      ),
+                      iconPadding: EdgeInsets.only(top: 8, right: 16),
+                      content:   SizedBox(
+                        width: double.maxFinite,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Column(
+                            children: [
+                              Flexible(
+                                // flex: 2,
+                                child: Container(
+                                  // height: 400,
+                                  padding: EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(20)
+                                  ),
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          (Name==""|| Name==null) ?  Container() :
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              // Text("Label: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                                              Text(Name,
+                                                  style: GoogleFonts.montserrat(
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 20,
+                                                      color: Colors.black)
+                                              ),
+                                              // IconButton(onPressed: (){
+                                              //   Navigator.pop(context);
+                                              // },
+                                              //     icon:Icon(Icons.close)
+                                              // ),
+                                              Consumer<UserAboutMEProvider>(
+                                                  builder: (c,userAboutMEProvider, _){
+                                                    return
+                                                      (isTrueOrFalse[insideId] == true) ? Text(
+                                                        'Added',
+                                                        style: GoogleFonts.montserrat(
+                                                          textStyle:
+                                                          Theme
+                                                              .of(context)
+                                                              .textTheme
+                                                              .titleSmall,
+                                                          fontStyle: FontStyle.italic,
+                                                          color:Colors.green ,
+                                                        ),
+                                                      ) : InkWell(
+                                                        onTap: (){
+                                                          AddButton(true, document);
+                                                        },
+                                                        child: Container(
+                                                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                          width: MediaQuery.of(context).size.width * .05,
+                                                          // width: MediaQuery.of(context).size.width * .15,
+
+                                                          // height: 60,
+                                                          decoration: BoxDecoration(
+                                                            color:Colors.blue ,
+                                                            border: Border.all(
+                                                                color:Colors.blue ,
+                                                                width: 1.0),
+                                                            borderRadius: BorderRadius.circular(8.0),
+                                                          ),
+                                                          child: Center(
+                                                            // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                            child: Text(
+                                                              'Add',
+                                                              style: GoogleFonts.montserrat(
+                                                                textStyle:
+                                                                Theme
+                                                                    .of(context)
+                                                                    .textTheme
+                                                                    .titleSmall,
+                                                                fontWeight: FontWeight.bold,
+                                                                color:Colors.white ,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                  })
+                                            ],
+                                          ),
+                                          SizedBox(height: 5,),
+                                          (FinalDescription==""|| FinalDescription==null) ? Container() :
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              // Text("Description: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                                              Flexible(child: Text(FinalDescription,  style: GoogleFonts.montserrat(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 20,
+                                                  color: Colors.black),
+                                                maxLines: null,)),
+                                            ],
+                                          ),
+                                          SizedBox(height: 10,),
+
+                                          (Impact==""|| Impact==null) ? Container() :
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              // Text("Impact: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                                              Flexible(child: Text(Impact,  style: GoogleFonts.montserrat(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontStyle: FontStyle.italic,
+                                                  fontSize: 20,
+                                                  color: Colors.grey),
+                                                maxLines: null,)),
+                                            ],
+                                          ),
+
+                                          SizedBox(height: 10,),
+
+                                          (Description==""|| Description==null) ? Container() :
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              // Text("Description: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                                              Flexible(child: Text(Description,  style: GoogleFonts.montserrat(
+                                                // fontWeight: FontWeight.w600,
+                                                  fontSize: 16,
+                                                  color: Colors.black),
+                                                maxLines: null,)),
+                                            ],
+                                          ),
+
+                                          SizedBox(height: 10,),
+
+
+
+
+                                          (_challengesProvider.keywords==""|| _challengesProvider.keywords==null||_challengesProvider.keywords.isEmpty) ? Container() :
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              // Text("Category: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                                              Flexible(
+                                                child: Consumer<ChallengesProvider>(
+                                                    builder: (c,addKeywordProvider, _){
+                                                      return Align(
+                                                        alignment: Alignment.centerLeft,
+                                                        child: Wrap(
+                                                          spacing: 10,
+                                                          runSpacing: 10,
+                                                          crossAxisAlignment: WrapCrossAlignment.start,
+                                                          alignment: WrapAlignment.start,
+                                                          runAlignment: WrapAlignment.start,
+                                                          children: addKeywordProvider.keywords.map((item){
+                                                            print("item: $item");
+                                                            print("addKeywordProvider.keywords: ${addKeywordProvider.keywords}");
+                                                            return InkWell(
+                                                              onTap: (){
+                                                                if(_tabController.index == 2){
+                                                                  searchChallengescontroller.text = item;
+                                                                  _challengesProvider.loadDataForPageSearchFilter(item);
+                                                                  // Navigator.pop(context);
+                                                                  showChallengesSelector();
+                                                                }
+                                                                if(_tabController.index == 3){
+                                                                  searchbyCatcontroller.text = item;
+                                                                  _addKeywordProvider.loadDataForPageSearchFilter(searchbyCatcontroller.text.toString());
+                                                                  // Navigator.pop(context);
+                                                                  showSolutionSelectors();
+                                                                }
+                                                              },
+                                                              child: Container(
+                                                                height: 50,
+                                                                // width: 200,
+                                                                margin: EdgeInsets.only(bottom: 10),
+                                                                padding: EdgeInsets.all(8),
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius: BorderRadius.circular(15),
+                                                                    // color: Color(0xFF00ACC1)
+                                                                    color: Colors.grey
+                                                                ),
+                                                                child: Row(
+                                                                  mainAxisSize: MainAxisSize.min,
+                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                  children: [
+                                                                    Text(item, style: TextStyle(
+                                                                        fontWeight: FontWeight.w700,
+                                                                        color: Colors.white
+                                                                    ),),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            );
+                                                          }).toList(),
+                                                        ),
+                                                      );
+                                                    }),
+                                              ),
+                                            ],
+                                          ),
+
+                                          SizedBox(height: 10),
+
+                                          (_challengesProvider.ProviderEditTags==""|| _challengesProvider.ProviderEditTags==null||_challengesProvider.ProviderEditTags.isEmpty) ? Container() :  Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              // Text("Tags: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+
+                                              Flexible(
+                                                child: Consumer<ChallengesProvider>(
+                                                    builder: (c,addKeywordProvider, _){
+                                                      return Align(
+                                                        alignment: Alignment.centerLeft,
+                                                        child: Wrap(
+                                                          spacing: 10,
+                                                          runSpacing: 10,
+                                                          crossAxisAlignment: WrapCrossAlignment.start,
+                                                          alignment: WrapAlignment.start,
+                                                          runAlignment: WrapAlignment.start,
+                                                          children: addKeywordProvider.ProviderEditTags.map((item){
+                                                            return InkWell(
+                                                              onTap: (){
+                                                                if(_tabController.index == 2){
+                                                                  searchChallengescontroller.text = item;
+                                                                  _challengesProvider.loadDataForPageSearchFilter(item);
+                                                                  // Navigator.pop(context);
+                                                                  showChallengesSelector();
+                                                                }
+                                                                if(_tabController.index == 3){
+                                                                  searchbyCatcontroller.text = item;
+                                                                  _addKeywordProvider.loadDataForPageSearchFilter(searchbyCatcontroller.text.toString());
+                                                                  // Navigator.pop(context);
+                                                                  showSolutionSelectors();
+                                                                }
+
+                                                              },
+                                                              child: Container(
+                                                                height: 50,
+                                                                // width: 200,
+                                                                padding: EdgeInsets.all(8),
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius: BorderRadius.circular(15),
+                                                                    color: Colors.grey
+                                                                ),
+                                                                child: Row(
+                                                                  mainAxisSize: MainAxisSize.min,
+                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                  children: [
+                                                                    Text(item, style: TextStyle(
+                                                                        fontWeight: FontWeight.w700,
+                                                                        color: Colors.white
+                                                                    ),),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            );
+                                                          }).toList(),
+                                                        ),
+                                                      );
+
+                                                    }),
+                                              ),
+
+
+                                            ],
+                                          ),
+
+                                          SizedBox(height: 10,),
+
+                                          Container(
+                                            height: 170 ,
+                                            child: FutureBuilder(
+                                              future: getRelatedSolutions(tags, keywords),
+                                              builder: (context, snapshot) {
+                                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                                  return Container(
+                                                      width: 330,
+                                                      child: Container(
+                                                          height: 20, // Adjust the height as needed
+                                                          width: 20,
+                                                          child: Center(
+                                                              child: CircularProgressIndicator()
+                                                          )
+                                                      )
+                                                  ); // Display a loading indicator while fetching data
+                                                } else if (snapshot.hasError) {
+                                                  return Text('Error: ${snapshot.error}');
+                                                } else {
+                                                  // List<DocumentSnapshot<Object?>>? relatedSolutions = snapshot.data;
+                                                  List<DocumentSnapshot<Map<String, dynamic>>>? relatedSolutions = snapshot.data?.cast<DocumentSnapshot<Map<String, dynamic>>>();
+
+                                                  // print("relatedSolutions: $relatedSolutions");
+
+                                                  return Column(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Padding(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+                                                        child: Text("Related Solutions (${relatedSolutions?.length})",
+                                                            style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                                                fontSize: 20,
+                                                                color: Colors.black)
+                                                        ),
+                                                      ),
+                                                      Flexible(
+                                                        child: ListView.builder(
+                                                          scrollDirection: Axis.horizontal,
+                                                          shrinkWrap: true,
+                                                          itemCount: relatedSolutions?.length,
+                                                          itemBuilder: (c, i) {
+                                                            // relatedSolutionlength = relatedSolutions?.length;
+                                                            // print("relatedSolutionlength: $relatedSolutionlength");
+                                                            var solutionData = relatedSolutions?[i].data() as Map<String, dynamic>;
+                                                            print("solutionData: ${solutionData}");
+                                                            return Container(
+                                                              margin: EdgeInsets.symmetric(horizontal: 15),
+                                                              padding: EdgeInsets.all(12),
+                                                              width: 330,
+                                                              decoration: BoxDecoration(
+                                                                border: Border.all(color: Colors.green),
+                                                                borderRadius: BorderRadius.circular(20),
+                                                              ),
+                                                              child: SingleChildScrollView(
+                                                                child: Column(
+                                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Row(
+                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                      children: [
+                                                                        Flexible(
+                                                                          child: Text("${solutionData['Name']}",
+                                                                              maxLines: null,
+                                                                              style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                                                                  fontSize: 18,
+                                                                                  color: Colors.black)),
+                                                                        ),
+                                                                        SizedBox(width: 5,),
+                                                                        // InkWell(
+                                                                        //   onTap: (){
+                                                                        //     _userAboutMEProvider.isRecommendedAddedSolutions(true, relatedSolutions![i]);
+                                                                        //   },
+                                                                        //   child: Container(
+                                                                        //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                        //     width: MediaQuery.of(context).size.width * .05,
+                                                                        //     // width: MediaQuery.of(context).size.width * .15,
+                                                                        //
+                                                                        //     // height: 60,
+                                                                        //     decoration: BoxDecoration(
+                                                                        //       color:Colors.blue ,
+                                                                        //       border: Border.all(
+                                                                        //           color:Colors.blue ,
+                                                                        //           width: 1.0),
+                                                                        //       borderRadius: BorderRadius.circular(8.0),
+                                                                        //     ),
+                                                                        //     child: Center(
+                                                                        //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                        //       child: Text(
+                                                                        //         'Add',
+                                                                        //         style: GoogleFonts.montserrat(
+                                                                        //           textStyle:
+                                                                        //           Theme
+                                                                        //               .of(context)
+                                                                        //               .textTheme
+                                                                        //               .titleSmall,
+                                                                        //           fontWeight: FontWeight.bold,
+                                                                        //           color:Colors.white ,
+                                                                        //         ),
+                                                                        //       ),
+                                                                        //     ),
+                                                                        //   ),
+                                                                        // ),
+
+                                                                        Row(
+                                                                          children: [
+                                                                            IconButton(
+                                                                                onPressed: (){
+                                                                                  userAboutMEProvider.updateSolutionPreview(
+                                                                                      solutionData['Name'],
+                                                                                      solutionData['Description'],
+                                                                                      solutionData['Final_Description'],
+                                                                                      solutionData['Impact'],
+                                                                                      solutionData['Keywords'],
+                                                                                      solutionData['tags'],
+                                                                                      solutionData['id'],
+                                                                                      isTrueOrFalse,
+                                                                                      solutionData
+                                                                                  );
+                                                                                },
+
+                                                                                icon: Icon(Icons.visibility, color: Colors.blue,)
+                                                                            ),
+                                                                            SizedBox(width: 5,),
+
+                                                                            Consumer<UserAboutMEProvider>(
+                                                                                builder: (c,userAboutMEProvider, _){
+                                                                                  return
+                                                                                    (userAboutMEProvider.isRecommendedSolutionsCheckedMap[solutionData['id']] == true) ? Text(
+                                                                                      'Added',
+                                                                                      style: GoogleFonts.montserrat(
+                                                                                        textStyle:
+                                                                                        Theme
+                                                                                            .of(context)
+                                                                                            .textTheme
+                                                                                            .titleSmall,
+                                                                                        fontStyle: FontStyle.italic,
+                                                                                        color:Colors.green ,
+                                                                                      ),
+                                                                                    ) : InkWell(
+                                                                                      onTap: (){
+                                                                                        // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
+                                                                                        userAboutMEProvider.isRecommendedAddedSolutions(true, relatedSolutions![i]);
+                                                                                        toastification.show(context: context,
+                                                                                            title: Text('${solutionData['Name']} added to basket'),
+                                                                                            autoCloseDuration: Duration(milliseconds: 2500),
+                                                                                            alignment: Alignment.center,
+                                                                                            backgroundColor: Colors.green,
+                                                                                            foregroundColor: Colors.white,
+                                                                                            icon: Icon(Icons.check_circle, color: Colors.white,),
+                                                                                            animationDuration: Duration(milliseconds: 1000),
+                                                                                            showProgressBar: false
+                                                                                        );
+                                                                                      },
+                                                                                      child: Container(
+                                                                                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                                        width: MediaQuery.of(context).size.width * .05,
+                                                                                        // width: MediaQuery.of(context).size.width * .15,
+
+                                                                                        // height: 60,
+                                                                                        decoration: BoxDecoration(
+                                                                                          color:Colors.blue ,
+                                                                                          border: Border.all(
+                                                                                              color:Colors.blue ,
+                                                                                              width: 1.0),
+                                                                                          borderRadius: BorderRadius.circular(8.0),
+                                                                                        ),
+                                                                                        child: Center(
+                                                                                          // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                                          child: Text(
+                                                                                            'Add',
+                                                                                            style: GoogleFonts.montserrat(
+                                                                                              textStyle:
+                                                                                              Theme
+                                                                                                  .of(context)
+                                                                                                  .textTheme
+                                                                                                  .titleSmall,
+                                                                                              fontWeight: FontWeight.bold,
+                                                                                              color:Colors.white ,
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    );
+                                                                                }),
+                                                                          ],
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                    SizedBox(height: 5,),
+                                                                    // Icon(Icons.add, color: Colors.blue, size: 24,),
+                                                                    Text("${solutionData['Final_description']}",
+                                                                        maxLines: 3,
+                                                                        style: GoogleFonts.montserrat(
+                                                                            fontSize: 15,
+                                                                            color: Colors.black)),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                }
+                                              },
+                                            ),
+                                          ),
+
+                                        ]
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              SizedBox(height: 15,),
+
+                              Flexible(
+                                // flex: 1,
+                                child: Container(
+                                  // height: 400,
+                                  padding: EdgeInsets.all(15),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(20)
+                                  ),
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Container(
+                                          height: 170 ,
+                                          width: MediaQuery.of(context).size.width,
+                                          child: FutureBuilder(
+                                            future: getRelatedChallenges(tags, keywords),
+                                            builder: (context, snapshot) {
+                                              print("tagstags: $tags");
+                                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                                return Container(
+                                                    width: 330,
+                                                    child: Container(
+                                                        height: 20, // Adjust the height as needed
+                                                        width: 20,
+                                                        child: Center(
+                                                            child: CircularProgressIndicator()
+                                                        )
+                                                    )
+                                                ); // Display a loading indicator while fetching data
+                                              } else if (snapshot.hasError) {
+                                                return Text('Error: ${snapshot.error}');
+                                              } else {
+                                                // List<DocumentSnapshot<Object?>>? relatedSolutions = snapshot.data;
+                                                List<DocumentSnapshot<Map<String, dynamic>>>? relatedChallenges = snapshot.data?.cast<DocumentSnapshot<Map<String, dynamic>>>();
+
+                                                // print("relatedSolutions: $relatedSolutions");
+
+                                                return Column(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+                                                      child: Text("Suggested challenges (${relatedChallenges?.length}):",
+                                                          style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                                              fontSize: 20,
+                                                              color: Colors.black)
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: ListView.builder(
+                                                        scrollDirection: Axis.horizontal,
+                                                        shrinkWrap: true,
+                                                        itemCount: relatedChallenges?.length,
+                                                        itemBuilder: (c, i) {
+                                                          // relatedSolutionlength = relatedChallenges?.length;
+                                                          // print("relatedSolutionlength: $relatedSolutionlength");
+                                                          var challengesData = relatedChallenges?[i].data() as Map<String, dynamic>;
+                                                          print("solutionData: ${challengesData}");
+                                                          return Container(
+                                                            margin: EdgeInsets.symmetric(horizontal: 15),
+                                                            padding: EdgeInsets.all(12),
+                                                            width: 330,
+                                                            decoration: BoxDecoration(
+                                                              border: Border.all(color: Colors.orange),
+                                                              borderRadius: BorderRadius.circular(20),
+                                                            ),
+                                                            child: SingleChildScrollView(
+                                                              child: Column(
+                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                    children: [
+                                                                      Flexible(
+                                                                        child: Text("${challengesData['Label']}",
+                                                                            style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                                                                fontSize: 18,
+                                                                                color: Colors.black)),
+                                                                      ),
+                                                                      // InkWell(
+                                                                      //   onTap: (){
+                                                                      //     _userAboutMEProvider.isRecommendedAddedChallenge(true,  relatedChallenges![i]);
+                                                                      //   },
+                                                                      //   child: Container(
+                                                                      //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                      //     width: MediaQuery.of(context).size.width * .05,
+                                                                      //     // width: MediaQuery.of(context).size.width * .15,
+                                                                      //
+                                                                      //     // height: 60,
+                                                                      //     decoration: BoxDecoration(
+                                                                      //       color:Colors.blue ,
+                                                                      //       border: Border.all(
+                                                                      //           color:Colors.blue ,
+                                                                      //           width: 1.0),
+                                                                      //       borderRadius: BorderRadius.circular(8.0),
+                                                                      //     ),
+                                                                      //     child: Center(
+                                                                      //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                      //       child: Text(
+                                                                      //         'Add',
+                                                                      //         style: GoogleFonts.montserrat(
+                                                                      //           textStyle:
+                                                                      //           Theme
+                                                                      //               .of(context)
+                                                                      //               .textTheme
+                                                                      //               .titleSmall,
+                                                                      //           fontWeight: FontWeight.bold,
+                                                                      //           color:Colors.white ,
+                                                                      //         ),
+                                                                      //       ),
+                                                                      //     ),
+                                                                      //   ),
+                                                                      // ),
+                                                                      Row(
+                                                                        children: [
+                                                                          IconButton(
+                                                                              onPressed: (){
+                                                                                userAboutMEProvider.updateChallengePreview(
+                                                                                    challengesData['Label'],
+                                                                                    challengesData['Description'],
+                                                                                    challengesData['Final_Description'],
+                                                                                    challengesData['Impact'],
+                                                                                    challengesData['Keywords'],
+                                                                                    challengesData['tags'],
+                                                                                    challengesData['id'],
+                                                                                    isTrueOrFalse,
+                                                                                    challengesData
+                                                                                );
+                                                                              },
+                                                                              icon: Icon(Icons.visibility, color: Colors.blue,)
+                                                                          ),
+                                                                          SizedBox(width: 5,),
+
+                                                                          (userAboutMEProvider.isRecommendedChallengeCheckedMap[challengesData['id']] == true) ? Text(
+                                                                            'Added',
+                                                                            style: GoogleFonts.montserrat(
+                                                                              textStyle:
+                                                                              Theme.of(context).textTheme.titleSmall,
+                                                                              fontStyle: FontStyle.italic,
+                                                                              color:Colors.green,
+                                                                            ),
+                                                                          ) : InkWell(
+                                                                            onTap: (){
+                                                                              // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
+                                                                              userAboutMEProvider.isRecommendedAddedChallenge(true, relatedChallenges![i]);
+                                                                              toastification.show(context: context,
+                                                                                  title: Text('${challengesData['Label']} added to basket'),
+                                                                                  autoCloseDuration: Duration(milliseconds: 2500),
+                                                                                  alignment: Alignment.center,
+                                                                                  backgroundColor: Colors.green,
+                                                                                  foregroundColor: Colors.white,
+                                                                                  icon: Icon(Icons.check_circle, color: Colors.white,),
+                                                                                  animationDuration: Duration(milliseconds: 1000),
+                                                                                  showProgressBar: false
+                                                                              );
+                                                                            },
+                                                                            child: Container(
+                                                                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                              width: MediaQuery.of(context).size.width * .05,
+                                                                              // width: MediaQuery.of(context).size.width * .15,
+
+                                                                              // height: 60,
+                                                                              decoration: BoxDecoration(
+                                                                                color:Colors.blue ,
+                                                                                border: Border.all(
+                                                                                    color:Colors.blue ,
+                                                                                    width: 1.0),
+                                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                              ),
+                                                                              child: Center(
+                                                                                // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                                child: Text(
+                                                                                  'Add',
+                                                                                  style: GoogleFonts.montserrat(
+                                                                                    textStyle:
+                                                                                    Theme
+                                                                                        .of(context)
+                                                                                        .textTheme
+                                                                                        .titleSmall,
+                                                                                    fontWeight: FontWeight.bold,
+                                                                                    color:Colors.white ,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      )
+
+                                                                    ],
+                                                                  ),
+                                                                  SizedBox(height: 5,),
+                                                                  // Text("${challengesData['Label']}",
+                                                                  //     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                                                  //         fontSize: 18,
+                                                                  //         color: Colors.black)),
+                                                                  Text("${challengesData['Final_description']}",
+                                                                      maxLines: 3,
+                                                                      style: GoogleFonts.montserrat(
+                                                                          fontSize: 15,
+                                                                          color: Colors.black)
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              }
+                                            },
+                                          ),
+                                        ),
+
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                  );
+                })
           );
           // });
         }
@@ -10128,7 +11038,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                                                   onTap: (){
                                                                     userAboutMEProvider.isRecommendedAddedSolutions(true,documentsss);
                                                                     toastification.show(context: context,
-                                                                        title: Text('${name} added successfully'),
+                                                                        title: Text('${name} added to basket'),
                                                                         autoCloseDuration: Duration(milliseconds: 2500),
                                                                         alignment: Alignment.center,
                                                                         backgroundColor: Colors.green,
@@ -10482,7 +11392,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                                                                             // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
                                                                                             userAboutMEProvider.isRecommendedAddedSolutions(true, relatedSolutions![i]);
                                                                                             toastification.show(context: context,
-                                                                                                title: Text('${solutionData['Name']} added successfully'),
+                                                                                                title: Text('${solutionData['Name']} added to basket'),
                                                                                                 autoCloseDuration: Duration(milliseconds: 2500),
                                                                                                 alignment: Alignment.center,
                                                                                                 backgroundColor: Colors.green,
@@ -10673,7 +11583,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                                                                             // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
                                                                                             userAboutMEProvider.isRecommendedAddedChallenge(true, relatedChallenges![i]);
                                                                                             toastification.show(context: context,
-                                                                                                title: Text('${challengesData['Label']} added successfully'),
+                                                                                                title: Text('${challengesData['Label']} added to basket'),
                                                                                                 autoCloseDuration: Duration(milliseconds: 2500),
                                                                                                 alignment: Alignment.center,
                                                                                                 backgroundColor: Colors.green,
@@ -11911,9 +12821,9 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                   children: [
                     IconButton(
                         onPressed: (){
-                          NewViewDialog(documentsss![i]['Name'],documentsss![i]['Description'],documentsss![i]['Impact'],documentsss![i]['Final_description'], documentsss![i]['Keywords'],documentsss![i]['tags'],documentsss![i]['id'],documentsss![i],userAboutMEProvider.isRecommendedSolutionsCheckedMap,userAboutMEProvider.isRecommendedAddedSolutions);
+                          NewSolViewDialog(documentsss![i]['Name'],documentsss![i]['Description'],documentsss![i]['Impact'],documentsss![i]['Final_description'], documentsss![i]['Keywords'],documentsss![i]['tags'],documentsss![i]['id'],documentsss![i],userAboutMEProvider.isRecommendedSolutionsCheckedMap,userAboutMEProvider.isRecommendedAddedSolutions);
                         },
-                        icon: Icon(Icons.info_outline, color: Colors.blue,)
+                        icon: Icon(Icons.visibility, color: Colors.blue,)
                     ),
                     SizedBox(width: 8),
                     (userAboutMEProvider.isRecommendedSolutionsCheckedMap[documentsss![i]['id']] == true) ? Text(
@@ -11931,7 +12841,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                       onTap: (){
                         userAboutMEProvider.isRecommendedAddedSolutions(true,documentsss![i]);
                         toastification.show(context: context,
-                            title: Text('${documentsss![i]['Name']} added successfully'),
+                            title: Text('${documentsss![i]['Name']} added to basket'),
                             autoCloseDuration: Duration(milliseconds: 2500),
                             alignment: Alignment.center,
                             backgroundColor: Colors.green,
@@ -12031,7 +12941,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                     onPressed: (){
                       NewViewDialog(documents![i]['Label'],documents![i]['Description'],documents![i]['Impact'],documents![i]['Final_description'], documents![i]['Keywords'],documents![i]['tags'],documents![i]['id'],documents![i], userAboutMEProvider.isRecommendedChallengeCheckedMap,userAboutMEProvider.isRecommendedAddedChallenge);
                     },
-                    icon: Icon(Icons.info_outline, color: Colors.blue,)
+                    icon: Icon(Icons.visibility, color: Colors.blue,)
                 ),
                 SizedBox(width: 8),
 
@@ -12050,7 +12960,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                   onTap: (){
                     userAboutMEProvider.isRecommendedAddedChallenge(true, documents![i]);
                     toastification.show(context: context,
-                        title: Text('${documents![i]['Label']} added successfully'),
+                        title: Text('${documents![i]['Label']} added to basket'),
                     autoCloseDuration: Duration(milliseconds: 2500),
                     alignment: Alignment.center,
                     backgroundColor: Colors.green,
@@ -12475,7 +13385,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
 
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 5),
-                                child: Text("impact on me: ",
+                                child: Text("Impact on me: ",
                                     style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
                                     fontWeight: FontWeight.w600)),
                               ),
@@ -12536,7 +13446,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                                    child: Text("Attachment :", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
+                                    child: Text("Relevant attachments :", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
                                   ),
                                   SizedBox(width: 10,),
 
@@ -13095,7 +14005,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: userAboutMEProvider.InPlace.map((String value) {
                                   return Container(
-                                    width: MediaQuery.of(context).size.width * .18,
+                                    width: MediaQuery.of(context).size.width * .3,
                                     child: Row(
                                       children: [
                                         Radio<String>(
@@ -13163,7 +14073,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                                    child: Text("Attachment :", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
+                                    child: Text("Relevant attachments :", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
                                   ),
                                   SizedBox(width: 10,),
 
