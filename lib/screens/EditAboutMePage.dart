@@ -142,8 +142,12 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
     getChatgptSettingsApiKey();
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       // Call EditChallengeList after the first frame has been rendered
-      _userAboutMEProvider.EditChallengeList(true, widget.aboutMeData["Challenges"]);
-      _userAboutMEProvider.EditSolutionList(true, widget.aboutMeData["Solutions"]);
+      _userAboutMEProvider.EditChallengeList( widget.aboutMeData["Challenges"]);
+      _userAboutMEProvider.EditChallengeListadd(challengesList);
+      _userAboutMEProvider.EditChallengeListadd(_previewProvider.PreviewChallengesList);
+      _userAboutMEProvider.EditSolutionList(widget.aboutMeData["Solutions"]);
+      _userAboutMEProvider.EditSolutionListadd(solutionsList);
+      _userAboutMEProvider.EditSolutionListadd(_previewProvider.PreviewSolutionList);
     });
   }
 
@@ -227,6 +231,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                       InkWell(
                           onTap: (){
                             selectedEmail = null;
+                            searchEmailcontroller.clear();
                             nameController.clear();
                             employerController.clear();
                             divisionOrSectionController.clear();
@@ -237,6 +242,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                             mycircumstancesController.clear();
                             MystrengthsController.clear();
                             mycircumstancesController.clear();
+                            AboutMeLabeltextController.clear();
                             RefineController.clear();
                             solutionsList.clear();
                             _userAboutMEProvider.solutionss.clear();
@@ -247,6 +253,21 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                             _userAboutMEProvider.combinedResults.clear();
                             _userAboutMEProvider.isEditChallengeListAdded.clear();
                             _userAboutMEProvider.isEditSolutionListAdded.clear();
+                            _previewProvider.email=null;
+                            _previewProvider.name=null;
+                            _previewProvider.employer=null;
+                            _previewProvider.division=null;
+                            _previewProvider.role=null;
+                            _previewProvider.location=null;
+                            _previewProvider.employeeNumber=null ;
+                            _previewProvider.linemanager=null;
+                            _previewProvider.title=null;
+                            _previewProvider.mycircumstance=null;
+                            _previewProvider.mystrength=null ;
+                            _previewProvider.myorganization=null ;
+                            _previewProvider.mychallenge=null ;
+                            _previewProvider.PreviewChallengesList.clear();
+                            _previewProvider.PreviewSolutionList.clear();
                             widget.refreshPage();
                               Navigator.pop(context);
                           },
@@ -1658,9 +1679,6 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
   }
 
   Widget AddChallengesPage(context,aboutMeData){
-
-    // print("aboutMeData: ${aboutMeData["Challenges"]}");
-
     return Container(
     height: MediaQuery.of(context).size.height,
     child: SingleChildScrollView(
@@ -1687,28 +1705,60 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                   TextField(
                     controller: RefineController,
                     maxLines: 3,
+                    // onChanged: (value) {
+                    //   if (value.isNotEmpty) {
+                    //     final lines = value.split('\n');
+                    //
+                    //     for (int i = 0; i < lines.length; i++) {
+                    //       if (lines[i].trim().isNotEmpty && !lines[i].startsWith('•')) {
+                    //         lines[i] = '• ' + lines[i];
+                    //       }
+                    //     }
+                    //
+                    //     RefineController.text = lines.join('\n');
+                    //     RefineController.selection = TextSelection.fromPosition(
+                    //       TextPosition(offset: RefineController.text.length),);
+                    //     userAboutMEProvider.updateisRefinetextChange(false);
+                    //     print("isRefinetextChange: ${userAboutMEProvider.isRefinetextChange}");
+                    //   } else {
+                    //     isInitialTyping = true; // Reset when the text field becomes empty
+                    //     userAboutMEProvider.updateisRefinetextChange(false);
+                    //     print("isRefinetextChange: ${userAboutMEProvider.isRefinetextChange}");
+                    //   }
+                    // },
                     onChanged: (value) {
                       if (value.isNotEmpty) {
                         final lines = value.split('\n');
 
                         for (int i = 0; i < lines.length; i++) {
-                          if (lines[i].trim().isNotEmpty && !lines[i].startsWith('•')) {
-                            lines[i] = '• ' + lines[i];
+                          if (lines[i].trim().isNotEmpty && !lines[i].startsWith('-')) {
+                            lines[i] = '- ' + lines[i];
                           }
                         }
 
-                        RefineController.text = lines.join('\n');
-                        RefineController.selection = TextSelection.fromPosition(
-                          TextPosition(offset: RefineController.text.length),);
+                        // Combine lines with '\n'
+                        final modifiedText = lines.join('\n');
+
+                        // Calculate new cursor position based on changes in text
+                        final newTextLength = modifiedText.length;
+                        final cursorPosition = RefineController.selection.baseOffset +
+                            (newTextLength - value.length);
+
+                        // Update text and cursor position
+                        RefineController.value = RefineController.value.copyWith(
+                          text: modifiedText,
+                          selection: TextSelection.fromPosition(
+                            TextPosition(offset: cursorPosition),
+                          ),
+                        );
+
                         userAboutMEProvider.updateisRefinetextChange(false);
-                        print("isRefinetextChange: ${userAboutMEProvider.isRefinetextChange}");
                       } else {
                         isInitialTyping = true; // Reset when the text field becomes empty
                         userAboutMEProvider.updateisRefinetextChange(false);
                         print("isRefinetextChange: ${userAboutMEProvider.isRefinetextChange}");
                       }
                     },
-
                     style: GoogleFonts.montserrat(
                         textStyle: Theme
                             .of(context)
@@ -1785,15 +1835,13 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                     ),
                   ),
 
-
-
-
                   SizedBox(height: 10,),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Expanded(
+                        flex: 2,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1864,6 +1912,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                       SizedBox(width: 20,),
 
                       Expanded(
+                        flex: 3,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1970,14 +2019,12 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                             //             color: Colors.black),))
                                             // ),
                                             DataCell(
-                                                Container(
-                                                  child: Text(challenge.label,
-                                                      overflow: TextOverflow.ellipsis,maxLines: 2,
-                                                      style: GoogleFonts.montserrat(
-                                                          textStyle: Theme.of(context).textTheme.bodySmall,
-                                                          fontWeight: FontWeight.w600,
-                                                          color: Colors.black)
-                                                  ),
+                                                Text(challenge.label,
+                                                    overflow: TextOverflow.ellipsis,maxLines: 1,
+                                                    style: GoogleFonts.montserrat(
+                                                        textStyle: Theme.of(context).textTheme.bodySmall,
+                                                        fontWeight: FontWeight.w600,
+                                                        color: Colors.black)
                                                 )),
                                             DataCell(
                                                 Container(
@@ -2005,23 +2052,36 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                 margin: EdgeInsets.all(5),
                                                 // width: 140,
                                                 child: (challenge.isConfirmed==true) ?
-                                                Text('Confirmed',
-                                                  style: TextStyle(color: Colors.green),
-                                                )
-                                                    :
                                                 Row(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
                                                   children: [
                                                     IconButton(
                                                       onPressed: () {
-
                                                         NewViewDialog(challenge.label,challenge.description,challenge.Impact,challenge.Final_description, challenge.Keywords,challenge.tags,challenge.id,challenge, userAboutMEProvider.isEditChallengeListAdded,userAboutMEProvider.EditRecommendedChallengeAdd);
                                                         print("challenge.isConfirmed: ${challenge.isConfirmed}");
                                                       },
                                                       icon: Icon(Icons.visibility, color: Colors.blue),
                                                     ),
                                                     SizedBox(width: 10,),
+                                                    Text('Confirmed',
+                                                      style: TextStyle(color: Colors.green),
+                                                    ),
+                                                  ],
+                                                )
+                                                    :
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                    IconButton(
+                                                      onPressed: () {
+                                                        NewViewDialog(challenge.label,challenge.description,challenge.Impact,challenge.Final_description, challenge.Keywords,challenge.tags,challenge.id,challenge, userAboutMEProvider.isEditChallengeListAdded,userAboutMEProvider.EditRecommendedChallengeAdd);
+                                                        print("challenge.isConfirmed: ${challenge.isConfirmed}");
+                                                      },
+                                                      icon: Icon(Icons.visibility, color: Colors.blue),
+                                                    ),
+                                                    SizedBox(width: 3,),
                                                     IconButton(
                                                       onPressed: () {
                                                         showconfirmChallengeDialogBox(challenge.id, challenge.label,challenge.description, challenge.Source, challenge.Status,challenge.tags,challenge.CreatedBy,
@@ -2030,7 +2090,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                       },
                                                       icon: Icon(Icons.check, color: Colors.green),
                                                     ),
-                                                    SizedBox(width: 10,),
+                                                    SizedBox(width: 3,),
                                                     IconButton(
                                                       onPressed: () {
                                                         userAboutMEProvider.removeEditChallenge(index,challenge);
@@ -2120,7 +2180,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                           };
 
                           String solutionJson = json.encode(AboutMEDatas);
-                          print(solutionJson);
+                          print("solutionJson: $solutionJson");
 
                           ProgressDialog.show(context, "Saving", Icons.save);
                           await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
@@ -2128,7 +2188,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
 
                           challengesList.clear();
                           _userAboutMEProvider.editchallengess.clear();
-                          await _navigateToTab(3);
+                          await _navigateToTab(4);
                           widget.refreshPage();
                            // Navigator.pop(context);
 
@@ -2193,6 +2253,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
+                          flex: 2,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -2276,6 +2337,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                         SizedBox(width: 20,),
 
                         Expanded(
+                          flex: 3,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -2332,10 +2394,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                           //
                                           // ),
                                           DataColumn(
-                                            label: Container(
-                                              // width: 180,
-                                              child: Text('Label',),
-                                            ),
+                                            label: Text('Label',),
                                           ),
                                           DataColumn(
                                             label: Text('Impact',),
@@ -2373,25 +2432,22 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                               //             fontWeight: FontWeight.w600,
                                               //             color: Colors.black),))),
                                               DataCell(
-                                                  Container(
-                                                    // width: 180,
-                                                      child: Text(solution.label,
-                                                          overflow: TextOverflow.ellipsis,maxLines: 2,
-                                                          style: GoogleFonts.montserrat(
-                                                              textStyle: Theme.of(context).textTheme.bodySmall,
-                                                              fontWeight: FontWeight.w600,
-                                                              color: Colors.black)
-                                                      ))),
+                                                  Text(solution.label,
+                                                      overflow: TextOverflow.ellipsis,
+                                                      maxLines: 1,
+                                                      style: GoogleFonts.montserrat(
+                                                          textStyle: Theme.of(context).textTheme.bodySmall,
+                                                          fontWeight: FontWeight.w600,
+                                                          color: Colors.black)
+                                                  )),
                                               DataCell(
-                                                  Container(
-                                                    // width: 400,
-                                                      child: Text(solution.Impact,
-                                                          overflow: TextOverflow.ellipsis,maxLines: 2,
-                                                          style: GoogleFonts.montserrat(
-                                                              textStyle: Theme.of(context).textTheme.bodySmall,
-                                                              fontWeight: FontWeight.w600,
-                                                              color: Colors.black)
-                                                      ))),
+                                                  Text(solution.Impact,
+                                                      overflow: TextOverflow.ellipsis,maxLines: 2,
+                                                      style: GoogleFonts.montserrat(
+                                                          textStyle: Theme.of(context).textTheme.bodySmall,
+                                                          fontWeight: FontWeight.w600,
+                                                          color: Colors.black)
+                                                  )),
                                               DataCell(
                                                   Container(
                                                     // width: 400,
@@ -2405,15 +2461,12 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                               DataCell(
                                                 Container(
                                                   // height: 100,
-                                                  margin: EdgeInsets.all(5),
+                                                  // margin: EdgeInsets.all(5),
                                                   // width: 140,
                                                   child: (solution.isConfirmed==true) ?
-                                                  Text('Confirmed',
-                                                    style: TextStyle(color: Colors.green),
-                                                  )
-                                                      :
                                                   Row(
                                                     mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
                                                     children: [
                                                       IconButton(
                                                         onPressed: () {
@@ -2421,7 +2474,24 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                         },
                                                         icon: Icon(Icons.visibility, color: Colors.blue),
                                                       ),
-                                                      SizedBox(width: 8,),
+                                                      SizedBox(width: 10,),
+                                                      Text('Confirmed',
+                                                        style: TextStyle(color: Colors.green),
+                                                      ),
+                                                    ],
+                                                  )
+                                                      :
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          NewSolViewDialog(solution.label, solution.description, solution.Impact, solution.Final_description, solution.Keywords, solution.tags, solution.id,solution,userAboutMEProvider.isEditSolutionListAdded,userAboutMEProvider.EditRecommendedSolutionAdd);
+                                                        },
+                                                        icon: Icon(Icons.visibility, color: Colors.blue),
+                                                      ),
+                                                      SizedBox(width: 3,),
                                                       IconButton(
                                                         onPressed: () {
                                                           showconfirmSolutionsDialogBox(solution.id, solution.label,solution.description, solution.Source, solution.Status,solution.tags,solution.CreatedBy,
@@ -2431,16 +2501,13 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                         },
                                                         icon: Icon(Icons.check, color: Colors.green),
                                                       ),
-                                                      SizedBox(width: 8,),
+                                                      SizedBox(width: 3,),
                                                       IconButton(
                                                         onPressed: () {
                                                           userAboutMEProvider.removeEditSolution(index,solution);
                                                         },
                                                         icon: Icon(Icons.close, color: Colors.red),
                                                       )
-                                                      //      :
-
-
                                                     ],
                                                   ),
                                                 ),
@@ -2620,7 +2687,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
     );
   }
 
-  Widget PreviewPage(aboutMeData) {
+  Widget PreviewPage(aboutMeData){
     // List<dynamic> challengesData = aboutMeData['Challenges'];
     // for (var challengeData in challengesData) {
     //   if (challengeData is Map<String, dynamic>) {
@@ -3397,22 +3464,13 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                       ),
                                     ),
                                     DataColumn(
-                                      label: Container(
-                                        // width: 400,
-                                          child: Text('Provider')
-                                      ),
+                                      label: Flexible(child: Text('Provider')),
                                     ),
                                     DataColumn(
-                                      label: Container(
-                                        // width: 400,
-                                          child: Text('In Place')
-                                      ),
+                                      label: Flexible(child: Text('In Place')),
                                     ),
                                     DataColumn(
-                                      label: Container(
-                                        // width: 400,
-                                          child: Text('Attachment')
-                                      ),
+                                      label: Flexible(child: Text('Attachment')),
                                     ),
                                   ],
                                   rows: previewProvider.PreviewSolutionList.map((challenge) {
@@ -3525,6 +3583,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                           downloadAboutMePdf(challengesList,solutionsList);
                           selectedEmail = null;
                           nameController.clear();
+                          searchEmailcontroller.clear();
                           employerController.clear();
                           divisionOrSectionController.clear();
                           RoleController.clear();
@@ -3534,6 +3593,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                           mycircumstancesController.clear();
                           MystrengthsController.clear();
                           mycircumstancesController.clear();
+                          AboutMeLabeltextController.clear();
                           RefineController.clear();
                           solutionsList.clear();
                           _userAboutMEProvider.solutionss.clear();
@@ -3542,6 +3602,22 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                           _userAboutMEProvider.editchallengess.clear();
                           _userAboutMEProvider.combinedSolutionsResults.clear();
                           _userAboutMEProvider.combinedResults.clear();
+                          previewProvider.email=null;
+                          previewProvider.name=null;
+                          previewProvider.employer=null;
+                          previewProvider.division=null;
+                          previewProvider.role=null;
+                          previewProvider.location=null;
+                          previewProvider.employeeNumber=null ;
+                          previewProvider.linemanager=null;
+                          previewProvider.title=null;
+                          previewProvider.mycircumstance=null;
+                          previewProvider.mystrength=null ;
+                          previewProvider.myorganization=null ;
+                          previewProvider.mychallenge=null ;
+                          previewProvider.PreviewChallengesList.clear();
+                          previewProvider.PreviewSolutionList.clear();
+                          _navigateToTab(0);
                           widget.refreshPage();
                           Navigator.pop(context);
                           setState(() {
@@ -3576,7 +3652,6 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                       ),
                     ],
                   )
-
                 ],
               ),
             ),
@@ -8183,13 +8258,13 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                             print("addKeywordProvider.keywords: ${addKeywordProvider.keywords}");
                                                             return InkWell(
                                                               onTap: (){
-                                                                if(_tabController.index == 2){
+                                                                if(_tabController.index == 3){
                                                                   searchChallengescontroller.text = item;
                                                                   _challengesProvider.loadDataForPageSearchFilter(item);
                                                                   // Navigator.pop(context);
                                                                   showChallengesSelector();
                                                                 }
-                                                                if(_tabController.index == 3){
+                                                                if(_tabController.index == 4){
                                                                   searchbyCatcontroller.text = item;
                                                                   _addKeywordProvider.loadDataForPageSearchFilter(searchbyCatcontroller.text.toString());
                                                                   // Navigator.pop(context);
@@ -8234,7 +8309,6 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               // Text("Tags: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
-
                                               Flexible(
                                                 child: Consumer<ChallengesProvider>(
                                                     builder: (c,addKeywordProvider, _){
@@ -8249,13 +8323,13 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                           children: addKeywordProvider.ProviderEditTags.map((item){
                                                             return InkWell(
                                                               onTap: (){
-                                                                if(_tabController.index == 2){
+                                                                if(_tabController.index == 3){
                                                                   searchChallengescontroller.text = item;
                                                                   _challengesProvider.loadDataForPageSearchFilter(item);
                                                                   // Navigator.pop(context);
                                                                   showChallengesSelector();
                                                                 }
-                                                                if(_tabController.index == 3){
+                                                                if(_tabController.index == 4){
                                                                   searchbyCatcontroller.text = item;
                                                                   _addKeywordProvider.loadDataForPageSearchFilter(searchbyCatcontroller.text.toString());
                                                                   // Navigator.pop(context);
@@ -8291,10 +8365,6 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
 
                                                     }),
                                               ),
-
-
-
-
                                             ],
                                           ),
 

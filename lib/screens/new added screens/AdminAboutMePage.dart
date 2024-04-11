@@ -167,7 +167,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return Scaffold(
       body: PageView(
         controller: page,
@@ -1350,6 +1350,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                             InkWell(
                               onTap: (){
                                 selectedEmail = null;
+                                searchEmailcontroller.clear();
                                 nameController.clear();
                                 employerController.clear();
                                 divisionOrSectionController.clear();
@@ -1360,6 +1361,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                 mycircumstancesController.clear();
                                 MystrengthsController.clear();
                                 mycircumstancesController.clear();
+                                AboutMeLabeltextController.clear();
                                 RefineController.clear();
                                 solutionsList.clear();
                                 _userAboutMEProvider.solutionss.clear();
@@ -1368,6 +1370,21 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                 _userAboutMEProvider.combinedResults.clear();
                                 _userAboutMEProvider.isRecommendedChallengeCheckedMap.clear();
                                 _userAboutMEProvider.isRecommendedSolutionsCheckedMap.clear();
+                                _previewProvider.email=null;
+                                _previewProvider.name=null;
+                                _previewProvider.employer=null;
+                                _previewProvider.division=null;
+                                _previewProvider.role=null;
+                                _previewProvider.location=null;
+                                _previewProvider.employeeNumber=null ;
+                                _previewProvider.linemanager=null;
+                                _previewProvider.title=null;
+                                _previewProvider.mycircumstance=null;
+                                _previewProvider.mystrength=null ;
+                                _previewProvider.myorganization=null ;
+                                _previewProvider.mychallenge=null ;
+                                _previewProvider.PreviewChallengesList.clear();
+                                _previewProvider.PreviewSolutionList.clear();
                                 _navigateToTab(0);
                                 setState(() {
                                 });
@@ -1967,7 +1984,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                  _previewProvider.updateEmail(selectedEmail);
                                  if(selectedEmail != null){
                                    toastification.show(context: context,
-                                       title: Text('Email Selected'),
+                                       title: Text('Email Selected ${selectedEmail}'),
                                        autoCloseDuration: Duration(milliseconds: 2500),
                                        alignment: Alignment.center,
                                        backgroundColor: Colors.green,
@@ -2644,7 +2661,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
     return SingleChildScrollView();
   }
 
-  Widget Detailspage() {
+  Widget Detailspage(){
     return SingleChildScrollView(
       child:Consumer<UserAboutMEProvider>(
           builder: (c,userAboutMEProvider, _){
@@ -2756,7 +2773,6 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                           //     isInitialTyping = true; // Reset when the text field becomes empty
                           //   }
                           // },
-
                           onChanged: (value) {
                             if (value.isNotEmpty) {
                               final lines = value.split('\n');
@@ -3817,28 +3833,60 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                     TextField(
                       controller: RefineController,
                       maxLines: 3,
+                      // onChanged: (value) {
+                      //   if (value.isNotEmpty) {
+                      //     final lines = value.split('\n');
+                      //
+                      //     for (int i = 0; i < lines.length; i++) {
+                      //       if (lines[i].trim().isNotEmpty && !lines[i].startsWith('•')) {
+                      //         lines[i] = '• ' + lines[i];
+                      //       }
+                      //     }
+                      //
+                      //     RefineController.text = lines.join('\n');
+                      //     RefineController.selection = TextSelection.fromPosition(
+                      //       TextPosition(offset: RefineController.text.length),);
+                      //     userAboutMEProvider.updateisRefinetextChange(false);
+                      //     print("isRefinetextChange: ${userAboutMEProvider.isRefinetextChange}");
+                      //   } else {
+                      //     isInitialTyping = true; // Reset when the text field becomes empty
+                      //     userAboutMEProvider.updateisRefinetextChange(false);
+                      //     print("isRefinetextChange: ${userAboutMEProvider.isRefinetextChange}");
+                      //   }
+                      // },
                       onChanged: (value) {
                         if (value.isNotEmpty) {
                           final lines = value.split('\n');
 
                           for (int i = 0; i < lines.length; i++) {
-                            if (lines[i].trim().isNotEmpty && !lines[i].startsWith('•')) {
-                              lines[i] = '• ' + lines[i];
+                            if (lines[i].trim().isNotEmpty && !lines[i].startsWith('-')) {
+                              lines[i] = '- ' + lines[i];
                             }
                           }
 
-                          RefineController.text = lines.join('\n');
-                          RefineController.selection = TextSelection.fromPosition(
-                            TextPosition(offset: RefineController.text.length),);
+                          // Combine lines with '\n'
+                          final modifiedText = lines.join('\n');
+
+                          // Calculate new cursor position based on changes in text
+                          final newTextLength = modifiedText.length;
+                          final cursorPosition = RefineController.selection.baseOffset +
+                              (newTextLength - value.length);
+
+                          // Update text and cursor position
+                          RefineController.value = RefineController.value.copyWith(
+                            text: modifiedText,
+                            selection: TextSelection.fromPosition(
+                              TextPosition(offset: cursorPosition),
+                            ),
+                          );
+
                           userAboutMEProvider.updateisRefinetextChange(false);
-                          print("isRefinetextChange: ${userAboutMEProvider.isRefinetextChange}");
                         } else {
                           isInitialTyping = true; // Reset when the text field becomes empty
                           userAboutMEProvider.updateisRefinetextChange(false);
                           print("isRefinetextChange: ${userAboutMEProvider.isRefinetextChange}");
                         }
                       },
-
                       style: GoogleFonts.montserrat(
                           textStyle: Theme
                               .of(context)
@@ -3930,12 +3978,10 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                     // :
                     InkWell(
                       onTap:() async {
+
                         var defaulttext = "Refine this sentence and give it in proper sentence";
-
                         defaulttext = defaulttext +"=" +" ${RefineController.text}";
-
                         getChatRefineResponse(defaulttext);
-
 
                       },
                       child:Container(
@@ -4006,6 +4052,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                         //   ),
                         // ) :
                         Expanded(
+                          flex: 2,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -4424,6 +4471,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                         // ),
 
                         Expanded(
+                          flex : 3,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -4489,6 +4537,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                           //   ),
                                           //
                                           // ),
+
                                           DataColumn(
                                             label: Container(
                                               // width: 180,
@@ -4533,7 +4582,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                               DataCell(
                                                   Container(
                                                     child: Text(challenge.label,
-                                                        overflow: TextOverflow.ellipsis,maxLines: 2,
+                                                        overflow: TextOverflow.ellipsis,maxLines: 1,
                                                         style: GoogleFonts.montserrat(
                                                             textStyle: Theme.of(context).textTheme.bodySmall,
                                                             fontWeight: FontWeight.w600,
@@ -4566,13 +4615,9 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                                   margin: EdgeInsets.all(5),
                                                   // width: 140,
                                                   child: (challenge.isConfirmed==true) ?
-                                                  Text('Confirmed',
-                                                    style: TextStyle(color: Colors.green),
-                                                  )
-                                                      :
                                                   Row(
                                                     mainAxisAlignment: MainAxisAlignment.start,
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
                                                     children: [
                                                       IconButton(
                                                         onPressed: () {
@@ -4595,7 +4640,39 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                                         },
                                                         icon: Icon(Icons.visibility, color: Colors.blue),
                                                       ),
-                                                      SizedBox(width: 6,),
+                                                      SizedBox(width: 10,),
+                                                      Text('Confirmed',
+                                                        style: TextStyle(color: Colors.green),
+                                                      ),
+                                                    ],
+                                                  )
+                                                      :
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: [
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          // (challenge.Keywords.isEmpty || challenge.tags.isEmpty) ? toastification.show(context: context,
+                                                          // title: Text('Cannot View this Challenge'),
+                                                          // autoCloseDuration: Duration(milliseconds: 2500),
+                                                          //   alignment: Alignment.center,
+                                                          //   backgroundColor: Colors.blue,
+                                                          //   foregroundColor: Colors.white,
+                                                          //   animationDuration: Duration(milliseconds: 1000),
+                                                          //   showProgressBar: false
+                                                          // )
+                                                          // :
+
+                                                          NewViewDialog(challenge.label,challenge.description,challenge.Impact,challenge.Final_description,
+                                                              challenge.Keywords,challenge.tags,challenge.id, challenge, userAboutMEProvider.isRecommendedChallengeCheckedMap,userAboutMEProvider.isRecommendedAddedChallenge);
+                                                          print("challenge.Keywords: ${challenge.Keywords}");
+                                                          print("challenge.tags: ${challenge.tags}");
+                                                          print("challenge.isConfirmed: ${challenge.isConfirmed}");
+                                                        },
+                                                        icon: Icon(Icons.visibility, color: Colors.blue),
+                                                      ),
+                                                      SizedBox(width: 3,),
                                                       IconButton(
                                                         onPressed: () {
                                                           showconfirmChallengeDialogBox(challenge.id, challenge.label,challenge.description, challenge.Source, challenge.Status,challenge.tags,challenge.CreatedBy,
@@ -4605,7 +4682,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                                         },
                                                         icon: Icon(Icons.check, color: Colors.green),
                                                       ),
-                                                      SizedBox(width: 6,),
+                                                      SizedBox(width: 3,),
                                                       IconButton(
                                                         onPressed: () {
                                                           userAboutMEProvider.removeChallenge(index,challenge);
@@ -4780,7 +4857,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
     );
   }
 
-  Widget AddSolutionsPage() {
+  Widget AddSolutionsPage(){
     return Container(
       height: MediaQuery.of(context).size.height,
       child: SingleChildScrollView(
@@ -4807,6 +4884,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
+                          flex: 2,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -4882,6 +4960,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                         SizedBox(width: 20,),
 
                         Expanded(
+                          flex: 3,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -4988,7 +5067,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                                   Container(
                                                     // width: 180,
                                                       child: Text(solution.label,
-                                                          overflow: TextOverflow.ellipsis,maxLines: 2,
+                                                          overflow: TextOverflow.ellipsis,maxLines: 1,
                                                           style: GoogleFonts.montserrat(
                                                               textStyle: Theme.of(context).textTheme.bodySmall,
                                                               fontWeight: FontWeight.w600,
@@ -5020,8 +5099,19 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                                   margin: EdgeInsets.all(5),
                                                   // width: 140,
                                                   child: (solution.isConfirmed==true) ?
-                                                  Text('Confirmed',
-                                                    style: TextStyle(color: Colors.green),
+                                                  Row(
+                                                    children: [
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          NewSolViewDialog(solution.label, solution.description, solution.Impact, solution.Final_description, solution.Keywords, solution.tags, solution.id,solution,userAboutMEProvider.isRecommendedSolutionsCheckedMap,userAboutMEProvider.isRecommendedAddedSolutions);
+                                                        },
+                                                        icon: Icon(Icons.visibility, color: Colors.blue),
+                                                      ),
+                                                      SizedBox(width: 10,),
+                                                      Text('Confirmed',
+                                                        style: TextStyle(color: Colors.green),
+                                                      ),
+                                                    ],
                                                   )
                                                       :
                                                   Row(
@@ -5033,7 +5123,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                                         },
                                                         icon: Icon(Icons.visibility, color: Colors.blue),
                                                       ),
-                                                      SizedBox(width: 15,),
+                                                      SizedBox(width: 3,),
                                                       IconButton(
                                                         onPressed: () {
                                                           showconfirmSolutionsDialogBox(solution.id, solution.label,solution.description, solution.Source, solution.Status,solution.tags,solution.CreatedBy,
@@ -5043,7 +5133,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                                         },
                                                         icon: Icon(Icons.check, color: Colors.green),
                                                       ),
-                                                      SizedBox(width: 15,),
+                                                      SizedBox(width: 3,),
                                                       IconButton(
                                                         onPressed: () {
                                                           userAboutMEProvider.removeSolution(index,solution);
@@ -5552,7 +5642,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
     );
   }
 
-  Widget PreviewPage()  {
+  Widget PreviewPage(){
     return Consumer<PreviewProvider>(
         builder: (c,previewProvider, _){
           return  Container(
@@ -6271,7 +6361,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                       ),
                                     ),
                                     DataColumn(
-                                      label: Container(
+                                      label: Flexible(
                                         // width: 400,
                                           child: Text('In Place')
                                       ),
@@ -6402,6 +6492,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
 
                             selectedEmail = null;
                             nameController.clear();
+                            searchEmailcontroller.clear();
                             employerController.clear();
                             divisionOrSectionController.clear();
                             RoleController.clear();
@@ -6411,12 +6502,29 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                             mycircumstancesController.clear();
                             MystrengthsController.clear();
                             mycircumstancesController.clear();
+                            AboutMeLabeltextController.clear();
                             RefineController.clear();
                             solutionsList.clear();
                             _userAboutMEProvider.solutionss.clear();
                             _userAboutMEProvider.challengess.clear();
                             _userAboutMEProvider.combinedSolutionsResults.clear();
                             _userAboutMEProvider.combinedResults.clear();
+                            previewProvider.email=null;
+                            previewProvider.name=null;
+                            previewProvider.employer=null;
+                            previewProvider.division=null;
+                            previewProvider.role=null;
+                            previewProvider.location=null;
+                            previewProvider.employeeNumber=null ;
+                            previewProvider.linemanager=null;
+                            previewProvider.title=null;
+                            previewProvider.mycircumstance=null;
+                            previewProvider.mystrength=null ;
+                            previewProvider.myorganization=null ;
+                            previewProvider.mychallenge=null ;
+                            previewProvider.PreviewChallengesList.clear();
+                            previewProvider.PreviewSolutionList.clear();
+                            _navigateToTab(0);
                             Navigator.pop(context);
                             setState(() {
                               page.jumpToPage(1);
@@ -9459,13 +9567,13 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                                             print("addKeywordProvider.keywords: ${addKeywordProvider.keywords}");
                                                             return InkWell(
                                                               onTap: (){
-                                                                if(_tabController.index == 2){
+                                                                if(_tabController.index == 3){
                                                                   searchChallengescontroller.text = item;
                                                                   _challengesProvider.loadDataForPageSearchFilter(item);
                                                                   // Navigator.pop(context);
                                                                   showChallengesSelector();
                                                                 }
-                                                                if(_tabController.index == 3){
+                                                                if(_tabController.index == 4){
                                                                   searchbyCatcontroller.text = item;
                                                                   _addKeywordProvider.loadDataForPageSearchFilter(searchbyCatcontroller.text.toString());
                                                                   // Navigator.pop(context);
@@ -9510,7 +9618,6 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               // Text("Tags: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
-
                                               Flexible(
                                                 child: Consumer<ChallengesProvider>(
                                                     builder: (c,addKeywordProvider, _){
@@ -9525,13 +9632,13 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                                           children: addKeywordProvider.ProviderEditTags.map((item){
                                                             return InkWell(
                                                               onTap: (){
-                                                                if(_tabController.index == 2){
+                                                                if(_tabController.index == 3){
                                                                   searchChallengescontroller.text = item;
                                                                   _challengesProvider.loadDataForPageSearchFilter(item);
                                                                   // Navigator.pop(context);
                                                                   showChallengesSelector();
                                                                 }
-                                                                if(_tabController.index == 3){
+                                                                if(_tabController.index == 4){
                                                                   searchbyCatcontroller.text = item;
                                                                   _addKeywordProvider.loadDataForPageSearchFilter(searchbyCatcontroller.text.toString());
                                                                   // Navigator.pop(context);
@@ -10032,12 +10139,9 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
 
   void NewSolViewDialog(Name, Description, Impact, FinalDescription, keywords, tags, insideId,document,isTrueOrFalse,AddButton){
 
-
     final DateFormat formatter = DateFormat("MMMM d, yyyy 'at' h:mm:ss a 'UTC'Z");
 
     // String formattedDate = formatter.format(dateTime);
-
-
 
     List<TextEditingController> textControllers = [];
     for(int i=0;i<6;i++){
@@ -10225,10 +10329,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                             ],
                                           ),
 
-                                          SizedBox(height: 10,),
-
-
-
+                                          SizedBox(height: 5,),
 
                                           (_challengesProvider.keywords==""|| _challengesProvider.keywords==null||_challengesProvider.keywords.isEmpty) ? Container() :
                                           Row(
@@ -10252,13 +10353,13 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                                             print("addKeywordProvider.keywords: ${addKeywordProvider.keywords}");
                                                             return InkWell(
                                                               onTap: (){
-                                                                if(_tabController.index == 2){
+                                                                if(_tabController.index == 3){
                                                                   searchChallengescontroller.text = item;
                                                                   _challengesProvider.loadDataForPageSearchFilter(item);
                                                                   // Navigator.pop(context);
                                                                   showChallengesSelector();
                                                                 }
-                                                                if(_tabController.index == 3){
+                                                                if(_tabController.index == 4){
                                                                   searchbyCatcontroller.text = item;
                                                                   _addKeywordProvider.loadDataForPageSearchFilter(searchbyCatcontroller.text.toString());
                                                                   // Navigator.pop(context);
@@ -10318,13 +10419,13 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                                           children: addKeywordProvider.ProviderEditTags.map((item){
                                                             return InkWell(
                                                               onTap: (){
-                                                                if(_tabController.index == 2){
+                                                                if(_tabController.index == 3){
                                                                   searchChallengescontroller.text = item;
                                                                   _challengesProvider.loadDataForPageSearchFilter(item);
                                                                   // Navigator.pop(context);
                                                                   showChallengesSelector();
                                                                 }
-                                                                if(_tabController.index == 3){
+                                                                if(_tabController.index == 4){
                                                                   searchbyCatcontroller.text = item;
                                                                   _addKeywordProvider.loadDataForPageSearchFilter(searchbyCatcontroller.text.toString());
                                                                   // Navigator.pop(context);
@@ -14177,7 +14278,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
     });
   }
 
-  void showAddChallengesDialogBox() {
+  void showAddChallengesDialogBox(){
     List<TextEditingController> textControllers = [];
     for(int i=0;i<6;i++){
       textControllers.add(TextEditingController());
@@ -14204,6 +14305,8 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                               challengeProvider.ProviderTagsclear();
                               ImpactAddChallengetextcontroller.clear();
                               NotesAddChallengetextcontroller.clear();
+                              challengesOriginalDescriptionTextEditingController.clear();
+                              challengesDescriptionTextEditingController.clear();
                               // controller.clearAllSelection();
                             },
                             child: Container(
@@ -14361,6 +14464,8 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                               finaltextcontroller.clear();
                               ImpactAddChallengetextcontroller.clear();
                               NotesAddChallengetextcontroller.clear();
+                              challengesDescriptionTextEditingController.clear();
+                              challengesOriginalDescriptionTextEditingController.clear();
 
                               print("ChallengesData Keywordsdfdsfs: ${ChallengesData['Keywords']}");
                               print("ChallengesData tagdfdfs: ${ChallengesData['tags']}");
@@ -14500,7 +14605,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
     );
   }
 
-  void showAddThriverDialogBox() {
+  void showAddThriverDialogBox(){
 
 
     List<TextEditingController> textControllers = [];
@@ -14536,6 +14641,8 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                             onTap: () async {
                               Navigator.pop(context);
                               SolutionNameTextEditingController.clear();
+                              SolutionsOriginalDescriptionTextEditingController.clear();
+                              SolutionDescriptionTextEditingController.clear();
                               finalSolutiontextcontroller.clear();
                               ImpactSolutiontextcontroller.clear();
                               NotesSolutiontextcontroller.clear();
@@ -14684,6 +14791,8 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                               );
                               Navigator.pop(context);
                               SolutionNameTextEditingController.clear();
+                              SolutionsOriginalDescriptionTextEditingController.clear();
+                              SolutionDescriptionTextEditingController.clear();
                               finalSolutiontextcontroller.clear();
                               ImpactSolutiontextcontroller.clear();
                               NotesSolutiontextcontroller.clear();
@@ -14774,8 +14883,6 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                     contentPadding: EdgeInsets.all(25),
                                     labelText: "Describe solution",
                                     hintText: "Describe solution",
-
-
                                     errorStyle: GoogleFonts.montserrat(
                                         textStyle: Theme
                                             .of(context)
@@ -15549,6 +15656,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                               //       );
                               //
                               //     }),
+
                             ]
                         ),
                       ),

@@ -585,7 +585,7 @@ class UserAboutMEProvider with ChangeNotifier{
   }
 
 
-  void EditChallengeList(bool value, challengesList) {
+  void EditChallengeList(challengesList) {
 
     for(var ChallengesDetails in challengesList) {
 
@@ -610,19 +610,47 @@ class UserAboutMEProvider with ChangeNotifier{
           HiddenStrengths: ChallengesDetails['Hidden Strengths'],
         attachment: ChallengesDetails['Attachment'],
         ));
-        isEditChallengeListAdded[ChallengesDetails['id']] = value;
+        isEditChallengeListAdded[ChallengesDetails['id']] = true;
 
-        print("isEditChallengeListAdded: $editchallengess");
+      print("editchallengessAdded: $editchallengess");
 
-        print(
-            "isEditChallengeListAddedADDING: $isRecommendedChallengeCheckedMap");
+      print("isEditChallengeListAddedADDING: $isRecommendedChallengeCheckedMap");
     }
-
-    // notifyListeners();
 
   }
 
-  void EditSolutionList(bool value, solutionList) {
+  void EditChallengeListadd(mainList){
+    for (var challenge in editchallengess) {
+      challenge.isConfirmed = true;
+      Map<String, dynamic> solutionData = {
+        'id':challenge.id,
+        'Label':challenge.label,
+        'Description':challenge.description,
+        'Source':challenge.Source,
+        'Challenge Status':challenge.Source,
+        'tags':challenge.tags,
+        'Created By':challenge.CreatedBy,
+        'Created Date':challenge.CreatedDate,
+        'Modified By':challenge.ModifiedBy,
+        'Modified Date':challenge.ModifiedDate,
+        'Original Description':challenge.OriginalDescription,
+        'Impact':challenge.Impact,
+        'Final_description':challenge.Final_description,
+        'Category':challenge.Category,
+        'Keywords':challenge.Keywords,
+        'Potential Strengths':challenge.PotentialStrengths,
+        'Hidden Strengths':challenge.HiddenStrengths,
+        'Impact_on_me':challenge.Impact,
+        'Attachment_link':challenge.attachment_link,
+        'Attachment':challenge.attachment,
+      };
+      mainList.add(solutionData);
+      print("mainList.length: ${mainList.length}");
+      print("mainList: ${mainList}");
+    }
+  }
+
+  void EditSolutionList(solutionList) {
 
     for(var SolutionDetails in solutionList) {
 
@@ -647,7 +675,8 @@ class UserAboutMEProvider with ChangeNotifier{
         InPlace: SolutionDetails['InPlace'],
         Provider: SolutionDetails['Provider'],
         ));
-      isEditSolutionListAdded[SolutionDetails['id']] = value;
+      isEditSolutionListAdded[SolutionDetails['id']] = true;
+
 
         print("isEditSolutionListAdded: $editsolutionss");
 
@@ -655,8 +684,43 @@ class UserAboutMEProvider with ChangeNotifier{
             "isEditSolutionListAddedADDING: $isEditSolutionListAdded");
     }
 
+
     // notifyListeners();
 
+  }
+
+  void EditSolutionListadd(mainList){
+    for (var solution in editsolutionss) {
+      solution.isConfirmed = true;
+      Map<String, dynamic> solutionData = {
+        'id':solution.id,
+        'Label':solution.label,
+        'Description':solution.description,
+        'Source':solution.Source,
+        'Challenge Status':solution.Source,
+        'tags':solution.tags,
+        'Created By':solution.CreatedBy,
+        'Created Date':solution.CreatedDate,
+        'Modified By':solution.ModifiedBy,
+        'Modified Date':solution.ModifiedDate,
+        'Original Description':solution.OriginalDescription,
+        'Impact':solution.Impact,
+        'Final_description':solution.Final_description,
+        'Category':solution.Category,
+        'Keywords':solution.Keywords,
+        'Potential Strengths':"",
+        'Hidden Strengths':"",
+        'AboutMe_Notes':solution.notes,
+        'Provider':solution.Provider,
+        'InPlace':solution.InPlace,
+        'Attachment_link' : solution.attachment_link,
+        'Attachment': solution.attachment,
+        // 'confirmed': false, // Add a 'confirmed' field
+      };
+      mainList.add(solutionData);
+      print("mainList.length: ${mainList.length}");
+      print("mainList: ${mainList}");
+    }
   }
 
   void EditRecommendedChallengeAdd(bool value, ChallengesDetails) {
