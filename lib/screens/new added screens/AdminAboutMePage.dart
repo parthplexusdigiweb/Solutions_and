@@ -84,7 +84,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
 
 
   var selectedEmail ;
-  var resultString ;
+  var resultString,solutionresultString;
 
   List<String> emailList = [];
 
@@ -147,6 +147,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
     _challengesProvider.lengthOfdocument = null;
     getQuestions();
     newSelectCategories();
+    newSolSelectCategories();
     getChatgptSettingsApiKey();
   }
 
@@ -5300,41 +5301,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                               ),
                             ),
                             SizedBox(width: 15,),
-                            InkWell(
-                              onTap:(){
-                                showAddThriverDialogBox();
-                              },
-                              child:Container(
-                                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                                // width: MediaQuery.of(context).size.width * .2,
-                                width: MediaQuery.of(context).size.width * .15,
 
-                                // height: 60,
-                                decoration: BoxDecoration(
-                                  // color:Colors.blue ,
-                                  border: Border.all(
-                                      color:Colors.blue ,
-                                      width: 1.0),
-                                  borderRadius: BorderRadius.circular(15.0),
-                                ),
-                                child: Center(
-                                  // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                  child: Text(
-                                    'Create My Own',
-                                    style: GoogleFonts.montserrat(
-                                      textStyle:
-                                      Theme
-                                          .of(context)
-                                          .textTheme
-                                          .titleSmall,
-                                      fontWeight: FontWeight.bold,
-                                      color:Colors.blue ,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 15,),
 
                           ],
                         ),
@@ -11765,6 +11732,31 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
     return resultString;
   }
 
+  Future<String> newSolSelectCategories() async {
+    List<String> matches = [];
+    String documentId = "aqTybsZWFxMuHPQt7u1T";
+    try {
+      DocumentSnapshot docSnapshot = await FirebaseFirestore.instance.collection('Keywords').doc("aqTybsZWFxMuHPQt7u1T").get();
+
+      if (docSnapshot.exists) {
+        dynamic data = docSnapshot.data();
+        // print(" docSnapshot.data $data");
+        if (data != null && data.containsKey('Values')) {
+          // You can use the document ID directly here
+          // String key = data['Key'].toString().toLowerCase();
+          List<String> values = data.containsKey('Values') ? data['Values'].cast<String>() : [];
+          // print(" values ; $values");
+          matches.addAll(values);
+        }
+      }
+    } catch (e) {
+      print("Error getting suggestions: $e");
+    }
+    solutionresultString = matches.join(', ');
+    print("solutionresultString $solutionresultString");
+    return solutionresultString;
+  }
+
   List<dynamic> generatedtags = [];
   List<dynamic> generatedsolutionstags = [];
   List<dynamic> generatedcategory = [];
@@ -12637,7 +12629,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Select Solutions'),
+              Text('Select solutions'),
               InkWell(
                   onTap: (){
                     _addKeywordProvider.lengthOfdocument = null;
@@ -12787,8 +12779,44 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                       ],
                     );
                   }),
-            )
+            ),
+            actions: [
+              InkWell(
+                onTap:(){
+                  showAddThriverDialogBox();
+                },
+                child:Container(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  // width: MediaQuery.of(context).size.width * .2,
+                  width: MediaQuery.of(context).size.width * .2,
 
+                  // height: 60,
+                  decoration: BoxDecoration(
+                    color:Colors.blue ,
+                    border: Border.all(
+                        color:Colors.blue ,
+                        width: 1.0),
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: Center(
+                    // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                    child: Text(
+                      'can’t find? .. add new solution',
+                      style: GoogleFonts.montserrat(
+                        textStyle:
+                        Theme
+                            .of(context)
+                            .textTheme
+                            .titleSmall,
+                        fontWeight: FontWeight.bold,
+                        color:Colors.white ,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 15,),
+            ],
         );
       },
     );
@@ -14132,6 +14160,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
   TextEditingController NotesSolutiontextcontroller = TextEditingController();
   TextEditingController challengesNameTextEditingController = TextEditingController();
   TextEditingController challengesDescriptionTextEditingController = TextEditingController();
+  TextEditingController SolutionDescriptionTextEditingController = TextEditingController();
   TextEditingController SolutionNameTextEditingController = TextEditingController();
   TextEditingController challengesOriginalDescriptionTextEditingController = TextEditingController();
   TextEditingController SolutionsOriginalDescriptionTextEditingController = TextEditingController();
@@ -14313,7 +14342,16 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                               ProgressDialog.hide();
                               // _challengesProvider.loadDataForPage(1);
                               // _challengesProvider.setFirstpageNo();
-
+                              toastification.show(context: context,
+                                  title: Text('${ChallengesData['Label']} added to basket'),
+                                  autoCloseDuration: Duration(milliseconds: 2500),
+                                  alignment: Alignment.center,
+                                  backgroundColor: Colors.green,
+                                  foregroundColor: Colors.white,
+                                  icon: Icon(Icons.check_circle, color: Colors.white,),
+                                  animationDuration: Duration(milliseconds: 1000),
+                                  showProgressBar: false
+                              );
                               Navigator.pop(context);
                               challengesNameTextEditingController.clear();
                               // challengeProvider.keywordsssssclear();
@@ -14541,6 +14579,36 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                               ////ApiRepository().updateSecurityPINFor(userAccountId,newPinTextEditingController.text);
 
                               // print('createdAt: $createdAt');
+                              ProgressDialog.show(context, "Creating a Solution", Icons.chair);
+
+                              var defaulttext ;
+                              defaulttext = q1;
+                              defaulttext = defaulttext +""+ "where xxx = ${SolutionsOriginalDescriptionTextEditingController.text.toString()}";
+                              print(defaulttext);
+                              await getChatSolGptResponse(defaulttext);
+
+
+                              var defaulttext2 ="";
+                              defaulttext2 =  q2;
+                              defaulttext2 =  defaulttext2 + " where yyy is "+finalSolutiontextcontroller.text.toString();
+
+                              var defaulttextq3 ="";
+                              defaulttextq3 =  q3;
+                              defaulttextq3 =  defaulttextq3 + " where yyy is "+finalSolutiontextcontroller.text.toString();
+
+                              var defaulttextq4 ="";
+                              defaulttextq4 =  q4;
+                              defaulttextq4 =  defaulttextq4 + " where yyy is "+finalSolutiontextcontroller.text.toString();
+                              defaulttextq4 =  defaulttextq4 + " and select tags from "+"${solutionresultString}";
+
+
+                              var defaulttextq5 ="";
+                              defaulttextq5 =  q5;
+                              defaulttextq5 =  defaulttextq5 + " where yyy is "+finalSolutiontextcontroller.text.toString();
+
+
+                              await getChatSolResponsenew(defaulttext2,defaulttextq3,defaulttextq4,defaulttextq5);
+
                               QuerySnapshot querySnapshot = await FirebaseFirestore.instance
                                   .collection('Thrivers')
                                   .orderBy('Created Date', descending: true)
@@ -14550,7 +14618,6 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                               print("abccccc; ${abc['id']}");
                               print("abccccc; ${abc['id'].runtimeType}");
                               var ids = abc['id'] + 1;
-                              ProgressDialog.show(context, "Creating a Thriver", Icons.chair);
                               // await ApiRepository().createThriversss({
                               //   "id": ids,
                               //   "Source" : addKeywordProvider.selectsourceItems,
@@ -14578,23 +14645,23 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                 'id': ids,
                                 'Name': SolutionNameTextEditingController.text,
                                 // 'Description': _controllerSolution.document.toPlainText(),
-                                'Description': "Description",
+                                'Description':  SolutionDescriptionTextEditingController.text,
                                 'Source': selectedEmail,
                                 'Thirver Status': "New",
-                                // 'tags': addKeywordProvider.ProviderTags,
-                                'tags': [],
+                                'tags': addKeywordProvider.ProviderTags,
+                                // 'tags': [],
                                 'Created By': widget.AdminName,
                                 // 'Created Date': formattedDate,
                                 'Created Date': Timestamp.now(),
                                 'Modified By': '',
                                 'Modified Date': '',
-                                // 'Original Description': originalSolutiontextEditingController.text,
-                                'Original Description': 'Original Description',
+                                'Original Description': SolutionsOriginalDescriptionTextEditingController.text,
+                                // 'Original Description': 'Original Description',
                                 'Impact': ImpactSolutiontextcontroller.text,
                                 'Final_description': finalSolutiontextcontroller.text,
                                 'Category': 	"Solution Category",
-                                // 'Keywords': addKeywordProvider.keywordsssss,
-                                'Keywords': [],
+                                'Keywords': addKeywordProvider.keywordsssss,
+                                // 'Keywords': [],
                                 'Notes': NotesSolutiontextcontroller.text,
                               };
 
@@ -14604,16 +14671,28 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                               _userAboutMEProvider.manuallyAddSolution(SolutionData);
 
                               ProgressDialog.hide();
+
+                              toastification.show(context: context,
+                                  title: Text('${SolutionData['Name']} added to basket'),
+                                  autoCloseDuration: Duration(milliseconds: 2500),
+                                  alignment: Alignment.center,
+                                  backgroundColor: Colors.green,
+                                  foregroundColor: Colors.white,
+                                  icon: Icon(Icons.check_circle, color: Colors.white,),
+                                  animationDuration: Duration(milliseconds: 1000),
+                                  showProgressBar: false
+                              );
                               Navigator.pop(context);
                               SolutionNameTextEditingController.clear();
                               finalSolutiontextcontroller.clear();
                               ImpactSolutiontextcontroller.clear();
                               NotesSolutiontextcontroller.clear();
                               // addKeywordProvider.selectedValue.clear();
-                              addKeywordProvider.keywordsssssclear();
-                              addKeywordProvider.ProviderTagsclear();
+                              // addKeywordProvider.keywordsssssclear();
+                              // addKeywordProvider.ProviderTagsclear();
                               addKeywordProvider.selectsourceItems = null;
                               addKeywordProvider.selectThriversStatusItems = null;
+
                             },
                             child: Container(
                               width: MediaQuery.of(context).size.width * .3,
@@ -14653,7 +14732,7 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.only(left: 20.0),
-                            child: Text("New Solution",
+                            child: Text("Describe solution",
                                 overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
                                     color: Colors.black)),
@@ -14676,124 +14755,10 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                               Padding(
                                 /// Original Description
                                 padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: TextField(
-                                        controller: SolutionsOriginalDescriptionTextEditingController,
-                                        // cursorColor: primaryColorOfApp,
-                                        onChanged: (value) {
-
-                                        },
-                                        style: GoogleFonts.montserrat(
-                                            textStyle: Theme
-                                                .of(context)
-                                                .textTheme
-                                                .bodyLarge,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.black),
-                                        decoration: InputDecoration(
-                                          //errorText: userAccountSearchErrorText,
-                                          contentPadding: EdgeInsets.all(25),
-                                          labelText: "Original Description",
-                                          hintText: "Original Description",
-
-
-                                          errorStyle: GoogleFonts.montserrat(
-                                              textStyle: Theme
-                                                  .of(context)
-                                                  .textTheme
-                                                  .bodyLarge,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.redAccent),
-
-                                          focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.black),
-                                              borderRadius: BorderRadius.circular(15)),
-                                          border: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.black12),
-                                              borderRadius: BorderRadius.circular(15)),
-                                          //hintText: "e.g Abouzied",
-                                          labelStyle: GoogleFonts.montserrat(
-                                              textStyle: Theme
-                                                  .of(context)
-                                                  .textTheme
-                                                  .bodyLarge,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.black),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 10,),
-                                    InkWell(
-                                      // onTap: () async {
-                                      //   var defaulttext ="";
-                                      //   // defaulttext ="1."+ "$q1"+" "+originaltextEditingController.text.toString();
-                                      //   defaulttext =  q2;
-                                      //   defaulttext =  defaulttext + " where yyy is "+finaltextcontroller.text.toString();
-                                      //   var defaulttextq3 ="";
-                                      //   // defaulttext ="1."+ "$q1"+" "+originaltextEditingController.text.toString();
-                                      //   defaulttextq3 =  q3;
-                                      //   defaulttextq3 =  defaulttextq3 + " where yyy is "+finaltextcontroller.text.toString();
-                                      //
-                                      //   var defaulttextq4 ="";
-                                      //   // defaulttext ="1."+ "$q1"+" "+originaltextEditingController.text.toString();
-                                      //   defaulttextq4 =  q4;
-                                      //   defaulttextq4 =  defaulttextq4 + " where yyy is "+finaltextcontroller.text.toString();
-                                      //   defaulttextq4 =  defaulttextq4 + " and select tags from "+"${resultString}";
-                                      //
-                                      //
-                                      //   var defaulttextq5 ="";
-                                      //   defaulttextq5 =  q5;
-                                      //   defaulttextq5 =  defaulttextq5 + " where yyy is "+finaltextcontroller.text.toString();
-                                      //
-                                      //   // defaulttext =defaulttext +" 3."+ "  $q3 "+originaltextEditingController.text.toString();
-                                      //   // defaulttext =defaulttext +" 4."+ "  $q4 "+originaltextEditingController.text.toString();
-                                      //   // defaulttext =defaulttext +" 5."+ "  $q5 "+originaltextEditingController.text.toString();
-                                      //   await getChatResponsenew(defaulttext,defaulttextq3,defaulttextq4,defaulttextq5);
-                                      //
-                                      // },
-                                      child: Container(
-                                        width: MediaQuery.of(context).size.width * .1,
-                                        padding: EdgeInsets.symmetric(horizontal: 15),
-                                        height: 60,
-                                        decoration: BoxDecoration(
-                                          color: Colors.blue,
-                                          border: Border.all(
-                                              color: Colors.blue,
-                                              width: 2.0),
-                                          borderRadius: BorderRadius.circular(15.0),
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            'Generate',
-                                            style: GoogleFonts.montserrat(
-                                                textStyle:
-                                                Theme
-                                                    .of(context)
-                                                    .textTheme
-                                                    .titleSmall,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-
-                              Padding(
-                                /// Name
-                                padding: const EdgeInsets.all(8.0),
                                 child: TextField(
-                                  controller: SolutionNameTextEditingController,
-
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.deny(RegExp(r'"')), // Disallow double quotes
-                                  ],
+                                  controller: SolutionsOriginalDescriptionTextEditingController,
                                   // cursorColor: primaryColorOfApp,
+                                  maxLines: 3,
                                   onChanged: (value) {
 
                                   },
@@ -14807,71 +14772,8 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                   decoration: InputDecoration(
                                     //errorText: userAccountSearchErrorText,
                                     contentPadding: EdgeInsets.all(25),
-                                    labelText: "Label",
-                                    hintText: "Label",
-
-                                    /*prefixIcon: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Icon(Icons.question_mark_outlined,
-                                 // color: primaryColorOfApp
-                                  ),
-                              ),*/
-
-                                    errorStyle: GoogleFonts.montserrat(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.redAccent),
-
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(15)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black12),
-                                        borderRadius: BorderRadius.circular(15)),
-                                    //hintText: "e.g Abouzied",
-                                    labelStyle: GoogleFonts.montserrat(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black),
-                                  ),
-                                ),
-                              ),
-
-                              Padding(
-
-
-                                /// Final Description
-                                padding: const EdgeInsets.all(8.0),
-                                child: TextField(
-                                  // maxLines: null,
-                                  // maxLines: 2,
-                                  controller: finalSolutiontextcontroller,
-                                  // cursorColor: primaryColorOfApp,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.deny(RegExp(r'"')), // Disallow double quotes
-                                  ],
-                                  onChanged: (value) {
-
-                                  },
-                                  style: GoogleFonts.montserrat(
-                                      textStyle: Theme
-                                          .of(context)
-                                          .textTheme
-                                          .bodyLarge,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black),
-                                  decoration: InputDecoration(
-                                    //errorText: userAccountSearchErrorText,
-                                    contentPadding: EdgeInsets.all(25),
-                                    labelText: "Description",
-                                    hintText: "Description",
-
+                                    labelText: "Describe solution",
+                                    hintText: "Describe solution",
 
 
                                     errorStyle: GoogleFonts.montserrat(
@@ -14900,134 +14802,251 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
                                 ),
                               ),
 
-                              Padding(
-                                /// Impact
-                                padding: const EdgeInsets.all(8.0),
-                                child: TextField(
-                                  controller: ImpactSolutiontextcontroller,
-
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.deny(RegExp(r'"')), // Disallow double quotes
-                                  ],
-                                  // cursorColor: primaryColorOfApp,
-                                  onChanged: (value) {
-
-                                  },
-                                  style: GoogleFonts.montserrat(
-                                      textStyle: Theme
-                                          .of(context)
-                                          .textTheme
-                                          .bodyLarge,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black),
-                                  decoration: InputDecoration(
-                                    //errorText: userAccountSearchErrorText,
-                                    contentPadding: EdgeInsets.all(25),
-                                    labelText: "Impact",
-                                    hintText: "Impact",
-
-                                    /*prefixIcon: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Icon(Icons.question_mark_outlined,
-                                 // color: primaryColorOfApp
-                                  ),
-                              ),*/
-
-                                    errorStyle: GoogleFonts.montserrat(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.redAccent),
-
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(15)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black12),
-                                        borderRadius: BorderRadius.circular(15)),
-                                    //hintText: "e.g Abouzied",
-                                    labelStyle: GoogleFonts.montserrat(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black),
-                                  ),
-                                ),
-                              ),
-
-
-                              Padding(
-                                /// Notes
-                                padding: const EdgeInsets.all(8.0),
-                                child: TextField(
-                                  controller: NotesSolutiontextcontroller,
-
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.deny(RegExp(r'"')), // Disallow double quotes
-                                  ],
-                                  // cursorColor: primaryColorOfApp,
-                                  onChanged: (value) {
-
-                                  },
-                                  style: GoogleFonts.montserrat(
-                                      textStyle: Theme
-                                          .of(context)
-                                          .textTheme
-                                          .bodyLarge,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black),
-                                  decoration: InputDecoration(
-                                    //errorText: userAccountSearchErrorText,
-                                    contentPadding: EdgeInsets.all(25),
-                                    labelText: "Notes",
-                                    hintText: "Notes",
-
-                                    /*prefixIcon: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Icon(Icons.question_mark_outlined,
-                                 // color: primaryColorOfApp
-                                  ),
-                              ),*/
-
-                                    errorStyle: GoogleFonts.montserrat(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.redAccent),
-
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(15)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black12),
-                                        borderRadius: BorderRadius.circular(15)),
-                                    //hintText: "e.g Abouzied",
-                                    labelStyle: GoogleFonts.montserrat(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black),
-                                  ),
-                                ),
-                              ),
-
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text("* Note: Please confirm the Solution in order to save it.",
-                                  style: TextStyle(
-                                      color: Colors.red,
-                                      fontWeight: FontWeight.w300
-                                  ),
-                                ),
-                              ),
+                              //
+                              // Padding(
+                              //   /// Name
+                              //   padding: const EdgeInsets.all(8.0),
+                              //   child: TextField(
+                              //     controller: SolutionNameTextEditingController,
+                              //
+                              //     inputFormatters: [
+                              //       FilteringTextInputFormatter.deny(RegExp(r'"')), // Disallow double quotes
+                              //     ],
+                              //     // cursorColor: primaryColorOfApp,
+                              //     onChanged: (value) {
+                              //
+                              //     },
+                              //     style: GoogleFonts.montserrat(
+                              //         textStyle: Theme
+                              //             .of(context)
+                              //             .textTheme
+                              //             .bodyLarge,
+                              //         fontWeight: FontWeight.w400,
+                              //         color: Colors.black),
+                              //     decoration: InputDecoration(
+                              //       //errorText: userAccountSearchErrorText,
+                              //       contentPadding: EdgeInsets.all(25),
+                              //       labelText: "Label",
+                              //       hintText: "Label",
+                              //
+                              //       /*prefixIcon: Padding(
+                              //   padding: const EdgeInsets.all(8.0),
+                              //   child: Icon(Icons.question_mark_outlined,
+                              //    // color: primaryColorOfApp
+                              //     ),
+                              // ),*/
+                              //
+                              //       errorStyle: GoogleFonts.montserrat(
+                              //           textStyle: Theme
+                              //               .of(context)
+                              //               .textTheme
+                              //               .bodyLarge,
+                              //           fontWeight: FontWeight.w400,
+                              //           color: Colors.redAccent),
+                              //
+                              //       focusedBorder: OutlineInputBorder(
+                              //           borderSide: BorderSide(color: Colors.black),
+                              //           borderRadius: BorderRadius.circular(15)),
+                              //       border: OutlineInputBorder(
+                              //           borderSide: BorderSide(color: Colors.black12),
+                              //           borderRadius: BorderRadius.circular(15)),
+                              //       //hintText: "e.g Abouzied",
+                              //       labelStyle: GoogleFonts.montserrat(
+                              //           textStyle: Theme
+                              //               .of(context)
+                              //               .textTheme
+                              //               .bodyLarge,
+                              //           fontWeight: FontWeight.w400,
+                              //           color: Colors.black),
+                              //     ),
+                              //   ),
+                              // ),
+                              //
+                              // Padding(
+                              //
+                              //
+                              //   /// Final Description
+                              //   padding: const EdgeInsets.all(8.0),
+                              //   child: TextField(
+                              //     // maxLines: null,
+                              //     // maxLines: 2,
+                              //     controller: finalSolutiontextcontroller,
+                              //     // cursorColor: primaryColorOfApp,
+                              //     inputFormatters: [
+                              //       FilteringTextInputFormatter.deny(RegExp(r'"')), // Disallow double quotes
+                              //     ],
+                              //     onChanged: (value) {
+                              //
+                              //     },
+                              //     style: GoogleFonts.montserrat(
+                              //         textStyle: Theme
+                              //             .of(context)
+                              //             .textTheme
+                              //             .bodyLarge,
+                              //         fontWeight: FontWeight.w400,
+                              //         color: Colors.black),
+                              //     decoration: InputDecoration(
+                              //       //errorText: userAccountSearchErrorText,
+                              //       contentPadding: EdgeInsets.all(25),
+                              //       labelText: "Description",
+                              //       hintText: "Description",
+                              //
+                              //
+                              //
+                              //       errorStyle: GoogleFonts.montserrat(
+                              //           textStyle: Theme
+                              //               .of(context)
+                              //               .textTheme
+                              //               .bodyLarge,
+                              //           fontWeight: FontWeight.w400,
+                              //           color: Colors.redAccent),
+                              //
+                              //       focusedBorder: OutlineInputBorder(
+                              //           borderSide: BorderSide(color: Colors.black),
+                              //           borderRadius: BorderRadius.circular(15)),
+                              //       border: OutlineInputBorder(
+                              //           borderSide: BorderSide(color: Colors.black12),
+                              //           borderRadius: BorderRadius.circular(15)),
+                              //       //hintText: "e.g Abouzied",
+                              //       labelStyle: GoogleFonts.montserrat(
+                              //           textStyle: Theme
+                              //               .of(context)
+                              //               .textTheme
+                              //               .bodyLarge,
+                              //           fontWeight: FontWeight.w400,
+                              //           color: Colors.black),
+                              //     ),
+                              //   ),
+                              // ),
+                              //
+                              // Padding(
+                              //   /// Impact
+                              //   padding: const EdgeInsets.all(8.0),
+                              //   child: TextField(
+                              //     controller: ImpactSolutiontextcontroller,
+                              //
+                              //     inputFormatters: [
+                              //       FilteringTextInputFormatter.deny(RegExp(r'"')), // Disallow double quotes
+                              //     ],
+                              //     // cursorColor: primaryColorOfApp,
+                              //     onChanged: (value) {
+                              //
+                              //     },
+                              //     style: GoogleFonts.montserrat(
+                              //         textStyle: Theme
+                              //             .of(context)
+                              //             .textTheme
+                              //             .bodyLarge,
+                              //         fontWeight: FontWeight.w400,
+                              //         color: Colors.black),
+                              //     decoration: InputDecoration(
+                              //       //errorText: userAccountSearchErrorText,
+                              //       contentPadding: EdgeInsets.all(25),
+                              //       labelText: "Impact",
+                              //       hintText: "Impact",
+                              //
+                              //       /*prefixIcon: Padding(
+                              //   padding: const EdgeInsets.all(8.0),
+                              //   child: Icon(Icons.question_mark_outlined,
+                              //    // color: primaryColorOfApp
+                              //     ),
+                              // ),*/
+                              //
+                              //       errorStyle: GoogleFonts.montserrat(
+                              //           textStyle: Theme
+                              //               .of(context)
+                              //               .textTheme
+                              //               .bodyLarge,
+                              //           fontWeight: FontWeight.w400,
+                              //           color: Colors.redAccent),
+                              //
+                              //       focusedBorder: OutlineInputBorder(
+                              //           borderSide: BorderSide(color: Colors.black),
+                              //           borderRadius: BorderRadius.circular(15)),
+                              //       border: OutlineInputBorder(
+                              //           borderSide: BorderSide(color: Colors.black12),
+                              //           borderRadius: BorderRadius.circular(15)),
+                              //       //hintText: "e.g Abouzied",
+                              //       labelStyle: GoogleFonts.montserrat(
+                              //           textStyle: Theme
+                              //               .of(context)
+                              //               .textTheme
+                              //               .bodyLarge,
+                              //           fontWeight: FontWeight.w400,
+                              //           color: Colors.black),
+                              //     ),
+                              //   ),
+                              // ),
+                              //
+                              //
+                              // Padding(
+                              //   /// Notes
+                              //   padding: const EdgeInsets.all(8.0),
+                              //   child: TextField(
+                              //     controller: NotesSolutiontextcontroller,
+                              //
+                              //     inputFormatters: [
+                              //       FilteringTextInputFormatter.deny(RegExp(r'"')), // Disallow double quotes
+                              //     ],
+                              //     // cursorColor: primaryColorOfApp,
+                              //     onChanged: (value) {
+                              //
+                              //     },
+                              //     style: GoogleFonts.montserrat(
+                              //         textStyle: Theme
+                              //             .of(context)
+                              //             .textTheme
+                              //             .bodyLarge,
+                              //         fontWeight: FontWeight.w400,
+                              //         color: Colors.black),
+                              //     decoration: InputDecoration(
+                              //       //errorText: userAccountSearchErrorText,
+                              //       contentPadding: EdgeInsets.all(25),
+                              //       labelText: "Notes",
+                              //       hintText: "Notes",
+                              //
+                              //       /*prefixIcon: Padding(
+                              //   padding: const EdgeInsets.all(8.0),
+                              //   child: Icon(Icons.question_mark_outlined,
+                              //    // color: primaryColorOfApp
+                              //     ),
+                              // ),*/
+                              //
+                              //       errorStyle: GoogleFonts.montserrat(
+                              //           textStyle: Theme
+                              //               .of(context)
+                              //               .textTheme
+                              //               .bodyLarge,
+                              //           fontWeight: FontWeight.w400,
+                              //           color: Colors.redAccent),
+                              //
+                              //       focusedBorder: OutlineInputBorder(
+                              //           borderSide: BorderSide(color: Colors.black),
+                              //           borderRadius: BorderRadius.circular(15)),
+                              //       border: OutlineInputBorder(
+                              //           borderSide: BorderSide(color: Colors.black12),
+                              //           borderRadius: BorderRadius.circular(15)),
+                              //       //hintText: "e.g Abouzied",
+                              //       labelStyle: GoogleFonts.montserrat(
+                              //           textStyle: Theme
+                              //               .of(context)
+                              //               .textTheme
+                              //               .bodyLarge,
+                              //           fontWeight: FontWeight.w400,
+                              //           color: Colors.black),
+                              //     ),
+                              //   ),
+                              // ),
+                              //
+                              // Padding(
+                              //   padding: const EdgeInsets.all(8.0),
+                              //   child: Text("* Note: Please confirm the Solution in order to save it.",
+                              //     style: TextStyle(
+                              //         color: Colors.red,
+                              //         fontWeight: FontWeight.w300
+                              //     ),
+                              //   ),
+                              // ),
 
 
                               // SizedBox(height: 10,),
@@ -15689,6 +15708,159 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
 
           // thriverNameTextEditingController.text = element.message!.content;
           finaltextcontroller.text = responseContent;
+        });
+        print("response: ${element.message!.content}");
+      }
+    }
+
+    // ProgressDialog.hide();
+
+  }
+
+  Future<void> getChatSolResponsenew(q2text,q3text,q4text,q5text,) async {
+    setState(() {
+      _messages.insert(0, q2text);
+      // _typingUsers.add(_gptChatUser);
+    });
+    // ProgressDialog.show(context, "Expand", Icons.search);
+
+    List<Messages> _messagesHistory2 = _messages.reversed.map((m) {
+      return Messages(role: Role.user, content: q2text);
+    }).toList();
+    final request2 = ChatCompleteText(
+      model: Gpt4ChatModel(),
+      messages: _messagesHistory2,
+      maxToken: 200,
+    );
+    final response2 = await _openAI.onChatCompletion(request: request2);
+    for (var element in response2!.choices) {
+      if (element.message != null) {
+        setState(() {
+          String gptResponse = element.message!.content;
+          String responseContent = gptResponse.replaceAll('"', '');
+
+          // thriverNameTextEditingController.text = element.message!.content;
+          SolutionNameTextEditingController.text = responseContent;
+        });
+        print("response: ${element.message!.content}");
+      }
+    }
+
+
+    List<Messages> _messagesHistory3 = _messages.reversed.map((m) {
+      return Messages(role: Role.user, content: q3text);
+    }).toList();
+    final request3 = ChatCompleteText(
+      model: Gpt4ChatModel(),
+      messages: _messagesHistory3,
+      maxToken: 200,
+    );
+    final response3 = await _openAI.onChatCompletion(request: request3);
+    for (var element in response3!.choices) {
+      if (element.message != null) {
+        setState(() {
+          SolutionDescriptionTextEditingController.text = element.message!.content;
+
+          // _controller = element.message!.content;
+          // _controller = QuillController(
+          //   document: Document()..insert(0, element.message!.content),
+          //   selection: TextSelection.collapsed(offset: element.message!.content.length),
+          // );
+
+        });
+        print("response: ${element.message!.content}");
+      }
+    }
+
+
+
+    List<Messages> _messagesHistory4 = _messages.reversed.map((m) {
+      return Messages(role: Role.user, content: q4text);
+    }).toList();
+    final request4 = ChatCompleteText(
+      model: Gpt4ChatModel(),
+      messages: _messagesHistory4,
+      maxToken: 200,
+    );
+    final response4 = await _openAI.onChatCompletion(request: request4);
+    for (var element in response4!.choices) {
+      if (element.message != null) {
+        setState(() {
+          // ValueItem<String> valueItem = new ValueItem<String>(value: element.message!.content, label: '${element.message!.content}');
+
+          // controller.options.add(valueItem);
+
+          String gptResponse = element.message!.content;
+          String responseContent = gptResponse.replaceAll(', ', ',');
+
+          // List<String> responseList = [gptResponse];
+          // print("responseListttt: ${responseList}");
+          // print("responseInList: ${[element.message!.content]}");
+
+
+          _addKeywordProvider.keywordsssss = responseContent.split(',');
+
+          // _addKeywordProvider.keywordsssss = [gptResponse];
+
+
+        });
+        print("_addKeywordProvider.ProviderTags: ${_challengesProvider.keywordsssss}");
+        print("responsesssss: ${element.message!.content}");
+      }
+    }
+
+
+    List<Messages> _messagesHistory5 = _messages.reversed.map((m) {
+      return Messages(role: Role.user, content: q5text);
+    }).toList();
+    final request5 = ChatCompleteText(
+      model: Gpt4ChatModel(),
+      messages: _messagesHistory5,
+      maxToken: 200,
+    );
+    final response5 = await _openAI.onChatCompletion(request: request5);
+    for (var element in response5!.choices) {
+      if (element.message != null) {
+        setState(() {
+          // ValueItem<String> valueItem = new ValueItem<String>(value: element.message!.content, label: '${element.message!.content}');
+          //
+          // controller.options.add( valueItem) ;
+          String gptResponse = element.message!.content;
+          String responseContent = gptResponse.replaceAll(', ', ',');
+
+          _addKeywordProvider.ProviderTags = responseContent.split(',');
+        });
+        print("_addKeywordProvider.ProviderTags: ${_addKeywordProvider.ProviderTags}");
+        print("response: ${element.message!.content}");
+      }
+    }
+    ProgressDialog.hide();
+  }
+
+  Future<void> getChatSolGptResponse(defaulttext) async {
+    setState(() {
+      _messages.insert(0, defaulttext);
+      // _typingUsers.add(_gptChatUser);
+    });
+    // ProgressDialog.show(context, "Expand", Icons.search);
+
+    List<Messages> _messagesHistory = _messages.reversed.map((m) {
+      return Messages(role: Role.user, content: defaulttext);
+    }).toList();
+    final request = ChatCompleteText(
+      model: Gpt4ChatModel(),
+      messages: _messagesHistory,
+      maxToken: 200,
+    );
+    final response = await _openAI.onChatCompletion(request: request);
+    for (var element in response!.choices) {
+      if (element.message != null) {
+        setState(() {
+          String gptResponse = element.message!.content;
+          String responseContent = gptResponse.replaceAll('"', '');
+
+          // thriverNameTextEditingController.text = element.message!.content;
+          finalSolutiontextcontroller.text = responseContent;
         });
         print("response: ${element.message!.content}");
       }

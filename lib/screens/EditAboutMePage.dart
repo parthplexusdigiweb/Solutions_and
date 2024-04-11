@@ -72,6 +72,8 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
   TextEditingController NotesAddChallengetextcontroller = TextEditingController();
   TextEditingController NotesSolutiontextcontroller = TextEditingController();
   TextEditingController challengesNameTextEditingController = TextEditingController();
+  TextEditingController challengesDescriptionTextEditingController = TextEditingController();
+  TextEditingController SolutionDescriptionTextEditingController = TextEditingController();
   TextEditingController SolutionNameTextEditingController = TextEditingController();
   TextEditingController challengesOriginalDescriptionTextEditingController = TextEditingController();
   TextEditingController SolutionsOriginalDescriptionTextEditingController = TextEditingController();
@@ -86,7 +88,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
   List<dynamic> Solutionsedittags = [];
 
   var selectedEmail ;
-  var resultString ;
+  var resultString,solutionresultString ;
 
   List<String> emailList = [];
 
@@ -134,7 +136,9 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
     _challengesProvider.lengthOfdocument = null;
     documentId = widget.aboutMeData.id;
     fetchEmailList();
+    getQuestions();
     newSelectCategories();
+    newSolSelectCategories();
     getChatgptSettingsApiKey();
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       // Call EditChallengeList after the first frame has been rendered
@@ -1805,7 +1809,22 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                               ),
                             ),
                             SizedBox(height: 6,),
+                            (userAboutMEProvider.combinedResults.isEmpty) ?
                             Container(
+                              // height: 350,
+                              height: MediaQuery.of(context).size.height * .48,
+                              width: MediaQuery.of(context).size.width ,
+                              child: Center(
+                                child: Text("No Suggestions Yet",
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.headlineLarge,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black),),),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ) : Container(
                               height: MediaQuery.of(context).size.height * .48,
                               // width: MediaQuery.of(context).size.width * .46,
                               decoration: BoxDecoration(
@@ -2082,41 +2101,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                             ),
                           ),
                           SizedBox(width: 15,),
-                          InkWell(
-                            onTap:(){
-                              showAddChallengesDialogBox();
-                            },
-                            child:Container(
-                              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                              // width: MediaQuery.of(context).size.width * .2,
-                              width: MediaQuery.of(context).size.width * .15,
 
-                              // height: 60,
-                              decoration: BoxDecoration(
-                                // color:Colors.blue ,
-                                border: Border.all(
-                                    color:Colors.blue ,
-                                    width: 1.0),
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              child: Center(
-                                // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                child: Text(
-                                  'Create My Own',
-                                  style: GoogleFonts.montserrat(
-                                    textStyle:
-                                    Theme
-                                        .of(context)
-                                        .textTheme
-                                        .titleSmall,
-                                    fontWeight: FontWeight.bold,
-                                    color:Colors.blue ,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 15,),
 
                         ],
                       ),
@@ -2222,6 +2207,23 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                 ),
                               ),
                               SizedBox(height: 10,),
+                              (userAboutMEProvider.combinedSolutionsResults.isEmpty) ?
+                              Container(
+                                // height: 350,
+                                height: MediaQuery.of(context).size.height * .6,
+                                width: MediaQuery.of(context).size.width ,
+
+                                child: Center(
+                                  child: Text("No Suggestions Yet",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.headlineLarge,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black),),),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ) :
                               Container(
                                 height: MediaQuery.of(context).size.height * .6,
                                 // width: MediaQuery.of(context).size.width * .46,
@@ -2534,41 +2536,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                               ),
                             ),
                             SizedBox(width: 15,),
-                            InkWell(
-                              onTap:(){
-                                showAddThriverDialogBox();
-                              },
-                              child:Container(
-                                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                                // width: MediaQuery.of(context).size.width * .2,
-                                width: MediaQuery.of(context).size.width * .15,
 
-                                // height: 60,
-                                decoration: BoxDecoration(
-                                  // color:Colors.blue ,
-                                  border: Border.all(
-                                      color:Colors.blue ,
-                                      width: 1.0),
-                                  borderRadius: BorderRadius.circular(15.0),
-                                ),
-                                child: Center(
-                                  // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                  child: Text(
-                                    'Create My Own',
-                                    style: GoogleFonts.montserrat(
-                                      textStyle:
-                                      Theme
-                                          .of(context)
-                                          .textTheme
-                                          .titleSmall,
-                                      fontWeight: FontWeight.bold,
-                                      color:Colors.blue ,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 15,),
 
                           ],
                         ),
@@ -4100,6 +4068,16 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                           ) : InkWell(
                             onTap: (){
                               userAboutMEProvider.EditRecommendedChallengeAdd(true, documentsss![i]);
+                              toastification.show(context: context,
+                                  title: Text('${challengesData['Label']} added to basket'),
+                                  autoCloseDuration: Duration(milliseconds: 2500),
+                                  alignment: Alignment.center,
+                                  backgroundColor: Colors.green,
+                                  foregroundColor: Colors.white,
+                                  icon: Icon(Icons.check_circle, color: Colors.white,),
+                                  animationDuration: Duration(milliseconds: 1000),
+                                  showProgressBar: false
+                              );
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
@@ -4313,6 +4291,16 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                           ) : InkWell(
                             onTap: (){
                               userAboutMEProvider.EditRecommendedSolutionAdd(true, documentsss![i]);
+                              toastification.show(context: context,
+                                  title: Text('${solutionsData['Name']} added to basket'),
+                                  autoCloseDuration: Duration(milliseconds: 2500),
+                                  alignment: Alignment.center,
+                                  backgroundColor: Colors.green,
+                                  foregroundColor: Colors.white,
+                                  icon: Icon(Icons.check_circle, color: Colors.white,),
+                                  animationDuration: Duration(milliseconds: 1000),
+                                  showProgressBar: false
+                              );
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
@@ -4644,6 +4632,43 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                   );
                 }),
           ),
+          actions: [
+            InkWell(
+              onTap:(){
+                showAddChallengesDialogBox();
+              },
+              child:Container(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                // width: MediaQuery.of(context).size.width * .2,
+                width: MediaQuery.of(context).size.width * .2,
+
+                // height: 60,
+                decoration: BoxDecoration(
+                  color:Colors.blue ,
+                  border: Border.all(
+                      color:Colors.blue ,
+                      width: 1.0),
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                child: Center(
+                  // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                  child: Text(
+                    'can’t find? .. add new challenge',
+                    style: GoogleFonts.montserrat(
+                      textStyle:
+                      Theme
+                          .of(context)
+                          .textTheme
+                          .titleSmall,
+                      fontWeight: FontWeight.bold,
+                      color:Colors.white ,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(width: 15,),
+          ],
           // actions: [
           //   Consumer<UserAboutMEProvider>(
           //       builder: (context, userAboutMEProvider, _) {
@@ -4889,17 +4914,68 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                       ],
                     );
                   }),
-            )
+            ),
+          actions: [
+            InkWell(
+            onTap:(){
+              showAddThriverDialogBox();
+            },
+            child:Container(
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              // width: MediaQuery.of(context).size.width * .2,
+              width: MediaQuery.of(context).size.width * .2,
+
+              // height: 60,
+              decoration: BoxDecoration(
+                color:Colors.blue ,
+                border: Border.all(
+                    color:Colors.blue ,
+                    width: 1.0),
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              child: Center(
+                // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                child: Text(
+                  'can’t find? .. add new solution',
+                  style: GoogleFonts.montserrat(
+                    textStyle:
+                    Theme
+                        .of(context)
+                        .textTheme
+                        .titleSmall,
+                    fontWeight: FontWeight.bold,
+                    color:Colors.white ,
+                  ),
+                ),
+              ),
+            ),
+          ),
+            SizedBox(width: 15,),
+          ],
 
         );
       },
     );
   } ///this
 
+  var q1,q2,q3,q4,q5;
+
+  getQuestions() async {
+    await FirebaseFirestore.instance.collection('Questions').doc("BuRiTTm0t4mBkTeTso7S").get().then((value) {
+      q1 = value['Question 1'];
+      q2 = value['Question 2'];
+      q3 = value['Question 3'];
+      q4 = value['Question 4'];
+      q5 = value['Question 5'];
+    });
+  }
+
   void showAddChallengesDialogBox() {
-
+    List<TextEditingController> textControllers = [];
+    for(int i=0;i<6;i++){
+      textControllers.add(TextEditingController());
+    }
     showDialog(
-
         context: context,
         builder: (BuildContext context) {
           return Consumer<ChallengesProvider>(
@@ -4921,13 +4997,11 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                               challengeProvider.ProviderTagsclear();
                               ImpactAddChallengetextcontroller.clear();
                               NotesAddChallengetextcontroller.clear();
-
                               // controller.clearAllSelection();
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(horizontal: 15),
                               width: MediaQuery.of(context).size.width * .3,
-
                               height: 60,
                               decoration: BoxDecoration(
                                 //color: Colors.white,
@@ -4958,6 +5032,36 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                             onTap: () async {
                               ////ApiRepository().updateSecurityPINFor(userAccountId,newPinTextEditingController.text);
 
+                              ProgressDialog.show(context, "Creating a Challenge", Icons.chair);
+
+                              var defaulttext ;
+                              defaulttext = q1;
+                              defaulttext = defaulttext +""+ "where xxx = ${challengesOriginalDescriptionTextEditingController.text.toString()}";
+                              print(defaulttext);
+                              await getChatGptResponse(defaulttext);
+
+
+                              var defaulttext2 ="";
+                              defaulttext2 =  q2;
+                              defaulttext2 =  defaulttext2 + " where yyy is "+finaltextcontroller.text.toString();
+
+                              var defaulttextq3 ="";
+                              defaulttextq3 =  q3;
+                              defaulttextq3 =  defaulttextq3 + " where yyy is "+finaltextcontroller.text.toString();
+
+                              var defaulttextq4 ="";
+                              defaulttextq4 =  q4;
+                              defaulttextq4 =  defaulttextq4 + " where yyy is "+finaltextcontroller.text.toString();
+                              defaulttextq4 =  defaulttextq4 + " and select tags from "+"${resultString}";
+
+
+                              var defaulttextq5 ="";
+                              defaulttextq5 =  q5;
+                              defaulttextq5 =  defaulttextq5 + " where yyy is "+finaltextcontroller.text.toString();
+
+
+                              await getChatResponsenew(defaulttext2,defaulttextq3,defaulttextq4,defaulttextq5);
+
                               QuerySnapshot querySnapshot = await FirebaseFirestore.instance
                                   .collection('Challenges')
                                   .orderBy('Created Date', descending: true)
@@ -4968,8 +5072,6 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                               print("abccccc; ${abc['id'].runtimeType}");
                               var ids = abc['id'] + 1;
 
-
-                              ProgressDialog.show(context, "Creating a Challenge", Icons.chair);
 
                               // await ApiRepository().createchallenges({
                               //   "Source" : selectedEmail,
@@ -5000,23 +5102,23 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                 'id': ids,
                                 'Label': challengesNameTextEditingController.text,
                                 // 'Description': _controller.document.toPlainText(),
-                                'Description': "Description",
+                                'Description': challengesDescriptionTextEditingController.text,
                                 'Source': selectedEmail,
                                 'Challenge Status': "New",
                                 // 'tags': challengeProvider.ProviderTags,
-                                'tags': [],
+                                'tags': challengeProvider.ProviderTags,
                                 'Created By': widget.AdminName,
                                 // 'Created Date': formattedDate,
                                 'Created Date': Timestamp.now(),
                                 'Modified By': '',
                                 'Modified Date': '',
                                 // 'Original Description': originaltextEditingController.text,
-                                'Original Description': 'Original Description',
+                                'Original Description': challengesOriginalDescriptionTextEditingController.text,
                                 'Impact': ImpactAddChallengetextcontroller.text,
                                 'Final_description': finaltextcontroller.text,
                                 'Category': 	"Challenge Category",
                                 // 'Keywords': challengeProvider.keywordsssss,
-                                'Keywords': [],
+                                'Keywords': challengeProvider.keywordsssss,
                                 'Potential Strengths': "",
                                 'Hidden Strengths': '',
                                 'Notes': '',
@@ -5025,22 +5127,37 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                               print("ChallengesData['id']: ${ChallengesData['id']}");
                               print("ChallengesData['Label']: ${ChallengesData['Label']}");
                               print("ChallengesData Created Date: ${ChallengesData['Created Date']}");
+                              print("ChallengesData Keywords: ${ChallengesData['Keywords']}");
+                              print("ChallengesData tags: ${ChallengesData['tags']}");
 
                               _userAboutMEProvider.EditmanuallyAddChallenge(ChallengesData);
 
                               ProgressDialog.hide();
+                              // _challengesProvider.loadDataForPage(1);
+                              // _challengesProvider.setFirstpageNo();
 
-
+                              toastification.show(context: context,
+                                  title: Text('${ChallengesData['Label']} added to basket'),
+                                  autoCloseDuration: Duration(milliseconds: 2500),
+                                  alignment: Alignment.center,
+                                  backgroundColor: Colors.green,
+                                  foregroundColor: Colors.white,
+                                  icon: Icon(Icons.check_circle, color: Colors.white,),
+                                  animationDuration: Duration(milliseconds: 1000),
+                                  showProgressBar: false
+                              );
                               Navigator.pop(context);
                               challengesNameTextEditingController.clear();
-                              challengeProvider.keywordsssssclear();
-                              challengeProvider.ProviderTagsclear();
+                              // challengeProvider.keywordsssssclear();
+                              // challengeProvider.ProviderTagsclear();
                               challengeProvider.selectsourceItems = null;
                               challengeProvider.selectThriversStatusItems = null;
                               finaltextcontroller.clear();
                               ImpactAddChallengetextcontroller.clear();
                               NotesAddChallengetextcontroller.clear();
 
+                              print("ChallengesData Keywordsdfdsfs: ${ChallengesData['Keywords']}");
+                              print("ChallengesData tagdfdfs: ${ChallengesData['tags']}");
                             },
                             child: Container(
                               width: MediaQuery.of(context).size.width * .3,
@@ -5087,7 +5204,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.only(left: 20.0),
-                            child: Text("New Challenge",
+                            child: Text("Describe challenge",
                                 overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
                                     color: Colors.black)),
@@ -5108,119 +5225,10 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                               Padding(
                                 /// Original Description
                                 padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: TextField(
-                                        controller: challengesOriginalDescriptionTextEditingController,
-                                        // cursorColor: primaryColorOfApp,
-                                        onChanged: (value) {
-
-                                        },
-                                        style: GoogleFonts.montserrat(
-                                            textStyle: Theme
-                                                .of(context)
-                                                .textTheme
-                                                .bodyLarge,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.black),
-                                        decoration: InputDecoration(
-                                          //errorText: userAccountSearchErrorText,
-                                          contentPadding: EdgeInsets.all(25),
-                                          labelText: "Original Description",
-                                          hintText: "Original Description",
-
-
-                                          errorStyle: GoogleFonts.montserrat(
-                                              textStyle: Theme
-                                                  .of(context)
-                                                  .textTheme
-                                                  .bodyLarge,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.redAccent),
-
-                                          focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.black),
-                                              borderRadius: BorderRadius.circular(15)),
-                                          border: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.black12),
-                                              borderRadius: BorderRadius.circular(15)),
-                                          //hintText: "e.g Abouzied",
-                                          labelStyle: GoogleFonts.montserrat(
-                                              textStyle: Theme
-                                                  .of(context)
-                                                  .textTheme
-                                                  .bodyLarge,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.black),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 10,),
-                                    InkWell(
-                                      // onTap: () async {
-                                      //   var defaulttext ="";
-                                      //   // defaulttext ="1."+ "$q1"+" "+originaltextEditingController.text.toString();
-                                      //   defaulttext =  q2;
-                                      //   defaulttext =  defaulttext + " where yyy is "+finaltextcontroller.text.toString();
-                                      //   var defaulttextq3 ="";
-                                      //   // defaulttext ="1."+ "$q1"+" "+originaltextEditingController.text.toString();
-                                      //   defaulttextq3 =  q3;
-                                      //   defaulttextq3 =  defaulttextq3 + " where yyy is "+finaltextcontroller.text.toString();
-                                      //
-                                      //   var defaulttextq4 ="";
-                                      //   // defaulttext ="1."+ "$q1"+" "+originaltextEditingController.text.toString();
-                                      //   defaulttextq4 =  q4;
-                                      //   defaulttextq4 =  defaulttextq4 + " where yyy is "+finaltextcontroller.text.toString();
-                                      //   defaulttextq4 =  defaulttextq4 + " and select tags from "+"${resultString}";
-                                      //
-                                      //
-                                      //   var defaulttextq5 ="";
-                                      //   defaulttextq5 =  q5;
-                                      //   defaulttextq5 =  defaulttextq5 + " where yyy is "+finaltextcontroller.text.toString();
-                                      //
-                                      //   // defaulttext =defaulttext +" 3."+ "  $q3 "+originaltextEditingController.text.toString();
-                                      //   // defaulttext =defaulttext +" 4."+ "  $q4 "+originaltextEditingController.text.toString();
-                                      //   // defaulttext =defaulttext +" 5."+ "  $q5 "+originaltextEditingController.text.toString();
-                                      //   await getChatResponsenew(defaulttext,defaulttextq3,defaulttextq4,defaulttextq5);
-                                      //
-                                      // },
-                                      child: Container(
-                                        width: MediaQuery.of(context).size.width * .1,
-                                        padding: EdgeInsets.symmetric(horizontal: 15),
-                                        height: 60,
-                                        decoration: BoxDecoration(
-                                          color: Colors.blue,
-                                          border: Border.all(
-                                              color: Colors.blue,
-                                              width: 2.0),
-                                          borderRadius: BorderRadius.circular(15.0),
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            'Generate',
-                                            style: GoogleFonts.montserrat(
-                                                textStyle:
-                                                Theme
-                                                    .of(context)
-                                                    .textTheme
-                                                    .titleSmall,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              Padding(
-                                /// Name
-                                padding: const EdgeInsets.all(8.0),
                                 child: TextField(
-                                  controller: challengesNameTextEditingController,
+                                  controller: challengesOriginalDescriptionTextEditingController,
                                   // cursorColor: primaryColorOfApp,
+                                  maxLines: 3,
                                   onChanged: (value) {
 
                                   },
@@ -5233,174 +5241,9 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                       color: Colors.black),
                                   decoration: InputDecoration(
                                     //errorText: userAccountSearchErrorText,
-                                    contentPadding: EdgeInsets.all(25),
-                                    labelText: "Label",
-                                    hintText: "Label",
-
-
-                                    errorStyle: GoogleFonts.montserrat(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.redAccent),
-
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(15)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black12),
-                                        borderRadius: BorderRadius.circular(15)),
-                                    //hintText: "e.g Abouzied",
-                                    labelStyle: GoogleFonts.montserrat(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black),
-                                  ),
-                                ),
-                              ),
-
-                              Padding(
-
-
-                                /// Final Description
-                                padding: const EdgeInsets.all(8.0),
-                                child: TextField(
-                                  maxLines: null,
-                                  controller: finaltextcontroller,
-                                  // cursorColor: primaryColorOfApp,
-
-                                  onChanged: (value) {
-
-                                  },
-                                  style: GoogleFonts.montserrat(
-                                      textStyle: Theme
-                                          .of(context)
-                                          .textTheme
-                                          .bodyLarge,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black),
-                                  decoration: InputDecoration(
-                                    //errorText: userAccountSearchErrorText,
-                                    contentPadding: EdgeInsets.all(25),
-                                    labelText: "Final Description",
-                                    hintText: "Final Description",
-
-
-                                    errorStyle: GoogleFonts.montserrat(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.redAccent),
-
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(15)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black12),
-                                        borderRadius: BorderRadius.circular(15)),
-                                    //hintText: "e.g Abouzied",
-                                    labelStyle: GoogleFonts.montserrat(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black),
-                                  ),
-                                ),
-                              ),
-
-                              Padding(
-                                /// Impact
-                                padding: const EdgeInsets.all(8.0),
-                                child: TextField(
-                                  controller: ImpactAddChallengetextcontroller,
-
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.deny(RegExp(r'"')), // Disallow double quotes
-                                  ],
-                                  // cursorColor: primaryColorOfApp,
-                                  onChanged: (value) {
-
-                                  },
-                                  style: GoogleFonts.montserrat(
-                                      textStyle: Theme
-                                          .of(context)
-                                          .textTheme
-                                          .bodyLarge,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black),
-                                  decoration: InputDecoration(
-                                    //errorText: userAccountSearchErrorText,
-                                    contentPadding: EdgeInsets.all(25),
-                                    labelText: "Impact",
-                                    hintText: "Impact",
-
-                                    /*prefixIcon: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Icon(Icons.question_mark_outlined,
-                                 // color: primaryColorOfApp
-                                  ),
-                              ),*/
-
-                                    errorStyle: GoogleFonts.montserrat(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.redAccent),
-
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(15)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black12),
-                                        borderRadius: BorderRadius.circular(15)),
-                                    //hintText: "e.g Abouzied",
-                                    labelStyle: GoogleFonts.montserrat(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black),
-                                  ),
-                                ),
-                              ),
-
-                              Padding(
-                                /// Notes
-                                padding: const EdgeInsets.all(8.0),
-                                child: TextField(
-                                  controller: NotesAddChallengetextcontroller,
-
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.deny(RegExp(r'"')), // Disallow double quotes
-                                  ],
-                                  // cursorColor: primaryColorOfApp,
-                                  onChanged: (value) {
-
-                                  },
-                                  style: GoogleFonts.montserrat(
-                                      textStyle: Theme
-                                          .of(context)
-                                          .textTheme
-                                          .bodyLarge,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black),
-                                  decoration: InputDecoration(
-                                    //errorText: userAccountSearchErrorText,
-                                    contentPadding: EdgeInsets.all(25),
-                                    labelText: "Notes",
-                                    hintText: "Notes",
+                                    contentPadding: EdgeInsets.all(20),
+                                    labelText: "Describe challenge",
+                                    hintText: "Describe challenge",
 
                                     errorStyle: GoogleFonts.montserrat(
                                         textStyle: Theme
@@ -5438,640 +5281,6 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                 ),
                               ),
 
-
-                              // Container(
-                              //   padding: EdgeInsets.only(left: 10),
-                              //   child: SizedBox(
-                              //     child: Row(
-                              //       children: [
-                              //         Expanded(
-                              //           flex: 4,
-                              //           child: TextField(
-                              //             controller: originaltextEditingController,
-                              //             cursorColor: primaryColorOfApp,
-                              //             style: GoogleFonts.montserrat(
-                              //                 textStyle: Theme
-                              //                     .of(context)
-                              //                     .textTheme
-                              //                     .bodyLarge,
-                              //                 fontWeight: FontWeight.w400,
-                              //                 color: Colors.black),
-                              //             decoration: InputDecoration(
-                              //               //errorText: userAccountSearchErrorText,
-                              //               contentPadding: EdgeInsets.all(25),
-                              //               labelText: "Original Description",
-                              //               hintText: "Original Description",
-                              //
-                              //
-                              //               errorStyle: GoogleFonts.montserrat(
-                              //                   textStyle: Theme
-                              //                       .of(context)
-                              //                       .textTheme
-                              //                       .bodyLarge,
-                              //                   fontWeight: FontWeight.w400,
-                              //                   color: Colors.redAccent),
-                              //
-                              //               focusedBorder: OutlineInputBorder(
-                              //                   borderSide: BorderSide(color: Colors.black),
-                              //                   borderRadius: BorderRadius.circular(15)),
-                              //               border: OutlineInputBorder(
-                              //                   borderSide: BorderSide(color: Colors.black12),
-                              //                   borderRadius: BorderRadius.circular(15)),
-                              //               //hintText: "e.g Abouzied",
-                              //               labelStyle: GoogleFonts.montserrat(
-                              //                   textStyle: Theme
-                              //                       .of(context)
-                              //                       .textTheme
-                              //                       .bodyLarge,
-                              //                   fontWeight: FontWeight.w400,
-                              //                   color: Colors.black),
-                              //             ),
-                              //           ),
-                              //         ),
-                              //
-                              //       ],
-                              //     ),
-                              //   ),
-                              // ),
-                              //
-                              // InkWell(
-                              //   onTap: ()async{
-                              //     var defaulttext ;
-                              //     defaulttext = q1;
-                              //     defaulttext = defaulttext +""+ "where xxx = ${originaltextEditingController.text.toString()}";
-                              //     print(defaulttext);
-                              //     await getChallengeCleanResponse(defaulttext);
-                              //   },
-                              //   child: Container(
-                              //     margin: EdgeInsets.only(top: 20,left: 10,right: 10, bottom: 10),
-                              //     width: 200,
-                              //     height: 60,
-                              //     decoration: BoxDecoration(
-                              //       color:Colors.blue,
-                              //       border: Border.all(
-                              //           color:Colors.blue,
-                              //           width: 2.0),
-                              //       borderRadius: BorderRadius.circular(10.0),
-                              //     ),
-                              //     child: Center(
-                              //       child: Text(
-                              //         'Clean',
-                              //         style: GoogleFonts.montserrat(
-                              //             textStyle:
-                              //             Theme.of(context).textTheme.titleSmall,
-                              //             fontWeight: FontWeight.bold,
-                              //             color: Colors.white),
-                              //       ),
-                              //     ),
-                              //   ),
-                              //
-                              // ),
-                              //
-                              //
-                              // Padding(
-                              //
-                              //
-                              //   /// Final Description
-                              //   padding: const EdgeInsets.all(8.0),
-                              //   child: TextField(
-                              //     maxLines: null,
-                              //     controller: finaltextcontroller,
-                              //     // cursorColor: primaryColorOfApp,
-                              //
-                              //     onChanged: (value) {
-                              //
-                              //     },
-                              //     style: GoogleFonts.montserrat(
-                              //         textStyle: Theme
-                              //             .of(context)
-                              //             .textTheme
-                              //             .bodyLarge,
-                              //         fontWeight: FontWeight.w400,
-                              //         color: Colors.black),
-                              //     decoration: InputDecoration(
-                              //       //errorText: userAccountSearchErrorText,
-                              //       contentPadding: EdgeInsets.all(25),
-                              //       labelText: "Final Description",
-                              //       hintText: "Final Description",
-                              //
-                              //
-                              //       errorStyle: GoogleFonts.montserrat(
-                              //           textStyle: Theme
-                              //               .of(context)
-                              //               .textTheme
-                              //               .bodyLarge,
-                              //           fontWeight: FontWeight.w400,
-                              //           color: Colors.redAccent),
-                              //
-                              //       focusedBorder: OutlineInputBorder(
-                              //           borderSide: BorderSide(color: Colors.black),
-                              //           borderRadius: BorderRadius.circular(15)),
-                              //       border: OutlineInputBorder(
-                              //           borderSide: BorderSide(color: Colors.black12),
-                              //           borderRadius: BorderRadius.circular(15)),
-                              //       //hintText: "e.g Abouzied",
-                              //       labelStyle: GoogleFonts.montserrat(
-                              //           textStyle: Theme
-                              //               .of(context)
-                              //               .textTheme
-                              //               .bodyLarge,
-                              //           fontWeight: FontWeight.w400,
-                              //           color: Colors.black),
-                              //     ),
-                              //   ),
-                              // ),
-                              // InkWell(
-                              //   onTap: () async {
-                              //     var defaulttext ="";
-                              //     // defaulttext ="1."+ "$q1"+" "+originaltextEditingController.text.toString();
-                              //     defaulttext =  q2;
-                              //     defaulttext =  defaulttext + " where yyy is "+finaltextcontroller.text.toString();
-                              //     var defaulttextq3 ="";
-                              //     // defaulttext ="1."+ "$q1"+" "+originaltextEditingController.text.toString();
-                              //     defaulttextq3 =  q3;
-                              //     defaulttextq3 =  defaulttextq3 + " where yyy is "+finaltextcontroller.text.toString();
-                              //
-                              //     var defaulttextq4 ="";
-                              //     // defaulttext ="1."+ "$q1"+" "+originaltextEditingController.text.toString();
-                              //     defaulttextq4 =  q4;
-                              //     defaulttextq4 =  defaulttextq4 + " where yyy is "+finaltextcontroller.text.toString();
-                              //     defaulttextq4 =  defaulttextq4 + " and select tags from "+"${resultString}";
-                              //
-                              //
-                              //     var defaulttextq5 ="";
-                              //     defaulttextq5 =  q5;
-                              //     defaulttextq5 =  defaulttextq5 + " where yyy is "+finaltextcontroller.text.toString();
-                              //
-                              //     await getChallengeExpandResponse(defaulttext,defaulttextq3,defaulttextq4,defaulttextq5);
-                              //
-                              //   },
-                              //   child: Container(
-                              //     margin: EdgeInsets.all(10),
-                              //     width: 200,
-                              //     height: 60,
-                              //     decoration: BoxDecoration(
-                              //       color:Colors.blue,
-                              //       border: Border.all(
-                              //           color:Colors.blue,
-                              //           width: 2.0),
-                              //       borderRadius: BorderRadius.circular(10.0),
-                              //     ),
-                              //     child: Center(
-                              //       child: Text(
-                              //         'Expand',
-                              //         style: GoogleFonts.montserrat(
-                              //             textStyle:
-                              //             Theme.of(context).textTheme.titleSmall,
-                              //             fontWeight: FontWeight.bold,
-                              //             color: Colors.white),
-                              //       ),
-                              //     ),
-                              //   ),
-                              // ),
-
-
-                              ///  Details
-                              // Container(
-                              //   /// Details
-                              //   margin: const EdgeInsets.all(8.0),
-                              //   decoration: BoxDecoration(
-                              //       borderRadius: BorderRadius.circular(10),
-                              //       border: Border.all(color: Colors.black, width: 1)
-                              //   ),
-                              //   child: Column(
-                              //     crossAxisAlignment: CrossAxisAlignment.start,
-                              //     children: [
-                              //       Container(
-                              //         padding: EdgeInsets.all(10),
-                              //         child: QuillEditor.basic(
-                              //           configurations: QuillEditorConfigurations(
-                              //             maxHeight: 200,
-                              //             padding: EdgeInsets.only(left: 10, top: 10),
-                              //             controller: _controller,
-                              //             readOnly: false,
-                              //             sharedConfigurations: const QuillSharedConfigurations(
-                              //               locale: Locale('en'),
-                              //             ),
-                              //           ),
-                              //         ),
-                              //       ),
-                              //       Divider(),
-                              //       QuillToolbar.simple(
-                              //         configurations: QuillSimpleToolbarConfigurations(
-                              //           controller: _controller,
-                              //           sharedConfigurations: const QuillSharedConfigurations(
-                              //             locale: Locale('en'),
-                              //           ),
-                              //         ),
-                              //       ),
-                              //
-                              //     ],
-                              //   ),
-                              // ),
-
-
-
-                              ///Category & Subcategory
-
-
-                              // Consumer<ChallengesProvider>(
-                              //     builder: (c,challengeProvider, _){
-                              //       return Padding(
-                              //         padding: const EdgeInsets.all(8.0),
-                              //         child: TypeAheadField(
-                              //           noItemsFoundBuilder: (c){
-                              //             // print("ccccc: $c");
-                              //             return Container(
-                              //                 child: Padding(
-                              //                   padding: const EdgeInsets.all(15.0),
-                              //                   child: Text("No Keywords Found",style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),),
-                              //                 )
-                              //             );
-                              //           },
-                              //           suggestionsBoxDecoration: SuggestionsBoxDecoration(
-                              //               scrollbarTrackAlwaysVisible: true,
-                              //               scrollbarThumbAlwaysVisible: true,
-                              //               hasScrollbar: true,
-                              //               borderRadius: BorderRadius.circular(5),
-                              //               color: Colors.white,
-                              //               constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.3, )
-                              //           ),
-                              //           suggestionsCallback: (value) async {
-                              //             // return await KeywordServices.getSuggestions(value, (addKeywordProvider.newselectedValue == null) ? addKeywordProvider.selectedValue : addKeywordProvider.newselectedValue);
-                              //             // return await KeywordServices.getSuggestions(value, 'Thrivers Category');
-                              //             return await ChallengeCategoryServices.getSuggestions(value);
-                              //           },
-                              //           itemBuilder: (context, String suggestion) {
-                              //             // print('selected multiple items before newselectedValue ${suggestion}');
-                              //             // print('selected multiple items after newselectedValue ${addKeywordProvider.newKeyValues} ');
-                              //             return Container(
-                              //               // color: Colors.black,
-                              //               child: Padding(
-                              //                 padding: const EdgeInsets.all(15.0),
-                              //                 child: Text(suggestion,style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),),
-                              //               ),
-                              //             );
-                              //           },
-                              //           direction: AxisDirection.up,
-                              //           onSuggestionSelected: (String suggestion) {
-                              //             // print('onSuggestionSelected before  ${addKeywordProvider.keywordsssss}');
-                              //             // addKeywordProvider.addkeywordschip(suggestion,editKeywordssss);
-                              //             challengeProvider.addkeywordschip(suggestion,challengeProvider.keywordsssss);
-                              //             // print('onSuggestionSelected after  ${addKeywordProvider.keywordsssss}');
-                              //             keywordscontroller.clear();
-                              //           },
-                              //           textFieldConfiguration: TextFieldConfiguration(
-                              //             controller: keywordscontroller,
-                              //             // onSubmitted: (text) {
-                              //             //   addKeywordProvider.addkeywordschip(tagscontroller.text.toString(),editKeywordssss);
-                              //             //   // addKeywordProvider.addkeywordschip(addKeywordProvider.newselectedValue);
-                              //             // },
-                              //             style: GoogleFonts.poppins(
-                              //               textStyle: Theme.of(context).textTheme.bodyLarge,
-                              //               color: Colors.black,
-                              //               fontWeight: FontWeight.w400,fontStyle: FontStyle.normal,
-                              //             ),
-                              //             decoration: InputDecoration(
-                              //               //errorText: userAccountSearchErrorText,
-                              //               contentPadding: EdgeInsets.all(25),
-                              //               labelText: "Select Category",
-                              //               hintText: "Select Category",
-                              //               /*prefixIcon: Padding(
-                              //                                           padding: const EdgeInsets.all(8.0),
-                              //                                           child: Icon(Icons.question_mark_outlined,
-                              //                                             //color: primaryColorOfApp
-                              //                                             ),
-                              //                                         ),*/
-                              //               errorStyle: GoogleFonts.montserrat(
-                              //                   textStyle: Theme.of(context).textTheme.bodyLarge,
-                              //                   fontWeight: FontWeight.w400,
-                              //                   color: Colors.redAccent),
-                              //
-                              //               focusedBorder: OutlineInputBorder(
-                              //                   borderSide: BorderSide(color: Colors.black),
-                              //                   borderRadius: BorderRadius.circular(15)),
-                              //               border: OutlineInputBorder(
-                              //                   borderSide: BorderSide(color: Colors.black12),
-                              //                   borderRadius: BorderRadius.circular(15)),
-                              //               //hintText: "e.g Abouzied",
-                              //               labelStyle: GoogleFonts.montserrat(
-                              //                   textStyle: Theme.of(context).textTheme.bodyLarge,
-                              //                   fontWeight: FontWeight.w400,
-                              //                   color: Colors.black),
-                              //             ),
-                              //           ),
-                              //         ),
-                              //       );}
-                              // ),
-                              //
-                              //
-                              // Consumer<ChallengesProvider>(
-                              //     builder: (c,challengesProvider, _){
-                              //       return Padding(
-                              //         padding: const EdgeInsets.only(left: 15.0),
-                              //         child: Align(
-                              //           alignment: Alignment.centerLeft,
-                              //           child: Wrap(
-                              //             spacing: 10,
-                              //             runSpacing: 10,
-                              //             crossAxisAlignment: WrapCrossAlignment.start,
-                              //             alignment: WrapAlignment.start,
-                              //             runAlignment: WrapAlignment.start,
-                              //             children: challengesProvider.keywordsssss.map((item){
-                              //               // children: editKeywordssss.map((item){
-                              //               //   print("item: $item");
-                              //               //   print("addKeywordProvider.keywordsssss: ${addKeywordProvider.keywordsssss}");
-                              //               return Container(
-                              //                 height: 50,
-                              //                 // width: 200,
-                              //                 padding: EdgeInsets.all(8),
-                              //                 margin: EdgeInsets.symmetric(vertical: 8),
-                              //                 decoration: BoxDecoration(
-                              //                     borderRadius: BorderRadius.circular(15),
-                              //                     color: Colors.blue
-                              //                 ),
-                              //                 child: Row(
-                              //                   mainAxisSize: MainAxisSize.min,
-                              //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              //                   children: [
-                              //                     Flexible(
-                              //                       child: Text(item, style: TextStyle(
-                              //                         fontWeight: FontWeight.w700,
-                              //                       ),
-                              //                         overflow: TextOverflow.ellipsis,
-                              //                         // softWrap: true,
-                              //                         // maxLines: 1,
-                              //                       ),
-                              //                     ),
-                              //                     IconButton(
-                              //                         onPressed: ()async{
-                              //                           // addKeywordProvider.newKeywordsList.remove(item);
-                              //                           // _addKeywordProvider.removekeywords(item);
-                              //                           _challengesProvider.keywordsssss.remove(item);
-                              //                         },
-                              //                         icon: Icon(Icons.close,size: 20, color: Colors.white,)
-                              //                     ),
-                              //                   ],
-                              //                 ),
-                              //               );
-                              //             }).toList(),
-                              //           ),
-                              //         ),
-                              //       );
-                              //     }),
-                              //
-                              //
-                              // Padding(
-                              //   padding: const EdgeInsets.all(10.0),
-                              //   child: TypeAheadField(
-                              //     noItemsFoundBuilder: (c){
-                              //       return Container(
-                              //           child: Padding(
-                              //             padding: const EdgeInsets.all(15.0),
-                              //             child: Text("Add Tag: '${tagscontroller.text}'",style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),
-                              //             ),
-                              //           )
-                              //       );
-                              //     },
-                              //     direction: AxisDirection.up,
-                              //     suggestionsBoxDecoration: SuggestionsBoxDecoration(
-                              //         scrollbarTrackAlwaysVisible: true,
-                              //         scrollbarThumbAlwaysVisible: true,
-                              //         hasScrollbar: true,
-                              //         borderRadius: BorderRadius.circular(5),
-                              //         // color: Colors.white,
-                              //         constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.3, )
-                              //     ),
-                              //     suggestionsCallback: (value) async {
-                              //       return await TagServices.getSuggestions(value);
-                              //     },
-                              //
-                              //     itemBuilder: (context, String suggestion) {
-                              //       return Container(
-                              //         // color: Colors.black,
-                              //         child: Padding(
-                              //           padding: const EdgeInsets.all(15.0),
-                              //           child: Text(suggestion,style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),),
-                              //         ),
-                              //       );
-                              //     },
-                              //     onSuggestionSelected: (String suggestion) {
-                              //       // print("Im selectedf $suggestion" );
-                              //       // print("Im selectedf ${tagscontroller.text}" );
-                              //       // setState(() {
-                              //       // tagscontroller.text = suggestion;
-                              //       _challengesProvider.addtags(suggestion,_challengesProvider.ProviderTags);
-                              //       // print("fenil tags added: $_addKeywordProvider.ProviderTags");
-                              //
-                              //       // });
-                              //     },
-                              //     textFieldConfiguration: TextFieldConfiguration(
-                              //       controller: tagscontroller,
-                              //       onSubmitted: (text) {
-                              //         _challengesProvider.addtags(text,_challengesProvider.ProviderTags);
-                              //         tagscontroller.clear();
-                              //         // print("tags: $tags");
-                              //       },
-                              //       style: GoogleFonts.poppins(
-                              //         textStyle: Theme.of(context).textTheme.bodyLarge,
-                              //         color: Colors.black,
-                              //         fontWeight: FontWeight.w400,fontStyle: FontStyle.normal,
-                              //       ),
-                              //       decoration: InputDecoration(
-                              //         //errorText: userAccountSearchErrorText,
-                              //         contentPadding: EdgeInsets.all(25),
-                              //         labelText: "Tags",
-                              //         hintText: "Tags",
-                              //         prefixIcon: Padding(
-                              //           padding: const EdgeInsets.all(8.0),
-                              //           child: Icon(Icons.tag,color: primaryColorOfApp,),
-                              //         ),
-                              //         suffixIcon: IconButton(
-                              //           icon: Icon(Icons.add, size: 20, color: primaryColorOfApp,),
-                              //           onPressed: () {
-                              //             _challengesProvider.addtags(tagscontroller.text.toString(),_challengesProvider.ProviderTags);
-                              //           },
-                              //         ),
-                              //         errorStyle: GoogleFonts.montserrat(
-                              //             textStyle: Theme
-                              //                 .of(context)
-                              //                 .textTheme
-                              //                 .bodyLarge,
-                              //             fontWeight: FontWeight.w400,
-                              //             color: Colors.redAccent),
-                              //
-                              //         focusedBorder: OutlineInputBorder(
-                              //             borderSide: BorderSide(color: Colors.black),
-                              //             borderRadius: BorderRadius.circular(15)),
-                              //         border: OutlineInputBorder(
-                              //             borderSide: BorderSide(color: Colors.black12),
-                              //             borderRadius: BorderRadius.circular(15)),
-                              //         //hintText: "e.g Abouzied",
-                              //         labelStyle: GoogleFonts.montserrat(
-                              //             textStyle: Theme
-                              //                 .of(context)
-                              //                 .textTheme
-                              //                 .bodyLarge,
-                              //             fontWeight: FontWeight.w400,
-                              //             color: Colors.black),
-                              //       ),
-                              //
-                              //     ),
-                              //   ),
-                              // ),
-                              //
-                              // Consumer<ChallengesProvider>(
-                              //     builder: (c,challengesProvider, _){
-                              //       return Padding(
-                              //         padding: const EdgeInsets.only(left: 15.0),
-                              //         child: Align(
-                              //           alignment: Alignment.centerLeft,
-                              //           child: Wrap(
-                              //             spacing: 10,
-                              //             runSpacing: 10,
-                              //             crossAxisAlignment: WrapCrossAlignment.start,
-                              //             alignment: WrapAlignment.start,
-                              //             runAlignment: WrapAlignment.start,
-                              //             children: challengesProvider.ProviderTags.map((item){
-                              //               return Container(
-                              //                 height: 50,
-                              //                 // width: 200,
-                              //                 padding: EdgeInsets.all(8),
-                              //                 margin: EdgeInsets.symmetric(vertical: 8),
-                              //                 decoration: BoxDecoration(
-                              //                     borderRadius: BorderRadius.circular(15),
-                              //                     color: Colors.blue
-                              //                 ),
-                              //                 child: Row(
-                              //                   mainAxisSize: MainAxisSize.min,
-                              //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              //                   children: [
-                              //                     Text(item, style: TextStyle(
-                              //                         fontWeight: FontWeight.w700
-                              //                     ),),
-                              //                     IconButton(
-                              //                         onPressed: (){
-                              //                           // setState(() {
-                              //                           challengesProvider.removetags(item);
-                              //                           // });
-                              //                         },
-                              //                         icon: Icon(Icons.close,size: 20, color: Colors.white,)
-                              //                     ),
-                              //                   ],
-                              //                 ),
-                              //               );
-                              //             }).toList(),
-                              //           ),
-                              //         ),
-                              //       );
-                              //
-                              //     }),
-
-                              ///
-
-                              // Padding(
-                              //   /// PotentialStrengths
-                              //   padding: const EdgeInsets.all(8.0),
-                              //   child: TextField(
-                              //     controller: PotentialStrengthstextcontroller,
-                              //
-                              //     inputFormatters: [
-                              //       FilteringTextInputFormatter.deny(RegExp(r'"')), // Disallow double quotes
-                              //     ],
-                              //     // cursorColor: primaryColorOfApp,
-                              //     onChanged: (value) {
-                              //
-                              //     },
-                              //     style: GoogleFonts.montserrat(
-                              //         textStyle: Theme
-                              //             .of(context)
-                              //             .textTheme
-                              //             .bodyLarge,
-                              //         fontWeight: FontWeight.w400,
-                              //         color: Colors.black),
-                              //     decoration: InputDecoration(
-                              //       //errorText: userAccountSearchErrorText,
-                              //       contentPadding: EdgeInsets.all(25),
-                              //       labelText: "Potential Strengths",
-                              //       hintText: "Potential Strengths",
-                              //
-                              //       errorStyle: GoogleFonts.montserrat(
-                              //           textStyle: Theme
-                              //               .of(context)
-                              //               .textTheme
-                              //               .bodyLarge,
-                              //           fontWeight: FontWeight.w400,
-                              //           color: Colors.redAccent),
-                              //
-                              //       focusedBorder: OutlineInputBorder(
-                              //           borderSide: BorderSide(color: Colors.black),
-                              //           borderRadius: BorderRadius.circular(15)),
-                              //       border: OutlineInputBorder(
-                              //           borderSide: BorderSide(color: Colors.black12),
-                              //           borderRadius: BorderRadius.circular(15)),
-                              //       //hintText: "e.g Abouzied",
-                              //       labelStyle: GoogleFonts.montserrat(
-                              //           textStyle: Theme
-                              //               .of(context)
-                              //               .textTheme
-                              //               .bodyLarge,
-                              //           fontWeight: FontWeight.w400,
-                              //           color: Colors.black),
-                              //     ),
-                              //   ),
-                              // ),
-                              //
-                              // Padding(
-                              //   /// HiddenStrengths
-                              //   padding: const EdgeInsets.all(8.0),
-                              //   child: TextField(
-                              //     controller: HiddenStrengthstextcontroller,
-                              //
-                              //     inputFormatters: [
-                              //       FilteringTextInputFormatter.deny(RegExp(r'"')), // Disallow double quotes
-                              //     ],
-                              //     // cursorColor: primaryColorOfApp,
-                              //     onChanged: (value) {
-                              //
-                              //     },
-                              //     style: GoogleFonts.montserrat(
-                              //         textStyle: Theme
-                              //             .of(context)
-                              //             .textTheme
-                              //             .bodyLarge,
-                              //         fontWeight: FontWeight.w400,
-                              //         color: Colors.black),
-                              //     decoration: InputDecoration(
-                              //       //errorText: userAccountSearchErrorText,
-                              //       contentPadding: EdgeInsets.all(25),
-                              //       labelText: "Hidden Strengths",
-                              //       hintText: "Hidden Strengths",
-                              //
-                              //       errorStyle: GoogleFonts.montserrat(
-                              //           textStyle: Theme
-                              //               .of(context)
-                              //               .textTheme
-                              //               .bodyLarge,
-                              //           fontWeight: FontWeight.w400,
-                              //           color: Colors.redAccent),
-                              //
-                              //       focusedBorder: OutlineInputBorder(
-                              //           borderSide: BorderSide(color: Colors.black),
-                              //           borderRadius: BorderRadius.circular(15)),
-                              //       border: OutlineInputBorder(
-                              //           borderSide: BorderSide(color: Colors.black12),
-                              //           borderRadius: BorderRadius.circular(15)),
-                              //       //hintText: "e.g Abouzied",
-                              //       labelStyle: GoogleFonts.montserrat(
-                              //           textStyle: Theme
-                              //               .of(context)
-                              //               .textTheme
-                              //               .bodyLarge,
-                              //           fontWeight: FontWeight.w400,
-                              //           color: Colors.black),
-                              //     ),
-                              //   ),
-                              // ),
 
 
                             ]
@@ -6164,6 +5373,36 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                               ////ApiRepository().updateSecurityPINFor(userAccountId,newPinTextEditingController.text);
 
                               // print('createdAt: $createdAt');
+                              ProgressDialog.show(context, "Creating a Solution", Icons.chair);
+
+                              var defaulttext ;
+                              defaulttext = q1;
+                              defaulttext = defaulttext +""+ "where xxx = ${SolutionsOriginalDescriptionTextEditingController.text.toString()}";
+                              print(defaulttext);
+                              await getChatSolGptResponse(defaulttext);
+
+
+                              var defaulttext2 ="";
+                              defaulttext2 =  q2;
+                              defaulttext2 =  defaulttext2 + " where yyy is "+finalSolutiontextcontroller.text.toString();
+
+                              var defaulttextq3 ="";
+                              defaulttextq3 =  q3;
+                              defaulttextq3 =  defaulttextq3 + " where yyy is "+finalSolutiontextcontroller.text.toString();
+
+                              var defaulttextq4 ="";
+                              defaulttextq4 =  q4;
+                              defaulttextq4 =  defaulttextq4 + " where yyy is "+finalSolutiontextcontroller.text.toString();
+                              defaulttextq4 =  defaulttextq4 + " and select tags from "+"${solutionresultString}";
+
+
+                              var defaulttextq5 ="";
+                              defaulttextq5 =  q5;
+                              defaulttextq5 =  defaulttextq5 + " where yyy is "+finalSolutiontextcontroller.text.toString();
+
+
+                              await getChatSolResponsenew(defaulttext2,defaulttextq3,defaulttextq4,defaulttextq5);
+
                               QuerySnapshot querySnapshot = await FirebaseFirestore.instance
                                   .collection('Thrivers')
                                   .orderBy('Created Date', descending: true)
@@ -6173,7 +5412,6 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                               print("abccccc; ${abc['id']}");
                               print("abccccc; ${abc['id'].runtimeType}");
                               var ids = abc['id'] + 1;
-                              ProgressDialog.show(context, "Creating a Thriver", Icons.chair);
                               // await ApiRepository().createThriversss({
                               //   "id": ids,
                               //   "Source" : addKeywordProvider.selectsourceItems,
@@ -6201,23 +5439,23 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                 'id': ids,
                                 'Name': SolutionNameTextEditingController.text,
                                 // 'Description': _controllerSolution.document.toPlainText(),
-                                'Description': "Description",
+                                'Description':  SolutionDescriptionTextEditingController.text,
                                 'Source': selectedEmail,
                                 'Thirver Status': "New",
-                                // 'tags': addKeywordProvider.ProviderTags,
-                                'tags': [],
+                                'tags': addKeywordProvider.ProviderTags,
+                                // 'tags': [],
                                 'Created By': widget.AdminName,
                                 // 'Created Date': formattedDate,
                                 'Created Date': Timestamp.now(),
                                 'Modified By': '',
                                 'Modified Date': '',
-                                // 'Original Description': originalSolutiontextEditingController.text,
-                                'Original Description': 'Original Description',
+                                'Original Description': SolutionsOriginalDescriptionTextEditingController.text,
+                                // 'Original Description': 'Original Description',
                                 'Impact': ImpactSolutiontextcontroller.text,
                                 'Final_description': finalSolutiontextcontroller.text,
                                 'Category': 	"Solution Category",
-                                // 'Keywords': addKeywordProvider.keywordsssss,
-                                'Keywords': [],
+                                'Keywords': addKeywordProvider.keywordsssss,
+                                // 'Keywords': [],
                                 'Notes': NotesSolutiontextcontroller.text,
                               };
 
@@ -6227,16 +5465,28 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                               _userAboutMEProvider.EditmanuallyAddSolution(SolutionData);
 
                               ProgressDialog.hide();
+
+                              toastification.show(context: context,
+                                  title: Text('${SolutionData['Name']} added to basket'),
+                                  autoCloseDuration: Duration(milliseconds: 2500),
+                                  alignment: Alignment.center,
+                                  backgroundColor: Colors.green,
+                                  foregroundColor: Colors.white,
+                                  icon: Icon(Icons.check_circle, color: Colors.white,),
+                                  animationDuration: Duration(milliseconds: 1000),
+                                  showProgressBar: false
+                              );
                               Navigator.pop(context);
                               SolutionNameTextEditingController.clear();
                               finalSolutiontextcontroller.clear();
                               ImpactSolutiontextcontroller.clear();
                               NotesSolutiontextcontroller.clear();
                               // addKeywordProvider.selectedValue.clear();
-                              addKeywordProvider.keywordsssssclear();
-                              addKeywordProvider.ProviderTagsclear();
+                              // addKeywordProvider.keywordsssssclear();
+                              // addKeywordProvider.ProviderTagsclear();
                               addKeywordProvider.selectsourceItems = null;
                               addKeywordProvider.selectThriversStatusItems = null;
+
                             },
                             child: Container(
                               width: MediaQuery.of(context).size.width * .3,
@@ -6276,7 +5526,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.only(left: 20.0),
-                            child: Text("New Solution",
+                            child: Text("Describe solution",
                                 overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
                                     color: Colors.black)),
@@ -6299,124 +5549,10 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                               Padding(
                                 /// Original Description
                                 padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: TextField(
-                                        controller: SolutionsOriginalDescriptionTextEditingController,
-                                        // cursorColor: primaryColorOfApp,
-                                        onChanged: (value) {
-
-                                        },
-                                        style: GoogleFonts.montserrat(
-                                            textStyle: Theme
-                                                .of(context)
-                                                .textTheme
-                                                .bodyLarge,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.black),
-                                        decoration: InputDecoration(
-                                          //errorText: userAccountSearchErrorText,
-                                          contentPadding: EdgeInsets.all(25),
-                                          labelText: "Original Description",
-                                          hintText: "Original Description",
-
-
-                                          errorStyle: GoogleFonts.montserrat(
-                                              textStyle: Theme
-                                                  .of(context)
-                                                  .textTheme
-                                                  .bodyLarge,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.redAccent),
-
-                                          focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.black),
-                                              borderRadius: BorderRadius.circular(15)),
-                                          border: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.black12),
-                                              borderRadius: BorderRadius.circular(15)),
-                                          //hintText: "e.g Abouzied",
-                                          labelStyle: GoogleFonts.montserrat(
-                                              textStyle: Theme
-                                                  .of(context)
-                                                  .textTheme
-                                                  .bodyLarge,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.black),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 10,),
-                                    InkWell(
-                                      // onTap: () async {
-                                      //   var defaulttext ="";
-                                      //   // defaulttext ="1."+ "$q1"+" "+originaltextEditingController.text.toString();
-                                      //   defaulttext =  q2;
-                                      //   defaulttext =  defaulttext + " where yyy is "+finaltextcontroller.text.toString();
-                                      //   var defaulttextq3 ="";
-                                      //   // defaulttext ="1."+ "$q1"+" "+originaltextEditingController.text.toString();
-                                      //   defaulttextq3 =  q3;
-                                      //   defaulttextq3 =  defaulttextq3 + " where yyy is "+finaltextcontroller.text.toString();
-                                      //
-                                      //   var defaulttextq4 ="";
-                                      //   // defaulttext ="1."+ "$q1"+" "+originaltextEditingController.text.toString();
-                                      //   defaulttextq4 =  q4;
-                                      //   defaulttextq4 =  defaulttextq4 + " where yyy is "+finaltextcontroller.text.toString();
-                                      //   defaulttextq4 =  defaulttextq4 + " and select tags from "+"${resultString}";
-                                      //
-                                      //
-                                      //   var defaulttextq5 ="";
-                                      //   defaulttextq5 =  q5;
-                                      //   defaulttextq5 =  defaulttextq5 + " where yyy is "+finaltextcontroller.text.toString();
-                                      //
-                                      //   // defaulttext =defaulttext +" 3."+ "  $q3 "+originaltextEditingController.text.toString();
-                                      //   // defaulttext =defaulttext +" 4."+ "  $q4 "+originaltextEditingController.text.toString();
-                                      //   // defaulttext =defaulttext +" 5."+ "  $q5 "+originaltextEditingController.text.toString();
-                                      //   await getChatResponsenew(defaulttext,defaulttextq3,defaulttextq4,defaulttextq5);
-                                      //
-                                      // },
-                                      child: Container(
-                                        width: MediaQuery.of(context).size.width * .1,
-                                        padding: EdgeInsets.symmetric(horizontal: 15),
-                                        height: 60,
-                                        decoration: BoxDecoration(
-                                          color: Colors.blue,
-                                          border: Border.all(
-                                              color: Colors.blue,
-                                              width: 2.0),
-                                          borderRadius: BorderRadius.circular(15.0),
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            'Generate',
-                                            style: GoogleFonts.montserrat(
-                                                textStyle:
-                                                Theme
-                                                    .of(context)
-                                                    .textTheme
-                                                    .titleSmall,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-
-                              Padding(
-                                /// Name
-                                padding: const EdgeInsets.all(8.0),
                                 child: TextField(
-                                  controller: SolutionNameTextEditingController,
-
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.deny(RegExp(r'"')), // Disallow double quotes
-                                  ],
+                                  controller: SolutionsOriginalDescriptionTextEditingController,
                                   // cursorColor: primaryColorOfApp,
+                                  maxLines: 3,
                                   onChanged: (value) {
 
                                   },
@@ -6430,71 +5566,8 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                   decoration: InputDecoration(
                                     //errorText: userAccountSearchErrorText,
                                     contentPadding: EdgeInsets.all(25),
-                                    labelText: "Label",
-                                    hintText: "Label",
-
-                                    /*prefixIcon: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Icon(Icons.question_mark_outlined,
-                                 // color: primaryColorOfApp
-                                  ),
-                              ),*/
-
-                                    errorStyle: GoogleFonts.montserrat(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.redAccent),
-
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(15)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black12),
-                                        borderRadius: BorderRadius.circular(15)),
-                                    //hintText: "e.g Abouzied",
-                                    labelStyle: GoogleFonts.montserrat(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black),
-                                  ),
-                                ),
-                              ),
-
-                              Padding(
-
-
-                                /// Final Description
-                                padding: const EdgeInsets.all(8.0),
-                                child: TextField(
-                                  // maxLines: null,
-                                  // maxLines: 2,
-                                  controller: finalSolutiontextcontroller,
-                                  // cursorColor: primaryColorOfApp,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.deny(RegExp(r'"')), // Disallow double quotes
-                                  ],
-                                  onChanged: (value) {
-
-                                  },
-                                  style: GoogleFonts.montserrat(
-                                      textStyle: Theme
-                                          .of(context)
-                                          .textTheme
-                                          .bodyLarge,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black),
-                                  decoration: InputDecoration(
-                                    //errorText: userAccountSearchErrorText,
-                                    contentPadding: EdgeInsets.all(25),
-                                    labelText: "Description",
-                                    hintText: "Description",
-
+                                    labelText: "Describe solution",
+                                    hintText: "Describe solution",
 
 
                                     errorStyle: GoogleFonts.montserrat(
@@ -6523,134 +5596,251 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                 ),
                               ),
 
-                              Padding(
-                                /// Impact
-                                padding: const EdgeInsets.all(8.0),
-                                child: TextField(
-                                  controller: ImpactSolutiontextcontroller,
-
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.deny(RegExp(r'"')), // Disallow double quotes
-                                  ],
-                                  // cursorColor: primaryColorOfApp,
-                                  onChanged: (value) {
-
-                                  },
-                                  style: GoogleFonts.montserrat(
-                                      textStyle: Theme
-                                          .of(context)
-                                          .textTheme
-                                          .bodyLarge,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black),
-                                  decoration: InputDecoration(
-                                    //errorText: userAccountSearchErrorText,
-                                    contentPadding: EdgeInsets.all(25),
-                                    labelText: "Impact",
-                                    hintText: "Impact",
-
-                                    /*prefixIcon: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Icon(Icons.question_mark_outlined,
-                                 // color: primaryColorOfApp
-                                  ),
-                              ),*/
-
-                                    errorStyle: GoogleFonts.montserrat(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.redAccent),
-
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(15)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black12),
-                                        borderRadius: BorderRadius.circular(15)),
-                                    //hintText: "e.g Abouzied",
-                                    labelStyle: GoogleFonts.montserrat(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black),
-                                  ),
-                                ),
-                              ),
-
-
-                              Padding(
-                                /// Notes
-                                padding: const EdgeInsets.all(8.0),
-                                child: TextField(
-                                  controller: NotesSolutiontextcontroller,
-
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.deny(RegExp(r'"')), // Disallow double quotes
-                                  ],
-                                  // cursorColor: primaryColorOfApp,
-                                  onChanged: (value) {
-
-                                  },
-                                  style: GoogleFonts.montserrat(
-                                      textStyle: Theme
-                                          .of(context)
-                                          .textTheme
-                                          .bodyLarge,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black),
-                                  decoration: InputDecoration(
-                                    //errorText: userAccountSearchErrorText,
-                                    contentPadding: EdgeInsets.all(25),
-                                    labelText: "Notes",
-                                    hintText: "Notes",
-
-                                    /*prefixIcon: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Icon(Icons.question_mark_outlined,
-                                 // color: primaryColorOfApp
-                                  ),
-                              ),*/
-
-                                    errorStyle: GoogleFonts.montserrat(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.redAccent),
-
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(15)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black12),
-                                        borderRadius: BorderRadius.circular(15)),
-                                    //hintText: "e.g Abouzied",
-                                    labelStyle: GoogleFonts.montserrat(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black),
-                                  ),
-                                ),
-                              ),
-
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text("* Note: Please confirm the Solution in order to save it.",
-                                  style: TextStyle(
-                                      color: Colors.red,
-                                      fontWeight: FontWeight.w300
-                                  ),
-                                ),
-                              ),
+                              //
+                              // Padding(
+                              //   /// Name
+                              //   padding: const EdgeInsets.all(8.0),
+                              //   child: TextField(
+                              //     controller: SolutionNameTextEditingController,
+                              //
+                              //     inputFormatters: [
+                              //       FilteringTextInputFormatter.deny(RegExp(r'"')), // Disallow double quotes
+                              //     ],
+                              //     // cursorColor: primaryColorOfApp,
+                              //     onChanged: (value) {
+                              //
+                              //     },
+                              //     style: GoogleFonts.montserrat(
+                              //         textStyle: Theme
+                              //             .of(context)
+                              //             .textTheme
+                              //             .bodyLarge,
+                              //         fontWeight: FontWeight.w400,
+                              //         color: Colors.black),
+                              //     decoration: InputDecoration(
+                              //       //errorText: userAccountSearchErrorText,
+                              //       contentPadding: EdgeInsets.all(25),
+                              //       labelText: "Label",
+                              //       hintText: "Label",
+                              //
+                              //       /*prefixIcon: Padding(
+                              //   padding: const EdgeInsets.all(8.0),
+                              //   child: Icon(Icons.question_mark_outlined,
+                              //    // color: primaryColorOfApp
+                              //     ),
+                              // ),*/
+                              //
+                              //       errorStyle: GoogleFonts.montserrat(
+                              //           textStyle: Theme
+                              //               .of(context)
+                              //               .textTheme
+                              //               .bodyLarge,
+                              //           fontWeight: FontWeight.w400,
+                              //           color: Colors.redAccent),
+                              //
+                              //       focusedBorder: OutlineInputBorder(
+                              //           borderSide: BorderSide(color: Colors.black),
+                              //           borderRadius: BorderRadius.circular(15)),
+                              //       border: OutlineInputBorder(
+                              //           borderSide: BorderSide(color: Colors.black12),
+                              //           borderRadius: BorderRadius.circular(15)),
+                              //       //hintText: "e.g Abouzied",
+                              //       labelStyle: GoogleFonts.montserrat(
+                              //           textStyle: Theme
+                              //               .of(context)
+                              //               .textTheme
+                              //               .bodyLarge,
+                              //           fontWeight: FontWeight.w400,
+                              //           color: Colors.black),
+                              //     ),
+                              //   ),
+                              // ),
+                              //
+                              // Padding(
+                              //
+                              //
+                              //   /// Final Description
+                              //   padding: const EdgeInsets.all(8.0),
+                              //   child: TextField(
+                              //     // maxLines: null,
+                              //     // maxLines: 2,
+                              //     controller: finalSolutiontextcontroller,
+                              //     // cursorColor: primaryColorOfApp,
+                              //     inputFormatters: [
+                              //       FilteringTextInputFormatter.deny(RegExp(r'"')), // Disallow double quotes
+                              //     ],
+                              //     onChanged: (value) {
+                              //
+                              //     },
+                              //     style: GoogleFonts.montserrat(
+                              //         textStyle: Theme
+                              //             .of(context)
+                              //             .textTheme
+                              //             .bodyLarge,
+                              //         fontWeight: FontWeight.w400,
+                              //         color: Colors.black),
+                              //     decoration: InputDecoration(
+                              //       //errorText: userAccountSearchErrorText,
+                              //       contentPadding: EdgeInsets.all(25),
+                              //       labelText: "Description",
+                              //       hintText: "Description",
+                              //
+                              //
+                              //
+                              //       errorStyle: GoogleFonts.montserrat(
+                              //           textStyle: Theme
+                              //               .of(context)
+                              //               .textTheme
+                              //               .bodyLarge,
+                              //           fontWeight: FontWeight.w400,
+                              //           color: Colors.redAccent),
+                              //
+                              //       focusedBorder: OutlineInputBorder(
+                              //           borderSide: BorderSide(color: Colors.black),
+                              //           borderRadius: BorderRadius.circular(15)),
+                              //       border: OutlineInputBorder(
+                              //           borderSide: BorderSide(color: Colors.black12),
+                              //           borderRadius: BorderRadius.circular(15)),
+                              //       //hintText: "e.g Abouzied",
+                              //       labelStyle: GoogleFonts.montserrat(
+                              //           textStyle: Theme
+                              //               .of(context)
+                              //               .textTheme
+                              //               .bodyLarge,
+                              //           fontWeight: FontWeight.w400,
+                              //           color: Colors.black),
+                              //     ),
+                              //   ),
+                              // ),
+                              //
+                              // Padding(
+                              //   /// Impact
+                              //   padding: const EdgeInsets.all(8.0),
+                              //   child: TextField(
+                              //     controller: ImpactSolutiontextcontroller,
+                              //
+                              //     inputFormatters: [
+                              //       FilteringTextInputFormatter.deny(RegExp(r'"')), // Disallow double quotes
+                              //     ],
+                              //     // cursorColor: primaryColorOfApp,
+                              //     onChanged: (value) {
+                              //
+                              //     },
+                              //     style: GoogleFonts.montserrat(
+                              //         textStyle: Theme
+                              //             .of(context)
+                              //             .textTheme
+                              //             .bodyLarge,
+                              //         fontWeight: FontWeight.w400,
+                              //         color: Colors.black),
+                              //     decoration: InputDecoration(
+                              //       //errorText: userAccountSearchErrorText,
+                              //       contentPadding: EdgeInsets.all(25),
+                              //       labelText: "Impact",
+                              //       hintText: "Impact",
+                              //
+                              //       /*prefixIcon: Padding(
+                              //   padding: const EdgeInsets.all(8.0),
+                              //   child: Icon(Icons.question_mark_outlined,
+                              //    // color: primaryColorOfApp
+                              //     ),
+                              // ),*/
+                              //
+                              //       errorStyle: GoogleFonts.montserrat(
+                              //           textStyle: Theme
+                              //               .of(context)
+                              //               .textTheme
+                              //               .bodyLarge,
+                              //           fontWeight: FontWeight.w400,
+                              //           color: Colors.redAccent),
+                              //
+                              //       focusedBorder: OutlineInputBorder(
+                              //           borderSide: BorderSide(color: Colors.black),
+                              //           borderRadius: BorderRadius.circular(15)),
+                              //       border: OutlineInputBorder(
+                              //           borderSide: BorderSide(color: Colors.black12),
+                              //           borderRadius: BorderRadius.circular(15)),
+                              //       //hintText: "e.g Abouzied",
+                              //       labelStyle: GoogleFonts.montserrat(
+                              //           textStyle: Theme
+                              //               .of(context)
+                              //               .textTheme
+                              //               .bodyLarge,
+                              //           fontWeight: FontWeight.w400,
+                              //           color: Colors.black),
+                              //     ),
+                              //   ),
+                              // ),
+                              //
+                              //
+                              // Padding(
+                              //   /// Notes
+                              //   padding: const EdgeInsets.all(8.0),
+                              //   child: TextField(
+                              //     controller: NotesSolutiontextcontroller,
+                              //
+                              //     inputFormatters: [
+                              //       FilteringTextInputFormatter.deny(RegExp(r'"')), // Disallow double quotes
+                              //     ],
+                              //     // cursorColor: primaryColorOfApp,
+                              //     onChanged: (value) {
+                              //
+                              //     },
+                              //     style: GoogleFonts.montserrat(
+                              //         textStyle: Theme
+                              //             .of(context)
+                              //             .textTheme
+                              //             .bodyLarge,
+                              //         fontWeight: FontWeight.w400,
+                              //         color: Colors.black),
+                              //     decoration: InputDecoration(
+                              //       //errorText: userAccountSearchErrorText,
+                              //       contentPadding: EdgeInsets.all(25),
+                              //       labelText: "Notes",
+                              //       hintText: "Notes",
+                              //
+                              //       /*prefixIcon: Padding(
+                              //   padding: const EdgeInsets.all(8.0),
+                              //   child: Icon(Icons.question_mark_outlined,
+                              //    // color: primaryColorOfApp
+                              //     ),
+                              // ),*/
+                              //
+                              //       errorStyle: GoogleFonts.montserrat(
+                              //           textStyle: Theme
+                              //               .of(context)
+                              //               .textTheme
+                              //               .bodyLarge,
+                              //           fontWeight: FontWeight.w400,
+                              //           color: Colors.redAccent),
+                              //
+                              //       focusedBorder: OutlineInputBorder(
+                              //           borderSide: BorderSide(color: Colors.black),
+                              //           borderRadius: BorderRadius.circular(15)),
+                              //       border: OutlineInputBorder(
+                              //           borderSide: BorderSide(color: Colors.black12),
+                              //           borderRadius: BorderRadius.circular(15)),
+                              //       //hintText: "e.g Abouzied",
+                              //       labelStyle: GoogleFonts.montserrat(
+                              //           textStyle: Theme
+                              //               .of(context)
+                              //               .textTheme
+                              //               .bodyLarge,
+                              //           fontWeight: FontWeight.w400,
+                              //           color: Colors.black),
+                              //     ),
+                              //   ),
+                              // ),
+                              //
+                              // Padding(
+                              //   padding: const EdgeInsets.all(8.0),
+                              //   child: Text("* Note: Please confirm the Solution in order to save it.",
+                              //     style: TextStyle(
+                              //         color: Colors.red,
+                              //         fontWeight: FontWeight.w300
+                              //     ),
+                              //   ),
+                              // ),
 
 
                               // SizedBox(height: 10,),
@@ -7162,6 +6352,315 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
               });
         }
     );
+  }
+
+  Future<void> getChatResponsenew(q2text,q3text,q4text,q5text,) async {
+    setState(() {
+      _messages.insert(0, q2text);
+      // _typingUsers.add(_gptChatUser);
+    });
+    // ProgressDialog.show(context, "Expand", Icons.search);
+
+    List<Messages> _messagesHistory2 = _messages.reversed.map((m) {
+      return Messages(role: Role.user, content: q2text);
+    }).toList();
+    final request2 = ChatCompleteText(
+      model: Gpt4ChatModel(),
+      messages: _messagesHistory2,
+      maxToken: 200,
+    );
+    final response2 = await _openAI.onChatCompletion(request: request2);
+    for (var element in response2!.choices) {
+      if (element.message != null) {
+        setState(() {
+          String gptResponse = element.message!.content;
+          String responseContent = gptResponse.replaceAll('"', '');
+
+          // thriverNameTextEditingController.text = element.message!.content;
+          challengesNameTextEditingController.text = responseContent;
+        });
+        print("response: ${element.message!.content}");
+      }
+    }
+
+
+    List<Messages> _messagesHistory3 = _messages.reversed.map((m) {
+      return Messages(role: Role.user, content: q3text);
+    }).toList();
+    final request3 = ChatCompleteText(
+      model: Gpt4ChatModel(),
+      messages: _messagesHistory3,
+      maxToken: 200,
+    );
+    final response3 = await _openAI.onChatCompletion(request: request3);
+    for (var element in response3!.choices) {
+      if (element.message != null) {
+        setState(() {
+          challengesDescriptionTextEditingController.text = element.message!.content;
+
+          // _controller = element.message!.content;
+          // _controller = QuillController(
+          //   document: Document()..insert(0, element.message!.content),
+          //   selection: TextSelection.collapsed(offset: element.message!.content.length),
+          // );
+
+        });
+        print("response: ${element.message!.content}");
+      }
+    }
+
+
+
+    List<Messages> _messagesHistory4 = _messages.reversed.map((m) {
+      return Messages(role: Role.user, content: q4text);
+    }).toList();
+    final request4 = ChatCompleteText(
+      model: Gpt4ChatModel(),
+      messages: _messagesHistory4,
+      maxToken: 200,
+    );
+    final response4 = await _openAI.onChatCompletion(request: request4);
+    for (var element in response4!.choices) {
+      if (element.message != null) {
+        setState(() {
+          // ValueItem<String> valueItem = new ValueItem<String>(value: element.message!.content, label: '${element.message!.content}');
+
+          // controller.options.add(valueItem);
+
+          String gptResponse = element.message!.content;
+          String responseContent = gptResponse.replaceAll(', ', ',');
+
+          // List<String> responseList = [gptResponse];
+          // print("responseListttt: ${responseList}");
+          // print("responseInList: ${[element.message!.content]}");
+
+
+          _challengesProvider.keywordsssss = responseContent.split(',');
+
+          // _addKeywordProvider.keywordsssss = [gptResponse];
+
+
+        });
+        print("_challengesProvider.ProviderTags: ${_challengesProvider.keywordsssss}");
+        print("responsesssss: ${element.message!.content}");
+      }
+    }
+
+
+    List<Messages> _messagesHistory5 = _messages.reversed.map((m) {
+      return Messages(role: Role.user, content: q5text);
+    }).toList();
+    final request5 = ChatCompleteText(
+      model: Gpt4ChatModel(),
+      messages: _messagesHistory5,
+      maxToken: 200,
+    );
+    final response5 = await _openAI.onChatCompletion(request: request5);
+    for (var element in response5!.choices) {
+      if (element.message != null) {
+        setState(() {
+          // ValueItem<String> valueItem = new ValueItem<String>(value: element.message!.content, label: '${element.message!.content}');
+          //
+          // controller.options.add( valueItem) ;
+          String gptResponse = element.message!.content;
+          String responseContent = gptResponse.replaceAll(', ', ',');
+
+          _challengesProvider.ProviderTags = responseContent.split(',');
+        });
+        print("_challengesProvider.ProviderTags: ${_challengesProvider.ProviderTags}");
+        print("response: ${element.message!.content}");
+      }
+    }
+
+
+    ProgressDialog.hide();
+
+  }
+
+  Future<void> getChatGptResponse(defaulttext) async {
+    setState(() {
+      _messages.insert(0, defaulttext);
+      // _typingUsers.add(_gptChatUser);
+    });
+    // ProgressDialog.show(context, "Expand", Icons.search);
+
+    List<Messages> _messagesHistory = _messages.reversed.map((m) {
+      return Messages(role: Role.user, content: defaulttext);
+    }).toList();
+    final request = ChatCompleteText(
+      model: Gpt4ChatModel(),
+      messages: _messagesHistory,
+      maxToken: 200,
+    );
+    final response = await _openAI.onChatCompletion(request: request);
+    for (var element in response!.choices) {
+      if (element.message != null) {
+        setState(() {
+          String gptResponse = element.message!.content;
+          String responseContent = gptResponse.replaceAll('"', '');
+
+          // thriverNameTextEditingController.text = element.message!.content;
+          finaltextcontroller.text = responseContent;
+        });
+        print("response: ${element.message!.content}");
+      }
+    }
+
+    // ProgressDialog.hide();
+
+  }
+
+  Future<void> getChatSolResponsenew(q2text,q3text,q4text,q5text,) async {
+    setState(() {
+      _messages.insert(0, q2text);
+      // _typingUsers.add(_gptChatUser);
+    });
+    // ProgressDialog.show(context, "Expand", Icons.search);
+
+    List<Messages> _messagesHistory2 = _messages.reversed.map((m) {
+      return Messages(role: Role.user, content: q2text);
+    }).toList();
+    final request2 = ChatCompleteText(
+      model: Gpt4ChatModel(),
+      messages: _messagesHistory2,
+      maxToken: 200,
+    );
+    final response2 = await _openAI.onChatCompletion(request: request2);
+    for (var element in response2!.choices) {
+      if (element.message != null) {
+        setState(() {
+          String gptResponse = element.message!.content;
+          String responseContent = gptResponse.replaceAll('"', '');
+
+          // thriverNameTextEditingController.text = element.message!.content;
+          SolutionNameTextEditingController.text = responseContent;
+        });
+        print("response: ${element.message!.content}");
+      }
+    }
+
+
+    List<Messages> _messagesHistory3 = _messages.reversed.map((m) {
+      return Messages(role: Role.user, content: q3text);
+    }).toList();
+    final request3 = ChatCompleteText(
+      model: Gpt4ChatModel(),
+      messages: _messagesHistory3,
+      maxToken: 200,
+    );
+    final response3 = await _openAI.onChatCompletion(request: request3);
+    for (var element in response3!.choices) {
+      if (element.message != null) {
+        setState(() {
+          SolutionDescriptionTextEditingController.text = element.message!.content;
+
+          // _controller = element.message!.content;
+          // _controller = QuillController(
+          //   document: Document()..insert(0, element.message!.content),
+          //   selection: TextSelection.collapsed(offset: element.message!.content.length),
+          // );
+
+        });
+        print("response: ${element.message!.content}");
+      }
+    }
+
+
+
+    List<Messages> _messagesHistory4 = _messages.reversed.map((m) {
+      return Messages(role: Role.user, content: q4text);
+    }).toList();
+    final request4 = ChatCompleteText(
+      model: Gpt4ChatModel(),
+      messages: _messagesHistory4,
+      maxToken: 200,
+    );
+    final response4 = await _openAI.onChatCompletion(request: request4);
+    for (var element in response4!.choices) {
+      if (element.message != null) {
+        setState(() {
+          // ValueItem<String> valueItem = new ValueItem<String>(value: element.message!.content, label: '${element.message!.content}');
+
+          // controller.options.add(valueItem);
+
+          String gptResponse = element.message!.content;
+          String responseContent = gptResponse.replaceAll(', ', ',');
+
+          // List<String> responseList = [gptResponse];
+          // print("responseListttt: ${responseList}");
+          // print("responseInList: ${[element.message!.content]}");
+
+
+          _addKeywordProvider.keywordsssss = responseContent.split(',');
+
+          // _addKeywordProvider.keywordsssss = [gptResponse];
+
+
+        });
+        print("_addKeywordProvider.ProviderTags: ${_challengesProvider.keywordsssss}");
+        print("responsesssss: ${element.message!.content}");
+      }
+    }
+
+
+    List<Messages> _messagesHistory5 = _messages.reversed.map((m) {
+      return Messages(role: Role.user, content: q5text);
+    }).toList();
+    final request5 = ChatCompleteText(
+      model: Gpt4ChatModel(),
+      messages: _messagesHistory5,
+      maxToken: 200,
+    );
+    final response5 = await _openAI.onChatCompletion(request: request5);
+    for (var element in response5!.choices) {
+      if (element.message != null) {
+        setState(() {
+          // ValueItem<String> valueItem = new ValueItem<String>(value: element.message!.content, label: '${element.message!.content}');
+          //
+          // controller.options.add( valueItem) ;
+          String gptResponse = element.message!.content;
+          String responseContent = gptResponse.replaceAll(', ', ',');
+
+          _addKeywordProvider.ProviderTags = responseContent.split(',');
+        });
+        print("_addKeywordProvider.ProviderTags: ${_addKeywordProvider.ProviderTags}");
+        print("response: ${element.message!.content}");
+      }
+    }
+    ProgressDialog.hide();
+  }
+
+  Future<void> getChatSolGptResponse(defaulttext) async {
+    setState(() {
+      _messages.insert(0, defaulttext);
+      // _typingUsers.add(_gptChatUser);
+    });
+    // ProgressDialog.show(context, "Expand", Icons.search);
+
+    List<Messages> _messagesHistory = _messages.reversed.map((m) {
+      return Messages(role: Role.user, content: defaulttext);
+    }).toList();
+    final request = ChatCompleteText(
+      model: Gpt4ChatModel(),
+      messages: _messagesHistory,
+      maxToken: 200,
+    );
+    final response = await _openAI.onChatCompletion(request: request);
+    for (var element in response!.choices) {
+      if (element.message != null) {
+        setState(() {
+          String gptResponse = element.message!.content;
+          String responseContent = gptResponse.replaceAll('"', '');
+
+          // thriverNameTextEditingController.text = element.message!.content;
+          finalSolutiontextcontroller.text = responseContent;
+        });
+        print("response: ${element.message!.content}");
+      }
+    }
+
+    // ProgressDialog.hide();
+
   }
 
 
@@ -12091,6 +11590,31 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
     resultString = matches.join(', ');
     print("resultString $resultString");
     return resultString;
+  }
+
+  Future<String> newSolSelectCategories() async {
+    List<String> matches = [];
+    String documentId = "aqTybsZWFxMuHPQt7u1T";
+    try {
+      DocumentSnapshot docSnapshot = await FirebaseFirestore.instance.collection('Keywords').doc("aqTybsZWFxMuHPQt7u1T").get();
+
+      if (docSnapshot.exists) {
+        dynamic data = docSnapshot.data();
+        // print(" docSnapshot.data $data");
+        if (data != null && data.containsKey('Values')) {
+          // You can use the document ID directly here
+          // String key = data['Key'].toString().toLowerCase();
+          List<String> values = data.containsKey('Values') ? data['Values'].cast<String>() : [];
+          // print(" values ; $values");
+          matches.addAll(values);
+        }
+      }
+    } catch (e) {
+      print("Error getting suggestions: $e");
+    }
+    solutionresultString = matches.join(', ');
+    print("solutionresultString $solutionresultString");
+    return solutionresultString;
   }
 
   Future<void> getChatRefineResponse(defaulttext) async {

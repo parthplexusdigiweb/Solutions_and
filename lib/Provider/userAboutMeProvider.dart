@@ -751,6 +751,7 @@ class UserAboutMEProvider with ChangeNotifier{
 
     print("ChallengesData:${challengess.first.Keywords}");
     print("ChallengesData:${challengess.first.tags}");
+    isRecommendedChallengeCheckedMap[ChallengesDetails['id']] = true;
 
     notifyListeners();
 
@@ -779,6 +780,7 @@ class UserAboutMEProvider with ChangeNotifier{
     ));
 
     print("ChallengesData:${editchallengess}");
+    isEditChallengeListAdded[ChallengesDetails['id']] = true;
 
     notifyListeners();
 
@@ -805,6 +807,7 @@ class UserAboutMEProvider with ChangeNotifier{
     ));
 
     print("SolutionsData:${solutionss}");
+    isRecommendedSolutionsCheckedMap[SolutionDetails['id']] = true;
 
     notifyListeners();
 
@@ -829,11 +832,9 @@ class UserAboutMEProvider with ChangeNotifier{
       Category: SolutionDetails['Category'],
       Keywords: SolutionDetails['Keywords'],
     ));
-
     print("SolutionsData:${editsolutionss}");
-
+    isEditSolutionListAdded[SolutionDetails['id']] = true;
     notifyListeners();
-
   }
 
   List<SolutionModel> getSelectedSolutions() {
