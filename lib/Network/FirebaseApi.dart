@@ -480,7 +480,7 @@ class ApiRepository{
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'api-key': "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"
+      "commit": "form here"
     };
 
     String token = EncryptData.createJWT({"email":email});
@@ -522,7 +522,9 @@ class ApiRepository{
 
   Future<void> sendEmailWithAttachment(context,email,name,filebytes,filename) async {
     String apiUrl = 'https://api.brevo.com/sendEmail'; // Example API endpoint, replace with actual endpoint
-    String BREVO_API_KEY_FROM_BACKEND = "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";
+    String BREVO_API_KEY_FROM_BACKEND = "commit form here";
+
+
     // String BREVO_API_KEY_FROM_BACKEND = "";
 
     print("BREVO_API_KEY_FROM_BACKEND : $BREVO_API_KEY_FROM_BACKEND");
@@ -533,7 +535,7 @@ class ApiRepository{
         headers : {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'api-key': "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"
+          'api-key': "commit form here"
         },
         body: jsonEncode({
           "sender": {
