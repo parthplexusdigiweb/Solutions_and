@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toastification/toastification.dart';
 
 import '../core/EncryptDecrypt.dart';
 
@@ -463,8 +464,8 @@ class ApiRepository{
 
   Future<bool> sendLoginMail(String email) async {
 
-    // String BREVO_API_KEY_FROM_BACKEND = await getBrevoApiKey();
-    String BREVO_API_KEY_FROM_BACKEND = "";
+    String BREVO_API_KEY_FROM_BACKEND = await getBrevoApiKey();
+    // String BREVO_API_KEY_FROM_BACKEND = "";
 
     print("BREVO_API_KEY_FROM_BACKEND : $BREVO_API_KEY_FROM_BACKEND");
 
@@ -479,7 +480,7 @@ class ApiRepository{
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'api-key': BREVO_API_KEY_FROM_BACKEND
+      'api-key': "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"
     };
 
     String token = EncryptData.createJWT({"email":email});
@@ -518,7 +519,64 @@ class ApiRepository{
     return isSuccessFull;
   }
 
-   Future<void> registerWithEmail(String email) async {
+
+  Future<void> sendEmailWithAttachment(context,email,name,filebytes,filename) async {
+    String apiUrl = 'https://api.brevo.com/sendEmail'; // Example API endpoint, replace with actual endpoint
+    String BREVO_API_KEY_FROM_BACKEND = "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";
+    // String BREVO_API_KEY_FROM_BACKEND = "";
+
+    print("BREVO_API_KEY_FROM_BACKEND : $BREVO_API_KEY_FROM_BACKEND");
+
+    try {
+      var response = await http.post(
+        Uri.parse("$BREVO_BASE_URL/smtp/email"),
+        headers : {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'api-key': "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"
+        },
+        body: jsonEncode({
+          "sender": {
+            "name": "Solutions Inclutions",
+            "email": "admin@solutioninclution.com"
+          },
+          'to' :[{ "email": email, "name": name }],
+          'attachment': [{
+            "content": filebytes,
+            "name": filename
+          }],
+          "htmlContent": "<!DOCTYPE html> <html> <body> <h1>Solutions Inclutions</h1> <p>Solutions Inclutions has sended you $name</p> </body> </html>",
+          "textContent": "Solutions Inclutions has sended you $name",
+          "subject": "Solutions Inclutions",
+          // Add other necessary fields according to Brevo API documentation
+        }),
+
+      );
+
+      if (response.statusCode == 200 ||response.statusCode == 201) {
+        print('Email sent successfully');
+        toastification.show(context: context,
+            title: Text('Email sent successfully ${email}'),
+            autoCloseDuration: Duration(milliseconds: 2500),
+            alignment: Alignment.center,
+            backgroundColor: Colors.green,
+            foregroundColor: Colors.white,
+            icon: Icon(Icons.check_circle, color: Colors.white,),
+            animationDuration: Duration(milliseconds: 1000),
+            showProgressBar: false
+        );
+      } else {
+        print('Failed to send email: ${response.statusCode}');
+        print(response.body);
+
+      }
+    } catch (e) {
+      print('Error sending email: $e');
+    }
+  }
+
+
+  Future<void> registerWithEmail(String email) async {
 
      try {
 

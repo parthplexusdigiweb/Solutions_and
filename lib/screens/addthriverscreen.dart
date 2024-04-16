@@ -51,8 +51,8 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
 
   CollectionReference thriversCollection = FirebaseFirestore.instance.collection('Thrivers');
 
-  MultiSelectController<String> controller = MultiSelectController();
-  MultiSelectController<String> newcontroller = MultiSelectController();
+  // MultiSelectControllerller<String> controller = MultiSelectController();
+  // MultiSelectController<String> newcontroller = MultiSelectController();
 
   var selectedValue; // Variable to store the selected value
 
@@ -2184,7 +2184,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                           addKeywordProvider.ProviderTagsclear();
                           addKeywordProvider.selectsourceItems = null;
                           addKeywordProvider.selectThriversStatusItems = null;
-                          controller.clearAllSelection();
+                          // controller.clearAllSelection();
                         },
                         child: Container(
                           width: MediaQuery.of(context).size.width * .3,

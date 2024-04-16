@@ -38,7 +38,7 @@ dependencies:
   firebase_core: ^2.24.2
   cloud_firestore: ^4.15.6
   flutter_typeahead: ^4.4.0
-  google_fonts: ^6.1.0
+  google_fonts:
   font_awesome_flutter: ^10.1.0
   firebase_storage: ^11.5.6
   encrypt: ^5.0.3
@@ -52,7 +52,7 @@ dependencies:
   shared_preferences: ^2.0.15
   go_router: ^13.0.0
   url_strategy: ^0.2.0
-  multi_dropdown: ^2.1.2
+  multi_dropdown:
   flutter_quill: ^9.1.1
   provider: ^6.1.1
   dash_chat_2: ^0.0.20
@@ -70,6 +70,9 @@ dependencies:
   path_provider: ^2.1.2
   open_filex: ^4.4.0
   printing: ^5.12.0
+  flutter_mail_server: ^0.0.2
+  http:
+  mailer: ^6.1.0
 
 dev_dependencies:
   flutter_test:

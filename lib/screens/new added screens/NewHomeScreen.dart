@@ -537,7 +537,7 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
                                         Expanded(
                                           child: Text(
                                             // 'Solutions',
-                                            'Super Admin',
+                                            'Super admin',
                                             overflow: TextOverflow.ellipsis,
                                             style: GoogleFonts.montserrat(
                                                 textStyle:

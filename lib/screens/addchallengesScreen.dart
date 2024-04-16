@@ -44,8 +44,8 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
   CollectionReference thriversCollection = FirebaseFirestore.instance.collection('Thrivers');
   CollectionReference challengesCollection = FirebaseFirestore.instance.collection('Challenges');
 
-  MultiSelectController<String> controller = MultiSelectController();
-  MultiSelectController<String> newcontroller = MultiSelectController();
+  // MultiSelectController<String> controller = MultiSelectController();
+  // MultiSelectController<String> newcontroller = MultiSelectController();
 
   var selectedValue,resultString;
 

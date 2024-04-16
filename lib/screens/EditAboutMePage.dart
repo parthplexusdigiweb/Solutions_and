@@ -56,6 +56,10 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
   TextEditingController LineManagerController = TextEditingController();
   TextEditingController mycircumstancesController = TextEditingController();
   TextEditingController AboutMeLabeltextController = TextEditingController();
+  TextEditingController AboutMeDescriptiontextController = TextEditingController();
+  TextEditingController AboutMeUseFulInfotextController = TextEditingController();
+  TextEditingController SendNametextController = TextEditingController();
+  TextEditingController SendEmailtextController = TextEditingController();
   TextEditingController RefineController = TextEditingController();
   TextEditingController MystrengthsController = TextEditingController();
   TextEditingController myOrganisationController = TextEditingController();
@@ -64,7 +68,6 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
   TextEditingController editsearchbyCatcontroller = TextEditingController();
   TextEditingController editsearchChallengescontroller = TextEditingController();
   TextEditingController NotesController = TextEditingController();
-
   TextEditingController finaltextcontroller = TextEditingController();
   TextEditingController finalSolutiontextcontroller = TextEditingController();
   TextEditingController ImpactAddChallengetextcontroller = TextEditingController();
@@ -87,8 +90,9 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
   List<dynamic> SolutionseditKeywordssss = [];
   List<dynamic> Solutionsedittags = [];
 
-  var selectedEmail ;
-  var resultString,solutionresultString ;
+  var selectedEmail,AB_Status;
+  String About_Me_Label = "";
+  var resultString,solutionresultString;
 
   List<String> emailList = [];
 
@@ -148,6 +152,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
       _userAboutMEProvider.EditSolutionList(widget.aboutMeData["Solutions"]);
       _userAboutMEProvider.EditSolutionListadd(solutionsList);
       _userAboutMEProvider.EditSolutionListadd(_previewProvider.PreviewSolutionList);
+      About_Me_Label = widget.aboutMeData["About_Me_Label"];
     });
   }
 
@@ -198,7 +203,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                 Tab(icon: Icon(Icons.edit_attributes),text: "My attributes"),
                                 Tab(icon: Icon(Icons.sync_problem),text: "My challenges"),
                                 Tab(icon: Icon(Icons.checklist_rtl),text: "My solutions"),
-                                Tab(icon: Icon(Icons.insert_drive_file),text: "My reports"),
+                                Tab(icon: Icon(Icons.insert_drive_file),text: "My report"),
                               ],
                             ),
                             Expanded(
@@ -223,6 +228,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                   ),
                   icon: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Padding(
                       //   padding: EdgeInsets.only(left: 15,top: 15),
@@ -283,6 +289,10 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                             ],
                           )
                       ),
+                      SizedBox(width: 20),
+                      Text("${About_Me_Label}",
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                      )
                     ],
                   ),
                   iconPadding: EdgeInsets.only(left: 15,top: 15),
@@ -292,6 +302,8 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
   }
 
   Widget AboutmeFormpage(context,aboutMeData) {
+
+    AB_Status = aboutMeData['AB_Status']==null ? "" : aboutMeData['AB_Status'];
 
     selectedEmail = aboutMeData['Email']==null ? "" : aboutMeData['Email'];
     _previewProvider.email = selectedEmail;
@@ -315,6 +327,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
     // documentId = aboutMeData.id;
 
     print("aboutMeData['Email']: ${aboutMeData['Email']}");
+    print("aboutMeData['AB_Status']: ${aboutMeData['AB_Status']}");
     print("documentId: ${documentId}");
     // print("_previewProvider.email: ${_previewProvider.email}");
     return SingleChildScrollView(
@@ -546,8 +559,10 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
 
                     // cursorColor: primaryColorOfApp,
                     onChanged: (value) {
+                      var createdAt = DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now());
                       _previewProvider.updateName(value);
-                      AboutMeLabeltextController.text = value;
+                      AboutMeLabeltextController.text = value + " $createdAt";
+                      About_Me_Label = value + " $createdAt";
                     },
                     style: GoogleFonts.montserrat(
                         textStyle: Theme
@@ -978,8 +993,11 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                     'Location': LocationController.text,
                     'Employee_Number': EmployeeNumberController.text,
                     'Line_Manager': LineManagerController.text,
-                    'AB_Status' : "Drafted",
-                    'About_Me_Label': nameController.text,
+                    'AB_Status' : (AB_Status=="Complete") ? "Complete" :"Drafted",
+                    'About_Me_Label': AboutMeLabeltextController.text,
+                    'AB_Description' : AboutMeDescriptiontextController.text,
+                    'AB_Useful_Info' : AboutMeUseFulInfotextController.text,
+                    'AB_Attachment' : "",
                     // 'My_Circumstance': mycircumstancesController.text,
                     // 'My_Strength': MystrengthsController.text,
                     // 'My_Organisation': myOrganisationController.text,
@@ -996,7 +1014,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                   String solutionJson = json.encode(AboutMEDatas);
                   print(solutionJson);
 
-                  ProgressDialog.show(context, "Creating About Me", Icons.chair);
+                  ProgressDialog.show(context, "Updating", Icons.update);
                   await ApiRepository().updateAboutMe(AboutMEDatas, documentId);
                   ProgressDialog.hide();
                   if (documentId != null) {
@@ -2750,20 +2768,150 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                   //   ),
                   // ),
                   // SizedBox(height: 20,),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        // Text("Title: ",
+                        //     style: GoogleFonts.montserrat(textStyle: Theme
+                        //         .of(context)
+                        //         .textTheme
+                        //         .titleMedium,)),
+                        // Text("${previewProvider.title==null ? "" : previewProvider.title}",
+                        //     style: GoogleFonts.montserrat(textStyle: Theme
+                        //         .of(context)
+                        //         .textTheme
+                        //         .bodyLarge,fontWeight: FontWeight.w700)),
+
+                        Text("Report Title: ", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
+
+                        Flexible(
+                          child: Container(
+                            height: 40,
+                            width: MediaQuery.of(context).size.width * .25,
+                            child: TextField(
+                              controller: AboutMeLabeltextController,
+                              onChanged: (value) {
+                                _previewProvider.updatetitle(value);
+                              },
+                              style: GoogleFonts.montserrat(
+                                  textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .bodyLarge,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.black),
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(10),
+                                // labelText: "Name",
+                                hintText: "About Me Title",
+                                errorStyle: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.bodyLarge,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.redAccent),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.black),
+                                    borderRadius: BorderRadius.circular(15)),
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.black12),
+                                    borderRadius: BorderRadius.circular(15)),
+                                labelStyle: GoogleFonts.montserrat(
+                                    textStyle: Theme
+                                        .of(context)
+                                        .textTheme
+                                        .bodyLarge,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(width: 10,),
+
+                        InkWell(
+                          onTap: () async {
+                            // sideMenu.changePage(2);
+                            // page.jumpToPage(1);
+                          },
+                          child: Container(
+                            // margin: EdgeInsets.all(10),
+                            padding: EdgeInsets.all(5),
+                            height: 40,
+                            width: MediaQuery.of(context).size.width * 0.15,
+                            decoration: BoxDecoration(
+                              // color: Colors.white,
+                              border: Border.all(color:primaryColorOfApp, width: 1.0),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(Icons.insert_drive_file,color: Colors.black,size: 20,),
+                                SizedBox(width: 5,),
+                                Expanded(
+                                  child: Text(
+                                    // 'Thrivers',
+                                    'For Someone Else',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.montserrat(
+                                        textStyle:
+                                        Theme.of(context).textTheme.bodySmall,
+                                        color: Colors.black),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                        ),
+
+                      ],
+                    ),
+                  ),
                   Divider(color: Colors.black26,),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 5),
+                    child: TextField(
+                      controller: AboutMeDescriptiontextController,
+                      onChanged: (value) {
+                        // _previewProvider.updatetitle(value);
+                      },
+                      style: GoogleFonts.montserrat(
+                          textStyle: Theme.of(context).textTheme.bodySmall,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black),
+                      decoration: InputDecoration(
+                        hintText: "Description",
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black),
+                            borderRadius: BorderRadius.circular(10)),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black12),
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                    ),
+                  ),
+
                   Container(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
 
                       children: [
+
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 5),
-                          child: Text("1. Employee data",
+                          child: Text("Personal Info",
                               style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
                                   fontSize: 20,
                                   color: Colors.black)),
                         ),
+
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 5),
@@ -2927,7 +3075,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 5),
-                          child: Text("2. Insight about me",
+                          child: Text("Insight about me",
                               style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
                                   fontSize: 20,
                                   color: Colors.black)),
@@ -2952,65 +3100,6 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                         //   ),
                         // ),
 
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 5),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              // Text("Title: ",
-                              //     style: GoogleFonts.montserrat(textStyle: Theme
-                              //         .of(context)
-                              //         .textTheme
-                              //         .titleMedium,)),
-                              // Text("${previewProvider.title==null ? "" : previewProvider.title}",
-                              //     style: GoogleFonts.montserrat(textStyle: Theme
-                              //         .of(context)
-                              //         .textTheme
-                              //         .bodyLarge,fontWeight: FontWeight.w700)),
-
-                              Text("Title: ", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
-
-                              Expanded(
-                                child: TextField(
-                                  controller: AboutMeLabeltextController,
-                                  onChanged: (value) {
-                                    _previewProvider.updatetitle(value);
-                                  },
-                                  style: GoogleFonts.montserrat(
-                                      textStyle: Theme
-                                          .of(context)
-                                          .textTheme
-                                          .bodyLarge,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black),
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.all(10),
-                                    // labelText: "Name",
-                                    hintText: "About Me Title",
-                                    errorStyle: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.bodyLarge,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.redAccent),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(15)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black12),
-                                        borderRadius: BorderRadius.circular(15)),
-                                    labelStyle: GoogleFonts.montserrat(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black),
-                                  ),
-                                ),
-                              ),
-
-                            ],
-                          ),
-                        ),
 
                         Padding(
                           padding: const EdgeInsets.symmetric(
@@ -3098,7 +3187,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 5),
-                          child: Text("3. Challenges",
+                          child: Text("Challenges",
                               style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
                                   fontSize: 20,
                                   color: Colors.black)),
@@ -3406,7 +3495,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 5),
-                          child: Text("4. Solutions",
+                          child: Text("Solutions",
                               style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
                                   fontSize: 20,
                                   color: Colors.black)),
@@ -3560,6 +3649,62 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                     ),
                   ),
 
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 15.0, horizontal: 5),
+                    child: TextField(
+                      controller: AboutMeUseFulInfotextController,
+                      onChanged: (value) {
+                        _previewProvider.updatetitle(value);
+                      },
+                      style: GoogleFonts.montserrat(
+                          textStyle: Theme.of(context).textTheme.bodySmall,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black),
+                      decoration: InputDecoration(
+                        hintText: "Links/Document/Product Info",
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black),
+                            borderRadius: BorderRadius.circular(10)),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black12),
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                    ),
+                  ),
+
+
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                        child: Text("Attachments :", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
+                      ),
+                      SizedBox(width: 10,),
+
+                      InkWell(
+                        onTap: (){
+                          // _userAboutMEProvider.pickFiles();
+                        },
+                        child: Container(
+                          // padding: EdgeInsets.all(20),
+                          child: Center(child: Icon(Icons.add, size: 30, color: Colors.white,)),
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("${_userAboutMEProvider.aadhar==null ? "" : _userAboutMEProvider.aadhar}", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
+                    // child: Text("document.pdf", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
+                  ),
+
                   SizedBox(height: 10,),
 
                   Row(
@@ -3570,59 +3715,63 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                           var createdAt = DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now());
 
                           Map<String, dynamic> AboutMEDatas = {
-                            'About_Me_Label': AboutMeLabeltextController.text + " $createdAt",
-                            'AB_Status' : "Submitted"
+                            'About_Me_Label': AboutMeLabeltextController.text,
+                            'AB_Status' : "Complete",
+                            'AB_Description' : AboutMeDescriptiontextController.text,
+                            'AB_Useful_Info' : AboutMeUseFulInfotextController.text,
+                            'AB_Attachment' : "",
                           };
+
 
                           String solutionJson = json.encode(AboutMEDatas);
                           print(solutionJson);
 
-                          ProgressDialog.show(context, "Submiting", Icons.save);
+                          ProgressDialog.show(context, "Completing", Icons.save);
                           await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
                           ProgressDialog.hide();
-                          downloadAboutMePdf(challengesList,solutionsList);
-                          selectedEmail = null;
-                          nameController.clear();
-                          searchEmailcontroller.clear();
-                          employerController.clear();
-                          divisionOrSectionController.clear();
-                          RoleController.clear();
-                          LocationController.clear();
-                          EmployeeNumberController.clear();
-                          LineManagerController.clear();
-                          mycircumstancesController.clear();
-                          MystrengthsController.clear();
-                          mycircumstancesController.clear();
-                          AboutMeLabeltextController.clear();
-                          RefineController.clear();
-                          solutionsList.clear();
-                          _userAboutMEProvider.solutionss.clear();
-                          _userAboutMEProvider.editsolutionss.clear();
-                          _userAboutMEProvider.challengess.clear();
-                          _userAboutMEProvider.editchallengess.clear();
-                          _userAboutMEProvider.combinedSolutionsResults.clear();
-                          _userAboutMEProvider.combinedResults.clear();
-                          previewProvider.email=null;
-                          previewProvider.name=null;
-                          previewProvider.employer=null;
-                          previewProvider.division=null;
-                          previewProvider.role=null;
-                          previewProvider.location=null;
-                          previewProvider.employeeNumber=null ;
-                          previewProvider.linemanager=null;
-                          previewProvider.title=null;
-                          previewProvider.mycircumstance=null;
-                          previewProvider.mystrength=null ;
-                          previewProvider.myorganization=null ;
-                          previewProvider.mychallenge=null ;
-                          previewProvider.PreviewChallengesList.clear();
-                          previewProvider.PreviewSolutionList.clear();
-                          _navigateToTab(0);
-                          widget.refreshPage();
-                          Navigator.pop(context);
-                          setState(() {
-                            widget.page.jumpToPage(1);
-                          });
+                          sendMailPopUp(challengesList,solutionsList);
+                          // selectedEmail = null;
+                          // nameController.clear();
+                          // searchEmailcontroller.clear();
+                          // employerController.clear();
+                          // divisionOrSectionController.clear();
+                          // RoleController.clear();
+                          // LocationController.clear();
+                          // EmployeeNumberController.clear();
+                          // LineManagerController.clear();
+                          // mycircumstancesController.clear();
+                          // MystrengthsController.clear();
+                          // mycircumstancesController.clear();
+                          // AboutMeLabeltextController.clear();
+                          // RefineController.clear();
+                          // solutionsList.clear();
+                          // _userAboutMEProvider.solutionss.clear();
+                          // _userAboutMEProvider.editsolutionss.clear();
+                          // _userAboutMEProvider.challengess.clear();
+                          // _userAboutMEProvider.editchallengess.clear();
+                          // _userAboutMEProvider.combinedSolutionsResults.clear();
+                          // _userAboutMEProvider.combinedResults.clear();
+                          // previewProvider.email=null;
+                          // previewProvider.name=null;
+                          // previewProvider.employer=null;
+                          // previewProvider.division=null;
+                          // previewProvider.role=null;
+                          // previewProvider.location=null;
+                          // previewProvider.employeeNumber=null ;
+                          // previewProvider.linemanager=null;
+                          // previewProvider.title=null;
+                          // previewProvider.mycircumstance=null;
+                          // previewProvider.mystrength=null ;
+                          // previewProvider.myorganization=null ;
+                          // previewProvider.mychallenge=null ;
+                          // previewProvider.PreviewChallengesList.clear();
+                          // previewProvider.PreviewSolutionList.clear();
+                          // // _navigateToTab(0);
+                          // widget.refreshPage();
+                          // // Navigator.pop(context);
+                          // setState(() {
+                          //   widget.page.jumpToPage(1);
+                          // });
                         },
                         child:Container(
                           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
@@ -3636,7 +3785,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                           ),
                           child: Center(
                             child: Text(
-                              'Submited',
+                              'Complete and send',
                               style: GoogleFonts.montserrat(
                                 textStyle:
                                 Theme
@@ -3659,6 +3808,239 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
         });
   }
 
+  sendMailPopUp(dataList,dataList2){
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Theme(
+              data: Theme.of(context).copyWith(dialogBackgroundColor: Colors.white),
+              child: AlertDialog(
+                insetPadding: EdgeInsets.symmetric(horizontal: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.08, vertical: MediaQuery
+                    .of(context)
+                    .size
+                    .height * 0.04),
+                title: Text(
+                  'Send Mail to:',
+                  style: GoogleFonts.montserrat(
+                    textStyle:
+                    Theme
+                        .of(context)
+                        .textTheme
+                        .titleMedium,
+                    fontWeight: FontWeight.bold,
+                    //color: primaryColorOfApp
+                  ),
+                ),
+                content: SizedBox(
+                  width: double.maxFinite,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 5.0, horizontal: 5),
+                        child: TextField(
+                          controller: SendNametextController,
+
+                          style: GoogleFonts.montserrat(
+                              textStyle: Theme.of(context).textTheme.bodySmall,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black),
+                          decoration: InputDecoration(
+                            hintText: "Name",
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                                borderRadius: BorderRadius.circular(10)),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black12),
+                                borderRadius: BorderRadius.circular(10)),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 5.0, horizontal: 5),
+                        child: TextField(
+                          controller: SendEmailtextController,
+                          style: GoogleFonts.montserrat(
+                              textStyle: Theme.of(context).textTheme.bodySmall,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black),
+                          decoration: InputDecoration(
+                            hintText: "Email",
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                                borderRadius: BorderRadius.circular(10)),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black12),
+                                borderRadius: BorderRadius.circular(10)),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 5.0, horizontal: 5),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text("File: "),
+                            Text("$About_Me_Label"),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                actions: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      InkWell(
+                        onTap: (){
+                          SendEmailtextController.clear();
+                          SendNametextController.clear();
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          width: MediaQuery.of(context).size.width * .3,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            //color: Colors.white,
+                            border: Border.all(
+                              //color:primaryColorOfApp ,
+                                width: 1.0),
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Cancel',
+                              style: GoogleFonts.montserrat(
+                                textStyle:
+                                Theme
+                                    .of(context)
+                                    .textTheme
+                                    .titleSmall,
+                                fontWeight: FontWeight.bold,
+                                //color: primaryColorOfApp
+                              ),
+                            ),
+                          ),
+                        ),
+
+                      ),
+                      SizedBox(width: 5, height: 5,),
+                      InkWell(
+                        onTap: () async {
+                          Map<String, dynamic> AboutMEDatas = {
+                            // 'About_Me_Label': AboutMeLabeltextController.text,
+                            'AB_Status' : "Complete and Sent"
+                          };
+
+                          String solutionJson = json.encode(AboutMEDatas);
+                          print(solutionJson);
+
+                          ProgressDialog.show(context, "Sending", Icons.save);
+                          await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
+
+
+                          final Uint8List pdfBytes = await makePdf(dataList,dataList2);
+                          String base64EncodedData = base64.encode(pdfBytes);
+                          String filename = "${About_Me_Label}.pdf";
+                          print("sendMailPopUp chunks: ${base64EncodedData}");
+                          print("sendMailPopUp filename: ${ filename}");
+                          ApiRepository().sendEmailWithAttachment(
+                              context,
+                              SendEmailtextController.text,
+                              SendNametextController.text,
+                              base64EncodedData,
+                              filename
+                          );
+                          downloadAboutMePdf(dataList,dataList2);
+
+                          ProgressDialog.hide();
+                          selectedEmail = null;
+                          SendEmailtextController.clear();
+                          SendNametextController.clear();
+                          nameController.clear();
+                          searchEmailcontroller.clear();
+                          employerController.clear();
+                          divisionOrSectionController.clear();
+                          RoleController.clear();
+                          LocationController.clear();
+                          EmployeeNumberController.clear();
+                          LineManagerController.clear();
+                          mycircumstancesController.clear();
+                          MystrengthsController.clear();
+                          mycircumstancesController.clear();
+                          AboutMeLabeltextController.clear();
+                          RefineController.clear();
+                          solutionsList.clear();
+                          _userAboutMEProvider.solutionss.clear();
+                          _userAboutMEProvider.challengess.clear();
+                          _userAboutMEProvider.combinedSolutionsResults.clear();
+                          _userAboutMEProvider.combinedResults.clear();
+                          _previewProvider.email=null;
+                          _previewProvider.name=null;
+                          _previewProvider.employer=null;
+                          _previewProvider.division=null;
+                          _previewProvider.role=null;
+                          _previewProvider.location=null;
+                          _previewProvider.employeeNumber=null ;
+                          _previewProvider.linemanager=null;
+                          _previewProvider.title=null;
+                          _previewProvider.mycircumstance=null;
+                          _previewProvider.mystrength=null ;
+                          _previewProvider.myorganization=null ;
+                          _previewProvider.mychallenge=null ;
+                          _previewProvider.PreviewChallengesList.clear();
+                          _previewProvider.PreviewSolutionList.clear();
+                          _navigateToTab(0);
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          width: MediaQuery.of(context).size.width * .3,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            border: Border.all(
+                                color: Colors.blue ,
+                                width: 1.0),
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Send',
+                              style: GoogleFonts.montserrat(
+                                  textStyle:
+                                  Theme
+                                      .of(context)
+                                      .textTheme
+                                      .titleSmall,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white
+                              ),
+                            ),
+                          ),
+                        ),
+
+                      ),
+                    ],
+                  ),
+                ],
+              )
+          );
+        }
+    );
+  }
+
+
   Future<Uint8List> makePdf(List<Map<String, dynamic>> dataList, List<Map<String, dynamic>> dataList2) async {
     final pdf = pw.Document();
 
@@ -3675,15 +4057,47 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
               pw.Padding(
                   padding: const pw.EdgeInsets.symmetric(
                       vertical: 10.0, horizontal: 5),
-                  child: pw.Center (child: pw.Text("About Me",style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 26)))
+                  child: pw.Center (child: pw.Text("My Report",style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 26)))
               ),
+
+              // pw.Center (child:pw.Text("${AboutMeLabeltextController.text}",style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14))),
 
               pw.Divider(),
 
               pw.Padding(
+                padding: const pw.EdgeInsets.symmetric(
+                    vertical: 10.0, horizontal: 8),
+                child: pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.start,
+                  children: [
+                    pw.Text("Report Title: ",),
+
+                    pw.Text(
+                      "${AboutMeLabeltextController.text}",),
+
+                  ],
+                ),
+              ),
+
+              pw.Padding(
+                padding: const pw.EdgeInsets.symmetric(
+                    vertical: 10.0, horizontal: 8),
+                child: pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.start,
+                  children: [
+                    pw.Text("Description: ",),
+
+                    pw.Text(
+                      "${AboutMeDescriptiontextController.text}",),
+
+                  ],
+                ),
+              ),
+
+              pw.Padding(
                   padding: const pw.EdgeInsets.symmetric(
                       vertical: 10.0, horizontal: 5),
-                  child: pw.Text("1. Personal Info",style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 24))
+                  child: pw.Text("Personal Info",style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 24))
               ),
 
               pw.Padding(
@@ -3794,23 +4208,10 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
               pw.Padding(
                   padding: const pw.EdgeInsets.symmetric(
                       vertical: 10.0, horizontal: 5),
-                  child: pw.Text("2. Details",style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 24))
+                  child: pw.Text("Details",style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 24))
               ),
 
-              pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(
-                    vertical: 10.0, horizontal: 8),
-                child: pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.start,
-                  children: [
-                    pw.Text("Title: ",),
 
-                    pw.Text(
-                      "${AboutMeLabeltextController.text}",),
-
-                  ],
-                ),
-              ),
 
               pw.Padding(
                 padding: const pw.EdgeInsets.symmetric(
@@ -3844,7 +4245,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                 padding: const pw.EdgeInsets.symmetric(
                     vertical: 10.0, horizontal: 8),
                 child:
-                pw.Text("4: What I find challenging about [My Organisatio] and the workplace environment that makes it harder for me to perform my best: ",),),
+                pw.Text("4: What I find challenging about [My Organisation] and the workplace environment that makes it harder for me to perform my best: ",),),
 
               pw.Text(
                 "${myOrganisation2Controller.text}",),
@@ -3855,7 +4256,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                   horizontal: 5,
                 ),
                 child: pw.Text(
-                  "3. Challenges",
+                  "Challenges",
                   style: pw.TextStyle(
                     fontWeight: pw.FontWeight.bold,
                     fontSize: 20,
@@ -3915,7 +4316,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                   horizontal: 5,
                 ),
                 child: pw.Text(
-                  "4. Solutions",
+                  "Solutions",
                   style: pw.TextStyle(
                     fontWeight: pw.FontWeight.bold,
                     fontSize: 20,
@@ -3973,6 +4374,37 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                   // Add Table Rows from dataList
                 ],
               ),
+
+              pw.Padding(
+                padding: const pw.EdgeInsets.symmetric(
+                    vertical: 10.0, horizontal: 8),
+                child: pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.start,
+                  children: [
+
+                    pw.Text("Useful Info: ",),
+                    pw.Text("${AboutMeUseFulInfotextController.text}",),
+
+                  ],
+                ),
+              ),
+
+              pw.Padding(
+                padding: const pw.EdgeInsets.symmetric(
+                    vertical: 10.0, horizontal: 8),
+                child: pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.start,
+                  children: [
+
+                    pw.Text("Attachment: ",),
+                    pw.Text("Attachment",),
+
+                  ],
+                ),
+              ),
+
+
+
             ];
           },));
     return pdf.save();
