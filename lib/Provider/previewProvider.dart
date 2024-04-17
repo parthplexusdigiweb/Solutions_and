@@ -5,6 +5,11 @@ class PreviewProvider with ChangeNotifier{
 
   List<Map<String, dynamic>> PreviewChallengesList = [];
   List<Map<String, dynamic>> PreviewSolutionList = [];
+  List<Map<String, dynamic>> PreviewSolutionMyResposibilty = [];
+  List<Map<String, dynamic>> PreviewSolutionStillNeeded = [];
+  List<Map<String, dynamic>> PreviewSolutionNotNeededAnyMore = [];
+  List<Map<String, dynamic>> PreviewSolutionNiceToHave = [];
+  List<Map<String, dynamic>> PreviewSolutionMustHave = [];
 
 
   updateEmail(value){

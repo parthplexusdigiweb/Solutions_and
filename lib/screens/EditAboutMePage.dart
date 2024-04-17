@@ -57,6 +57,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
   TextEditingController mycircumstancesController = TextEditingController();
   TextEditingController AboutMeLabeltextController = TextEditingController();
   TextEditingController AboutMeDescriptiontextController = TextEditingController();
+  TextEditingController AboutMeDatetextController = TextEditingController();
   TextEditingController AboutMeUseFulInfotextController = TextEditingController();
   TextEditingController SendNametextController = TextEditingController();
   TextEditingController SendEmailtextController = TextEditingController();
@@ -170,7 +171,9 @@ Date
       _userAboutMEProvider.EditChallengeListadd(_previewProvider.PreviewChallengesList);
       _userAboutMEProvider.EditSolutionList(widget.aboutMeData["Solutions"]);
       _userAboutMEProvider.EditSolutionListadd(solutionsList);
-      _userAboutMEProvider.EditSolutionListadd(_previewProvider.PreviewSolutionList);
+      _userAboutMEProvider.EditSolutionProvideradd(_previewProvider.PreviewSolutionMyResposibilty);
+      _userAboutMEProvider.EditSolutionInPlaceadd(_previewProvider.PreviewSolutionStillNeeded,_previewProvider.PreviewSolutionNotNeededAnyMore,
+          _previewProvider.PreviewSolutionNiceToHave,_previewProvider.PreviewSolutionMustHave);
       About_Me_Label = widget.aboutMeData["About_Me_Label"];
     });
   }
@@ -293,6 +296,11 @@ Date
                             _previewProvider.mychallenge=null ;
                             _previewProvider.PreviewChallengesList.clear();
                             _previewProvider.PreviewSolutionList.clear();
+                            _previewProvider.PreviewSolutionMyResposibilty.clear();
+                            _previewProvider.PreviewSolutionStillNeeded.clear();
+                            _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
+                            _previewProvider.PreviewSolutionNiceToHave.clear();
+                            _previewProvider.PreviewSolutionMustHave.clear();
                             widget.refreshPage();
                               Navigator.pop(context);
                           },
@@ -2415,7 +2423,7 @@ Date
                                     // width: MediaQuery.of(context).size.width,
                                     child:SingleChildScrollView(
                                       child: DataTable(
-                                        dataRowMaxHeight:60 ,
+                                        dataRowMaxHeight:85 ,
                                         headingTextStyle: GoogleFonts.montserrat(
                                             textStyle: Theme.of(context).textTheme.titleMedium,
                                             fontWeight: FontWeight.w500,
@@ -2501,19 +2509,26 @@ Date
                                                   // margin: EdgeInsets.all(5),
                                                   // width: 140,
                                                   child: (solution.isConfirmed==true) ?
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                  Column(
                                                     children: [
-                                                      IconButton(
-                                                        onPressed: () {
-                                                          NewSolViewDialog(solution.label, solution.description, solution.Impact, solution.Final_description, solution.Keywords, solution.tags, solution.id,solution,userAboutMEProvider.isEditSolutionListAdded,userAboutMEProvider.EditRecommendedSolutionAdd);
-                                                        },
-                                                        icon: Icon(Icons.visibility, color: Colors.blue),
+                                                      Row(
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          IconButton(
+                                                            onPressed: () {
+                                                              NewSolViewDialog(solution.label, solution.description, solution.Impact, solution.Final_description, solution.Keywords, solution.tags, solution.id,solution,userAboutMEProvider.isEditSolutionListAdded,userAboutMEProvider.EditRecommendedSolutionAdd);
+                                                            },
+                                                            icon: Icon(Icons.visibility, color: Colors.blue),
+                                                          ),
+                                                          SizedBox(width: 10,),
+                                                          Text('Confirmed',
+                                                            style: TextStyle(color: Colors.green),
+                                                          ),
+                                                        ],
                                                       ),
-                                                      SizedBox(width: 10,),
-                                                      Text('Confirmed',
-                                                        style: TextStyle(color: Colors.green),
+                                                      Text('${(userAboutMEProvider.newprovider[solution.id] == "Request of my employer") ? userAboutMEProvider.newInplace[solution.id] : userAboutMEProvider.newprovider[solution.id]}',
+                                                        style: TextStyle(color: Colors.red,fontSize: 10),
                                                       ),
                                                     ],
                                                   )
@@ -3841,7 +3856,7 @@ Date
           String message = """
 Dear ${employerController.text},
 
-Thank you for recognising that our organisation performs better, and we achieve more together, when each of us feels safe and open to share what we need to be our best in the roles we are asked and agree to perform. This communication sets out what I think it would be helpful for you to know about me and includes what I believe helps me thrive, so that I can perform to my best, both for me and for LMN.
+Thank you for recognising that our organisation performs better, and we achieve more together, when each of us feels safe and open to share what we need to be our best in the roles we are asked and agree to perform. This communication sets out what I think it would be helpful for you to know about me and includes what I believe helps me thrive, so that I can perform to my best, both for me and for ${employerController.text}.
 
 In relation to performing to my very best, both to help me and ${employerController.text} to achieve the best we can, on the next two pages I have set out:
 • information that I think it is helpful for me to share with my Team Leader and team colleagues, and
@@ -3857,6 +3872,7 @@ Date
 """;
 
           AboutMeDescriptiontextController.text = message;
+          AboutMeDatetextController.text = formattedDate;
 
           AboutMeLabeltextController.text = "${nameController.text} - draft communication to ${employerController.text}";
 
@@ -3871,89 +3887,92 @@ Date
                 children: [
                   SizedBox(height: 5,),
                   // SizedBox(height: 20,),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 15.0, horizontal: 5),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      // crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    // crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
 
-                        Text("Report :   ", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,fontStyle: FontStyle.italic)),
+                      Text("Report :   ", style: GoogleFonts.lato(
+                          textStyle: Theme.of(context).textTheme.titleMedium,
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.bold
+                      )),
 
-                        Flexible(
-                          child: Container(
-                            height: 40,
-                            width: MediaQuery.of(context).size.width * .25,
-                            child: TextField(
-                              controller: AboutMeLabeltextController,
-                              onChanged: (value) {
-                                _previewProvider.updatetitle(value);
-                              },
-                              style: GoogleFonts.montserrat(
-                                  textStyle: Theme.of(context).textTheme.bodySmall,
-                                  fontStyle: FontStyle.italic,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black),
-                              decoration: InputDecoration(
-                                hintText: "About Me Title",
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.black),
-                                    borderRadius: BorderRadius.circular(10)),
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.black12),
-                                    borderRadius: BorderRadius.circular(10)),
-                              ),
+                      Flexible(
+                        child: Container(
+                          height: 40,
+                          width: MediaQuery.of(context).size.width * .25,
+                          child: TextField(
+                            controller: AboutMeLabeltextController,
+                            onChanged: (value) {
+                              _previewProvider.updatetitle(value);
+                            },
+                            style: GoogleFonts.lato(
+                                textStyle: Theme.of(context).textTheme.bodySmall,
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black),
+                            decoration: InputDecoration(
+                              hintText: " - draft communication to " ,
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(10)),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black12),
+                                  borderRadius: BorderRadius.circular(10)),
                             ),
                           ),
                         ),
+                      ),
 
-                        // SizedBox(width: 10,),
-                        //
-                        // InkWell(
-                        //   onTap: () async {
-                        //     // sideMenu.changePage(2);
-                        //     // page.jumpToPage(1);
-                        //   },
-                        //   child: Container(
-                        //     // margin: EdgeInsets.all(10),
-                        //     padding: EdgeInsets.all(5),
-                        //     height: 40,
-                        //     width: MediaQuery.of(context).size.width * 0.15,
-                        //     decoration: BoxDecoration(
-                        //       // color: Colors.white,
-                        //       border: Border.all(color:primaryColorOfApp, width: 1.0),
-                        //       borderRadius: BorderRadius.circular(10.0),
-                        //     ),
-                        //     child: Row(
-                        //       mainAxisAlignment: MainAxisAlignment.center,
-                        //       crossAxisAlignment: CrossAxisAlignment.center,
-                        //       children: [
-                        //         Icon(Icons.insert_drive_file,color: Colors.black,size: 20,),
-                        //         SizedBox(width: 5,),
-                        //         Expanded(
-                        //           child: Text(
-                        //             // 'Thrivers',
-                        //             'For Someone Else',
-                        //             overflow: TextOverflow.ellipsis,
-                        //             style: GoogleFonts.montserrat(
-                        //                 textStyle:
-                        //                 Theme.of(context).textTheme.bodySmall,
-                        //                 color: Colors.black),
-                        //           ),
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ),
-                        //
-                        // ),
+                      // SizedBox(width: 10,),
+                      //
+                      // InkWell(
+                      //   onTap: () async {
+                      //     // sideMenu.changePage(2);
+                      //     // page.jumpToPage(1);
+                      //   },
+                      //   child: Container(
+                      //     // margin: EdgeInsets.all(10),
+                      //     padding: EdgeInsets.all(5),
+                      //     height: 40,
+                      //     width: MediaQuery.of(context).size.width * 0.15,
+                      //     decoration: BoxDecoration(
+                      //       // color: Colors.white,
+                      //       border: Border.all(color:primaryColorOfApp, width: 1.0),
+                      //       borderRadius: BorderRadius.circular(10.0),
+                      //     ),
+                      //     child: Row(
+                      //       mainAxisAlignment: MainAxisAlignment.center,
+                      //       crossAxisAlignment: CrossAxisAlignment.center,
+                      //       children: [
+                      //         Icon(Icons.insert_drive_file,color: Colors.black,size: 20,),
+                      //         SizedBox(width: 5,),
+                      //         Expanded(
+                      //           child: Text(
+                      //             // 'Thrivers',
+                      //             'For Someone Else',
+                      //             overflow: TextOverflow.ellipsis,
+                      //             style: GoogleFonts.montserrat(
+                      //                 textStyle:
+                      //                 Theme.of(context).textTheme.bodySmall,
+                      //                 color: Colors.black),
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      //
+                      // ),
 
-                      ],
-                    ),
+                    ],
                   ),
 
                   // Divider(color: Colors.black26,),
+
+
+                  SizedBox(height: 5,),
 
                   Container(
                     child: Column(
@@ -3963,19 +3982,36 @@ Date
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Expanded(
-                              flex: 1,
-                              child: Text("Date: ",
-                                  style: GoogleFonts.montserrat(textStyle: Theme
+                            Container(
+                              width: MediaQuery.of(context).size.width * .1,
+                              child: Text("Date:   ",
+                                  style: GoogleFonts.lato(textStyle: Theme
                                       .of(context)
                                       .textTheme
                                       .titleMedium,fontWeight: FontWeight.w700)),
                             ),
-                            Expanded(
-                              flex: 5,
-                              child: Text("${formattedDate}",
-                                  style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.bodyLarge,
-                                  )),
+                            Flexible(
+                              flex: 1,
+                              child: Container(
+                                height: 40,
+                                width: MediaQuery.of(context).size.width * .19,
+                                child: TextField(
+                                  controller: AboutMeDatetextController,
+                                  style: GoogleFonts.lato(
+                                      textStyle: Theme.of(context).textTheme.bodyLarge,
+                                      color: Colors.black),
+                                  decoration: InputDecoration(
+                                    hintText: "${formattedDate}" ,
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(10)),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black12),
+                                        borderRadius: BorderRadius.circular(10)),
+                                  ),
+                                ),
+                              ),
+
                             ),
                           ],
                         ),
@@ -3983,10 +4019,10 @@ Date
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Expanded(
-                              flex: 1,
+                            Container(
+                              width: MediaQuery.of(context).size.width * .1,
                               child: Text("Name: ",
-                                  style: GoogleFonts.montserrat(textStyle: Theme
+                                  style: GoogleFonts.lato(textStyle: Theme
                                       .of(context)
                                       .textTheme
                                       .titleMedium,fontWeight: FontWeight.w700)),
@@ -3994,7 +4030,7 @@ Date
                             Expanded(
                               flex: 5,
                               child: Text("${previewProvider.name==null ? "" : previewProvider.name}",
-                                  style: GoogleFonts.montserrat(textStyle: Theme
+                                  style: GoogleFonts.lato(textStyle: Theme
                                       .of(context)
                                       .textTheme
                                       .bodyLarge,)),
@@ -4006,10 +4042,10 @@ Date
                           mainAxisAlignment: MainAxisAlignment.start,
 
                           children: [
-                            Expanded(
-                              flex: 1,
+                            Container(
+                              width: MediaQuery.of(context).size.width * .1,
                               child: Text("Role: ",
-                                  style: GoogleFonts.montserrat(textStyle: Theme
+                                  style: GoogleFonts.lato(textStyle: Theme
                                       .of(context)
                                       .textTheme
                                       .titleMedium,fontWeight: FontWeight.w700)),
@@ -4017,7 +4053,7 @@ Date
                             Expanded(
                               flex: 5,
                               child: Text("${previewProvider.role==null ? "" : previewProvider.role}",
-                                  style: GoogleFonts.montserrat(textStyle: Theme
+                                  style: GoogleFonts.lato(textStyle: Theme
                                       .of(context)
                                       .textTheme
                                       .bodyLarge,)),
@@ -4028,10 +4064,10 @@ Date
                           mainAxisAlignment: MainAxisAlignment.start,
 
                           children: [
-                            Expanded(
-                              flex: 1,
+                            Container(
+                              width: MediaQuery.of(context).size.width * .1,
                               child: Text("Location: ",
-                                  style: GoogleFonts.montserrat(textStyle: Theme
+                                  style: GoogleFonts.lato(textStyle: Theme
                                       .of(context)
                                       .textTheme
                                       .titleMedium,fontWeight: FontWeight.w700)),
@@ -4039,7 +4075,7 @@ Date
                             Expanded(
                               flex: 5,
                               child: Text("${previewProvider.location==null ? "" : previewProvider.location}",
-                                  style: GoogleFonts.montserrat(textStyle: Theme
+                                  style: GoogleFonts.lato(textStyle: Theme
                                       .of(context)
                                       .textTheme
                                       .bodyLarge,)),
@@ -4049,10 +4085,10 @@ Date
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Expanded(
-                              flex: 1,
+                            Container(
+                              width: MediaQuery.of(context).size.width * .1,
                               child: Text("Employee number: ",
-                                  style: GoogleFonts.montserrat(textStyle: Theme
+                                  style: GoogleFonts.lato(textStyle: Theme
                                       .of(context)
                                       .textTheme
                                       .titleMedium,fontWeight: FontWeight.w700)),
@@ -4060,7 +4096,7 @@ Date
                             Expanded(
                               flex: 5,
                               child: Text("${previewProvider.employeeNumber==null ? "" : previewProvider.employeeNumber}",
-                                  style: GoogleFonts.montserrat(textStyle: Theme
+                                  style: GoogleFonts.lato(textStyle: Theme
                                       .of(context)
                                       .textTheme
                                       .bodyLarge,)),
@@ -4070,10 +4106,10 @@ Date
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Expanded(
-                              flex: 1,
+                            Container(
+                              width: MediaQuery.of(context).size.width * .1,
                               child: Text("Team Leader:",
-                                  style: GoogleFonts.montserrat(textStyle: Theme
+                                  style: GoogleFonts.lato(textStyle: Theme
                                       .of(context)
                                       .textTheme
                                       .titleMedium,fontWeight: FontWeight.w700)),
@@ -4081,7 +4117,7 @@ Date
                             Expanded(
                               flex: 5,
                               child: Text("${previewProvider.linemanager==null ? "" : previewProvider.linemanager}",
-                                  style: GoogleFonts.montserrat(textStyle: Theme
+                                  style: GoogleFonts.lato(textStyle: Theme
                                       .of(context)
                                       .textTheme
                                       .bodyLarge,)),
@@ -4098,8 +4134,8 @@ Date
                   Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: Text("Performing to my best in my role ${employerController.text}: ",
-                        style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                            fontSize: 20,
+                        style: GoogleFonts.lato(fontWeight: FontWeight.bold,
+                            // fontSize: 20,
                             color: Colors.blue)),
                   ),
 
@@ -4111,8 +4147,8 @@ Date
                         // _previewProvider.updatetitle(value);
                       },
                       maxLines: 18,
-                      style: GoogleFonts.montserrat(
-                          textStyle: Theme.of(context).textTheme.bodySmall,
+                      style: GoogleFonts.lato(
+                          textStyle: Theme.of(context).textTheme.bodyMedium,
                           fontWeight: FontWeight.w400,
                           color: Colors.black),
                       decoration: InputDecoration(
@@ -4131,7 +4167,7 @@ Date
 
                   Container(
                     width: MediaQuery.of(context).size.width,
-                    padding: EdgeInsets.all(8),
+                    // padding: EdgeInsets.all(8),
                     margin: EdgeInsets.all(5),
                     decoration: BoxDecoration(
                       border: Border.all(color:Colors.black,),
@@ -4145,15 +4181,15 @@ Date
                           padding: const EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 5),
                           child: Text("To perform to my best in my role, I’d like to share this information about me:",
-                              style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                                  fontSize: 20,
+                              style: GoogleFonts.lato(fontWeight: FontWeight.bold,
+                                  // fontSize: 20,
                                   color: Colors.blue)),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 5),
                           child: Text("Me and My circumstances: ",
-                              style: GoogleFonts.montserrat(textStyle: Theme
+                              style: GoogleFonts.lato(textStyle: Theme
                                   .of(context)
                                   .textTheme
                                   .titleMedium,
@@ -4165,7 +4201,7 @@ Date
                           padding: const EdgeInsets.symmetric(
                               horizontal: 5),
                           child: Text("${previewProvider.mycircumstance==null ? "" : previewProvider.mycircumstance}",
-                              style: GoogleFonts.montserrat(textStyle: Theme
+                              style: GoogleFonts.lato(textStyle: Theme
                                   .of(context)
                                   .textTheme
                                   .bodyMedium,fontWeight: FontWeight.w600
@@ -4175,7 +4211,7 @@ Date
                           padding: const EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 5),
                           child: Text("My strengths that I want to have the opportunity to use in my role: ",
-                              style: GoogleFonts.montserrat(textStyle: Theme
+                              style: GoogleFonts.lato(textStyle: Theme
                                   .of(context)
                                   .textTheme
                                   .titleMedium,
@@ -4187,7 +4223,7 @@ Date
                           padding: const EdgeInsets.symmetric(
                               horizontal: 5),
                           child: Text("${previewProvider.mystrength==null ? "" : previewProvider.mystrength}",
-                              style: GoogleFonts.montserrat(textStyle: Theme
+                              style: GoogleFonts.lato(textStyle: Theme
                                   .of(context)
                                   .textTheme
                                   .bodyMedium,fontWeight: FontWeight.w600
@@ -4202,17 +4238,18 @@ Date
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10.0, horizontal: 5),
+                                padding: const EdgeInsets.symmetric( vertical: 10.0,horizontal: 5),
                                 child: Text("Things I find challenging in life that make it harder for me to perform my best:",
-                                  style: GoogleFonts.montserrat(textStyle: Theme
+                                  style: GoogleFonts.lato(textStyle: Theme
                                       .of(context)
                                       .textTheme
-                                      .titleMedium,fontWeight: FontWeight.bold,
+                                      .titleMedium,
                                       decoration: TextDecoration.underline
                                   ),
                                 ),
                               ),
+                              SizedBox(height: 5,),
+
                               Consumer<PreviewProvider>(
                                 builder: (context, previewProvider, _) {
                                   return Column(
@@ -4224,18 +4261,19 @@ Date
                                           text: TextSpan(
                                             children: [
                                               TextSpan(
-                                                text: '● ',
+                                                  text: ' •  ',
+                                                  style:TextStyle(fontSize: 20)
                                               ),
                                               TextSpan(
                                                   text: '${solution['Label']}',
-                                                  style: GoogleFonts.montserrat(textStyle: Theme
+                                                  style: GoogleFonts.lato(textStyle: Theme
                                                       .of(context)
                                                       .textTheme
                                                       .titleMedium,fontWeight: FontWeight.bold,)
                                               ),
                                               TextSpan(
                                                   text: ' - ${solution['Final_description']}\n',
-                                                  style: GoogleFonts.montserrat(textStyle: Theme
+                                                  style: GoogleFonts.lato(textStyle: Theme
                                                       .of(context)
                                                       .textTheme
                                                       .bodyMedium,fontWeight: FontWeight.w600
@@ -4243,7 +4281,7 @@ Date
                                               ),
                                               TextSpan(
                                                   text: '  ${solution['Impact']}',
-                                                  style: GoogleFonts.montserrat(textStyle: Theme
+                                                  style: GoogleFonts.lato(textStyle: Theme
                                                       .of(context)
                                                       .textTheme
                                                       .titleMedium,color: Colors.grey,)
@@ -4260,24 +4298,25 @@ Date
                           ),
                         ),
 
-                        SizedBox(height: 5,),
 
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 5),
                           child: Text("What I value about ${employerController.text} and workplace environment that helps me perform to my best: ",
-                              style: GoogleFonts.montserrat(textStyle: Theme
+                              style: GoogleFonts.lato(textStyle: Theme
                                   .of(context)
                                   .textTheme
                                   .titleMedium,
                                   decoration: TextDecoration.underline
                               )),
                         ),
+                        SizedBox(height: 5,),
+
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 5),
                           child: Text("${previewProvider.myorganization==null ? "" : previewProvider.myorganization}",
-                              style: GoogleFonts.montserrat(textStyle: Theme
+                              style: GoogleFonts.lato(textStyle: Theme
                                   .of(context)
                                   .textTheme
                                   .bodyMedium,fontWeight: FontWeight.w600
@@ -4288,18 +4327,20 @@ Date
                           padding: const EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 5),
                           child: Text("What I find challenging about ${employerController.text} and the workplace environment that makes it harder for me to perform my best: ",
-                              style: GoogleFonts.montserrat(textStyle: Theme
+                              style: GoogleFonts.lato(textStyle: Theme
                                   .of(context)
                                   .textTheme
                                   .titleMedium,
                                   decoration: TextDecoration.underline
                               )),
                         ),
+                        SizedBox(height: 5,),
+
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 5),
                           child: Text("${previewProvider.mychallenge==null ? "" : previewProvider.mychallenge}",
-                              style: GoogleFonts.montserrat(textStyle: Theme
+                              style: GoogleFonts.lato(textStyle: Theme
                                   .of(context)
                                   .textTheme
                                   .bodyMedium,fontWeight: FontWeight.w600
@@ -4310,7 +4351,6 @@ Date
                     ),
                   ),
 
-
                   Container(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -4320,54 +4360,362 @@ Date
                           padding: const EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 5),
                           child: Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${employerController.text}:",
-                              style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                                  fontSize: 20,
+                              style: GoogleFonts.lato(fontWeight: FontWeight.bold,
+                                  // fontSize: 20,
                                   color: Colors.blue)),
                         ),
-                        Consumer<PreviewProvider>(
-                          builder: (context, previewProvider, _) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: previewProvider.PreviewSolutionList.map((solution) {
-                                return Padding(
-                                  padding: EdgeInsets.only(bottom: 20.0),
-                                  child: RichText(
-                                    text: TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text: '● ',
-                                        ),
-                                        TextSpan(
-                                            text: '${solution['Label']}',
-                                            style: GoogleFonts.montserrat(textStyle: Theme
-                                                .of(context)
-                                                .textTheme
-                                                .titleMedium,fontWeight: FontWeight.bold,)
-                                        ),
-                                        TextSpan(
-                                            text: ' - ${solution['Final_description']}\n',
-                                            style: GoogleFonts.montserrat(textStyle: Theme
-                                                .of(context)
-                                                .textTheme
-                                                .bodyMedium,fontWeight: FontWeight.w600
-                                            )
-                                        ),
-                                        TextSpan(
-                                            text: '  ${solution['Impact']}',
-                                            style: GoogleFonts.montserrat(textStyle: Theme
-                                                .of(context)
-                                                .textTheme
-                                                .titleMedium,color: Colors.grey,)
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            );
-                          },
-                        ),
 
+                        _previewProvider.PreviewSolutionMyResposibilty.isNotEmpty ?
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10.0, horizontal: 5),
+                                child: Text("Personal Responsibility",
+                                  style: GoogleFonts.lato(
+                                      fontWeight: FontWeight.bold,
+                                      // fontSize: 20,
+                                      color: Colors.black,
+                                      decoration: TextDecoration.underline
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10.0, horizontal: 5),
+                                child: Text("Things I already or will do to help myself: ",
+                                    style: GoogleFonts.lato(
+                                        textStyle: Theme
+                                            .of(context)
+                                            .textTheme
+                                            .titleMedium
+                                    )),
+                              ),
+                              Consumer<PreviewProvider>(
+                                builder: (context, previewProvider, _) {
+                                  return Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: previewProvider.PreviewSolutionMyResposibilty.map((solution) {
+                                      return Padding(
+                                        padding: EdgeInsets.only(bottom: 20.0),
+                                        child: RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                  text: ' •  ',
+                                                  style: TextStyle(fontSize: 20)
+                                              ),
+                                              TextSpan(
+                                                  text: '${solution['Label']}',
+                                                  style: GoogleFonts.lato(textStyle: Theme
+                                                      .of(context)
+                                                      .textTheme
+                                                      .titleMedium,fontWeight: FontWeight.bold,)
+                                              ),
+                                              TextSpan(
+                                                  text: ' - ${solution['Final_description']}\n',
+                                                  style: GoogleFonts.lato(textStyle: Theme
+                                                      .of(context)
+                                                      .textTheme
+                                                      .bodyMedium,fontWeight: FontWeight.w400
+                                                  )
+                                              ),
+                                              TextSpan(
+                                                  text: '  ${solution['Impact']}',
+                                                  style: GoogleFonts.lato(textStyle: Theme
+                                                      .of(context)
+                                                      .textTheme
+                                                      .titleMedium,color: Colors.grey,)
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ) : Container(),
+
+                        (_previewProvider.PreviewSolutionNotNeededAnyMore.isNotEmpty ||
+                            _previewProvider.PreviewSolutionMustHave.isNotEmpty ||
+                            _previewProvider.PreviewSolutionNiceToHave.isNotEmpty ||
+                            _previewProvider.PreviewSolutionStillNeeded.isNotEmpty ) ?
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 5),
+                          child: Text("Requests of ${employerController.text}",
+                              style: GoogleFonts.lato(
+                                  fontWeight: FontWeight.bold,
+                                  decoration: TextDecoration.underline,
+                                  // fontSize: 20,
+                                  color: Colors.black)),
+                        ) : Container(),
+
+                        _previewProvider.PreviewSolutionStillNeeded.isNotEmpty ?
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10.0, horizontal: 5),
+                                child: Text("${employerController.text} already provides the following assistance to me, which I’d like to continue to receive: ",
+                                    style: GoogleFonts.lato(
+                                        textStyle: Theme
+                                            .of(context)
+                                            .textTheme
+                                            .titleMedium
+                                    )),
+                              ),
+                              Consumer<PreviewProvider> (
+                                builder: (context, previewProvider, _) {
+                                  return Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: previewProvider.PreviewSolutionStillNeeded.map((solution) {
+                                      return Padding(
+                                        padding: EdgeInsets.only(bottom: 20.0),
+                                        child: RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                  text: ' •  ',
+                                                  style: TextStyle(fontSize: 20)
+                                              ),
+                                              TextSpan(
+                                                  text: '${solution['Label']}',
+                                                  style: GoogleFonts.lato(textStyle: Theme
+                                                      .of(context)
+                                                      .textTheme
+                                                      .titleMedium,fontWeight: FontWeight.bold,)
+                                              ),
+                                              TextSpan(
+                                                  text: ' - ${solution['Final_description']}\n',
+                                                  style: GoogleFonts.lato(textStyle: Theme
+                                                      .of(context)
+                                                      .textTheme
+                                                      .bodyMedium,fontWeight: FontWeight.w400
+                                                  )
+                                              ),
+                                              TextSpan(
+                                                  text: '  ${solution['Impact']}',
+                                                  style: GoogleFonts.lato(textStyle: Theme
+                                                      .of(context)
+                                                      .textTheme
+                                                      .titleMedium,color: Colors.grey,)
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ) : Container(),
+
+                        _previewProvider.PreviewSolutionMustHave.isNotEmpty ?
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10.0, horizontal: 5),
+                                child: Text("I’m asking ${employerController.text} to start providing for me:",
+                                    style: GoogleFonts.lato(
+                                        textStyle: Theme
+                                            .of(context)
+                                            .textTheme
+                                            .titleMedium
+                                    )),
+                              ),
+                              Consumer<PreviewProvider>(
+                                builder: (context, previewProvider, _) {
+                                  return Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: previewProvider.PreviewSolutionMustHave.map((solution) {
+                                      return Padding(
+                                        padding: EdgeInsets.only(bottom: 20.0),
+                                        child: RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                  text: ' •  ',
+                                                  style: TextStyle(fontSize: 20)
+                                              ),
+                                              TextSpan(
+                                                  text: '${solution['Label']}',
+                                                  style: GoogleFonts.lato(textStyle: Theme
+                                                      .of(context)
+                                                      .textTheme
+                                                      .titleMedium,fontWeight: FontWeight.bold,)
+                                              ),
+                                              TextSpan(
+                                                  text: ' - ${solution['Final_description']}\n',
+                                                  style: GoogleFonts.lato(textStyle: Theme
+                                                      .of(context)
+                                                      .textTheme
+                                                      .bodyMedium,fontWeight: FontWeight.w400
+                                                  )
+                                              ),
+                                              TextSpan(
+                                                  text: '  ${solution['Impact']}',
+                                                  style: GoogleFonts.lato(textStyle: Theme
+                                                      .of(context)
+                                                      .textTheme
+                                                      .titleMedium,color: Colors.grey,)
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ) : Container(),
+
+                        _previewProvider.PreviewSolutionNiceToHave.isNotEmpty ?
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10.0, horizontal: 5),
+                                child: Text("I’m asking  ${employerController.text} to start providing for me but they are not essential: ",
+                                    style: GoogleFonts.lato(
+                                        textStyle: Theme
+                                            .of(context)
+                                            .textTheme
+                                            .titleMedium
+                                    )),
+                              ),
+                              Consumer<PreviewProvider>(
+                                builder: (context, previewProvider, _) {
+                                  return Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: previewProvider.PreviewSolutionNiceToHave.map((solution) {
+                                      return Padding(
+                                        padding: EdgeInsets.only(bottom: 20.0),
+                                        child: RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                  text: ' •  ',
+                                                  style: TextStyle(fontSize: 20)
+                                              ),
+                                              TextSpan(
+                                                  text: '${solution['Label']}',
+                                                  style: GoogleFonts.lato(textStyle: Theme
+                                                      .of(context)
+                                                      .textTheme
+                                                      .titleMedium,fontWeight: FontWeight.bold,)
+                                              ),
+                                              TextSpan(
+                                                  text: ' - ${solution['Final_description']}\n',
+                                                  style: GoogleFonts.lato(textStyle: Theme
+                                                      .of(context)
+                                                      .textTheme
+                                                      .bodyMedium,fontWeight: FontWeight.w400
+                                                  )
+                                              ),
+                                              TextSpan(
+                                                  text: '  ${solution['Impact']}',
+                                                  style: GoogleFonts.lato(textStyle: Theme
+                                                      .of(context)
+                                                      .textTheme
+                                                      .titleMedium,color: Colors.grey,)
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ) : Container(),
+
+                        _previewProvider.PreviewSolutionNotNeededAnyMore .isNotEmpty ?
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10.0, horizontal: 5),
+                                child: Text("${employerController.text} already provides for me but are not needed anymore: ",
+                                    style: GoogleFonts.lato(
+                                        textStyle: Theme
+                                            .of(context)
+                                            .textTheme
+                                            .titleMedium
+                                    )),
+                              ),
+                              Consumer<PreviewProvider>(
+                                builder: (context, previewProvider, _) {
+                                  return Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: previewProvider.PreviewSolutionNotNeededAnyMore.map((solution) {
+                                      return Padding(
+                                        padding: EdgeInsets.only(bottom: 20.0),
+                                        child: RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                  text: ' •  ',
+                                                  style: TextStyle(fontSize: 20)
+                                              ),
+                                              TextSpan(
+                                                  text: '${solution['Label']}',
+                                                  style: GoogleFonts.lato(textStyle: Theme
+                                                      .of(context)
+                                                      .textTheme
+                                                      .titleMedium,fontWeight: FontWeight.bold,)
+                                              ),
+                                              TextSpan(
+                                                  text: ' - ${solution['Final_description']}\n',
+                                                  style: GoogleFonts.lato(textStyle: Theme
+                                                      .of(context)
+                                                      .textTheme
+                                                      .bodyMedium,fontWeight: FontWeight.w400
+                                                  )
+                                              ),
+                                              TextSpan(
+                                                  text: '  ${solution['Impact']}',
+                                                  style: GoogleFonts.lato(textStyle: Theme
+                                                      .of(context)
+                                                      .textTheme
+                                                      .titleMedium,color: Colors.grey,)
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ) : Container(),
                       ],
                     ),
                   ),
@@ -4380,7 +4728,7 @@ Date
                       onChanged: (value) {
                         _previewProvider.updatetitle(value);
                       },
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.lato(
                           textStyle: Theme.of(context).textTheme.bodySmall,
                           fontWeight: FontWeight.w400,
                           color: Colors.black),
@@ -4400,7 +4748,7 @@ Date
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                        child: Text("Attachments :", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
+                        child: Text("Attachments :", style: GoogleFonts.lato(textStyle: Theme.of(context).textTheme.titleSmall,)),
                       ),
                       SizedBox(width: 10,),
 
@@ -4436,7 +4784,7 @@ Date
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text("${_userAboutMEProvider.aadhar==null ? "" : _userAboutMEProvider.aadhar}", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
+                    child: Text("${_userAboutMEProvider.aadhar==null ? "" : _userAboutMEProvider.aadhar}", style: GoogleFonts.lato(textStyle: Theme.of(context).textTheme.titleSmall,)),
                     // child: Text("document.pdf", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
                   ),
                   SizedBox(height: 10,),
@@ -8870,7 +9218,19 @@ Date
                                 // print("solutionData['confirmed']: $isConfirmed");
 
                                 solutionsList.add(solutionData);
-                                _previewProvider.PreviewSolutionList.add(solutionData);
+                                // _previewProvider.PreviewSolutionList.add(solutionData);
+
+                                if(_userAboutMEProvider.selectedProvider == "My Responsibilty"){
+                                  _previewProvider.PreviewSolutionMyResposibilty.add(solutionData);
+                                }
+                                if(_userAboutMEProvider.selectedInPlace == "Yes (Still Needed)"){
+                                  _previewProvider.PreviewSolutionStillNeeded.add(solutionData);}
+                                if(_userAboutMEProvider.selectedInPlace == "Yes (Not Needed Anymore)"){
+                                  _previewProvider.PreviewSolutionNotNeededAnyMore.add(solutionData);}
+                                if(_userAboutMEProvider.selectedInPlace == "No (Nice to have)"){
+                                  _previewProvider.PreviewSolutionNiceToHave.add(solutionData);}
+                                if(_userAboutMEProvider.selectedInPlace == "No (Must Have)"){
+                                  _previewProvider.PreviewSolutionMustHave.add(solutionData);}
 
                                 ProgressDialog.hide();
 

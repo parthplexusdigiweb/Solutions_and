@@ -40,6 +40,9 @@ class UserAboutMEProvider with ChangeNotifier{
   var selectedInPlace;
   var selectedPriority ;
 
+  Map<dynamic, dynamic> newprovider = {};
+  Map<dynamic, dynamic> newInplace = {};
+
   int currentPageIndex = 0;
 
   Set<DocumentSnapshot> combinedResults = {};
@@ -98,6 +101,18 @@ class UserAboutMEProvider with ChangeNotifier{
   updateisRefinetextChange(bool value){
     isRefinetextChange = value;
     print("isRefinetextChange: $isRefinetextChange");
+    notifyListeners();
+  }
+
+  updatenewprovider(value,id){
+    newprovider[id] = value;
+    print("newprovider: $newprovider");
+    notifyListeners();
+  }
+
+  updatenewInplace(value,id){
+    newInplace[id] = value;
+    print("newInplace: $newInplace");
     notifyListeners();
   }
 
@@ -717,9 +732,94 @@ class UserAboutMEProvider with ChangeNotifier{
         'Attachment': solution.attachment,
         // 'confirmed': false, // Add a 'confirmed' field
       };
+
+      print("Provider object:${solutionData["Provider"]}");
+      print("InPlace object:${solutionData["InPlace"]}");
       mainList.add(solutionData);
+      updatenewprovider(solutionData["Provider"], solutionData["id"]);
+      updatenewInplace(solutionData["InPlace"], solutionData["id"]);
       print("mainList.length: ${mainList.length}");
       print("mainList: ${mainList}");
+    }
+  }
+
+  void EditSolutionProvideradd(mainList){
+    for (var solution in editsolutionss) {
+      solution.isConfirmed = true;
+      Map<String, dynamic> solutionData = {
+        'id':solution.id,
+        'Label':solution.label,
+        'Description':solution.description,
+        'Source':solution.Source,
+        'Challenge Status':solution.Source,
+        'tags':solution.tags,
+        'Created By':solution.CreatedBy,
+        'Created Date':solution.CreatedDate,
+        'Modified By':solution.ModifiedBy,
+        'Modified Date':solution.ModifiedDate,
+        'Original Description':solution.OriginalDescription,
+        'Impact':solution.Impact,
+        'Final_description':solution.Final_description,
+        'Category':solution.Category,
+        'Keywords':solution.Keywords,
+        'Potential Strengths':"",
+        'Hidden Strengths':"",
+        'AboutMe_Notes':solution.notes,
+        'Provider':solution.Provider,
+        'InPlace':solution.InPlace,
+        'Attachment_link' : solution.attachment_link,
+        'Attachment': solution.attachment,
+        // 'confirmed': false, // Add a 'confirmed' field
+      };
+      if(solutionData["Provider"]=="My Responsibilty"){
+      mainList.add(solutionData);
+      }
+      print("mainList.length: ${mainList.length}");
+      print("mainList: ${mainList}");
+    }
+  }
+
+  void EditSolutionInPlaceadd(mainList,mainList1,mainList2,mainList3){
+    for (var solution in editsolutionss) {
+      solution.isConfirmed = true;
+      Map<String, dynamic> solutionData = {
+        'id':solution.id,
+        'Label':solution.label,
+        'Description':solution.description,
+        'Source':solution.Source,
+        'Challenge Status':solution.Source,
+        'tags':solution.tags,
+        'Created By':solution.CreatedBy,
+        'Created Date':solution.CreatedDate,
+        'Modified By':solution.ModifiedBy,
+        'Modified Date':solution.ModifiedDate,
+        'Original Description':solution.OriginalDescription,
+        'Impact':solution.Impact,
+        'Final_description':solution.Final_description,
+        'Category':solution.Category,
+        'Keywords':solution.Keywords,
+        'Potential Strengths':"",
+        'Hidden Strengths':"",
+        'AboutMe_Notes':solution.notes,
+        'Provider':solution.Provider,
+        'InPlace':solution.InPlace,
+        'Attachment_link' : solution.attachment_link,
+        'Attachment': solution.attachment,
+        // 'confirmed': false, // Add a 'confirmed' field
+      };
+      if(solutionData["InPlace"]=='Yes (Still Needed)'){
+      mainList.add(solutionData);
+      }
+      else if(solutionData["InPlace"]=='Yes (Not Needed Anymore)'){
+      mainList1.add(solutionData);
+      }
+     else  if(solutionData["InPlace"]=='No (Nice to have)'){
+    mainList2.add(solutionData);
+     }
+     else if(solutionData["InPlace"]=='No (Must Have)'){
+    mainList3.add(solutionData);
+    }
+
     }
   }
 
