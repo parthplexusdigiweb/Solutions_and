@@ -967,6 +967,7 @@ Date
               SizedBox(height: 5, width: 5,),
               InkWell(
                 onTap: () async{
+
                   // if(selectedEmail==null|| nameController.text.isEmpty || employerController.text.isEmpty || divisionOrSectionController.text.isEmpty || RoleController.text.isEmpty ||
                   //     LocationController.text.isEmpty || EmployeeNumberController.text.isEmpty || LineManagerController.text.isEmpty ){
                   //   if(selectedEmail==null){
@@ -1020,7 +1021,7 @@ Date
                     'Location': LocationController.text,
                     'Employee_Number': EmployeeNumberController.text,
                     'Line_Manager': LineManagerController.text,
-                    'AB_Status' : (AB_Status=="Complete") ? "Complete" :"Drafted",
+                    'AB_Status' : (AB_Status=="Complete") ? "Complete" :"Draft",
                     'About_Me_Label': AboutMeLabeltextController.text,
                     'AB_Description' : AboutMeDescriptiontextController.text,
                     'AB_Useful_Info' : AboutMeUseFulInfotextController.text,
@@ -2108,7 +2109,13 @@ Date
                                                       },
                                                       icon: Icon(Icons.visibility, color: Colors.blue),
                                                     ),
-                                                    SizedBox(width: 10,),
+                                                    IconButton(
+                                                      onPressed: () {
+                                                        userAboutMEProvider.removeEditConfirmChallenge(index,challenge.id,challengesList,_previewProvider.PreviewChallengesList);
+                                                      },
+                                                      icon: Icon(Icons.close, color: Colors.red),
+                                                    ),
+                                                    // SizedBox(width: 10,),
                                                     Text('Confirmed',
                                                       style: TextStyle(color: Colors.green),
                                                     ),
@@ -2143,7 +2150,6 @@ Date
                                                       icon: Icon(Icons.close, color: Colors.red),
                                                     )
                                                     //      :
-
 
                                                   ],
                                                 ),
@@ -2521,7 +2527,20 @@ Date
                                                             },
                                                             icon: Icon(Icons.visibility, color: Colors.blue),
                                                           ),
-                                                          SizedBox(width: 10,),
+                                                          IconButton(
+                                                            onPressed: () {
+                                                              userAboutMEProvider.removeEditConfirmSolution(
+                                                                index,solution,solutionsList,
+                                                                _previewProvider.PreviewSolutionMyResposibilty,
+                                                                _previewProvider.PreviewSolutionStillNeeded,
+                                                                _previewProvider.PreviewSolutionNotNeededAnyMore,
+                                                                _previewProvider.PreviewSolutionNiceToHave,
+                                                                _previewProvider.PreviewSolutionMustHave,
+                                                              );
+                                                            },
+                                                            icon: Icon(Icons.close, color: Colors.red),
+                                                          ),
+                                                          // SizedBox(width: 10,),
                                                           Text('Confirmed',
                                                             style: TextStyle(color: Colors.green),
                                                           ),
@@ -4255,6 +4274,9 @@ Date
                                   return Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: previewProvider.PreviewChallengesList.map((solution) {
+
+                                      print("PreviewChallengesList Available: ");
+                                      print("PreviewChallengesList check remove: $solution");
                                       return Padding(
                                         padding: EdgeInsets.only(bottom: 20.0),
                                         child: RichText(
@@ -4280,7 +4302,7 @@ Date
                                                   )
                                               ),
                                               TextSpan(
-                                                  text: '  ${solution['Impact']}',
+                                                  text: '  ${solution['Impact_on_me']}',
                                                   style: GoogleFonts.lato(textStyle: Theme
                                                       .of(context)
                                                       .textTheme
@@ -4424,7 +4446,7 @@ Date
                                                   )
                                               ),
                                               TextSpan(
-                                                  text: '  ${solution['Impact']}',
+                                                  text: '  ${solution['AboutMe_Notes']}',
                                                   style: GoogleFonts.lato(textStyle: Theme
                                                       .of(context)
                                                       .textTheme
@@ -9219,6 +9241,8 @@ Date
 
                                 solutionsList.add(solutionData);
                                 // _previewProvider.PreviewSolutionList.add(solutionData);
+                                userAboutMEProvider.updatenewprovider(solutionData["Provider"],solutionData["id"]);
+                                userAboutMEProvider.updatenewInplace(solutionData["InPlace"],solutionData["id"]);
 
                                 if(_userAboutMEProvider.selectedProvider == "My Responsibilty"){
                                   _previewProvider.PreviewSolutionMyResposibilty.add(solutionData);

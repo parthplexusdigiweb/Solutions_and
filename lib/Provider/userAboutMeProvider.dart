@@ -660,8 +660,9 @@ class UserAboutMEProvider with ChangeNotifier{
         'Attachment':challenge.attachment,
       };
       mainList.add(solutionData);
-      print("mainList.length: ${mainList.length}");
-      print("mainList: ${mainList}");
+      print("mainList.length challenge: ${mainList.length}");
+      print("mainList challenge: ${mainList}");
+
     }
   }
 
@@ -774,8 +775,8 @@ class UserAboutMEProvider with ChangeNotifier{
       if(solutionData["Provider"]=="My Responsibilty"){
       mainList.add(solutionData);
       }
-      print("mainList.length: ${mainList.length}");
-      print("mainList: ${mainList}");
+      print("mainList.length solution: ${mainList.length}");
+      print("mainList solution: ${mainList}");
     }
   }
 
@@ -1066,6 +1067,222 @@ class UserAboutMEProvider with ChangeNotifier{
       // print("removedSolution :${removedSolution.label}");
 
 
+      notifyListeners();
+    }
+  }
+
+  void removeConfirmChallenge(int index, id ,ConfirmChallenge,providerlist) {
+    List<dynamic> challengesList = ConfirmChallenge ?? [];
+    Iterable<Map<String, dynamic>> challengesIterable = challengesList.map((
+        item) => item as Map<String, dynamic>);
+
+    for (var solutionData in challengesIterable) {
+      print("solutionData iddddd: ${solutionData["id"]}");
+
+      if (solutionData["id"] == id) {
+        print("solutionData: ${solutionData["id"]}");
+
+        ConfirmChallenge.remove(solutionData);
+        providerlist.remove(solutionData);
+
+        if (challengess.length > index) {
+          ChallengesModel removedSolution = challengess.removeAt(index);
+
+          isCheckedMapchallenge.remove(index);
+
+          selectedChallenges.removeWhere((solution) => solution.id == removedSolution.id);
+
+          isRecommendedChallengeCheckedMap[id] = false;
+
+          print("isRecommendedChallengeCheckedMapREMOVEED: ${isRecommendedChallengeCheckedMap}");
+
+          notifyListeners();
+        }
+        // isRecommendedChallengeCheckedMap[challenge.id] = false;
+        // print("isRecommendedChallengeCheckedMapREMOVEED: ${isRecommendedChallengeCheckedMap}");
+        print("challengesListREMOVEED: ${solutionData['Label']}");
+        print("challengesList.length: ${ConfirmChallenge.length}");
+        print("challengesList: ${ConfirmChallenge}");
+        break;
+      }
+      notifyListeners();
+    }
+  }
+
+  void removeEditConfirmChallenge(int index, id,ConfirmChallenge,providerlist) {
+    List<dynamic> challengesList = ConfirmChallenge ?? [];
+    Iterable<Map<String, dynamic>> challengesIterable = challengesList.map((
+        item) => item as Map<String, dynamic>);
+
+    for (var solutionData in challengesIterable) {
+      print("solutionData iddddd: ${solutionData["id"]}");
+
+      if (solutionData["id"] == id) {
+        print("solutionData: ${solutionData["id"]}");
+
+        ConfirmChallenge.remove(solutionData);
+        providerlist.remove(solutionData);
+        print("providerlist challenges: ${providerlist}");
+
+
+        if (editchallengess.length > index) {
+          ChallengesModel removedSolution = editchallengess.removeAt(index);
+
+          isCheckedMapchallenge.remove(index);
+
+          selectedChallenges.removeWhere((solution) => solution.id == removedSolution.id);
+
+          isEditChallengeListAdded[id] = false;
+
+          print("isEditChallengeListAddedREMOVEED: ${isEditChallengeListAdded}");
+
+          // print("removedSolution :${removedSolution.label}");
+
+
+          notifyListeners();
+        }
+        // isRecommendedChallengeCheckedMap[challenge.id] = false;
+        // print("isRecommendedChallengeCheckedMapREMOVEED: ${isRecommendedChallengeCheckedMap}");
+        print("challengesListREMOVEED: ${solutionData['Label']}");
+        print("challengesList.length: ${ConfirmChallenge.length}");
+        print("challengesList: ${ConfirmChallenge}");
+        break;
+      }
+      notifyListeners();
+    }
+  }
+
+  void removeConfirmSolution(int index, id,ConfirmSolution, providerlist1,providerlist2,providerlist3,providerlist4,providerlist5) {
+    List<dynamic> solutionsList = ConfirmSolution ?? [];
+    Iterable<Map<String, dynamic>> solutionIterable = solutionsList.map((
+        item) => item as Map<String, dynamic>);
+
+    for (var solutionData in solutionIterable) {
+      print("solutionData iddddd: ${solutionData["id"]}");
+
+      if (solutionData["id"] == id) {
+        print("solutionData: ${solutionData["id"]}");
+
+        ConfirmSolution.remove(solutionData);
+
+        if (solutionData["Provider"] == "My Responsibilty") {
+          providerlist1.remove(solutionData);
+          print("providerlist: My Responsibilty");
+        }
+       else if (solutionData["InPlace"] == "Yes (Still Needed)") {
+          providerlist2.remove(solutionData);
+          print("providerlist: Yes (Still Needed)");
+
+        }
+        else if (solutionData["InPlace"] == "Yes (Not Needed Anymore)") {
+          providerlist3.remove(solutionData);
+          print("providerlist: Yes (Not Needed Anymore)");
+        }
+        else if (solutionData["InPlace"] == "No (Nice to have)") {
+          providerlist4.remove(solutionData);
+          print("providerlist: No (Nice to have)");
+
+        }
+        else if (solutionData["InPlace"] == "No (Must Have)") {
+          providerlist5.remove(solutionData);
+          print("providerlist: No (Must Have)");
+
+        }
+        if (solutionss.length > index) {
+          SolutionModel removedSolution = solutionss.removeAt(index);
+
+          isCheckedMap.remove(index);
+
+          selectedSolutions.removeWhere((solution) => solution.id == removedSolution.id);
+
+          isRecommendedSolutionsCheckedMap[id] = false;
+
+          print("isRecommendedSolutionsCheckedMapREMOVEED: ${isRecommendedSolutionsCheckedMap}");
+
+          notifyListeners();
+        }
+        // isRecommendedChallengeCheckedMap[challenge.id] = false;
+        // print("isRecommendedChallengeCheckedMapREMOVEED: ${isRecommendedChallengeCheckedMap}");
+        print("solutionsListREMOVEED: ${solutionData['Label']}");
+        print("ConfirmSolution.length: ${ConfirmSolution.length}");
+        print("ConfirmSolution: ${ConfirmSolution}");
+        break;
+      }
+      notifyListeners();
+    }
+  }
+
+  void removeEditConfirmSolution(int index, id,ConfirmSolution, providerlist1,providerlist2,providerlist3,providerlist4,providerlist5) {
+    List<dynamic> solutionsList = ConfirmSolution ?? [];
+    Iterable<Map<String, dynamic>> solutionIterable = solutionsList.map((
+        item) => item as Map<String, dynamic>);
+
+    for (var solutionData in solutionIterable) {
+      print("solutionData iddddd: ${solutionData["id"]}");
+
+      if (solutionData["id"] == id) {
+        print("solutionData: ${solutionData["id"]}");
+
+        ConfirmSolution.remove(solutionData);
+
+        if (solutionData["Provider"] == "My Responsibilty") {
+          providerlist1.remove(solutionData);
+          print("providerlist: My Responsibilty");
+          print("providerlist1: $providerlist1");
+          notifyListeners();
+        }
+       else if (solutionData["InPlace"] == "Yes (Still Needed)") {
+          providerlist2.remove(solutionData);
+          print("providerlist: Yes (Still Needed)");
+          print("providerlist2: $providerlist2");
+          notifyListeners();
+
+        }
+        else if (solutionData["InPlace"] == "Yes (Not Needed Anymore)") {
+          providerlist3.remove(solutionData);
+          print("providerlist: Yes (Not Needed Anymore)");
+          print("providerlist3: $providerlist3");
+          notifyListeners();
+
+        }
+        else if (solutionData["InPlace"] == "No (Nice to have)") {
+          providerlist4.remove(solutionData);
+          print("providerlist: No (Nice to have)");
+          print("providerlist4: $providerlist4");
+          notifyListeners();
+
+        }
+        else if (solutionData["InPlace"] == "No (Must Have)") {
+          providerlist5.remove(solutionData);
+          print("providerlist: No (Must Have)");
+          print("providerlist5: $providerlist5");
+          notifyListeners();
+        }
+        if (editsolutionss.length > index) {
+          // Remove the solution at the specified index
+          SolutionModel removedSolution = editsolutionss.removeAt(index);
+
+          // Update isCheckedMap and remove the corresponding entry
+          isCheckedMap.remove(index);
+          // isCheckedMapchallenge.remove(index);
+
+          // Remove the corresponding solution from selectedSolutions
+          selectedSolutions.removeWhere((solution) => solution.id == removedSolution.id);
+          // selectedSolutions.removeWhere((solution) => solution.id == "CH0${removedSolution.id}");
+
+          isEditSolutionListAdded[id] = false;
+
+          print("isEditSolutionListAddedREMOVEED: ${isEditSolutionListAdded}");
+
+          notifyListeners();
+        }
+        // isRecommendedChallengeCheckedMap[challenge.id] = false;
+        // print("isRecommendedChallengeCheckedMapREMOVEED: ${isRecommendedChallengeCheckedMap}");
+        print("solutionsListREMOVEED: ${solutionData['Label']}");
+        print("ConfirmSolution.length: ${ConfirmSolution.length}");
+        print("ConfirmSolution: ${ConfirmSolution}");
+        break;
+      }
       notifyListeners();
     }
   }
