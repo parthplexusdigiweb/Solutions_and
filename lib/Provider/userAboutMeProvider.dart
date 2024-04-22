@@ -104,6 +104,21 @@ class UserAboutMEProvider with ChangeNotifier{
     notifyListeners();
   }
 
+  updateconfirmList(listname, indexToUpdate,updatedData){
+    listname[indexToUpdate] = updatedData;
+    print("listname.length: ${listname.length}");
+    print("listname: $listname");
+    print("indexToUpdate: $indexToUpdate");
+    print("updatedData: $updatedData");
+    notifyListeners();
+  }
+
+  updateInplaceValue(value){
+    value = null;
+    print("updateInplaceValue: $value");
+    notifyListeners();
+  }
+
   updatenewprovider(value,id){
     newprovider[id] = value;
     print("newprovider: $newprovider");
@@ -381,7 +396,7 @@ class UserAboutMEProvider with ChangeNotifier{
       // Checkbox is checked, add to the list
       selectedSolutions.add(SolutionModel(
         id: thriversDetails['id'],
-        label: thriversDetails['Name'],
+        label: thriversDetails['Label'],
         description: thriversDetails['Description'],
           notes: "",
         Source: thriversDetails['Source'],
@@ -460,7 +475,7 @@ class UserAboutMEProvider with ChangeNotifier{
       // Checkbox is checked, add to the list
       solutionss.add(SolutionModel(
         id: thriversDetails['id'],
-        label: thriversDetails['Name'],
+        label: thriversDetails['Label'],
         description: thriversDetails['Description'],
         notes: "",
         Source: thriversDetails['Source'],
@@ -572,7 +587,7 @@ class UserAboutMEProvider with ChangeNotifier{
     if (isRecommendedSolutionsCheckedMap[thriversDetails['id']] != value) {
       solutionss.add(SolutionModel(
         id: thriversDetails['id'],
-        label: thriversDetails['Name'],
+        label: thriversDetails['Label'],
         description: thriversDetails['Description'],
         notes: "",
         Source: thriversDetails['Source'],
@@ -629,7 +644,7 @@ class UserAboutMEProvider with ChangeNotifier{
 
       print("editchallengessAdded: $editchallengess");
 
-      print("isEditChallengeListAddedADDING: $isRecommendedChallengeCheckedMap");
+      print("isEditChallengeListAddedADDING: $isEditChallengeListAdded");
     }
 
   }
@@ -655,7 +670,7 @@ class UserAboutMEProvider with ChangeNotifier{
         'Keywords':challenge.Keywords,
         'Potential Strengths':challenge.PotentialStrengths,
         'Hidden Strengths':challenge.HiddenStrengths,
-        'Impact_on_me':challenge.Impact,
+        'Impact_on_me':challenge.notes,
         'Attachment_link':challenge.attachment_link,
         'Attachment':challenge.attachment,
       };
@@ -864,7 +879,7 @@ class UserAboutMEProvider with ChangeNotifier{
       // Checkbox is checked, add to the list
       editsolutionss.add(SolutionModel(
         id: SolutionDetails['id'],
-        label: SolutionDetails['Name'],
+        label: SolutionDetails['Label'],
         description: SolutionDetails['Description'],
         notes: "",
         Source: SolutionDetails['Source'],
@@ -954,7 +969,7 @@ class UserAboutMEProvider with ChangeNotifier{
   void manuallyAddSolution(SolutionDetails){
     solutionss.add(SolutionModel(
       id: SolutionDetails['id'],
-      label: SolutionDetails['Name'],
+      label: SolutionDetails['Label'],
       description: SolutionDetails['Description'],
       notes: SolutionDetails['Notes'],
       Source: SolutionDetails['Source'],
@@ -981,7 +996,7 @@ class UserAboutMEProvider with ChangeNotifier{
   void EditmanuallyAddSolution(SolutionDetails){
     editsolutionss.add(SolutionModel(
       id: SolutionDetails['id'],
-      label: SolutionDetails['Name'],
+      label: SolutionDetails['Label'],
       description: SolutionDetails['Description'],
       notes: SolutionDetails['Notes'],
       Source: SolutionDetails['Source'],
@@ -1025,6 +1040,151 @@ class UserAboutMEProvider with ChangeNotifier{
   void clearSelectedChallenges() {
     selectedChallenges.clear();
     print("selectedChallenges.clear(): $selectedChallenges");
+    notifyListeners();
+  }
+
+  void updateConfirmSolution( id,ConfirmSolution, providerlist1,providerlist2,providerlist3,providerlist4,providerlist5) {
+    List<dynamic> solutionsList = ConfirmSolution ?? [];
+    Iterable<Map<String, dynamic>> solutionIterable = solutionsList.map((
+        item) => item as Map<String, dynamic>);
+
+    for (var solutionData in solutionIterable) {
+
+      if (solutionData["id"] == id) {
+        print("solutionData: ${solutionData["id"]}");
+
+        if (solutionData["Provider"] == "My Responsibilty") {
+          providerlist1.remove(solutionData);
+          print("providerlist: My Responsibilty");
+        }
+        else if (solutionData["InPlace"] == "Yes (Still Needed)") {
+          providerlist2.remove(solutionData);
+          print("providerlist: Yes (Still Needed)");
+
+        }
+        else if (solutionData["InPlace"] == "Yes (Not Needed Anymore)") {
+          providerlist3.remove(solutionData);
+          print("providerlist: Yes (Not Needed Anymore)");
+        }
+        else if (solutionData["InPlace"] == "No (Nice to have)") {
+          providerlist4.remove(solutionData);
+          print("providerlist: No (Nice to have)");
+
+        }
+        else if (solutionData["InPlace"] == "No (Must Have)") {
+          providerlist5.remove(solutionData);
+          print("providerlist: No (Must Have)");
+          print("providerlist: $providerlist5");
+
+        }
+        break;
+      }
+      notifyListeners();
+    }
+  }
+
+
+  void updateEditConfirmSolution1(id, providerlist1,) {
+    // List<dynamic> solutionsList = ConfirmSolution ?? [];
+    //
+    List<dynamic> providersolutionsList1 = providerlist1 ?? [];
+    // List<dynamic> providersolutionsList2 = providerlist2 ?? [];
+    // List<dynamic> providersolutionsList3 = providerlist3 ?? [];
+    // List<dynamic> providersolutionsList4 = providerlist4 ?? [];
+
+    // Iterable<Map<String, dynamic>> solutionIterable = solutionsList.map((item) => item as Map<String, dynamic>);
+
+    Iterable<Map<String, dynamic>> providerIterable1 = providersolutionsList1.map((item) => item as Map<String, dynamic>);
+    // Iterable<Map<String, dynamic>> providerIterable2 = providersolutionsList2.map((item) => item as Map<String, dynamic>);
+    // Iterable<Map<String, dynamic>> providerIterable3 = providersolutionsList3.map((item) => item as Map<String, dynamic>);
+    // Iterable<Map<String, dynamic>> providerIterable4 = providersolutionsList4.map((item) => item as Map<String, dynamic>);
+
+    for (var solutionData in providerIterable1){
+      print("inside My Responsibilty");
+      if (solutionData["id"] == id && solutionData["Provider"] == "My Responsibilty") {
+        print("My Responsibilty id: ${solutionData["id"]}");
+        print("My Responsibilty InPlace: ${solutionData["InPlace"]}");
+        providerlist1.remove(solutionData);
+      }
+      break;
+    }
+    notifyListeners();
+
+  }
+
+  void updateEditConfirmSolution2(id,providerlist2){
+
+    List<dynamic> providersolutionsList2 = providerlist2 ?? [];
+    Iterable<Map<String, dynamic>> providerIterable2 = providersolutionsList2.map((item) => item as Map<String, dynamic>);
+
+
+    for (var solutionData in providerIterable2){
+      print("inside No Yes (Still Needed)");
+      if (solutionData["id"] == id && solutionData["InPlace"] == "Yes (Still Needed)") {
+        print("providerlist2 id: ${solutionData["id"]}");
+        print("providerlist2 InPlace: ${solutionData["InPlace"]}");
+        providerlist2.remove(solutionData);
+
+      }
+      break;
+    }
+    notifyListeners();
+  }
+
+  void updateEditConfirmSolution3(id,providerlist2){
+
+    List<dynamic> providersolutionsList2 = providerlist2 ?? [];
+    Iterable<Map<String, dynamic>> providerIterable2 = providersolutionsList2.map((item) => item as Map<String, dynamic>);
+
+
+    for (var solutionData in providerIterable2){
+      print("inside No Yes (Not Needed Anymore)");
+      if (solutionData["id"] == id && solutionData["InPlace"] == "Yes (Not Needed Anymore)") {
+        print("Yes (Not Needed Anymore) id: ${solutionData["id"]}");
+        print("Yes (Not Needed Anymore) InPlace: ${solutionData["InPlace"]}");
+        providerlist2.remove(solutionData);
+
+      }
+      break;
+    }
+    notifyListeners();
+  }
+
+  void updateEditConfirmSolution4(id,providerlist2){
+
+    List<dynamic> providersolutionsList2 = providerlist2 ?? [];
+    Iterable<Map<String, dynamic>> providerIterable2 = providersolutionsList2.map((item) => item as Map<String, dynamic>);
+
+
+    for (var solutionData in providerIterable2){
+      print("inside No Yes (Not Needed Anymore)");
+      if (solutionData["id"] == id && solutionData["InPlace"] == "No (Nice to have)") {
+        print("No (Nice to have) id: ${solutionData["id"]}");
+        print("No (Nice to have) InPlace: ${solutionData["InPlace"]}");
+        providerlist2.remove(solutionData);
+
+      }
+      break;
+    }
+    notifyListeners();
+  }
+
+  void updateEditConfirmSolution5(id,providerlist5){
+
+    List<dynamic> providersolutionsList5 = providerlist5 ?? [];
+    Iterable<Map<String, dynamic>> providerIterable5 = providersolutionsList5.map((item) => item as Map<String, dynamic>);
+
+
+    for (var solutionData in providerIterable5){
+      print("inside No (Must Have)");
+      if (solutionData["id"] == id && solutionData["InPlace"] == "No (Must Have)") {
+        print("providerlist5 id: ${solutionData["id"]}");
+        print("providerlist5 InPlace: ${solutionData["InPlace"]}");
+        providerlist5.remove(solutionData);
+
+      }
+      break;
+    }
     notifyListeners();
   }
 
@@ -1084,6 +1244,7 @@ class UserAboutMEProvider with ChangeNotifier{
 
         ConfirmChallenge.remove(solutionData);
         providerlist.remove(solutionData);
+        // print("providerlist challenges: ${providerlist}");
 
         if (challengess.length > index) {
           ChallengesModel removedSolution = challengess.removeAt(index);
@@ -1111,38 +1272,15 @@ class UserAboutMEProvider with ChangeNotifier{
 
   void removeEditConfirmChallenge(int index, id,ConfirmChallenge,providerlist) {
     List<dynamic> challengesList = ConfirmChallenge ?? [];
-    Iterable<Map<String, dynamic>> challengesIterable = challengesList.map((
-        item) => item as Map<String, dynamic>);
+    List<dynamic> providerchallengesList = providerlist ?? [];
+    Iterable<Map<String, dynamic>> challengesIterable = challengesList.map((item) => item as Map<String, dynamic>);
+    Iterable<Map<String, dynamic>> providerIterable = providerchallengesList.map((item) => item as Map<String, dynamic>);
 
     for (var solutionData in challengesIterable) {
       print("solutionData iddddd: ${solutionData["id"]}");
-
       if (solutionData["id"] == id) {
         print("solutionData: ${solutionData["id"]}");
-
         ConfirmChallenge.remove(solutionData);
-        providerlist.remove(solutionData);
-        print("providerlist challenges: ${providerlist}");
-
-
-        if (editchallengess.length > index) {
-          ChallengesModel removedSolution = editchallengess.removeAt(index);
-
-          isCheckedMapchallenge.remove(index);
-
-          selectedChallenges.removeWhere((solution) => solution.id == removedSolution.id);
-
-          isEditChallengeListAdded[id] = false;
-
-          print("isEditChallengeListAddedREMOVEED: ${isEditChallengeListAdded}");
-
-          // print("removedSolution :${removedSolution.label}");
-
-
-          notifyListeners();
-        }
-        // isRecommendedChallengeCheckedMap[challenge.id] = false;
-        // print("isRecommendedChallengeCheckedMapREMOVEED: ${isRecommendedChallengeCheckedMap}");
         print("challengesListREMOVEED: ${solutionData['Label']}");
         print("challengesList.length: ${ConfirmChallenge.length}");
         print("challengesList: ${ConfirmChallenge}");
@@ -1150,6 +1288,34 @@ class UserAboutMEProvider with ChangeNotifier{
       }
       notifyListeners();
     }
+
+    for (var providerData in providerIterable) {
+      print("providerData iddddd: ${providerData["id"]}");
+      if (providerData["id"] == id) {
+        print("providerData: ${providerData["id"]}");
+        providerlist.remove(providerData);
+        print("providerlistREMOVEED: ${providerData['Label']}");
+        print("providerlist.length: ${providerlist.length}");
+        print("providerlist: ${providerlist}");
+        break;
+      }
+      notifyListeners();
+    }
+
+    if (editchallengess.length > index) {
+      ChallengesModel removedSolution = editchallengess.removeAt(index);
+
+      isCheckedMapchallenge.remove(index);
+
+      selectedChallenges.removeWhere((solution) => solution.id == removedSolution.id);
+
+      isEditChallengeListAdded[id] = false;
+
+      print("isEditChallengeListAddedREMOVEED: ${isEditChallengeListAdded}");
+
+      notifyListeners();
+    }
+
   }
 
   void removeConfirmSolution(int index, id,ConfirmSolution, providerlist1,providerlist2,providerlist3,providerlist4,providerlist5) {
@@ -1160,6 +1326,10 @@ class UserAboutMEProvider with ChangeNotifier{
     for (var solutionData in solutionIterable) {
       print("solutionData iddddd: ${solutionData["id"]}");
 
+      print("solutionsListREMOVEED: ${solutionData['Label']}");
+      print("ConfirmSolution.length: ${ConfirmSolution.length}");
+      print("ConfirmSolution: ${ConfirmSolution}");
+
       if (solutionData["id"] == id) {
         print("solutionData: ${solutionData["id"]}");
 
@@ -1188,34 +1358,50 @@ class UserAboutMEProvider with ChangeNotifier{
           print("providerlist: No (Must Have)");
 
         }
-        if (solutionss.length > index) {
-          SolutionModel removedSolution = solutionss.removeAt(index);
+        // if (solutionss.length > index) {
+        //   SolutionModel removedSolution = solutionss.removeAt(index);
+        //
+        //   isCheckedMap.remove(index);
+        //
+        //   solutionss.removeWhere((solution) => solution.id == id);
+        //
+        //   isRecommendedSolutionsCheckedMap[id] = false;
+        //
+        //   print("isRecommendedSolutionsCheckedMapREMOVEED: ${isRecommendedSolutionsCheckedMap}");
+        //
+        //   notifyListeners();
+        // }
 
-          isCheckedMap.remove(index);
+        solutionss.removeWhere((solution) => solution.id == id);
 
-          selectedSolutions.removeWhere((solution) => solution.id == removedSolution.id);
+        isRecommendedSolutionsCheckedMap[id] = false;
 
-          isRecommendedSolutionsCheckedMap[id] = false;
+        print("isRecommendedSolutionsCheckedMapREMOVEED: ${isRecommendedSolutionsCheckedMap}");
+        print("solutionsslist: ${solutionss}");
+        notifyListeners();
 
-          print("isRecommendedSolutionsCheckedMapREMOVEED: ${isRecommendedSolutionsCheckedMap}");
-
-          notifyListeners();
-        }
-        // isRecommendedChallengeCheckedMap[challenge.id] = false;
-        // print("isRecommendedChallengeCheckedMapREMOVEED: ${isRecommendedChallengeCheckedMap}");
-        print("solutionsListREMOVEED: ${solutionData['Label']}");
-        print("ConfirmSolution.length: ${ConfirmSolution.length}");
-        print("ConfirmSolution: ${ConfirmSolution}");
         break;
       }
       notifyListeners();
     }
   }
 
-  void removeEditConfirmSolution(int index, id,ConfirmSolution, providerlist1,providerlist2,providerlist3,providerlist4,providerlist5) {
+  void removeEditConfirmSolution(id,ConfirmSolution, providerlist1,providerlist2,providerlist3,providerlist4,providerlist5) {
     List<dynamic> solutionsList = ConfirmSolution ?? [];
-    Iterable<Map<String, dynamic>> solutionIterable = solutionsList.map((
-        item) => item as Map<String, dynamic>);
+
+    List<dynamic> providersolutionsList1 = providerlist1 ?? [];
+    List<dynamic> providersolutionsList2 = providerlist2 ?? [];
+    List<dynamic> providersolutionsList3 = providerlist3 ?? [];
+    List<dynamic> providersolutionsList4 = providerlist4 ?? [];
+    List<dynamic> providersolutionsList5 = providerlist5 ?? [];
+
+    Iterable<Map<String, dynamic>> solutionIterable = solutionsList.map((item) => item as Map<String, dynamic>);
+
+    Iterable<Map<String, dynamic>> providerIterable1 = providersolutionsList1.map((item) => item as Map<String, dynamic>);
+    Iterable<Map<String, dynamic>> providerIterable2 = providersolutionsList2.map((item) => item as Map<String, dynamic>);
+    Iterable<Map<String, dynamic>> providerIterable3 = providersolutionsList3.map((item) => item as Map<String, dynamic>);
+    Iterable<Map<String, dynamic>> providerIterable4 = providersolutionsList4.map((item) => item as Map<String, dynamic>);
+    Iterable<Map<String, dynamic>> providerIterable5 = providersolutionsList5.map((item) => item as Map<String, dynamic>);
 
     for (var solutionData in solutionIterable) {
       print("solutionData iddddd: ${solutionData["id"]}");
@@ -1225,59 +1411,6 @@ class UserAboutMEProvider with ChangeNotifier{
 
         ConfirmSolution.remove(solutionData);
 
-        if (solutionData["Provider"] == "My Responsibilty") {
-          providerlist1.remove(solutionData);
-          print("providerlist: My Responsibilty");
-          print("providerlist1: $providerlist1");
-          notifyListeners();
-        }
-       else if (solutionData["InPlace"] == "Yes (Still Needed)") {
-          providerlist2.remove(solutionData);
-          print("providerlist: Yes (Still Needed)");
-          print("providerlist2: $providerlist2");
-          notifyListeners();
-
-        }
-        else if (solutionData["InPlace"] == "Yes (Not Needed Anymore)") {
-          providerlist3.remove(solutionData);
-          print("providerlist: Yes (Not Needed Anymore)");
-          print("providerlist3: $providerlist3");
-          notifyListeners();
-
-        }
-        else if (solutionData["InPlace"] == "No (Nice to have)") {
-          providerlist4.remove(solutionData);
-          print("providerlist: No (Nice to have)");
-          print("providerlist4: $providerlist4");
-          notifyListeners();
-
-        }
-        else if (solutionData["InPlace"] == "No (Must Have)") {
-          providerlist5.remove(solutionData);
-          print("providerlist: No (Must Have)");
-          print("providerlist5: $providerlist5");
-          notifyListeners();
-        }
-        if (editsolutionss.length > index) {
-          // Remove the solution at the specified index
-          SolutionModel removedSolution = editsolutionss.removeAt(index);
-
-          // Update isCheckedMap and remove the corresponding entry
-          isCheckedMap.remove(index);
-          // isCheckedMapchallenge.remove(index);
-
-          // Remove the corresponding solution from selectedSolutions
-          selectedSolutions.removeWhere((solution) => solution.id == removedSolution.id);
-          // selectedSolutions.removeWhere((solution) => solution.id == "CH0${removedSolution.id}");
-
-          isEditSolutionListAdded[id] = false;
-
-          print("isEditSolutionListAddedREMOVEED: ${isEditSolutionListAdded}");
-
-          notifyListeners();
-        }
-        // isRecommendedChallengeCheckedMap[challenge.id] = false;
-        // print("isRecommendedChallengeCheckedMapREMOVEED: ${isRecommendedChallengeCheckedMap}");
         print("solutionsListREMOVEED: ${solutionData['Label']}");
         print("ConfirmSolution.length: ${ConfirmSolution.length}");
         print("ConfirmSolution: ${ConfirmSolution}");
@@ -1285,6 +1418,112 @@ class UserAboutMEProvider with ChangeNotifier{
       }
       notifyListeners();
     }
+
+    for (var solutionData in providerIterable1) {
+      if (solutionData["id"] == id) {
+        print("solutionData: ${solutionData["id"]}");
+        if (solutionData["Provider"] == "My Responsibilty") {
+          providerlist1.remove(solutionData);
+          print("providerlist: My Responsibilty");
+          print("providerlist1: $providerlist1");
+          notifyListeners();
+        }
+
+        print("providerlist1REMOVEED: ${solutionData['Label']}");
+        print("providerlist1.length: ${providerlist1.length}");
+        print("providerlist1: ${providerlist1}");
+        break;
+      }
+    }
+
+    for (var solutionData in providerIterable2) {
+
+      if (solutionData["id"] == id) {
+        print("solutionData: ${solutionData["id"]}");
+
+        if (solutionData["InPlace"] == "Yes (Still Needed)") {
+          providerlist2.remove(solutionData);
+          print("providerlist: Yes (Still Needed)");
+          print("providerlist2: $providerlist2");
+        }
+
+        print("providerlist2REMOVEED: ${solutionData['Label']}");
+        print("providerlist2.length: ${providerlist2.length}");
+        print("providerlist2: ${providerlist2}");
+        break;
+      }
+      notifyListeners();
+    }
+
+    for (var solutionData in providerIterable3) {
+      print("solutionData iddddd: ${solutionData["id"]}");
+
+      if (solutionData["id"] == id) {
+        print("solutionData: ${solutionData["id"]}");
+
+        if (solutionData["InPlace"] == "Yes (Not Needed Anymore)") {
+          providerlist3.remove(solutionData);
+          print("providerlist: Yes (Not Needed Anymore)");
+          print("providerlist3: $providerlist3");
+        }
+
+        print("providerIterable3 REMOVEED: ${solutionData['Label']}");
+        print("providerIterable3.length: ${providerIterable3.length}");
+        print("providerIterable3: ${providerIterable3}");
+        break;
+      }
+      notifyListeners();
+    }
+
+    for (var solutionData in providerIterable4) {
+      print("solutionData iddddd: ${solutionData["id"]}");
+
+      if (solutionData["id"] == id) {
+        print("solutionData: ${solutionData["id"]}");
+
+        if (solutionData["InPlace"] == "No (Nice to have)") {
+          providerlist4.remove(solutionData);
+          print("providerlist: No (Nice to have)");
+          print("providerlist4: $providerlist4");
+        }
+
+        print("providerlist4 REMOVEED: ${solutionData['Label']}");
+        print("providerlist4.length: ${providerlist4.length}");
+        print("providerlist4: ${providerlist4}");
+        break;
+      }
+      notifyListeners();
+    }
+
+    for (var solutionData in providerIterable5) {
+      print("solutionData iddddd: ${solutionData["id"]}");
+
+      if (solutionData["id"] == id) {
+        print("solutionData: ${solutionData["id"]}");
+
+        if (solutionData["InPlace"] == "No (Must Have)") {
+          providerlist5.remove(solutionData);
+          print("providerlist: No (Must Have)");
+          print("providerlist5: $providerlist5");
+        }
+
+
+        print("providerlist5 REMOVEED: ${solutionData['Label']}");
+        print("providerlist5.length: ${providerlist5.length}");
+        print("providerlist5: ${providerlist5}");
+        break;
+      }
+      notifyListeners();
+    }
+
+    editsolutionss.removeWhere((solution) => solution.id == id);
+    isEditSolutionListAdded[id] = false;
+
+    print("isEditSolutionListAddedREMOVEED: ${isEditSolutionListAdded}");
+
+    notifyListeners();
+
+
   }
 
   void removeEditChallenge(int index, challenge) {
@@ -1413,7 +1652,7 @@ class UserAboutMEProvider with ChangeNotifier{
 
   void isClickedBosx(bool? value, DocumentSnapshot<Object?> thriversDetails) {
     _isChecked = value!;
-    print((value, thriversDetails["Name"]));
+    print((value, thriversDetails["Label"]));
     notifyListeners();
   }
 

@@ -30,9 +30,9 @@ import 'package:toastification/toastification.dart';
 
 
 class AdminAboutMePage extends StatefulWidget {
-  var AdminName;
+  var AdminName,Pagejump;
 
-  AdminAboutMePage({this.AdminName});
+  AdminAboutMePage({this.AdminName,this.Pagejump});
 
   @override
   State<AdminAboutMePage> createState() => _AdminAboutMePageState();
@@ -57,7 +57,9 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
   TextEditingController AboutMeDescriptiontextController = TextEditingController();
   TextEditingController AboutMeUseFulInfotextController = TextEditingController();
   TextEditingController SendNametextController = TextEditingController();
+  TextEditingController CopySendNametextController = TextEditingController();
   TextEditingController SendEmailtextController = TextEditingController();
+  TextEditingController CopySendEmailtextController = TextEditingController();
   TextEditingController RefineController = TextEditingController();
   TextEditingController MystrengthsController = TextEditingController();
   TextEditingController myOrganisationController = TextEditingController();
@@ -202,7 +204,8 @@ Date
         physics: NeverScrollableScrollPhysics(),
         children: [
           EmployeePageView(),
-          MyReports(),
+          MyLibrary(),
+          MyReportScreen(),
         ],
       ),
       // body: EmployeePageView(),
@@ -559,7 +562,7 @@ Date
     );
   }
 
-  Widget MyReports(){
+  Widget MyLibrary(){
     return Scaffold(
       backgroundColor: Colors.grey.withOpacity(0.2),
       body:SingleChildScrollView(
@@ -586,35 +589,51 @@ Date
 
                         Row(
                           children: [
-                            IconButton(onPressed: () async {
+                            // IconButton(
+                            //     onPressed: (){
+                            //       sendMailPopUp(challengesList,solutionsList);
+                            //     },
+                            //     icon: Icon(Icons.add)),
+
+                            InkWell(
+                              onTap: () async {
                               await showAddAddAboutMeDialogBox();
-                            }, icon: Icon(Icons.add, size: 30,color: Colors.blue)
+                            },
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.15,
+                                padding: EdgeInsets.all(10),
+                                margin: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Text('Create new report',textAlign: TextAlign.center,style: GoogleFonts.montserrat(
+                                    textStyle: Theme.of(context).textTheme.titleSmall,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),)),
                             ),
 
-                            SizedBox(width: 10,),
+                          //  SizedBox(width: 5,),
 
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(10),
-                                onTap: () {
-                                  // showAddAddAboutMeDialogBox();
-                                  // Navigator.pop(context);
-                                  page.jumpToPage(0);
-                                },
-                                child: Container(
-                                    width: MediaQuery.of(context).size.width * 0.1,
-                                    padding: EdgeInsets.all(10),
-                                    margin: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      color: Colors.blue,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Text('Home',textAlign: TextAlign.center,style: GoogleFonts.montserrat(
-                                        textStyle: Theme.of(context).textTheme.titleSmall,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white),)),
-                              ),
+                            InkWell(
+                              borderRadius: BorderRadius.circular(10),
+                              onTap: () {
+                                // showAddAddAboutMeDialogBox();
+                                // Navigator.pop(context);
+                                page.jumpToPage(0);
+                              },
+                              child: Container(
+                                  width: MediaQuery.of(context).size.width * 0.1,
+                                  padding: EdgeInsets.all(10),
+                                  margin: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Text('Home',textAlign: TextAlign.center,style: GoogleFonts.montserrat(
+                                      textStyle: Theme.of(context).textTheme.titleSmall,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),)),
                             ),
 
                           ],
@@ -1480,6 +1499,7 @@ Date
             width: MediaQuery.of(context).size.width * 0.5,
             height: MediaQuery.of(context).size.height * 0.7,
             child: Card(
+
               color: Colors.white,
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 20),
@@ -1487,19 +1507,22 @@ Date
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.start,
-                    //   children: [
-                    //     InkWell(
-                    //         onTap: (){
-                    //           Navigator.of(context).pop();
-                    //         },
-                    //         child: Text("<<- Dashboard",
-                    //           style: TextStyle(
-                    //               // decoration: TextDecoration.underline
-                    //           ),
-                    //         )),
-                    //   ],
+                    // Align(
+                    //   alignment: Alignment.topLeft,
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.start,
+                    //     children: [
+                    //       InkWell(
+                    //           onTap: (){
+                    //             widget.Pagejump.jumpToPage(0);
+                    //           },
+                    //           child: Text("<<- Dashboard",
+                    //             style: TextStyle(
+                    //                 // decoration: TextDecoration.underline
+                    //             ),
+                    //           )),
+                    //     ],
+                    //   ),
                     // ),
                     Column(
                       children: [
@@ -1797,24 +1820,24 @@ Date
                             Expanded(
                               child: InkWell(
                                 onTap: () async {
-                                  // sideMenu.changePage(6);
-                                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
-
-                                  // Check if there are any documents
-
-                                  print("querySnapshot :${querySnapshot}");
-                                  print("querySnapshot :${querySnapshot.docs.length}");
-
-                                  if (querySnapshot.docs.isNotEmpty) {
-                                    // Get the last document
-                                    DocumentSnapshot lastDocument = querySnapshot.docs.first;
-                                    print("lastDocument :$lastDocument");
-                                    showEditAboutMeDialogBox(lastDocument,5);
-                                  }
-                                  else{
-                                    _navigateToTab(5);
-                                    await showAddAddAboutMeDialogBox();
-                                  }
+                                  page.jumpToPage(2);
+                                  // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+                                  //
+                                  // // Check if there are any documents
+                                  //
+                                  // print("querySnapshot :${querySnapshot}");
+                                  // print("querySnapshot :${querySnapshot.docs.length}");
+                                  //
+                                  // if (querySnapshot.docs.isNotEmpty) {
+                                  //   // Get the last document
+                                  //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                                  //   print("lastDocument :$lastDocument");
+                                  //   showEditAboutMeDialogBox(lastDocument,5);
+                                  // }
+                                  // else{
+                                  //   _navigateToTab(5);
+                                  //   await showAddAddAboutMeDialogBox();
+                                  // }
                                 },
                                 child: Container(
                                   margin: EdgeInsets.all(10),
@@ -1904,7 +1927,189 @@ Date
     );
   }
 
+  Widget MyReportScreen(){
+    return Scaffold(
+      // key: _scaffoldKey,
+      backgroundColor: Colors.grey.withOpacity(0.2),
+      //appBar:AppHelper().CustomAppBarForRetailHub(context),
+      body:Container(
+        margin: EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.7),
+          borderRadius: BorderRadius.circular(20),
+          // image: DecorationImage(
+          //   image: NetworkImage("https://e0.pxfuel.com/wallpapers/1/408/desktop-wallpaper-expo-2020-dubai-live-from-the-opening-ceremony.jpg"),
+          //   fit: BoxFit.cover,
+          // ),
+        ),
+        child: Center(
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.5,
+            height: MediaQuery.of(context).size.height * 0.2,
+            child: Card(
+              color: Colors.white,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        InkWell(
+                            onTap: (){
+                              // Navigator.of(context).pop();
+                              page.jumpToPage(0);
+                            },
+                            child: Text("<<- Back",
+                              style: TextStyle(
+                                  // decoration: TextDecoration.underline
+                              ),
+                            )),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: InkWell(
+                                onTap: () async {
+                                  // sideMenu.changePage(6);
+                                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+
+                                  // Check if there are any documents
+
+                                  print("querySnapshot :${querySnapshot}");
+                                  print("querySnapshot :${querySnapshot.docs.length}");
+
+                                  if (querySnapshot.docs.isNotEmpty) {
+                                    // Get the last document
+                                    DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                                    print("lastDocument :$lastDocument");
+                                    // showEditAboutMeDialogBox(lastDocument,4);
+                                    showReportViewPageDialogBox(lastDocument);
+                                  }
+                                  // else{
+                                  //   _navigateToTab(4);
+                                  //   await showAddAddAboutMeDialogBox();
+                                  // }
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.all(10),
+                                  height: 60,
+
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        // Icon(Icons.article,color: Colors.black,size: 30,),
+                                        Icon(Icons.checklist_rtl,color: Colors.black,size: 30,),
+                                        SizedBox(width: 5,),
+
+                                        Expanded(
+                                          child: Text(
+                                            // 'Solutions',
+                                            'View Report as Pdf',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.montserrat(
+                                                textStyle:
+                                                Theme.of(context).textTheme.titleLarge,
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+
+                              ),
+                            ),
+                            Expanded(
+                              child: InkWell(
+                                onTap: () async {
+                                  // sideMenu.changePage(6);
+                                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+
+                                  // Check if there are any documents
+
+                                  print("querySnapshot :${querySnapshot}");
+                                  print("querySnapshot :${querySnapshot.docs.length}");
+
+                                  if (querySnapshot.docs.isNotEmpty) {
+                                    // Get the last document
+                                    DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                                    print("lastDocument :$lastDocument");
+                                    showEditAboutMeDialogBox(lastDocument,5);
+                                  }
+                                  else{
+                                    _navigateToTab(5);
+                                    await showAddAddAboutMeDialogBox();
+                                  }
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.all(10),
+                                  height: 60,
+
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        // Icon(Icons.article,color: Colors.black,size: 30,),
+                                        Icon(Icons.insert_drive_file,color: Colors.black,size: 30,),
+                                        SizedBox(width: 5,),
+
+                                        Expanded(
+                                          child: Text(
+                                            // 'Solutions',
+                                            'My report',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.montserrat(
+                                                textStyle:
+                                                Theme.of(context).textTheme.titleLarge,
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget AboutmeFormpage() {
+
+    DateTime date = DateTime.now();
+    final DateFormat formatter = DateFormat('dd MMMM yyyy');
+    String formattedDate = formatter.format(date);
+    AboutMeDatetextController.text = formattedDate;
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2167,8 +2372,8 @@ Date
                           onChanged: (value) {
                             var createdAt = DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now());
                             _previewProvider.updateName(value);
-                            AboutMeLabeltextController.text = value + " $createdAt";
-                            About_Me_Label = value + " $createdAt";
+                            AboutMeLabeltextController.text = value + " - draft communication to " + employerController.text;
+                            About_Me_Label = value + " - draft communication to " + employerController.text;
                           },
                           style: GoogleFonts.montserrat(
                               textStyle: Theme
@@ -2227,6 +2432,8 @@ Date
                           // cursorColor: primaryColorOfApp,
                           onChanged: (value) {
                             _previewProvider.updateemployer(value);
+                            AboutMeLabeltextController.text = nameController.text + " - draft communication to " + value;
+                            About_Me_Label = nameController.text + " - draft communication to " + value;
                           },
                           style: GoogleFonts.montserrat(
                               textStyle: Theme
@@ -3644,7 +3851,7 @@ Date
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       // Text("CH0${challengesData['id']}.",
-                      Text("${solutionsData['Name']}",
+                      Text("${solutionsData['Label']}",
                           style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
                               fontSize: 15,
                               color: Colors.black)),
@@ -3694,7 +3901,7 @@ Date
 
                           IconButton(
                               onPressed: (){
-                                NewSolViewDialog(solutionsData['Name'],solutionsData['Description'],solutionsData['Impact'],solutionsData['Final_description'], solutionsData['Keywords'],solutionsData['tags'],solutionsData['id'],solutionsData,userAboutMEProvider.isRecommendedSolutionsCheckedMap,userAboutMEProvider.isRecommendedAddedSolutions);
+                                NewSolViewDialog(solutionsData['Label'],solutionsData['Description'],solutionsData['Impact'],solutionsData['Final_description'], solutionsData['Keywords'],solutionsData['tags'],solutionsData['id'],solutionsData,userAboutMEProvider.isRecommendedSolutionsCheckedMap,userAboutMEProvider.isRecommendedAddedSolutions);
                               },
                               icon: Icon(Icons.visibility, color: Colors.blue,)
                           ),
@@ -3715,7 +3922,7 @@ Date
                             onTap: (){
                               userAboutMEProvider.isRecommendedAddedSolutions(true, documentsss![i]);
                               toastification.show(context: context,
-                                  title: Text('${solutionsData['Name']} added to basket'),
+                                  title: Text('${solutionsData['Label']} added to basket'),
                                   autoCloseDuration: Duration(milliseconds: 2500),
                                   alignment: Alignment.center,
                                   backgroundColor: Colors.green,
@@ -3986,7 +4193,7 @@ Date
                           color: Colors.black),
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(10),
-                        // labelText: "Name",
+                        // labelText: "Label",
                         hintText: "Describe your challenges",
                         errorStyle: GoogleFonts.montserrat(
                             textStyle: Theme
@@ -5758,9 +5965,7 @@ Date
     return Consumer<PreviewProvider>(
         builder: (c,previewProvider, _){
 
-          DateTime date = DateTime.now();
-          final DateFormat formatter = DateFormat('dd MMMM yyyy');
-          String formattedDate = formatter.format(date);
+
 
           String message = """
 Dear ${employerController.text},
@@ -5781,9 +5986,8 @@ Date
 """;
 
           AboutMeDescriptiontextController.text = message;
-          AboutMeDatetextController.text = formattedDate;
 
-          AboutMeLabeltextController.text = "${nameController.text} - draft communication to ${employerController.text}";
+          // AboutMeLabeltextController.text = "${nameController.text} - draft communication to ${employerController.text}";
 
           return  Container(
             height: MediaQuery
@@ -5910,7 +6114,7 @@ Date
                                       textStyle: Theme.of(context).textTheme.bodyLarge,
                                       color: Colors.black),
                                   decoration: InputDecoration(
-                                    hintText: "${formattedDate}" ,
+                                    hintText: "" ,
                                     contentPadding: EdgeInsets.all(15),
                                     focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(color: Colors.black),
@@ -6209,8 +6413,14 @@ Date
                                                 IconButton(
                                                   icon: Icon(Icons.edit),
                                                   onPressed: (){
-                                                    // showconfirmChallengeDialogBox(Id, label, description, source, ChallengeStatus, tags, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, OriginalDescription, Impact, Final_description, Category, Keywords, PotentialStrengths, HiddenStrengths, index, listname, Notes)
-                                                  },),
+                                                    showEditconfirmChallengeDialogBox(solution['id'], solution['Label'] , solution['Description'],
+                                                        solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
+                                                        solution['Created Date'], solution['Modified By'], solution['Modified Date'],
+                                                        solution['Original Description'], solution['Impact'], solution['Final_description'],
+                                                        solution['Category'], solution['Keywords'], solution['Potential Strengths'],
+                                                        solution['Hidden Strengths'], index, solution, solution['Impact_on_me']);
+                                                  },
+                                                ),
                                                 IconButton(
                                                   icon: Icon(Icons.delete),
                                                   onPressed: (){
@@ -6375,8 +6585,14 @@ Date
                                                 IconButton(
                                                   icon: Icon(Icons.edit),
                                                   onPressed: (){
-                                                    // showconfirmChallengeDialogBox(Id, label, description, source, ChallengeStatus, tags, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, OriginalDescription, Impact, Final_description, Category, Keywords, PotentialStrengths, HiddenStrengths, index, listname, Notes)
-                                                  },),
+                                                    showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
+                                                        solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
+                                                        solution['Created Date'], solution['Modified By'], solution['Modified Date'],
+                                                        solution['Original Description'], solution['Impact'], solution['Final_description'],
+                                                        solution['Category'], solution['Keywords'], solution['Potential Strengths'],
+                                                        solution['Hidden Strengths'], index, solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']);
+                                                  },
+                                                ),
                                                 IconButton(
                                                   icon: Icon(Icons.delete),
                                                   onPressed: (){
@@ -6387,7 +6603,8 @@ Date
                                                       _previewProvider.PreviewSolutionNiceToHave,
                                                       _previewProvider.PreviewSolutionMustHave,
                                                     );
-                                                    },)
+                                                    },
+                                                )
                                               ],
                                             )
                                           ],
@@ -6479,9 +6696,15 @@ Date
                                               children: [
                                                 IconButton(
                                                   icon: Icon(Icons.edit),
-                                                  onPressed: (){
-                                                    // showconfirmChallengeDialogBox(Id, label, description, source, ChallengeStatus, tags, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, OriginalDescription, Impact, Final_description, Category, Keywords, PotentialStrengths, HiddenStrengths, index, listname, Notes)
-                                                  },),
+                                                    onPressed: (){
+                                                      showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
+                                                          solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
+                                                          solution['Created Date'], solution['Modified By'], solution['Modified Date'],
+                                                          solution['Original Description'], solution['Impact'], solution['Final_description'],
+                                                          solution['Category'], solution['Keywords'], solution['Potential Strengths'],
+                                                          solution['Hidden Strengths'], index, solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']);
+                                                    },
+                                                    ),
                                                 IconButton(
                                                   icon: Icon(Icons.delete),
                                                   onPressed: (){
@@ -6571,8 +6794,14 @@ Date
                                                 IconButton(
                                                   icon: Icon(Icons.edit),
                                                   onPressed: (){
-                                                    // showconfirmChallengeDialogBox(Id, label, description, source, ChallengeStatus, tags, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, OriginalDescription, Impact, Final_description, Category, Keywords, PotentialStrengths, HiddenStrengths, index, listname, Notes)
-                                                  },),
+                                                    showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
+                                                        solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
+                                                        solution['Created Date'], solution['Modified By'], solution['Modified Date'],
+                                                        solution['Original Description'], solution['Impact'], solution['Final_description'],
+                                                        solution['Category'], solution['Keywords'], solution['Potential Strengths'],
+                                                        solution['Hidden Strengths'], index, solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']);
+                                                  },
+                                                ),
                                                 IconButton(
                                                   icon: Icon(Icons.delete),
                                                   onPressed: (){
@@ -6662,8 +6891,14 @@ Date
                                                 IconButton(
                                                   icon: Icon(Icons.edit),
                                                   onPressed: (){
-                                                    // showconfirmChallengeDialogBox(Id, label, description, source, ChallengeStatus, tags, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, OriginalDescription, Impact, Final_description, Category, Keywords, PotentialStrengths, HiddenStrengths, index, listname, Notes)
-                                                  },),
+                                                    showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
+                                                        solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
+                                                        solution['Created Date'], solution['Modified By'], solution['Modified Date'],
+                                                        solution['Original Description'], solution['Impact'], solution['Final_description'],
+                                                        solution['Category'], solution['Keywords'], solution['Potential Strengths'],
+                                                        solution['Hidden Strengths'], index, solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']);
+                                                  },
+                                                ),
                                                 IconButton(
                                                   icon: Icon(Icons.delete),
                                                   onPressed: (){
@@ -6753,8 +6988,14 @@ Date
                                                 IconButton(
                                                   icon: Icon(Icons.edit),
                                                   onPressed: (){
-                                                    // showconfirmChallengeDialogBox(Id, label, description, source, ChallengeStatus, tags, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, OriginalDescription, Impact, Final_description, Category, Keywords, PotentialStrengths, HiddenStrengths, index, listname, Notes)
-                                                  },),
+                                                    showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
+                                                        solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
+                                                        solution['Created Date'], solution['Modified By'], solution['Modified Date'],
+                                                        solution['Original Description'], solution['Impact'], solution['Final_description'],
+                                                        solution['Category'], solution['Keywords'], solution['Potential Strengths'],
+                                                        solution['Hidden Strengths'], index, solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']);
+                                                  },
+                                                ),
                                                 IconButton(
                                                   icon: Icon(Icons.delete),
                                                   onPressed: (){
@@ -6869,11 +7110,106 @@ Date
 
                             Map<String, dynamic> AboutMEDatas = {
                               'About_Me_Label': AboutMeLabeltextController.text,
+                              'AB_Description' : AboutMeDescriptiontextController.text,
+                              'AB_Date' : AboutMeDatetextController.text,
+                              'AB_Useful_Info' : AboutMeUseFulInfotextController.text,
+                              'AB_Attachment' : "",
+                              'Solutions': solutionsList,
+                              'Challenges': challengesList,
+                            };
+
+                            String solutionJson = json.encode(AboutMEDatas);
+                            print(solutionJson);
+
+                            ProgressDialog.show(context, "Completing", Icons.save);
+                            await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
+
+                            ProgressDialog.hide();
+
+                            // sendMailPopUp(challengesList,solutionsList);
+
+                            // selectedEmail = null;
+                            // nameController.clear();
+                            // searchEmailcontroller.clear();
+                            // employerController.clear();
+                            // divisionOrSectionController.clear();
+                            // RoleController.clear();
+                            // LocationController.clear();
+                            // EmployeeNumberController.clear();
+                            // LineManagerController.clear();
+                            // mycircumstancesController.clear();
+                            // MystrengthsController.clear();
+                            // mycircumstancesController.clear();
+                            // AboutMeLabeltextController.clear();
+                            // RefineController.clear();
+                            // solutionsList.clear();
+                            // _userAboutMEProvider.solutionss.clear();
+                            // _userAboutMEProvider.challengess.clear();
+                            // _userAboutMEProvider.combinedSolutionsResults.clear();
+                            // _userAboutMEProvider.combinedResults.clear();
+                            // previewProvider.email=null;
+                            // previewProvider.name=null;
+                            // previewProvider.employer=null;
+                            // previewProvider.division=null;
+                            // previewProvider.role=null;
+                            // previewProvider.location=null;
+                            // previewProvider.employeeNumber=null ;
+                            // previewProvider.linemanager=null;
+                            // previewProvider.title=null;
+                            // previewProvider.mycircumstance=null;
+                            // previewProvider.mystrength=null ;
+                            // previewProvider.myorganization=null ;
+                            // previewProvider.mychallenge=null ;
+                            // previewProvider.PreviewChallengesList.clear();
+                            // previewProvider.PreviewSolutionList.clear();
+                            // // _navigateToTab(0);
+                            // // Navigator.pop(context);
+                            // setState(() {
+                            //   page.jumpToPage(1);
+                            // });
+
+                          },
+                          child:Container(
+                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                            width: MediaQuery.of(context).size.width * .15,
+                            decoration: BoxDecoration(
+                              color:Colors.blue ,
+                              border: Border.all(
+                                  color:Colors.blue ,
+                                  width: 1.0),
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            child: Center(
+                              child:Text(
+                                'Save',
+                                style: GoogleFonts.montserrat(
+                                  textStyle:
+                                  Theme
+                                      .of(context)
+                                      .textTheme
+                                      .titleSmall,
+                                  fontWeight: FontWeight.bold,
+                                  color:Colors.white ,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10,),
+                        InkWell(
+                          onTap: () async {
+
+                            var createdAt = DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now());
+
+                            Map<String, dynamic> AboutMEDatas = {
+                              'About_Me_Label': AboutMeLabeltextController.text,
                               'AB_Status' : "Complete",
                               'AB_Description' : AboutMeDescriptiontextController.text,
                               'AB_Date' : AboutMeDatetextController.text,
                               'AB_Useful_Info' : AboutMeUseFulInfotextController.text,
                               'AB_Attachment' : "",
+                              'Solutions': solutionsList,
+                              'Challenges': challengesList,
                             };
 
                             String solutionJson = json.encode(AboutMEDatas);
@@ -7354,6 +7690,8 @@ Date
                                   return Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: previewProvider.PreviewChallengesList.map((solution) {
+
+                                      print("check impact on me:${solution['Impact_on_me']}");
                                       return Padding(
                                         padding: EdgeInsets.only(bottom: 20.0),
                                         child: RichText(
@@ -7379,7 +7717,7 @@ Date
                                                   )
                                               ),
                                               TextSpan(
-                                                  text: '  ${solution['Impact']}',
+                                                  text: '  ${solution['Impact_on_me']}',
                                                   style: GoogleFonts.lato(textStyle: Theme
                                                       .of(context)
                                                       .textTheme
@@ -7526,7 +7864,7 @@ Date
                                                   )
                                               ),
                                               TextSpan(
-                                                  text: '  ${solution['Impact']}',
+                                                  text: '  ${solution['AboutMe_Notes']}',
                                                   style: GoogleFonts.lato(textStyle: Theme
                                                       .of(context)
                                                       .textTheme
@@ -7606,7 +7944,7 @@ Date
                                                   )
                                               ),
                                               TextSpan(
-                                                  text: '  ${solution['Impact']}',
+                                                  text: '  ${solution['AboutMe_Notes']}',
                                                   style: GoogleFonts.lato(textStyle: Theme
                                                       .of(context)
                                                       .textTheme
@@ -7671,7 +8009,7 @@ Date
                                                   )
                                               ),
                                               TextSpan(
-                                                  text: '  ${solution['Impact']}',
+                                                  text: '  ${solution['AboutMe_Notes']}',
                                                   style: GoogleFonts.lato(textStyle: Theme
                                                       .of(context)
                                                       .textTheme
@@ -7736,7 +8074,7 @@ Date
                                                   )
                                               ),
                                               TextSpan(
-                                                  text: '  ${solution['Impact']}',
+                                                  text: '  ${solution['AboutMe_Notes']}',
                                                   style: GoogleFonts.lato(textStyle: Theme
                                                       .of(context)
                                                       .textTheme
@@ -7801,7 +8139,7 @@ Date
                                                   )
                                               ),
                                               TextSpan(
-                                                  text: '  ${solution['Impact']}',
+                                                  text: '  ${solution['AboutMe_Notes']}',
                                                   style: GoogleFonts.lato(textStyle: Theme
                                                       .of(context)
                                                       .textTheme
@@ -8140,46 +8478,123 @@ Date
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 5.0, horizontal: 5),
-                    child: TextField(
-                      controller: SendNametextController,
-
-                      style: GoogleFonts.montserrat(
-                          textStyle: Theme.of(context).textTheme.bodySmall,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black),
-                      decoration: InputDecoration(
-                        hintText: "Name",
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                            borderRadius: BorderRadius.circular(10)),
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black12),
-                            borderRadius: BorderRadius.circular(10)),
+                  Row(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.05,
+                        child: Text("To: ",style: GoogleFonts.montserrat(
+                          textStyle:
+                          Theme
+                              .of(context)
+                              .textTheme
+                              .titleMedium,
+                        ),),
                       ),
-                    ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 5.0, horizontal: 5),
+                          child: TextField(
+                            controller: SendNametextController,
+                          
+                            style: GoogleFonts.montserrat(
+                                textStyle: Theme.of(context).textTheme.bodySmall,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black),
+                            decoration: InputDecoration(
+                              hintText: "Name",
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(10)),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black12),
+                                  borderRadius: BorderRadius.circular(10)),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 5.0, horizontal: 5),
+                          child: TextField(
+                            controller: SendEmailtextController,
+                            style: GoogleFonts.montserrat(
+                                textStyle: Theme.of(context).textTheme.bodySmall,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black),
+                            decoration: InputDecoration(
+                              hintText: "Email",
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(10)),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black12),
+                                  borderRadius: BorderRadius.circular(10)),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 5.0, horizontal: 5),
-                    child: TextField(
-                      controller: SendEmailtextController,
-                      style: GoogleFonts.montserrat(
-                          textStyle: Theme.of(context).textTheme.bodySmall,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black),
-                      decoration: InputDecoration(
-                        hintText: "Email",
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                            borderRadius: BorderRadius.circular(10)),
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black12),
-                            borderRadius: BorderRadius.circular(10)),
+                  Row(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.05,
+                        child: Text("Copy: ",style: GoogleFonts.montserrat(
+                          textStyle:
+                          Theme
+                              .of(context)
+                              .textTheme
+                              .titleMedium,
+                        ),),
                       ),
-                    ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 5.0, horizontal: 5),
+                          child: TextField(
+                            controller: CopySendNametextController,
+
+                            style: GoogleFonts.montserrat(
+                                textStyle: Theme.of(context).textTheme.bodySmall,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black),
+                            decoration: InputDecoration(
+                              hintText: "Name",
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(10)),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black12),
+                                  borderRadius: BorderRadius.circular(10)),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 5.0, horizontal: 5),
+                          child: TextField(
+                            controller: CopySendEmailtextController,
+                            style: GoogleFonts.montserrat(
+                                textStyle: Theme.of(context).textTheme.bodySmall,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black),
+                            decoration: InputDecoration(
+                              hintText: "Email",
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(10)),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black12),
+                                  borderRadius: BorderRadius.circular(10)),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -8202,7 +8617,9 @@ Date
                   InkWell(
                     onTap: (){
                       SendEmailtextController.clear();
+                      CopySendEmailtextController.clear();
                       SendNametextController.clear();
+                      CopySendNametextController.clear();
                       Navigator.pop(context);
                     },
                     child: Container(
@@ -8257,6 +8674,8 @@ Date
                           context,
                           SendEmailtextController.text,
                           SendNametextController.text,
+                          CopySendEmailtextController.text,
+                          CopySendNametextController.text,
                           base64EncodedData,
                           filename
                       );
@@ -9938,7 +10357,7 @@ Date
                                                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                                                       children: [
                                                                                         Flexible(
-                                                                                          child: Text("${solutionData['Name']}",
+                                                                                          child: Text("${solutionData['Label']}",
                                                                                               maxLines: null,
                                                                                               style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
                                                                                                   fontSize: 18,
@@ -9998,7 +10417,7 @@ Date
                                                                                                     // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
                                                                                                     userAboutMEProvider.isRecommendedAddedSolutions(true, relatedSolutions![i]);
                                                                                                     toastification.show(context: context,
-                                                                                                        title: Text('${solutionData['Name']} added to basket'),
+                                                                                                        title: Text('${solutionData['Label']} added to basket'),
                                                                                                         autoCloseDuration: Duration(milliseconds: 2500),
                                                                                                         alignment: Alignment.center,
                                                                                                         backgroundColor: Colors.green,
@@ -11109,7 +11528,7 @@ Date
                                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                                     children: [
                                                                       Flexible(
-                                                                        child: Text("${solutionData['Name']}",
+                                                                        child: Text("${solutionData['Label']}",
                                                                             maxLines: null,
                                                                             style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
                                                                                 fontSize: 18,
@@ -11156,7 +11575,7 @@ Date
                                                                           IconButton(
                                                                               onPressed: (){
                                                                                 userAboutMEProvider.updateSolutionPreview(
-                                                                                    solutionData['Name'],
+                                                                                    solutionData['Label'],
                                                                                     solutionData['Description'],
                                                                                     solutionData['Final_Description'],
                                                                                     solutionData['Impact'],
@@ -11191,7 +11610,7 @@ Date
                                                                                       // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
                                                                                       userAboutMEProvider.isRecommendedAddedSolutions(true, relatedSolutions![i]);
                                                                                       toastification.show(context: context,
-                                                                                          title: Text('${solutionData['Name']} added to basket'),
+                                                                                          title: Text('${solutionData['Label']} added to basket'),
                                                                                           autoCloseDuration: Duration(milliseconds: 2500),
                                                                                           alignment: Alignment.center,
                                                                                           backgroundColor: Colors.green,
@@ -11669,7 +12088,7 @@ Date
                                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                                       children: [
                                                                         Flexible(
-                                                                          child: Text("${solutionData['Name']}",
+                                                                          child: Text("${solutionData['Label']}",
                                                                               maxLines: null,
                                                                               style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
                                                                                   fontSize: 18,
@@ -11716,7 +12135,7 @@ Date
                                                                             IconButton(
                                                                                 onPressed: (){
                                                                                   userAboutMEProvider.updateSolutionPreview(
-                                                                                      solutionData['Name'],
+                                                                                      solutionData['Label'],
                                                                                       solutionData['Description'],
                                                                                       solutionData['Final_Description'],
                                                                                       solutionData['Impact'],
@@ -11751,7 +12170,7 @@ Date
                                                                                         // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
                                                                                         userAboutMEProvider.isRecommendedAddedSolutions(true, relatedSolutions![i]);
                                                                                         toastification.show(context: context,
-                                                                                            title: Text('${solutionData['Name']} added to basket'),
+                                                                                            title: Text('${solutionData['Label']} added to basket'),
                                                                                             autoCloseDuration: Duration(milliseconds: 2500),
                                                                                             alignment: Alignment.center,
                                                                                             backgroundColor: Colors.green,
@@ -12129,7 +12548,7 @@ Date
                                 else if (snapshot.hasData) {
                                   DocumentSnapshot? doc = snapshot.data;
 
-                                  var name = doc?.get("Name");
+                                  var name = doc?.get("Label");
                                   // var Description = doc?.get("Description");
                                   // var OriginalDescription = doc?.get('Original Description');
                                   var FinalDescription = doc?.get('Final_description');
@@ -12510,7 +12929,7 @@ Date
                                                                               crossAxisAlignment: CrossAxisAlignment.start,
                                                                               children: [
                                                                                 Flexible(
-                                                                                  child: Text("${solutionData['Name']}",
+                                                                                  child: Text("${solutionData['Label']}",
                                                                                       maxLines: null,
                                                                                       style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
                                                                                           fontSize: 18,
@@ -12572,7 +12991,7 @@ Date
                                                                                             // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
                                                                                             userAboutMEProvider.isRecommendedAddedSolutions(true, relatedSolutions![i]);
                                                                                             toastification.show(context: context,
-                                                                                                title: Text('${solutionData['Name']} added to basket'),
+                                                                                                title: Text('${solutionData['Label']} added to basket'),
                                                                                                 autoCloseDuration: Duration(milliseconds: 2500),
                                                                                                 alignment: Alignment.center,
                                                                                                 backgroundColor: Colors.green,
@@ -14081,7 +14500,7 @@ Date
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(documentsss![i]['Name'],style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis),
+                      Text(documentsss![i]['Label'],style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis),
                       Text(documentsss![i]['Final_description'],style: Theme.of(context).textTheme.subtitle1?.copyWith(color: Colors.grey,overflow: TextOverflow.ellipsis),maxLines: 2,),
                       SizedBox(height: 10),
 
@@ -14096,7 +14515,7 @@ Date
                   children: [
                     IconButton(
                         onPressed: (){
-                          NewSolViewDialog(documentsss![i]['Name'],documentsss![i]['Description'],documentsss![i]['Impact'],documentsss![i]['Final_description'], documentsss![i]['Keywords'],documentsss![i]['tags'],documentsss![i]['id'],documentsss![i],userAboutMEProvider.isRecommendedSolutionsCheckedMap,userAboutMEProvider.isRecommendedAddedSolutions);
+                          NewSolViewDialog(documentsss![i]['Label'],documentsss![i]['Description'],documentsss![i]['Impact'],documentsss![i]['Final_description'], documentsss![i]['Keywords'],documentsss![i]['tags'],documentsss![i]['id'],documentsss![i],userAboutMEProvider.isRecommendedSolutionsCheckedMap,userAboutMEProvider.isRecommendedAddedSolutions);
                         },
                         icon: Icon(Icons.visibility, color: Colors.blue,)
                     ),
@@ -14116,7 +14535,7 @@ Date
                       onTap: (){
                         userAboutMEProvider.isRecommendedAddedSolutions(true,documentsss![i]);
                         toastification.show(context: context,
-                            title: Text('${documentsss![i]['Name']} added to basket'),
+                            title: Text('${documentsss![i]['Label']} added to basket'),
                             autoCloseDuration: Duration(milliseconds: 2500),
                             alignment: Alignment.center,
                             backgroundColor: Colors.green,
@@ -14762,8 +15181,374 @@ Date
     );
   }
 
+  void showEditconfirmChallengeDialogBox(Id,label,description,source,ChallengeStatus,tags,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,OriginalDescription,
+      Impact,Final_description,Category ,Keywords ,PotentialStrengths, HiddenStrengths, index, listname, Notes) {
+
+    print("CreatedDate: $CreatedDate");
+
+
+    NotesController.text = Notes;
+
+    print("Inside showconfirmrDialogBox");
+    print("Id: CH0$Id");
+    print("label: $label");
+    print("description: $description");
+    print("source: $source");
+    print("Status: $ChallengeStatus");
+    print("tags: ${tags}");
+    print("CreatedBy: $CreatedBy");
+    print("CreatedDate: $CreatedDate");
+    print("ModifiedBy: $ModifiedBy");
+    print("ModifiedDate: $ModifiedDate");
+    print("OriginalDescription: $OriginalDescription");
+    print("Impact: $Impact");
+    print("Final_description: $Final_description");
+    print("Category: $Category");
+    print("Keywords: $Keywords");
+    print("PotentialStrengths: $PotentialStrengths");
+    print("HiddenStrengths: $HiddenStrengths");
+    print("Notes: $Notes");
+    print("index: $index");
+    print("listname: $listname");
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Consumer<UserAboutMEProvider>(
+              builder: (c,userAboutMEProvider, _){
+                // addKeywordProvider.getcategoryAndKeywords();
+                // addKeywordProvider.newgetSource();
+                // addKeywordProvider.getThriversStatus();
+                return Theme(
+                  data: Theme.of(context).copyWith(dialogBackgroundColor: Colors.white),
+                  child: AlertDialog(
+                    insetPadding: EdgeInsets.symmetric(horizontal: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.2),
+                    actions: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: (){
+                              NotesController.clear();
+                              userAboutMEProvider.selectedPriority = null;
+                              userAboutMEProvider.selectedProvider = null;
+                              userAboutMEProvider.selectedInPlace = null;
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              width: MediaQuery.of(context).size.width * .2,
+
+                              height: 60,
+                              decoration: BoxDecoration(
+                                //color: Colors.white,
+                                border: Border.all(
+                                  //color:primaryColorOfApp ,
+                                    width: 1.0),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Cancel',
+                                  style: GoogleFonts.montserrat(
+                                    textStyle:
+                                    Theme
+                                        .of(context)
+                                        .textTheme
+                                        .titleSmall,
+                                    fontWeight: FontWeight.bold,
+                                    //color: primaryColorOfApp
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                          ),
+                          SizedBox(width: 5, height: 5,),
+                          InkWell(
+                            onTap: () async {
+                              // if(NotesController.text.isEmpty || userAboutMEProvider.selectedProvider == null || userAboutMEProvider.selectedInPlace == null
+                              //     || userAboutMEProvider.selectedPriority == null ){
+                              //   if(NotesController.text.isEmpty){
+                              //     showEmptyAlert(context, "Add Notes");
+                              //   }
+                              //   else if(userAboutMEProvider.selectedProvider == null ){
+                              //     showEmptyAlert(context, "Select Provider");
+                              //   }
+                              //   else if(userAboutMEProvider.selectedInPlace == null ){
+                              //     showEmptyAlert(context, "Select In Place");
+                              //   }
+                              //   else if(userAboutMEProvider.selectedPriority == null){
+                              //     showEmptyAlert(context, "Select Priority");
+                              //   }
+                              // }
+                              // else
+                              {
+                                ProgressDialog.show(context, "Confirming", Icons.check_circle_outline);
+
+                                if(userAboutMEProvider.aadhar != null) {
+                             await userAboutMEProvider.uploadFile(
+                                      userAboutMEProvider.fileBytes,
+                                      userAboutMEProvider.aadhar);
+                                }
+
+
+                                int indexToUpdate = challengesList.indexWhere((element) => element['id'] == Id);
+
+                                if (indexToUpdate != -1) {
+                                  // Create a new solutionData to update the existing one
+                                  Map<String, dynamic> updatedSolutionData = {
+                                    'id': Id,
+                                    'Label': label,
+                                    'Description': description,
+                                    'Source': source,
+                                    'Challenge Status': ChallengeStatus,
+                                    'tags': tags,
+                                    'Created By': CreatedBy,
+                                    'Created Date': CreatedDate,
+                                    'Modified By': ModifiedBy,
+                                    'Modified Date': ModifiedDate,
+                                    'Original Description': OriginalDescription,
+                                    'Impact': Impact,
+                                    'Final_description': Final_description,
+                                    'Category': Category,
+                                    'Keywords': Keywords,
+                                    'Potential Strengths': PotentialStrengths,
+                                    'Hidden Strengths': HiddenStrengths,
+                                    'Impact_on_me': NotesController.text,
+                                    'Attachment_link': userAboutMEProvider.downloadURL == null ? null : userAboutMEProvider.downloadURL,
+                                    'Attachment': userAboutMEProvider.aadhar == null ? "" : userAboutMEProvider.aadhar
+                                  };
+
+                                  // challengesList[indexToUpdate] = updatedSolutionData;
+                                  userAboutMEProvider.updateconfirmList(challengesList,indexToUpdate,updatedSolutionData);
+                                  userAboutMEProvider.updateconfirmList(_previewProvider.PreviewChallengesList,indexToUpdate,updatedSolutionData);
+                                } else {
+                                  print("Id not found in challengesList.");
+                                }
+
+
+
+                                ProgressDialog.hide();
+
+
+
+
+                            print("solutionsList.length: ${solutionsList.length}");
+                            print("solutionsList: ${solutionsList}");
+                            NotesController.clear();
+                            userAboutMEProvider.selectedPriority = null;
+                            userAboutMEProvider.selectedProvider = null;
+                            userAboutMEProvider.selectedInPlace = null;
+                            userAboutMEProvider.aadhar = null;
+                            userAboutMEProvider.fileBytes = null;
+                            Navigator.pop(context);
+                          }
+                        },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * .2,
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              height: 60,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                border: Border.all(
+                                    color: Colors.blue,
+                                    width: 2.0),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Save',
+                                  style: GoogleFonts.montserrat(
+                                      textStyle:
+                                      Theme
+                                          .of(context)
+                                          .textTheme
+                                          .titleSmall,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                              ),
+                            ),
+
+                          ),
+                        ],
+                      ),
+
+                    ],
+                    title: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20.0),
+                          child: Text("Edit/Confirm Challenge",
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                  color: Colors.black)),
+                        ),
+
+                      ],
+                    ),
+                    content: SizedBox(
+                      width: double.maxFinite,
+                      //height: MediaQuery.of(context).size.height*0.5,
+                      child: SingleChildScrollView(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+
+                              ///
+                              // Padding(
+                              //   padding: const EdgeInsets.only(left: 20.0),
+                              //   child: Text("Id: ${Id}",
+                              //       overflow: TextOverflow.ellipsis,
+                              //       style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                              //           fontSize: 15,
+                              //           color: Colors.black)),
+                              // ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20.0),
+                                child: Text("${label}",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Colors.black)),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20.0),
+                                child: Container(
+                                  // width: 400,
+                                  child: Text("${Final_description}",
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: GoogleFonts.montserrat(fontWeight: FontWeight.w600,
+                                          fontSize: 15,
+                                          color: Colors.black)),
+                                ),
+                              ),
+
+                              Divider(),
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 0),
+                                child: Text("* Edit as appropriate",
+                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                        fontSize: 14,
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.w400)),
+                              ),
+                              // SizedBox(height: 5,),
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 5),
+                                child: Text("Impact on me: ",
+                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                    fontWeight: FontWeight.w600)),
+                              ),
+
+                              TextField(
+                                maxLines: 4,
+                                controller: NotesController,
+                                cursorColor: primaryColorOfApp,
+
+                                // readOnly: readonly,
+                                // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                style: GoogleFonts.montserrat(
+                                    textStyle: Theme
+                                        .of(context)
+                                        .textTheme
+                                        .bodyLarge,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black),
+                                decoration: InputDecoration(
+                                  //errorText: userAccountSearchErrorText,
+                                  contentPadding: EdgeInsets.all(15),
+                                  helperStyle: TextStyle(color: Colors.red),
+                                  // labelText: "Notes",
+
+                                  /*prefixIcon: Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Icon(Icons.question_mark_outlined,
+                                                       // color: primaryColorOfApp
+                                                          ),
+                                                    ),*/
+
+                                  errorStyle: GoogleFonts.montserrat(
+                                      textStyle: Theme
+                                          .of(context)
+                                          .textTheme
+                                          .bodyLarge,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.redAccent),
+
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.black),
+                                      borderRadius: BorderRadius.circular(15)),
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.black12),
+                                      borderRadius: BorderRadius.circular(15)),
+                                  //hintText: "e.g Abouzied",
+                                  labelStyle: GoogleFonts.montserrat(
+                                      textStyle: Theme
+                                          .of(context)
+                                          .textTheme
+                                          .bodyLarge,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black),
+                                ),
+                              ),
+
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                                    child: Text("Relevant attachments :", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
+                                  ),
+                                  SizedBox(width: 10,),
+
+                                  InkWell(
+                                    onTap: (){
+                                      userAboutMEProvider.pickFiles();
+                                    },
+                                    child: Container(
+                                      // padding: EdgeInsets.all(20),
+                                      child: Center(child: Icon(Icons.add, size: 30, color: Colors.white,)),
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        color: Colors.blue,
+                                        borderRadius: BorderRadius.circular(50),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text("${userAboutMEProvider.aadhar==null ? "" : userAboutMEProvider.aadhar}", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
+                                // child: Text("document.pdf", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
+                              ),
+
+
+                            ]
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              });
+        }
+    );
+  }
+
   void showconfirmSolutionsDialogBox(Id,label,description,source,ChallengeStatus,tags,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,OriginalDescription,
-      Impact,Final_description,Category ,Keywords ,PotentialStrengths, HiddenStrengths, index, listname,Notes)  {
+      Impact,Final_description,Category ,Keywords ,PotentialStrengths, HiddenStrengths, index, listname,Notes) {
 
     DateTime dateTime = CreatedDate.toDate();
 
@@ -14912,7 +15697,7 @@ Date
 
                                 Map<String, dynamic> solutionDataSaved = {
                                   'id': Id,
-                                  'Name': label,
+                                  'Label': label,
                                   'Description': description,
                                   'Source': source,
                                   'Thirver Status': ChallengeStatus,
@@ -14959,7 +15744,7 @@ Date
 
                                   Map<String, dynamic> solutionNewDataSaved = {
                                     'id': newId,
-                                    'Name': label,
+                                    'Label': label,
                                     'Description': description,
                                     'Source': source,
                                     'Challenge Status': ChallengeStatus,
@@ -15024,6 +15809,596 @@ Date
                                 _previewProvider.PreviewSolutionNiceToHave.add(solutionData);}
                               if(_userAboutMEProvider.selectedInPlace == "No (Must Have)"){
                                 _previewProvider.PreviewSolutionMustHave.add(solutionData);}
+
+                                ProgressDialog.hide();
+
+
+                                print("solutionsList.length: ${solutionsList.length}");
+                                print("solutionsList: ${solutionsList}");
+                                NotesController.clear();
+                                userAboutMEProvider.selectedPriority = null;
+                                userAboutMEProvider.selectedProvider = null;
+                                userAboutMEProvider.selectedInPlace = null;
+                                userAboutMEProvider.aadhar = null;
+                                userAboutMEProvider.fileBytes = null;
+                                Navigator.pop(context);
+                              }
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * .2,
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              height: 60,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                border: Border.all(
+                                    color: Colors.blue,
+                                    width: 2.0),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Confirm',
+                                  style: GoogleFonts.montserrat(
+                                      textStyle:
+                                      Theme
+                                          .of(context)
+                                          .textTheme
+                                          .titleSmall,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                              ),
+                            ),
+
+                          ),
+                        ],
+                      ),
+                    ],
+
+                    title: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20.0),
+                          child: Text("Edit/Confirm Solution",
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                  color: Colors.black)),
+                        ),
+
+                      ],
+                    ),
+                    content: SizedBox(
+                      width: double.maxFinite,
+                      //height: MediaQuery.of(context).size.height*0.5,
+                      child: SingleChildScrollView(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+
+                              ///
+
+                              // Padding(
+                              //   padding: const EdgeInsets.only(left: 20.0),
+                              //   child: Text("Id: ${Id}",
+                              //       overflow: TextOverflow.ellipsis,
+                              //       style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                              //           fontSize: 15,
+                              //           color: Colors.black)),
+                              // ),
+
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20.0),
+                                child: Text("${label}",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Colors.black)),
+                              ),
+
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20.0),
+                                child: Container(
+                                  // width: 400,
+                                  child: Text("${Final_description}",
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: GoogleFonts.montserrat(fontWeight: FontWeight.w600,
+                                          fontSize: 15,
+                                          color: Colors.black)),
+                                ),
+                              ),
+
+                              Divider(),
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 0),
+                                child: Text("* Edit as appropriate",
+                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                        fontSize: 14,
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.w400)),
+                              ),
+                              // SizedBox(height: 5,),
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                                child: Text("How this solutions helps me :",
+                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                        fontWeight: FontWeight.w600)),
+                              ),
+
+                              TextField(
+                                maxLines: 4,
+                                controller: NotesController,
+                                cursorColor: primaryColorOfApp,
+
+                                // readOnly: readonly,
+                                // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                style: GoogleFonts.montserrat(
+                                    textStyle: Theme
+                                        .of(context)
+                                        .textTheme
+                                        .bodyLarge,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black),
+                                decoration: InputDecoration(
+                                  //errorText: userAccountSearchErrorText,
+                                  contentPadding: EdgeInsets.all(25),
+                                  // labelText: "Notes",
+                                  hintText: "Notes",
+
+                                  /*prefixIcon: Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Icon(Icons.question_mark_outlined,
+                                                       // color: primaryColorOfApp
+                                                          ),
+                                                    ),*/
+
+                                  errorStyle: GoogleFonts.montserrat(
+                                      textStyle: Theme
+                                          .of(context)
+                                          .textTheme
+                                          .bodyLarge,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.redAccent),
+
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.black),
+                                      borderRadius: BorderRadius.circular(15)),
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.black12),
+                                      borderRadius: BorderRadius.circular(15)),
+                                  //hintText: "e.g Abouzied",
+                                  labelStyle: GoogleFonts.montserrat(
+                                      textStyle: Theme
+                                          .of(context)
+                                          .textTheme
+                                          .bodyLarge,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black),
+                                ),
+                              ),
+
+                              SizedBox(height: 10,),
+
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                                child: Text("Provider :",
+                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                        fontWeight: FontWeight.w600)),
+                              ),
+
+                              // DropdownButtonFormField(
+                              //   style: TextStyle(fontSize: 12,overflow: TextOverflow.ellipsis),
+                              //   decoration: InputDecoration(
+                              //     //errorText: userAccountSearchErrorText,
+                              //     contentPadding: EdgeInsets.all(15),
+                              //     // labelText: "Priority",
+                              //     hintText: "Provider",
+                              //
+                              //
+                              //     errorStyle: GoogleFonts.montserrat(
+                              //         textStyle: Theme
+                              //             .of(context)
+                              //             .textTheme
+                              //             .bodyLarge,
+                              //         fontWeight: FontWeight.w400,
+                              //         color: Colors.redAccent),
+                              //
+                              //     focusedBorder: OutlineInputBorder(
+                              //         borderSide: BorderSide(color: Colors.black),
+                              //         borderRadius: BorderRadius.circular(15)),
+                              //     border: OutlineInputBorder(
+                              //         borderSide: BorderSide(color: Colors.black12),
+                              //         borderRadius: BorderRadius.circular(15)),
+                              //     //hintText: "e.g Abouzied",
+                              //     labelStyle: GoogleFonts.montserrat(
+                              //         textStyle: Theme
+                              //             .of(context)
+                              //             .textTheme
+                              //             .bodyLarge,
+                              //         fontWeight: FontWeight.w400,
+                              //         color: Colors.black),
+                              //   ),
+                              //   value: selectedProvider,
+                              //   onChanged: (newValue) {
+                              //    setState(() {
+                              //      selectedProvider = newValue;
+                              //    });
+                              //   },
+                              //   icon: Icon(Icons.keyboard_arrow_down_outlined,size: 20,),
+                              //   items: provider.map<DropdownMenuItem<String>>((String value) {
+                              //
+                              //     return DropdownMenuItem<String>(
+                              //       value: value,
+                              //       child: Text(value, overflow: TextOverflow.ellipsis,),
+                              //     );
+                              //   }).toList(),
+                              // ),
+
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: userAboutMEProvider.provider.map((String value) {
+                                  return Container(
+                                    width: MediaQuery.of(context).size.width * .18,
+                                    child: Row(
+                                      children: [
+                                        Radio<String>(
+                                          value: value,
+                                          groupValue: userAboutMEProvider.selectedProvider,
+                                          activeColor: Colors.blue,
+                                          onChanged: (newValue) {
+                                            // setState(() {
+                                            //   selectedProvider = newValue;
+                                            // });
+                                            userAboutMEProvider.updateProvider(newValue);
+                                          },
+                                        ),
+                                        Text(
+                                          value,
+                                          style: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+
+                              SizedBox(height: 10,),
+
+                              (userAboutMEProvider.selectedProvider=="Request of my employer") ? Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                                child: Text("In Place :",
+                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                        fontWeight: FontWeight.w600)),
+                              ) : Container(),
+
+                              (userAboutMEProvider.selectedProvider=="Request of my employer") ?   Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: userAboutMEProvider.InPlace.map((String value) {
+                                  return Container(
+                                    width: MediaQuery.of(context).size.width * .3,
+                                    child: Row(
+                                      children: [
+                                        Radio<String>(
+                                          value: value,
+                                          groupValue: userAboutMEProvider.selectedInPlace,
+                                          activeColor: Colors.blue,
+                                          onChanged: (newValue) {
+                                            // setState(() {
+                                            //   selectedProvider = newValue;
+                                            // });
+                                            userAboutMEProvider.updateInPlace(newValue);
+                                          },
+                                        ),
+                                        Text(
+                                          value,
+                                          style: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                              ) : Container(),
+
+
+                              SizedBox(height: 10,),
+
+                              // Padding(
+                              //   padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                              //   child: Text("Priority :", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                              //       fontWeight: FontWeight.w600)),
+                              // ),
+                              // Row(
+                              //   mainAxisAlignment: MainAxisAlignment.start,
+                              //   children: userAboutMEProvider.Priority.map((String value) {
+                              //     return Container(
+                              //       width: MediaQuery.of(context).size.width * .18,
+                              //       child: Row(
+                              //         children: [
+                              //           Radio<String>(
+                              //             value: value,
+                              //             groupValue: userAboutMEProvider.selectedPriority,
+                              //             activeColor: Colors.blue,
+                              //             onChanged: (newValue) {
+                              //               // setState(() {
+                              //               //   selectedProvider = newValue;
+                              //               // });
+                              //               userAboutMEProvider.updatePriority(newValue);
+                              //             },
+                              //           ),
+                              //           Flexible(
+                              //             child: Text(
+                              //               value,
+                              //               style: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis,),
+                              //             ),
+                              //           ),
+                              //         ],
+                              //       ),
+                              //     );
+                              //   }).toList(),
+                              // ),
+
+                              SizedBox(height: 10,),
+
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                                    child: Text("Relevant attachments :", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
+                                  ),
+                                  SizedBox(width: 10,),
+
+                                  InkWell(
+                                    onTap: (){
+                                      userAboutMEProvider.pickFiles();
+                                    },
+                                    child: Container(
+                                      // padding: EdgeInsets.all(20),
+                                      child: Center(child: Icon(Icons.add, size: 30, color: Colors.white,)),
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        color: Colors.blue,
+                                        borderRadius: BorderRadius.circular(50),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text("${userAboutMEProvider.aadhar== null ? "" : userAboutMEProvider.aadhar}", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
+                              ),
+
+
+
+
+                            ]
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              });
+        }
+    );
+  }
+
+
+  void showEditconfirmSolutionsDialogBox(Id,label,description,source,ChallengeStatus,tags,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,OriginalDescription,
+      Impact,Final_description,Category ,Keywords ,PotentialStrengths, HiddenStrengths, index, listname,Notes,Provider,InPlace)  {
+
+
+    NotesController.text = Notes;
+    _userAboutMEProvider.selectedProvider = Provider;
+    _userAboutMEProvider.selectedInPlace = InPlace;
+
+    print("Inside showconfirmrDialogBox");
+    print("Id: SH0$Id");
+    print("label: $label");
+    print("description: $description");
+    print("source: $source");
+    print("Status: $ChallengeStatus");
+    print("tags: ${tags}");
+    print("CreatedBy: $CreatedBy");
+    print("CreatedDate: $CreatedDate");
+    print("ModifiedBy: $ModifiedBy");
+    print("ModifiedDate: $ModifiedDate");
+    print("OriginalDescription: $OriginalDescription");
+    print("Impact: $Impact");
+    print("Final_description: $Final_description");
+    print("Category: $Category");
+    print("Keywords: $Keywords");
+    print("PotentialStrengths: $PotentialStrengths");
+    print("HiddenStrengths: $HiddenStrengths");
+    print("Notes: $Notes");
+    print("index: $index");
+    print("listname: $listname");
+
+    print("solutionsList before edit: $solutionsList");
+    print("solutionsList before edit: ${solutionsList.length}");
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Consumer<UserAboutMEProvider>(
+              builder: (c,userAboutMEProvider, _){
+                // addKeywordProvider.getcategoryAndKeywords();
+                // addKeywordProvider.newgetSource();
+                // addKeywordProvider.getThriversStatus();
+                return Theme(
+                  data: Theme.of(context).copyWith(dialogBackgroundColor: Colors.white),
+                  child: AlertDialog(
+                    insetPadding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.2),
+
+                    actions: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: (){
+                              NotesController.clear();
+                              userAboutMEProvider.selectedPriority = null;
+                              userAboutMEProvider.selectedProvider = null;
+                              userAboutMEProvider.selectedInPlace = null;
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              width: MediaQuery.of(context).size.width * .2,
+
+                              height: 60,
+                              decoration: BoxDecoration(
+                                //color: Colors.white,
+                                border: Border.all(
+                                  //color:primaryColorOfApp ,
+                                    width: 1.0),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Cancel',
+                                  style: GoogleFonts.montserrat(
+                                    textStyle:
+                                    Theme
+                                        .of(context)
+                                        .textTheme
+                                        .titleSmall,
+                                    fontWeight: FontWeight.bold,
+                                    //color: primaryColorOfApp
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                          ),
+                          SizedBox(width: 5, height: 5,),
+                          InkWell(
+                            onTap: () async {
+
+                              {
+                                ProgressDialog.show(context, "Confirming", Icons.check_circle_outline);
+
+                                if(userAboutMEProvider.aadhar != null) {
+                                  await userAboutMEProvider.uploadFile(
+                                      userAboutMEProvider.fileBytes,
+                                      userAboutMEProvider.aadhar);
+                                }
+
+
+
+                                int indexToUpdate = solutionsList.indexWhere((element) => element['id'] == Id);
+
+                                if (indexToUpdate != -1) {
+                                  Map<String, dynamic> solutionData = {
+                                    'id': Id,
+                                    'Label': label,
+                                    'Description': description,
+                                    'Source': source,
+                                    'Challenge Status': ChallengeStatus,
+                                    'tags': tags,
+                                    'Created By': CreatedBy,
+                                    'Created Date': CreatedDate,
+                                    'Modified By': ModifiedBy,
+                                    'Modified Date': ModifiedDate,
+                                    'Original Description': OriginalDescription,
+                                    'Impact': Impact,
+                                    'Final_description': Final_description,
+                                    'Category': Category,
+                                    'Keywords': Keywords,
+                                    'Potential Strengths': PotentialStrengths,
+                                    'Hidden Strengths': HiddenStrengths,
+                                    'AboutMe_Notes': NotesController.text,
+                                    'Provider': userAboutMEProvider.selectedProvider,
+                                    'InPlace': userAboutMEProvider.selectedInPlace,
+                                    'Attachment_link': userAboutMEProvider.downloadURL == null ? null : userAboutMEProvider.downloadURL,
+                                    'Attachment': userAboutMEProvider.aadhar == null ? "-" : userAboutMEProvider.aadhar
+                                  };
+
+                                  if(userAboutMEProvider.selectedProvider == 'My Responsibilty'){
+                                    userAboutMEProvider.selectedInPlace = null;
+                                    _previewProvider.PreviewSolutionMyResposibilty.add(solutionData);
+                                    userAboutMEProvider.updateConfirmSolution( Id, solutionsList,
+                                      _previewProvider.PreviewSolutionMyResposibilty,
+                                      _previewProvider.PreviewSolutionStillNeeded,
+                                      _previewProvider.PreviewSolutionNotNeededAnyMore,
+                                      _previewProvider.PreviewSolutionNiceToHave,
+                                      _previewProvider.PreviewSolutionMustHave,
+                                    );
+                                    userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
+                                  }
+
+                                 else if(userAboutMEProvider.selectedInPlace == 'Yes (Still Needed)'){
+                                    _previewProvider.PreviewSolutionStillNeeded.add(solutionData);
+                                    userAboutMEProvider.updateConfirmSolution( Id, solutionsList,
+                                      _previewProvider.PreviewSolutionMyResposibilty,
+                                      _previewProvider.PreviewSolutionStillNeeded,
+                                      _previewProvider.PreviewSolutionNotNeededAnyMore,
+                                      _previewProvider.PreviewSolutionNiceToHave,
+                                      _previewProvider.PreviewSolutionMustHave,
+                                    );
+                                    userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
+                                  }
+
+                                  else if(userAboutMEProvider.selectedInPlace == 'Yes (Not Needed Anymore)'){
+                                    _previewProvider.PreviewSolutionNotNeededAnyMore.add(solutionData);
+                                    userAboutMEProvider.updateConfirmSolution( Id, solutionsList,
+                                      _previewProvider.PreviewSolutionMyResposibilty,
+                                      _previewProvider.PreviewSolutionStillNeeded,
+                                      _previewProvider.PreviewSolutionNotNeededAnyMore,
+                                      _previewProvider.PreviewSolutionNiceToHave,
+                                      _previewProvider.PreviewSolutionMustHave,
+                                    );
+                                    userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
+                                  }
+
+                                  else if(userAboutMEProvider.selectedInPlace == 'No (Nice to have)'){
+                                    _previewProvider.PreviewSolutionNiceToHave.add(solutionData);
+                                    userAboutMEProvider.updateConfirmSolution(Id, solutionsList,
+                                      _previewProvider.PreviewSolutionMyResposibilty,
+                                      _previewProvider.PreviewSolutionStillNeeded,
+                                      _previewProvider.PreviewSolutionNotNeededAnyMore,
+                                      _previewProvider.PreviewSolutionNiceToHave,
+                                      _previewProvider.PreviewSolutionMustHave,
+                                    );
+                                    userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
+                                  }
+
+                                  else if(userAboutMEProvider.selectedInPlace == 'No (Must Have)'){
+                                    _previewProvider.PreviewSolutionMustHave.add(solutionData);
+                                    userAboutMEProvider.updateConfirmSolution( Id, solutionsList,
+                                      _previewProvider.PreviewSolutionMyResposibilty,
+                                      _previewProvider.PreviewSolutionStillNeeded,
+                                      _previewProvider.PreviewSolutionNotNeededAnyMore,
+                                      _previewProvider.PreviewSolutionNiceToHave,
+                                      _previewProvider.PreviewSolutionMustHave,
+                                    );
+                                    userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
+                                  }
+
+                                  print("solutionsList after edit: $solutionsList");
+                                  print("solutionsList after edit: ${solutionsList.length}");
+                                  // userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
+                                  userAboutMEProvider.updatenewprovider(solutionData["Provider"], solutionData["id"]);
+                                  userAboutMEProvider.updatenewInplace(solutionData["InPlace"], solutionData["id"]);
+
+                                } else {
+                                  // Handle case where 'id' does not exist in the list
+                                  print("Id not found in solutionData.");
+                                }
+
+
+
+
+
+                                // solutionsList.add(solutionData);
+
 
                                 ProgressDialog.hide();
 
@@ -15903,7 +17278,7 @@ Date
                               // });
                               Map<String, dynamic> SolutionData = {
                                 'id': ids,
-                                'Name': SolutionNameTextEditingController.text,
+                                'Label': SolutionNameTextEditingController.text,
                                 // 'Description': _controllerSolution.document.toPlainText(),
                                 'Description':  SolutionDescriptionTextEditingController.text,
                                 'Source': selectedEmail,
@@ -15925,7 +17300,7 @@ Date
                                 'Notes': NotesSolutiontextcontroller.text,
                               };
 
-                              print("SolutionData: ${SolutionData['Name']}");
+                              print("SolutionData: ${SolutionData['Label']}");
                               print("SolutionData Created Date: ${SolutionData['Created Date']}");
 
                               _userAboutMEProvider.manuallyAddSolution(SolutionData);
@@ -15933,7 +17308,7 @@ Date
                               ProgressDialog.hide();
 
                               toastification.show(context: context,
-                                  title: Text('${SolutionData['Name']} added to basket'),
+                                  title: Text('${SolutionData['Label']} added to basket'),
                                   autoCloseDuration: Duration(milliseconds: 2500),
                                   alignment: Alignment.center,
                                   backgroundColor: Colors.green,

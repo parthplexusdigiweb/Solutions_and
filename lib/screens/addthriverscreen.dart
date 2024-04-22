@@ -245,7 +245,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
   //         .collection('Thrivers')
   //         // .where('Keywords', arrayContainsAny: keywordsList)
   //
-  //     // .where('Name', arrayContainsAny: keywordsList)
+  //     // .where('Label', arrayContainsAny: keywordsList)
   //     // .where('Description', arrayContainsAny: keywordsList)
   //     // .where('Category', arrayContainsAny: keywordsList)
   //     // .where('tags', arrayContainsAny: keywordsList)
@@ -268,8 +268,8 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
   //     FirebaseFirestore.instance
   //         .collection('Thrivers')
   //     // .where('Keywords', arrayContainsAny: keywordsList)
-  //         .where('Name', isGreaterThanOrEqualTo: search)
-  //         .where('Name', isLessThan: search + 'z')
+  //         .where('Label', isGreaterThanOrEqualTo: search)
+  //         .where('Label', isLessThan: search + 'z')
   //     // .where('Description', arrayContainsAny: keywordsList)
   //     // .where('Category', arrayContainsAny: keywordsList)
   //     // .where('tags', arrayContainsAny: keywordsList)
@@ -277,7 +277,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
   //         .then((QuerySnapshot querySnapshot) {
   //       print("querySnapshot.docs name ${querySnapshot.docs}");
   //       documents.addAll(querySnapshot.docs);
-  //       print("inside Name");
+  //       print("inside Label");
   //
   //       // Process the query results
   //       // Here you can access the documents returned by the query
@@ -290,7 +290,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
   //     FirebaseFirestore.instance
   //         .collection('Thrivers')
   //     // .where('Keywords', arrayContainsAny: keywordsList)
-  //     // .where('Name', arrayContainsAny: keywordsList)
+  //     // .where('Label', arrayContainsAny: keywordsList)
   //     // .where('Description', arrayContainsAny: keywordsList)
   //         .where('Description', isGreaterThanOrEqualTo: search)
   //         .where('Description', isLessThan: search + 'z')
@@ -313,7 +313,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
   //     FirebaseFirestore.instance
   //         .collection('Thrivers')
   //     // .where('Keywords', arrayContainsAny: keywordsList)
-  //     // .where('Name', arrayContainsAny: keywordsList)
+  //     // .where('Label', arrayContainsAny: keywordsList)
   //     // .where('Description', arrayContainsAny: keywordsList)
   //         .where('Original Description', isGreaterThanOrEqualTo: search)
   //         .where('Original Description', isLessThanOrEqualTo: search + '\uf8ff')
@@ -335,7 +335,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
   //     FirebaseFirestore.instance
   //         .collection('Thrivers')
   //     // .where('Keywords', arrayContainsAny: keywordsList)
-  //     // .where('Name', arrayContainsAny: keywordsList)
+  //     // .where('Label', arrayContainsAny: keywordsList)
   //     // .where('Description', arrayContainsAny: keywordsList)
   //     // .where('Category', arrayContainsAny: keywordsList)
   //         .where('tags', arrayContainsAny: keywordsList)
@@ -364,7 +364,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
 
   Future<List<DocumentSnapshot>> searchProductsByDescription(String description) async {
     // QuerySnapshot querySnapshot = await productsCollection
-    //     .where('Name', isEqualTo: description)
+    //     .where('Label', isEqualTo: description)
     //     .get();
 
     String startValue = description;
@@ -377,8 +377,8 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
 
     //
     // QuerySnapshot querySnapshot = await productsCollection
-    //     .where('Name', isGreaterThanOrEqualTo: description)
-    //     .where('Name', isLessThanOrEqualTo: description + '\uf8ff')
+    //     .where('Label', isGreaterThanOrEqualTo: description)
+    //     .where('Label', isLessThanOrEqualTo: description + '\uf8ff')
     //     .get();
     print("isnide searchProductsByDescription ${querySnapshot.size}");
     return querySnapshot.docs;
@@ -407,7 +407,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
   //   docssssss.map((e) => print("$e"));
   //  final dc =  docssssss.where((element) {
   //     print("inside docssssss ${element.data()}");
-  //     var name  = element.get("Name").toLowerCase();
+  //     var name  = element.get("Label").toLowerCase();
   //     var description  = element.get("Description").toLowerCase();
   //     if(name.contains(search.toLowerCase())){
   //       print("inisde element name $name and element is $element");
@@ -451,7 +451,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
 //     docssssss?.map((e) => print("$e"));
 //    final dc =  docssssss?.where((element) {
 //       print("inside docssssss ${element.data()}");
-//       var name  = element.get("Name").toLowerCase();
+//       var name  = element.get("Label").toLowerCase();
 //       // var description  = element.get("Description").toLowerCase();
 //       if(name.contains(search.toLowerCase())){
 //         print("inisde element name $name and element is $element");
@@ -1511,8 +1511,8 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
 
 
     for (DocumentSnapshot categoryDocument in categories) {
-      String categoryName = categoryDocument['Name'];
-      print("Category Name"+categoryName);
+      String categoryName = categoryDocument['Label'];
+      print("Category Label"+categoryName);
 
       // Fetch data from "Thrivers" where category matches
       var thriversSnapshot = await FirebaseFirestore.instance
@@ -1523,7 +1523,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
       List<Widget> thriverNodes = [];
 
       for (QueryDocumentSnapshot thriverDocument in thriversSnapshot.docs) {
-        String thriverName = thriverDocument['Name'];
+        String thriverName = thriverDocument['Label'];
         print("category name"+thriverName);
         thriverNodes.add(ListTile(title: Text(thriverName,style: TextStyle(color: Colors.black),)));
       }
@@ -1566,7 +1566,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
       List<dynamic> values = categoryDocument['Values'];
 
       // var categoryName = categoryDocument['Values'];
-      print("Category Name"+categoryName);
+      print("Category Label"+categoryName);
       print("Values: $values");
 
       // Fetch data from "Thrivers" where category matches
@@ -1575,7 +1575,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
       List<Widget> thriverNodes = [];
 
       for (QueryDocumentSnapshot thriverDocument in thriversSnapshot.docs) {
-        String thriverName = thriverDocument['Name'];
+        String thriverName = thriverDocument['Label'];
         print("category name"+thriverName);
         thriverNodes.add(ListTile(title: Text(thriverName,style: TextStyle(color: Colors.black),)));
       }
@@ -1624,17 +1624,17 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
         List<Widget> thriverNodes = [];
 
         for (QueryDocumentSnapshot thriverDocument in thriversSnapshot.docs) {
-          String thriverName = thriverDocument['Name'];
+          String thriverName = thriverDocument['Label'];
           // print("category nameee $thriverName");
           thriverNodes.add(
             ListTile(
               title: InkWell(
                 onTap: (){
-                  // thriversDetails.reference,thriversDetails.id, thriversDetails['Name'], thriversDetails['Description'], thriversDetails['Category']
+                  // thriversDetails.reference,thriversDetails.id, thriversDetails['Label'], thriversDetails['Description'], thriversDetails['Category']
                   // ,thriversDetails['Keywords'],thriversDetails['Created Date'],thriversDetails['Created By'],thriversDetails['tags'],thriversDetails['Modified By']
                   // ,thriversDetails['Modified Date'],thriversDetails['id']
                   ViewSolutionDialog(thriverDocument.reference, thriverDocument.id,
-                      thriverDocument['Name'], thriverDocument['Description'], thriverDocument['Category'],
+                      thriverDocument['Label'], thriverDocument['Description'], thriverDocument['Category'],
                       thriverDocument['Keywords'], thriverDocument['Created Date'], thriverDocument['Created By'],
                       thriverDocument['tags'], thriverDocument['Modified By'], thriverDocument['Modified Date'], thriverDocument['id']);
                 },
@@ -1816,7 +1816,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
               Expanded(
                 child: InkWell(
                   onTap: (){
-                    ViewSolutionDialog(thriversDetails.reference,thriversDetails.id, thriversDetails['Name'], thriversDetails['Description'], thriversDetails['Category']
+                    ViewSolutionDialog(thriversDetails.reference,thriversDetails.id, thriversDetails['Label'], thriversDetails['Description'], thriversDetails['Category']
                         ,thriversDetails['Keywords'],thriversDetails['Created Date'],thriversDetails['Created By'],thriversDetails['tags'],thriversDetails['Modified By']
                         ,thriversDetails['Modified Date'],thriversDetails['id']);
 
@@ -1825,7 +1825,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      !selectedFieldNames.contains("Name")?Text(thriversDetails['Name'],style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis):Container(),
+                      !selectedFieldNames.contains("Label")?Text(thriversDetails['Label'],style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis):Container(),
                       !selectedFieldNames.contains("Description")?Text(thriversDetails['Description'],style: Theme.of(context).textTheme.subtitle1?.copyWith(color: Colors.grey,overflow: TextOverflow.ellipsis),maxLines: 2,):Container(),
                       SizedBox(height: 10),
 
@@ -1957,12 +1957,12 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                   iconSize: 25,
                   color: primaryColorOfApp,
                   onPressed: () async {
-                    // print("object: ${thriversDetails.id} , ${thriversDetails['Name']}, ${thriversDetails['Description']}, ${thriversDetails['Category']}, ${thriversDetails['Keywords']} ,${thriversDetails['Created Date']},${thriversDetails['Created By']},${thriversDetails['Modified By']},${thriversDetails['Modified Date']}}");
+                    // print("object: ${thriversDetails.id} , ${thriversDetails['Label']}, ${thriversDetails['Description']}, ${thriversDetails['Category']}, ${thriversDetails['Keywords']} ,${thriversDetails['Created Date']},${thriversDetails['Created By']},${thriversDetails['Modified By']},${thriversDetails['Modified Date']}}");
                     showEditThriverDialogBox
-                      (thriversDetails.reference,thriversDetails.id, thriversDetails['Name'], thriversDetails['Description'], thriversDetails['Category']
+                      (thriversDetails.reference,thriversDetails.id, thriversDetails['Label'], thriversDetails['Description'], thriversDetails['Category']
                         ,thriversDetails['Keywords'],thriversDetails['Created Date'],thriversDetails['Created By'],thriversDetails['tags'],thriversDetails['Modified By']
                         ,thriversDetails['Modified Date'],thriversDetails['id']);
-                    // showEditThriverDialogBox(thriversDetails.id, thriversDetails['Name'], thriversDetails['Description'], thriversDetails['Category'] );
+                    // showEditThriverDialogBox(thriversDetails.id, thriversDetails['Label'], thriversDetails['Description'], thriversDetails['Category'] );
                   },
                   icon: Icon(Icons.edit,)),
 
@@ -2153,7 +2153,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                             "Created Date": DateTime.now(),
                             "Modified By": "",
                             "Modified Date": "",
-                            'Name': thriverNameTextEditingController.text,
+                            'Label': thriverNameTextEditingController.text,
                             // 'Description': thriverDescTextEditingController.text,
                             'Description': _controller.document.toPlainText(),
                             'Original Description': originaltextEditingController.text,
@@ -2703,7 +2703,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                           ),
 
                           Padding(
-                            /// Name
+                            /// Label
                             padding: const EdgeInsets.all(8.0),
                             child: TextField(
                               controller: thriverNameTextEditingController,
@@ -3734,8 +3734,8 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
 
 
 
-  // void showEditThriverDialogBox(thriversDetails,Id, Name, Description, newvalues, keywords) {
-  // // void showEditThriverDialogBox(Id, Name, Description, newvalues) {
+  // void showEditThriverDialogBox(thriversDetails,Id, Label, Description, newvalues, keywords) {
+  // // void showEditThriverDialogBox(Id, Label, Description, newvalues) {
   //
   //
   //   List<TextEditingController> textControllers = [];
@@ -3750,7 +3750,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
   //         builder: (BuildContext context, StateSetter setState) {
   //           return Consumer<AddKeywordProvider>(
   //               builder: (c,addKeywordProvider, _){
-  //                 editthriverNameTextEditingController.text = Name ;
+  //                 editthriverNameTextEditingController.text = Label ;
   //                 editthriverDescTextEditingController.text = Description;
   //
   //                 print("new Values $keywords");
@@ -3830,7 +3830,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
   //                         ),
   //                         InkWell(
   //                           onTap: () async {
-  //                             print("Name ${editthriverNameTextEditingController.text}");
+  //                             print("Label ${editthriverNameTextEditingController.text}");
   //                             print("Description ${editthriverDescTextEditingController.text}");
   //                             print("Category ${(addKeywordProvider.newselectedValue == null) ? addKeywordProvider.newvalue.toString() : addKeywordProvider.newselectedValue.toString()}");
   //                             print("Keywords ${addKeywordProvider.keywords}");
@@ -3840,7 +3840,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
   //                             ProgressDialog.show(
   //                                 context, "Update a Thriver", Icons.chair);
   //                             await ApiRepository().updateThriver({
-  //                               'Name': editthriverNameTextEditingController.text,
+  //                               'Label': editthriverNameTextEditingController.text,
   //                               'Description': editthriverDescTextEditingController.text,
   //                               'Category': (addKeywordProvider.newselectedValue == null) ? addKeywordProvider.newvalue.toString() : addKeywordProvider.newselectedValue.toString(),
   //                               // 'Keywords': addKeywordProvider.newKeywordsList,
@@ -3926,8 +3926,8 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
   //                                     decoration: InputDecoration(
   //                                       //errorText: userAccountSearchErrorText,
   //                                       contentPadding: EdgeInsets.all(25),
-  //                                       labelText: "Thriver Name",
-  //                                       hintText: "Thriver Name",
+  //                                       labelText: "Thriver Label",
+  //                                       hintText: "Thriver Label",
   //                                       /*prefixIcon: Padding(
   //                                 padding: const EdgeInsets.all(8.0),
   //                                 child: Icon(Icons.question_mark_outlined,
@@ -4195,7 +4195,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
   //   );
   // }
 
-  void showEditThriverDialogBox(documentReference,Id, Name, Description, newvalues, keywords, createdat,createdby,tags, modifiedBy,modifiedDate,insideId) {
+  void showEditThriverDialogBox(documentReference,Id, Label, Description, newvalues, keywords, createdat,createdby,tags, modifiedBy,modifiedDate,insideId) {
 
 
     DateTime dateTime = createdat.toDate();
@@ -4307,7 +4307,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                                       "Created Date": createdat,
                                       "Modified By": widget.AdminName,
                                       "Modified Date": ModifiedAt,
-                                      'Name': editthriverNameTextEditingController.text,
+                                      'Label': editthriverNameTextEditingController.text,
                                       // 'Description': editthriverDescTextEditingController.text,
                                       'Original Description': editoriginaltextEditingController.text,
                                       'Final_description': editfinaltextcontroller.text,
@@ -4446,7 +4446,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                                                 //Map valueMap = jsonDecode(data);
                                                 // print("DocumentSnapshot : ${doc?.data()}");
 
-                                                editthriverNameTextEditingController.text = doc?.get("Name");
+                                                editthriverNameTextEditingController.text = doc?.get("Label");
                                                 // editthriverDescTextEditingController.text = doc?.get("Description");
                                                 editoriginaltextEditingController.text = doc?.get('Original Description');
                                                 editfinaltextcontroller.text = doc?.get('Final_description');
@@ -5562,7 +5562,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
     );
   }
 
-  void ViewSolutionDialog(documentReference,Id, Name, Description, newvalues, keywords, createdat,createdby,tags, modifiedBy,modifiedDate,insideId) {
+  void ViewSolutionDialog(documentReference,Id, Label, Description, newvalues, keywords, createdat,createdby,tags, modifiedBy,modifiedDate,insideId) {
 
 
     DateTime dateTime = createdat.toDate();
@@ -5675,7 +5675,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                                   else if (snapshot.hasData) {
                                     DocumentSnapshot? doc = snapshot.data;
 
-                                    var name = doc?.get("Name");
+                                    var name = doc?.get("Label");
                                     var Description = doc?.get("Description");
                                 var OriginalDescription = doc?.get('Original Description');
 
@@ -5939,7 +5939,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                                                                                   style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
                                                                                       fontSize: 20,
                                                                                       color: Colors.black)),
-                                                                              Text("${solutionData['Name']}",
+                                                                              Text("${solutionData['Label']}",
                                                                                   style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
                                                                                       fontSize: 25,
                                                                                       color: Colors.black)),
@@ -6441,8 +6441,8 @@ class KeywordServicessss {
           //       suggestionsCallback: (pattern) async {
           //         List<DocumentSnapshot> itemList = [];
           //         await FirebaseFirestore.instance.collection('Solutions')
-          //             .where('Name', isGreaterThanOrEqualTo: pattern)
-          //             .where('Name', isLessThanOrEqualTo: pattern + '\uf8ff')
+          //             .where('Label', isGreaterThanOrEqualTo: pattern)
+          //             .where('Label', isLessThanOrEqualTo: pattern + '\uf8ff')
           //             .get().then((value) {
           //           itemList.addAll(value.docs);
           //         });
@@ -6450,14 +6450,14 @@ class KeywordServicessss {
           //       },
           //       itemBuilder: (context, suggestion) {
           //         return CheckboxListTile(
-          //           value: solutions.contains(suggestion.get("Name")),
-          //           title: Text(suggestion.get("Name")),
+          //           value: solutions.contains(suggestion.get("Label")),
+          //           title: Text(suggestion.get("Label")),
           //           onChanged: (value){
-          //             if(solutions.contains(suggestion.get("Name"))){
-          //               solutions.remove(suggestion.get("Name"));
+          //             if(solutions.contains(suggestion.get("Label"))){
+          //               solutions.remove(suggestion.get("Label"));
           //               solutionsDocRefs.remove(suggestion.reference);
           //             }else{
-          //               solutions.add(suggestion.get("Name"));
+          //               solutions.add(suggestion.get("Label"));
           //               solutionsDocRefs.add(suggestion.reference);
           //             }
           //             print("solutions");

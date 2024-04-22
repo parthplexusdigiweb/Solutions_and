@@ -313,7 +313,7 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
               children: [
                 // BrevoScreen(),
                 DashBoardScreen(),
-                AdminAboutMePage(AdminName: (widget.AdminName==null) ? "Admin" : widget.AdminName),
+                AdminAboutMePage(AdminName: (widget.AdminName==null) ? "Admin" : widget.AdminName, Pagejump: page),
                 AddThriversScreen(AdminName: (widget.AdminName==null) ? "Admin" : widget.AdminName),
                 AddChallengesScreen(AdminName: (widget.AdminName==null) ? "Admin" : widget.AdminName),
                 ReportScreen(),
@@ -328,7 +328,7 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
                 ChatGptScreen(),
                 ChatGptSettingsScreen(),
                 // AdminAboutMePage(),
-                // DSemo(),
+                DSemo(),
                 /*AddChallenges(),
                 AddSolutionsScreen,
 
@@ -394,7 +394,7 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
                             Expanded(
                               child: InkWell(
                                 onTap: () async {
-                                  // sideMenu.changePage(2);
+                                  sideMenu.changePage(1);
                                   page.jumpToPage(1);
                                 },
                                 child: Container(
@@ -683,6 +683,7 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
           //   },
           //   icon: const Icon(Icons.article),
           // ),
+
           SideMenuItem(
             priority: 4,
             title: 'Report',
@@ -804,6 +805,19 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
             // icon: const Icon(Icons.email_outlined),
             icon: const Icon(Icons.settings_suggest),
           ),
+          SideMenuItem(
+            priority: 12,
+            title: 'Import',
+            //badgeColor: Colors.amber,
+            // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
+            tooltipContent: "Import",
+            onTap: (page, _) {
+              sideMenu.changePage(page);
+              Navigator.pop(context);
+            },
+            // icon: const Icon(Icons.email_outlined),
+            icon: const Icon(Icons.import_export),
+          ),
           ///
           // SideMenuItem(
           //   priority: 12,
@@ -844,7 +858,7 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
           // ),
           ///
           SideMenuItem(
-            priority: 12,
+            priority: 13,
             title: 'Log Out',
             //badgeColor: Colors.amber,
             // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),

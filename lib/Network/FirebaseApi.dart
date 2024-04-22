@@ -520,7 +520,7 @@ class ApiRepository{
   }
 
 
-  Future<void> sendEmailWithAttachment(context,email,name,filebytes,filename) async {
+  Future<void> sendEmailWithAttachment(context, email1,name1,email2,name2,filebytes,filename) async {
     String apiUrl = 'https://api.brevo.com/sendEmail'; // Example API endpoint, replace with actual endpoint
     String BREVO_API_KEY_FROM_BACKEND = "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";
     // String BREVO_API_KEY_FROM_BACKEND = "";
@@ -533,20 +533,20 @@ class ApiRepository{
         headers : {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'api-key': "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"
+          // 'api-key': "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"
         },
         body: jsonEncode({
           "sender": {
             "name": "Solutions Inclutions",
             "email": "admin@solutioninclution.com"
           },
-          'to' :[{ "email": email, "name": name }],
+          'to' :[{ "email": email1, "name": name1 },{ "email": email2, "name": name2 }],
           'attachment': [{
             "content": filebytes,
             "name": filename
           }],
-          "htmlContent": "<!DOCTYPE html> <html> <body> <h1>Solutions Inclutions</h1> <p>Solutions Inclutions has sended you $name</p> </body> </html>",
-          "textContent": "Solutions Inclutions has sended you $name",
+          "htmlContent": "<!DOCTYPE html> <html> <body> <h1>Solutions Inclutions</h1> <p>Solutions Inclutions has sended you $filename</p> </body> </html>",
+          "textContent": "Solutions Inclutions has sended you $filename",
           "subject": "Solutions Inclutions",
           // Add other necessary fields according to Brevo API documentation
         }),
@@ -555,23 +555,29 @@ class ApiRepository{
 
       if (response.statusCode == 200 ||response.statusCode == 201) {
         print('Email sent successfully');
-        toastification.show(context: context,
-            title: Text('Email sent successfully ${email}'),
-            autoCloseDuration: Duration(milliseconds: 2500),
-            alignment: Alignment.center,
-            backgroundColor: Colors.green,
-            foregroundColor: Colors.white,
-            icon: Icon(Icons.check_circle, color: Colors.white,),
-            animationDuration: Duration(milliseconds: 1000),
-            showProgressBar: false
-        );
+        print("statusCode ${response.statusCode}");
+        print("headers ${response.headers}");
+        print("isRedirect ${response.isRedirect}");
+        print("reasonPhrase ${response.reasonPhrase}");
+        print("request ${response.request}");
+        print("body ${response.body}");
+        // toastification.show(context: context,
+        //     title: Text('Email sent successfully to $email1 and $email2'),
+        //     autoCloseDuration: Duration(milliseconds: 2500),
+        //     alignment: Alignment.center,
+        //     backgroundColor: Colors.green,
+        //     foregroundColor: Colors.white,
+        //     icon: Icon(Icons.check_circle, color: Colors.white,),
+        //     animationDuration: Duration(milliseconds: 1000),
+        //     showProgressBar: false
+        // );
       } else {
         print('Failed to send email: ${response.statusCode}');
         print(response.body);
 
       }
     } catch (e) {
-      print('Error sending email: $e');
+      print('Error sending email: ${e}');
     }
   }
 

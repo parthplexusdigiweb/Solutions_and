@@ -132,7 +132,7 @@ class AddKeywordProvider with ChangeNotifier{
 
         docssssss?.map((e) => print("docsssssseeeee $e"));
         final dc = docssssss?.where((element) {
-          var name = element.get("Name").toLowerCase();
+          var name = element.get("Label").toLowerCase();
           var description = element.get("Description").toLowerCase();
           var tags = element.get('tags').toString().toLowerCase();
           var category = element.get('Keywords').toString().toLowerCase();
@@ -200,7 +200,7 @@ class AddKeywordProvider with ChangeNotifier{
 
         docssssss?.map((e) => print("$e"));
         final dc = docssssss?.where((element) {
-          var name = element.get("Name").toLowerCase();
+          var name = element.get("Label").toLowerCase();
           var description = element.get("Description").toLowerCase();
           var tags = element.get('tags').toString().toLowerCase();
           var category = element.get('Keywords').toString().toLowerCase();

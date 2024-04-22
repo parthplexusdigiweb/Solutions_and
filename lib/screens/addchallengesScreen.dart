@@ -1616,7 +1616,7 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
       List<Widget> thriverNodes = [];
 
       for (QueryDocumentSnapshot thriverDocument in thriversSnapshot.docs) {
-        String thriverName = thriverDocument['Name'];
+        String thriverName = thriverDocument['Label'];
         // print("category name"+thriverName);
         thriverNodes.add(ListTile(title: Text(thriverName,style: TextStyle(color: Colors.black),)));
       }
@@ -5327,43 +5327,45 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
                                                         children: [
                                                           Text("Tags: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
                                                 
-                                                          Consumer<ChallengesProvider>(
-                                                              builder: (c,addKeywordProvider, _){
-                                                                return Padding(
-                                                                  padding: const EdgeInsets.only(left: 15.0),
-                                                                  child: Align(
-                                                                    alignment: Alignment.centerLeft,
-                                                                    child: Wrap(
-                                                                      spacing: 10,
-                                                                      runSpacing: 10,
-                                                                      crossAxisAlignment: WrapCrossAlignment.start,
-                                                                      alignment: WrapAlignment.start,
-                                                                      runAlignment: WrapAlignment.start,
-                                                                      children: addKeywordProvider.ProviderEditTags.map((item){
-                                                                        return Container(
-                                                                          height: 50,
-                                                                          // width: 200,
-                                                                          padding: EdgeInsets.all(8),
-                                                                          decoration: BoxDecoration(
-                                                                              borderRadius: BorderRadius.circular(15),
-                                                                              color: Colors.blue
-                                                                          ),
-                                                                          child: Row(
-                                                                            mainAxisSize: MainAxisSize.min,
-                                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                            children: [
-                                                                              Text(item, style: TextStyle(
-                                                                                  fontWeight: FontWeight.w700
-                                                                              ),),
-                                                                            ],
-                                                                          ),
-                                                                        );
-                                                                      }).toList(),
+                                                          Flexible(
+                                                            child: Consumer<ChallengesProvider>(
+                                                                builder: (c,addKeywordProvider, _){
+                                                                  return Padding(
+                                                                    padding: const EdgeInsets.only(left: 15.0),
+                                                                    child: Align(
+                                                                      alignment: Alignment.centerLeft,
+                                                                      child: Wrap(
+                                                                        spacing: 10,
+                                                                        runSpacing: 10,
+                                                                        crossAxisAlignment: WrapCrossAlignment.start,
+                                                                        alignment: WrapAlignment.start,
+                                                                        runAlignment: WrapAlignment.start,
+                                                                        children: addKeywordProvider.ProviderEditTags.map((item){
+                                                                          return Container(
+                                                                            height: 50,
+                                                                            // width: 200,
+                                                                            padding: EdgeInsets.all(8),
+                                                                            decoration: BoxDecoration(
+                                                                                borderRadius: BorderRadius.circular(15),
+                                                                                color: Colors.blue
+                                                                            ),
+                                                                            child: Row(
+                                                                              mainAxisSize: MainAxisSize.min,
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              children: [
+                                                                                Text(item, style: TextStyle(
+                                                                                    fontWeight: FontWeight.w700
+                                                                                ),),
+                                                                              ],
+                                                                            ),
+                                                                          );
+                                                                        }).toList(),
+                                                                      ),
                                                                     ),
-                                                                  ),
-                                                                );
-                                                
-                                                              }),
+                                                                  );
+                                                                                                            
+                                                                }),
+                                                          ),
                                                         ],
                                                       ),
                                                 
@@ -5451,7 +5453,7 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
                                                                                   style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
                                                                                       fontSize: 20,
                                                                                       color: Colors.black)),
-                                                                              Text("${solutionData['Name']}",
+                                                                              Text("${solutionData['Label']}",
                                                                                   style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
                                                                                       fontSize: 25,
                                                                                       color: Colors.black)),

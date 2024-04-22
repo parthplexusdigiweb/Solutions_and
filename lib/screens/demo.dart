@@ -70,7 +70,7 @@ class _DSemoState extends State<DSemo> {
 
   void _loadCSV() async {
     print("inisde load csv");
-    final _rawData = await rootBundle.loadString("challenges_Import.csv");
+    final _rawData = await rootBundle.loadString("Solutions_import_march8th.csv");
     List<List<dynamic>> _listData = const CsvToListConverter().convert(_rawData);
 
     setState(() {
@@ -123,7 +123,7 @@ class _DSemoState extends State<DSemo> {
     super.initState();
     // KeywordServices();
     addKeywordProvider = Provider.of<AddKeywordProvider>(context, listen: false);
-    _loadCSV(); //----
+    _loadCSV(); /// this
     // _loadCSVvvvv();
   }
 
@@ -362,6 +362,44 @@ class _DSemoState extends State<DSemo> {
                 //   }
                 //
                 // },
+                ///
+                // onTap: () async {
+                //
+                //   int x = 0;
+                //   for(var i in _data){
+                //   List<String> Keywordsarray = i[8].split(', ');
+                //   List<String> Tagsarray = i[9].split(', ');
+                //
+                //   x = x + 1;
+                //
+                //     // print(i[13]);
+                //     await ApiRepository().createThriversss({
+                //       "id": x,
+                //       "Source" : i[1].toString(),
+                //       "Thirver Status" : addKeywordProvider.selectThriversStatusItems,
+                //       "tags": Tagsarray,
+                //       "Created By": i[0],
+                //       "Created Date": DateTime.now(),
+                //       "Modified By": "",
+                //       "Modified Date": "",
+                //       'Label': i[4].toString(),
+                //       // 'Description': thriverDescTextEditingController.text,
+                //       'Description': i[7].toString(),
+                //       'Original Description': i[3].toString(),
+                //       'Final_description': i[5].toString(),
+                //       'Impact': i[6].toString(),
+                //       // 'Details': _controller.document.insert(0, addDetailsController.text.toString()),
+                //       // 'Category': addKeywordProvider.selectedValue.toString(),
+                //       'Category': "Thrivers Category",
+                //       'Keywords': Keywordsarray,
+                //       "Notes" :  i[10].toString()
+                //       // 'Associated Thrivers': "",
+                //       // 'Associated Challenges': ""
+                //     }
+                //     );
+                //   }
+                //
+                // },
                 child: Card(
                   margin: const EdgeInsets.all(3),
                   color: index == 0 ? Colors.amber : Colors.white,
@@ -388,7 +426,7 @@ class _DSemoState extends State<DSemo> {
                     //     Text(_data[index][5]),
                     //   ],
                     // ),
-                    title: Text("${_data[index][8]}"),
+                    title: Text("${_data[index][4]}"),
                   ),
                 ),
               );
