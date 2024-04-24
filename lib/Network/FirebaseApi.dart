@@ -533,8 +533,7 @@ class ApiRepository{
         headers : {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          // 'api-key': "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"
-          'api-key': "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" /// this is the main api key for mail clear before push
+          'api-key': "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"
 
         },
         body: jsonEncode({
