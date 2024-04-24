@@ -139,7 +139,6 @@ class _BrevoScreenState extends State<BrevoScreen> {
                             // Add more fields if needed
                           });
                           ProgressDialog.hide();
-                          Navigator.pop(context);
                         },
                         child: Container(
                           width: 200,

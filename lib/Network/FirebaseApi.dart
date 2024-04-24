@@ -480,7 +480,7 @@ class ApiRepository{
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'api-key': "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"
+      'api-key': BREVO_API_KEY_FROM_BACKEND
     };
 
     String token = EncryptData.createJWT({"email":email});
@@ -524,6 +524,10 @@ class ApiRepository{
     String apiUrl = 'https://api.brevo.com/sendEmail'; // Example API endpoint, replace with actual endpoint
     // String BREVO_API_KEY_FROM_BACKEND = "";
 
+    String BREVO_API_KEY_FROM_BACKEND = await getBrevoApiKey();
+    // String BREVO_API_KEY_FROM_BACKEND = "";
+
+    print("BREVO_API_KEY_FROM_BACKEND : $BREVO_API_KEY_FROM_BACKEND");
 
     try {
       var response = await http.post(
@@ -531,6 +535,8 @@ class ApiRepository{
         headers : {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
+          'api-key': BREVO_API_KEY_FROM_BACKEND /// this is the main api key for mail clear before push
+
         },
         body: jsonEncode({
           "sender": {
