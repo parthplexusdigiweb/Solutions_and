@@ -522,7 +522,6 @@ class ApiRepository{
 
   Future<void> sendEmailWithAttachment(context, email1,name1,email2,name2,filebytes,filename) async {
     String apiUrl = 'https://api.brevo.com/sendEmail'; // Example API endpoint, replace with actual endpoint
-    // String BREVO_API_KEY_FROM_BACKEND = "";
 
     String BREVO_API_KEY_FROM_BACKEND = await getBrevoApiKey();
     // String BREVO_API_KEY_FROM_BACKEND = "";

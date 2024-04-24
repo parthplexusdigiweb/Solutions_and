@@ -10387,27 +10387,30 @@ Date
     print("Inside showconfirmrDialogBox");
     print("pop up Id: $Id");
     print("label: $label");
-    print("description: $description");
-    print("source: $source");
-    print("Status: $ChallengeStatus");
-    print("tags: ${tags}");
-    print("CreatedBy: $CreatedBy");
-    print("CreatedDate: $CreatedDate");
-    print("ModifiedBy: $ModifiedBy");
-    print("ModifiedDate: $ModifiedDate");
-    print("OriginalDescription: $OriginalDescription");
-    print("Impact: $Impact");
-    print("Final_description: $Final_description");
-    print("Category: $Category");
-    print("Keywords: $Keywords");
-    print("PotentialStrengths: $PotentialStrengths");
-    print("HiddenStrengths: $HiddenStrengths");
-    print("Notes: $Notes");
-    // print("index: $index");
-    print("listname: $listname");
+    print("Provider: $Provider");
+    print("InPlace: $InPlace");
 
-    print("solutionsList before edit: $solutionsList");
-    print("solutionsList before edit: ${solutionsList.length}");
+    // print("description: $description");
+    // print("source: $source");
+    // print("Status: $ChallengeStatus");
+    // print("tags: ${tags}");
+    // print("CreatedBy: $CreatedBy");
+    // print("CreatedDate: $CreatedDate");
+    // print("ModifiedBy: $ModifiedBy");
+    // print("ModifiedDate: $ModifiedDate");
+    // print("OriginalDescription: $OriginalDescription");
+    // print("Impact: $Impact");
+    // print("Final_description: $Final_description");
+    // print("Category: $Category");
+    // print("Keywords: $Keywords");
+    // print("PotentialStrengths: $PotentialStrengths");
+    // print("HiddenStrengths: $HiddenStrengths");
+    // print("Notes: $Notes");
+    // // print("index: $index");
+    // print("listname: $listname");
+
+    // print("solutionsList before edit: $solutionsList");
+    // print("solutionsList before edit: ${solutionsList.length}");
 
     showDialog(
         context: context,
@@ -10510,11 +10513,11 @@ Date
 
                                     // e
 
-                                    userAboutMEProvider.updateEditConfirmSolution1(Id,_previewProvider.PreviewSolutionMyResposibilty);
-                                    userAboutMEProvider.updateEditConfirmSolution2(Id,_previewProvider.PreviewSolutionStillNeeded);
-                                    userAboutMEProvider.updateEditConfirmSolution3(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
-                                    userAboutMEProvider.updateEditConfirmSolution4(Id,_previewProvider.PreviewSolutionNiceToHave);
-                                    userAboutMEProvider.updateEditConfirmSolution5(Id,_previewProvider.PreviewSolutionMustHave);
+                                    userAboutMEProvider.updateEditConfirmSolution18(Id,_previewProvider.PreviewSolutionMyResposibilty);
+                                    userAboutMEProvider.updateEditConfirmSolution28(Id,_previewProvider.PreviewSolutionStillNeeded);
+                                    userAboutMEProvider.updateEditConfirmSolution38(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
+                                    userAboutMEProvider.updateEditConfirmSolution48(Id,_previewProvider.PreviewSolutionNiceToHave);
+                                    userAboutMEProvider.updateEditConfirmSolution58(Id,_previewProvider.PreviewSolutionMustHave);
 
                                     userAboutMEProvider.updateInplaceValue(userAboutMEProvider.selectedInPlace);
 
@@ -10543,11 +10546,11 @@ Date
 
                                  else if(userAboutMEProvider.selectedInPlace == "No (Must Have)"){
 
-                                    userAboutMEProvider.updateEditConfirmSolution1(Id,_previewProvider.PreviewSolutionMyResposibilty);
-                                    userAboutMEProvider.updateEditConfirmSolution2(Id,_previewProvider.PreviewSolutionStillNeeded);
-                                    userAboutMEProvider.updateEditConfirmSolution3(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
-                                    userAboutMEProvider.updateEditConfirmSolution4(Id,_previewProvider.PreviewSolutionNiceToHave);
-                                    userAboutMEProvider.updateEditConfirmSolution5(Id,_previewProvider.PreviewSolutionMustHave);
+                                    userAboutMEProvider.updateEditConfirmSolution18(Id,_previewProvider.PreviewSolutionMyResposibilty);
+                                    userAboutMEProvider.updateEditConfirmSolution28(Id,_previewProvider.PreviewSolutionStillNeeded);
+                                    userAboutMEProvider.updateEditConfirmSolution38(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
+                                    userAboutMEProvider.updateEditConfirmSolution48(Id,_previewProvider.PreviewSolutionNiceToHave);
+                                    userAboutMEProvider.updateEditConfirmSolution58(Id,_previewProvider.PreviewSolutionMustHave);
 
 
                                     int index = _previewProvider.PreviewSolutionMustHave.indexWhere((solution) => solution['id'] == Id);
@@ -10565,11 +10568,11 @@ Date
                               }
 
                                  else if(userAboutMEProvider.selectedInPlace == "Yes (Still Needed)"){
-                                    userAboutMEProvider.updateEditConfirmSolution1(Id,_previewProvider.PreviewSolutionMyResposibilty);
-                                    userAboutMEProvider.updateEditConfirmSolution2(Id,_previewProvider.PreviewSolutionStillNeeded);
-                                    userAboutMEProvider.updateEditConfirmSolution3(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
-                                    userAboutMEProvider.updateEditConfirmSolution4(Id,_previewProvider.PreviewSolutionNiceToHave);
-                                    userAboutMEProvider.updateEditConfirmSolution5(Id,_previewProvider.PreviewSolutionMustHave);
+                                    userAboutMEProvider.updateEditConfirmSolution18(Id,_previewProvider.PreviewSolutionMyResposibilty);
+                                    userAboutMEProvider.updateEditConfirmSolution28(Id,_previewProvider.PreviewSolutionStillNeeded);
+                                    userAboutMEProvider.updateEditConfirmSolution38(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
+                                    userAboutMEProvider.updateEditConfirmSolution48(Id,_previewProvider.PreviewSolutionNiceToHave);
+                                    userAboutMEProvider.updateEditConfirmSolution58(Id,_previewProvider.PreviewSolutionMustHave);
 
                                     int index = _previewProvider.PreviewSolutionStillNeeded.indexWhere((solution) => solution['id'] == Id);
                                     if (index != -1) {
@@ -10586,11 +10589,11 @@ Date
                               }
 
                                  else if(userAboutMEProvider.selectedInPlace == "Yes (Not Needed Anymore)"){
-                                    userAboutMEProvider.updateEditConfirmSolution1(Id,_previewProvider.PreviewSolutionMyResposibilty);
-                                    userAboutMEProvider.updateEditConfirmSolution2(Id,_previewProvider.PreviewSolutionStillNeeded);
-                                    userAboutMEProvider.updateEditConfirmSolution3(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
-                                    userAboutMEProvider.updateEditConfirmSolution4(Id,_previewProvider.PreviewSolutionNiceToHave);
-                                    userAboutMEProvider.updateEditConfirmSolution5(Id,_previewProvider.PreviewSolutionMustHave);
+                                    userAboutMEProvider.updateEditConfirmSolution18(Id,_previewProvider.PreviewSolutionMyResposibilty);
+                                    userAboutMEProvider.updateEditConfirmSolution28(Id,_previewProvider.PreviewSolutionStillNeeded);
+                                    userAboutMEProvider.updateEditConfirmSolution38(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
+                                    userAboutMEProvider.updateEditConfirmSolution48(Id,_previewProvider.PreviewSolutionNiceToHave);
+                                    userAboutMEProvider.updateEditConfirmSolution58(Id,_previewProvider.PreviewSolutionMustHave);
 
                                     int index = _previewProvider.PreviewSolutionNotNeededAnyMore.indexWhere((solution) => solution['id'] == Id);
                                     if (index != -1) {
@@ -10607,11 +10610,11 @@ Date
                               }
 
                                  else if(userAboutMEProvider.selectedInPlace == "No (Nice to have)"){
-                                    userAboutMEProvider.updateEditConfirmSolution1(Id,_previewProvider.PreviewSolutionMyResposibilty);
-                                    userAboutMEProvider.updateEditConfirmSolution2(Id,_previewProvider.PreviewSolutionStillNeeded);
-                                    userAboutMEProvider.updateEditConfirmSolution3(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
-                                    userAboutMEProvider.updateEditConfirmSolution4(Id,_previewProvider.PreviewSolutionNiceToHave);
-                                    userAboutMEProvider.updateEditConfirmSolution5(Id,_previewProvider.PreviewSolutionMustHave);
+                                    userAboutMEProvider.updateEditConfirmSolution18(Id,_previewProvider.PreviewSolutionMyResposibilty);
+                                    userAboutMEProvider.updateEditConfirmSolution28(Id,_previewProvider.PreviewSolutionStillNeeded);
+                                    userAboutMEProvider.updateEditConfirmSolution38(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
+                                    userAboutMEProvider.updateEditConfirmSolution48(Id,_previewProvider.PreviewSolutionNiceToHave);
+                                    userAboutMEProvider.updateEditConfirmSolution58(Id,_previewProvider.PreviewSolutionMustHave);
 
                                     int index = _previewProvider.PreviewSolutionNiceToHave.indexWhere((solution) => solution['id'] == Id);
                                     if (index != -1) {
@@ -10630,15 +10633,14 @@ Date
                               }
 
 
-                                  print("solutionsList after edit: $solutionsList");
-                                  print("solutionsList length after edit: ${solutionsList.length}");
+                                  // print("solutionsList after edit: $solutionsList");
+                                  // print("solutionsList length after edit: ${solutionsList.length}");
                                   // userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
                                   userAboutMEProvider.updatenewprovider(solutionData["Provider"], solutionData["id"]);
                                   userAboutMEProvider.updatenewInplace(solutionData["InPlace"], solutionData["id"]);
                                 }
 
                                 else {
-                                  // Handle case where 'id' does not exist in the list
                                   print("Id not found in solutionData.");
                                 }
 
@@ -10879,7 +10881,7 @@ Date
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: userAboutMEProvider.provider.map((String value) {
                                   return Container(
-                                    width: MediaQuery.of(context).size.width * .18,
+                                    width: MediaQuery.of(context).size.width * .24,
                                     child: Row(
                                       children: [
                                         Radio<String>(

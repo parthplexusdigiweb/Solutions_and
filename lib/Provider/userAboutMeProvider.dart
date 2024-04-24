@@ -675,8 +675,8 @@ class UserAboutMEProvider with ChangeNotifier{
         'Attachment':challenge.attachment,
       };
       mainList.add(solutionData);
-      print("mainList.length challenge: ${mainList.length}");
-      print("mainList challenge: ${mainList}");
+      // print("mainList.length challenge: ${mainList.length}");
+      // print("mainList challenge: ${mainList}");
 
     }
   }
@@ -754,8 +754,8 @@ class UserAboutMEProvider with ChangeNotifier{
       mainList.add(solutionData);
       updatenewprovider(solutionData["Provider"], solutionData["id"]);
       updatenewInplace(solutionData["InPlace"], solutionData["id"]);
-      print("mainList.length: ${mainList.length}");
-      print("mainList: ${mainList}");
+      // print("mainList.length: ${mainList.length}");
+      // print("mainList: ${mainList}");
     }
   }
 
@@ -790,8 +790,8 @@ class UserAboutMEProvider with ChangeNotifier{
       if(solutionData["Provider"]=="My Responsibilty"){
       mainList.add(solutionData);
       }
-      print("mainList.length solution: ${mainList.length}");
-      print("mainList solution: ${mainList}");
+      // print("mainList.length solution: ${mainList.length}");
+      // print("mainList solution: ${mainList}");
     }
   }
 
@@ -1083,6 +1083,85 @@ class UserAboutMEProvider with ChangeNotifier{
     }
   }
 
+  void updateEditConfirmSolution18(id, providerlist1) {
+    List<dynamic> itemsToRemove = [];
+
+    for (var solutionData in providerlist1) {
+      if (solutionData["id"] == id && solutionData["Provider"] == "My Responsibilty") {
+        itemsToRemove.add(solutionData);
+      }
+    }
+
+    for (var item in itemsToRemove) {
+      providerlist1.remove(item);
+    }
+
+    notifyListeners();
+  }
+
+  void updateEditConfirmSolution28(id, providerlist1) {
+    List<dynamic> itemsToRemove = [];
+
+    for (var solutionData in providerlist1) {
+      if (solutionData["id"] == id && solutionData["InPlace"] == "Yes (Still Needed)") {
+        itemsToRemove.add(solutionData);
+      }
+    }
+
+    for (var item in itemsToRemove) {
+      providerlist1.remove(item);
+    }
+
+    notifyListeners();
+  }
+
+  void updateEditConfirmSolution38(id, providerlist1) {
+    List<dynamic> itemsToRemove = [];
+
+    for (var solutionData in providerlist1) {
+      if (solutionData["id"] == id && solutionData["InPlace"] == "Yes (Not Needed Anymore)") {
+        itemsToRemove.add(solutionData);
+      }
+    }
+
+    for (var item in itemsToRemove) {
+      providerlist1.remove(item);
+    }
+
+    notifyListeners();
+  }
+
+  void updateEditConfirmSolution48(id, providerlist1) {
+    List<dynamic> itemsToRemove = [];
+
+    for (var solutionData in providerlist1) {
+      if (solutionData["id"] == id && solutionData["InPlace"] == "No (Nice to have)") {
+        itemsToRemove.add(solutionData);
+      }
+    }
+
+    for (var item in itemsToRemove) {
+      providerlist1.remove(item);
+    }
+
+    notifyListeners();
+  }
+
+  void updateEditConfirmSolution58(id, providerlist1) {
+    List<dynamic> itemsToRemove = [];
+
+    for (var solutionData in providerlist1) {
+      if (solutionData["id"] == id && solutionData["InPlace"] == "No (Must Have)") {
+        itemsToRemove.add(solutionData);
+      }
+    }
+
+    for (var item in itemsToRemove) {
+      providerlist1.remove(item);
+    }
+
+    notifyListeners();
+  }
 
   void updateEditConfirmSolution1(id, providerlist1,) {
     // List<dynamic> solutionsList = ConfirmSolution ?? [];
