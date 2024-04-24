@@ -13,6 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
 import 'package:thrivers/Network/FirebaseApi.dart';
 import 'package:thrivers/Provider/AddKeywordsProvider.dart';
@@ -1989,7 +1990,89 @@ Date
                                     DocumentSnapshot lastDocument = querySnapshot.docs.first;
                                     print("lastDocument :$lastDocument");
                                     // showEditAboutMeDialogBox(lastDocument,4);
-                                    showReportViewPageDialogBox(lastDocument);
+                                    // showReportViewPageDialogBox(lastDocument);
+
+                                    About_Me_Label = lastDocument['About_Me_Label']==null ? "" : lastDocument['About_Me_Label'];
+                                    AboutMeLabeltextController.text = lastDocument['About_Me_Label']==null ? "" : lastDocument['About_Me_Label'];
+                                    AboutMeDescriptiontextController.text = lastDocument['AB_Description']==null ? "" : lastDocument['AB_Description'];
+                                    AboutMeUseFulInfotextController.text = lastDocument['AB_Useful_Info']==null ? "" : lastDocument['AB_Useful_Info'];
+                                    AboutMeDatetextController.text = lastDocument['AB_Date']==null ? "" : lastDocument['AB_Date'];
+                                    selectedEmail = lastDocument['Email']==null ? "" : lastDocument['Email'];
+                                    _previewProvider.email = selectedEmail;
+                                    searchEmailcontroller.text = lastDocument['Email']==null ? "" : lastDocument['Email'];
+                                    // _previewProvider.email = selectedEmail;
+                                    nameController.text = lastDocument['User_Name']==null ? "" : lastDocument['User_Name'];
+                                    _previewProvider.name = nameController.text;
+                                    employerController.text = lastDocument['Employer']==null ? "" : lastDocument['Employer'];
+                                    _previewProvider.employer = employerController.text;
+                                    divisionOrSectionController.text = lastDocument['Division_or_Section']==null ? "" : lastDocument['Division_or_Section'];
+                                    _previewProvider.division = divisionOrSectionController.text;
+                                    RoleController.text = lastDocument['Role']==null ? "" : lastDocument['Role'];
+                                    _previewProvider.role = RoleController.text;
+                                    LocationController.text = lastDocument['Location']==null ? "" : lastDocument['Location'];
+                                    _previewProvider.location = LocationController.text;
+                                    EmployeeNumberController.text = lastDocument['Employee_Number']==null ? "" : lastDocument['Employee_Number'];
+                                    _previewProvider.employeeNumber = EmployeeNumberController.text;
+                                    LineManagerController.text = lastDocument['Line_Manager']==null ? "" : lastDocument['Line_Manager'];
+                                    _previewProvider.linemanager = LineManagerController.text;
+
+                                    mycircumstancesController.text = lastDocument['My_Circumstance']==null ? "" : lastDocument['My_Circumstance'];
+                                    _previewProvider.mycircumstance = mycircumstancesController.text;
+                                    MystrengthsController.text = lastDocument['My_Strength']==null ? "" : lastDocument['My_Strength'];
+                                    _previewProvider.mystrength = MystrengthsController.text;
+                                    myOrganisationController.text = lastDocument['My_Organisation']==null ? "" : lastDocument['My_Organisation'];
+                                    _previewProvider.myorganization = myOrganisationController.text;
+                                    myOrganisation2Controller.text = lastDocument['My_Challenges_Organisation']==null ? "" : lastDocument['My_Challenges_Organisation'];
+                                    _previewProvider.mychallenge = myOrganisation2Controller.text;
+
+                                    List<dynamic> challengesList = lastDocument['Challenges'] ?? [];
+                                    List<dynamic> solutionsList = lastDocument['Solutions'] ?? [];
+
+                                    Iterable<Map<String, dynamic>> challengesIterable = challengesList.map((item) => item as Map<String, dynamic>);
+                                    Iterable<Map<String, dynamic>> solutionsIterable = solutionsList.map((item) => item as Map<String, dynamic>);
+
+                                    List<Map<String, dynamic>> abc = [];
+                                    List<Map<String, dynamic>> xyz = [];
+
+                                    abc.addAll(challengesIterable);
+                                    xyz.addAll(solutionsIterable);
+
+
+
+                                    Uint8List pdfBytes = await makePdf(abc, xyz);
+
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return  AlertDialog(
+                                            icon: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text("${About_Me_Label}",
+                                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                                                ),
+                                                IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.close)),
+                                              ],
+                                            ),
+                                            backgroundColor: Colors.white,
+                                              content: SizedBox(
+                                                width: double.maxFinite,
+                                                  child: PdfPreview(
+                                                    maxPageWidth: MediaQuery.of(context).size.width * .6,
+                                                    allowSharing: false,
+                                                    canChangeOrientation: false,
+                                                    canChangePageFormat: false,
+                                                    canDebug: false,
+                                                  allowPrinting: false,
+                                                  pdfFileName: About_Me_Label,
+                                                  previewPageMargin: EdgeInsets.all(10),
+                                                  useActions: true,
+                                                    pdfPreviewPageDecoration: BoxDecoration(color: Colors.white),
+                                                    build: (format) => pdfBytes,
+                                                  ),
+                                              ));
+                                        });
+
                                   }
                                   // else{
                                   //   _navigateToTab(4);
@@ -2052,6 +2135,7 @@ Date
                                   else{
                                     _navigateToTab(5);
                                     await showAddAddAboutMeDialogBox();
+
                                   }
                                 },
                                 child: Container(
@@ -9129,6 +9213,8 @@ Date
 
   Future<Uint8List> makePdf(List<Map<String, dynamic>> dataList, List<Map<String, dynamic>> dataList2) async {
     final pdf = pw.Document();
+    final Reportfont = await PdfGoogleFonts.latoBoldItalic();
+    final Reportansfont = await PdfGoogleFonts.latoItalic();
 
     pdf.addPage(
         pw.MultiPage(
@@ -9139,31 +9225,73 @@ Date
             List<pw.TableRow> ChallengetableRows = generateChallengeTableRows(dataList);
             List<pw.TableRow> SolutiontableRows = generateSolutionTableRows(dataList2);
 
+
             return [
-              pw.Padding(
-                  padding: const pw.EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: 5),
-                  child: pw.Center (child: pw.Text("My Report",style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 26)))
-              ),
-
-            // pw.Center (child:pw.Text("${AboutMeLabeltextController.text}",style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14))),
-
-              pw.Divider(),
-
               pw.Padding(
                 padding: const pw.EdgeInsets.symmetric(
                     vertical: 10.0, horizontal: 8),
                 child: pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.start,
                   children: [
-                    pw.Text("Report Title: ",),
+                    pw.Text("Report: ", style: pw.TextStyle(font: Reportfont)),
 
-                    pw.Text(
-                      "${AboutMeLabeltextController.text}",),
+                    pw.Text("${AboutMeLabeltextController.text}",style: pw.TextStyle(font: Reportansfont,color: PdfColors.black)),
 
                   ],
                 ),
               ),
+
+              pw.SizedBox(height: 5,),
+
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.start,
+                children: [
+                  pw.Container(
+                    width: 100,
+                    child: pw.Text(
+                      "Date: ",
+                      style: pw.TextStyle(
+                        font: Reportansfont,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  pw.Expanded(
+                    flex: 5,
+                    child: pw.Text(
+                      "${AboutMeDatetextController.text}",
+                      style: pw.TextStyle(font: Reportansfont),
+                    ),
+                  ),
+                ],
+              ),
+
+              pw.SizedBox(height: 10,),
+
+
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.start,
+                children: [
+                  pw.Container(
+                    width: 100,
+                    child: pw.Text(
+                      "Name: ",
+                      style: pw.TextStyle(
+                        font: Reportansfont,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  pw.Expanded(
+                    flex: 5,
+                    child: pw.Text(
+                      "${nameController.text}",
+                      style: pw.TextStyle(font: Reportansfont),
+                    ),
+                  ),
+                ],
+              ),
+
 
               pw.Padding(
                 padding: const pw.EdgeInsets.symmetric(
