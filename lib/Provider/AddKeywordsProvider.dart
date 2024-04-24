@@ -43,9 +43,9 @@ class AddKeywordProvider with ChangeNotifier{
   bool _isLoadingMore = false;
   bool get isLoadingMore => _isLoadingMore;
 
-  int _perPage = 10;
+  int _perPage = 30;
   int currentPage = 1; // Current page number
-  int totalPages = 31; // Total number of pages
+  int totalPages = 1; // Total number of pages
 
   void loadNextPage() {
     if (currentPage < totalPages) {
@@ -65,6 +65,21 @@ class AddKeywordProvider with ChangeNotifier{
     }
   }
 
+  void loadFirstPage() {
+    currentPage = 1;
+    _isLoadingMore = true;
+    loadDataForPage(currentPage);
+    notifyListeners();
+  }
+
+  void loadLastPage() {
+    currentPage = totalPages;
+    _isLoadingMore = true;
+    loadDataForPage(currentPage);
+    notifyListeners();
+  }
+
+
 
   getdatasearch() async {
     querySnapshotsss = await productsCollection.get();
@@ -79,21 +94,41 @@ class AddKeywordProvider with ChangeNotifier{
 
     FirebaseFirestore.instance
         .collection('Thrivers')
-        .orderBy('id')
-        .startAfter([startIndex]) // Start after the specified document index
-        .limit(_perPage)
         .get()
         .then((QuerySnapshot querySnapshot) {
+      int totalCount = querySnapshot.docs.length;
+      totalPages = (totalCount / _perPage).ceil();
+
+      // Ensure currentPage does not exceed totalPages
+      if (currentPage > totalPages) {
+        currentPage = totalPages;
+      }
+
+      // Adjust the startIndex to ensure it doesn't exceed totalCount
+      if (startIndex >= totalCount) {
+        startIndex = (totalCount - 1).clamp(0, totalCount - 1);
+      }
+
+      FirebaseFirestore.instance
+          .collection('Thrivers')
+          .orderBy('id')
+          .startAfter([startIndex]) // Start after the specified document index
+          .limit(_perPage)
+          .get()
+          .then((QuerySnapshot querySnapshot) {
         documents.clear();
         documents.addAll(querySnapshot.docs);
         _isLoadingMore = false;
         // currentPage = 1;
         notifyListeners();
-    }).catchError((error) {
-      print('Error loading data for page $page: $error');
-      _isLoadingMore = false;
-      notifyListeners();
-    });
+      }).catchError((error) {
+        print('Error loading data for page $page: $error');
+        _isLoadingMore = false;
+        notifyListeners();
+      });
+      }).catchError((error) {
+        print('Error retrieving document count: $error');
+      });
   }
 
   void setFirstpageNo(){
@@ -110,6 +145,9 @@ class AddKeywordProvider with ChangeNotifier{
     loadDataForPageSearchFilter(search);
     notifyListeners();
   }
+
+
+
 
 
   Future<void> loadDataForPageSearchFilter(search) async   {

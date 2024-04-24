@@ -26,9 +26,9 @@ class ChallengesProvider with ChangeNotifier{
   bool _isLoadingMore = false;
   bool get isLoadingMore => _isLoadingMore;
 
-  int _perPage = 10;
+  int _perPage = 30;
   int currentPage = 1; // Current page number
-  int totalPages = 31; // Total number of pages
+  int totalPages = 1; // Total number of pages
   var lengthOfdocument;
 
 
@@ -50,6 +50,20 @@ class ChallengesProvider with ChangeNotifier{
     }
   }
 
+  void loadFirstPage() {
+    currentPage = 1;
+    _isLoadingMore = true;
+    loadDataForPage(currentPage);
+    notifyListeners();
+  }
+
+  void loadLastPage() {
+    currentPage = totalPages;
+    _isLoadingMore = true;
+    loadDataForPage(currentPage);
+    notifyListeners();
+  }
+
   getdatasearch() async {
     querySnapshotsss = await productsCollection.get();
     docssssss  = querySnapshotsss?.docs;
@@ -59,6 +73,24 @@ class ChallengesProvider with ChangeNotifier{
     int startIndex = (page - 1) * _perPage;
 
     _isLoadingMore = true;
+
+
+    FirebaseFirestore.instance
+        .collection('Challenges')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      int totalCount = querySnapshot.docs.length;
+      totalPages = (totalCount / _perPage).ceil();
+
+      // Ensure currentPage does not exceed totalPages
+      if (currentPage > totalPages) {
+        currentPage = totalPages;
+      }
+
+      // Adjust the startIndex to ensure it doesn't exceed totalCount
+      if (startIndex >= totalCount) {
+        startIndex = (totalCount - 1).clamp(0, totalCount - 1);
+      }
 
     FirebaseFirestore.instance
         .collection('Challenges')
@@ -76,6 +108,9 @@ class ChallengesProvider with ChangeNotifier{
       print('Error loading data for page $page: $error');
       _isLoadingMore = false;
       notifyListeners();
+    });
+    }).catchError((error) {
+      print('Error retrieving document count: $error');
     });
   }
 

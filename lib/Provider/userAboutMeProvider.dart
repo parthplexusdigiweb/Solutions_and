@@ -106,10 +106,10 @@ class UserAboutMEProvider with ChangeNotifier{
 
   updateconfirmList(listname, indexToUpdate,updatedData){
     listname[indexToUpdate] = updatedData;
-    print("listname.length: ${listname.length}");
-    print("listname: $listname");
-    print("indexToUpdate: $indexToUpdate");
-    print("updatedData: $updatedData");
+    // print("listname.length: ${listname.length}");
+    // print("listname: $listname");
+    // print("indexToUpdate: $indexToUpdate");
+    // print("updatedData: $updatedData");
     notifyListeners();
   }
 
@@ -1099,12 +1099,27 @@ class UserAboutMEProvider with ChangeNotifier{
     // Iterable<Map<String, dynamic>> providerIterable3 = providersolutionsList3.map((item) => item as Map<String, dynamic>);
     // Iterable<Map<String, dynamic>> providerIterable4 = providersolutionsList4.map((item) => item as Map<String, dynamic>);
 
+    print("Before remove from _previewProvider.PreviewSolutionMyResposibilty");
+    print(providerlist1.length);
+    print(providerlist1);
+
     for (var solutionData in providerIterable1){
-      print("inside My Responsibilty");
+      print("remove from My Responsibilty");
+      print(" solutionData id: ${solutionData["id"]}");
+      print(" id: $id");
+      print(" InPlace: ${solutionData["InPlace"]}");
+      print(" Provider: ${solutionData["Provider"]}");
       if (solutionData["id"] == id && solutionData["Provider"] == "My Responsibilty") {
-        print("My Responsibilty id: ${solutionData["id"]}");
-        print("My Responsibilty InPlace: ${solutionData["InPlace"]}");
+
+        print("if solutionData id : ${solutionData["id"]}");
+        print("if id : $id");
+        print("if Provider: ${solutionData["Provider"]}");
         providerlist1.remove(solutionData);
+
+        print("After remove from My Responsibilty: $providerlist1");
+        print("After remove from My Responsibilty length: ${providerlist1.length}");
+
+
       }
       break;
     }
@@ -1119,12 +1134,16 @@ class UserAboutMEProvider with ChangeNotifier{
 
 
     for (var solutionData in providerIterable2){
-      print("inside No Yes (Still Needed)");
+      print("remove from Yes (Still Needed)");
+      print("solutionData id: ${solutionData["id"]}");
+      print(" id: ${id}");
+      print(" InPlace: ${solutionData["InPlace"]}");
       if (solutionData["id"] == id && solutionData["InPlace"] == "Yes (Still Needed)") {
-        print("providerlist2 id: ${solutionData["id"]}");
-        print("providerlist2 InPlace: ${solutionData["InPlace"]}");
+        print("inside if Yes (Still Needed) id: ${solutionData["id"]}");
+        print("inside if Yes (Still Needed) InPlace: ${solutionData["InPlace"]}");
         providerlist2.remove(solutionData);
-
+        print("After remove from Yes (Still Needed): $providerlist2");
+        print("After remove from Yes (Still Needed) length: ${providerlist2.length}");
       }
       break;
     }
@@ -1138,11 +1157,19 @@ class UserAboutMEProvider with ChangeNotifier{
 
 
     for (var solutionData in providerIterable2){
-      print("inside No Yes (Not Needed Anymore)");
+      print("remove from Yes (Not Needed Anymore)");
+      print("solutionData id: ${solutionData["id"]}");
+      print(" id: ${id}");
+      print(" InPlace: ${solutionData["InPlace"]}");
       if (solutionData["id"] == id && solutionData["InPlace"] == "Yes (Not Needed Anymore)") {
-        print("Yes (Not Needed Anymore) id: ${solutionData["id"]}");
-        print("Yes (Not Needed Anymore) InPlace: ${solutionData["InPlace"]}");
+
+        print("inside if Yes (Not Needed Anymore) id: ${solutionData["id"]}");
+        print("inside if Yes (Not Needed Anymore) InPlace: ${solutionData["InPlace"]}");
         providerlist2.remove(solutionData);
+
+        print("After remove from Yes (Not Needed Anymore): $providerlist2");
+
+        print("After remove from Yes (Not Needed Anymore) length: ${providerlist2.length}");
 
       }
       break;
@@ -1157,11 +1184,17 @@ class UserAboutMEProvider with ChangeNotifier{
 
 
     for (var solutionData in providerIterable2){
-      print("inside No Yes (Not Needed Anymore)");
+      print("remove from Yes (Not Needed Anymore)");
+      print("solutionData id: ${solutionData["id"]}");
+      print(" id: ${id}");
+      print(" InPlace: ${solutionData["InPlace"]}");
       if (solutionData["id"] == id && solutionData["InPlace"] == "No (Nice to have)") {
-        print("No (Nice to have) id: ${solutionData["id"]}");
-        print("No (Nice to have) InPlace: ${solutionData["InPlace"]}");
+        print("inside if No (Nice to have) id: ${solutionData["id"]}");
+        print("inside if No (Nice to have) InPlace: ${solutionData["InPlace"]}");
         providerlist2.remove(solutionData);
+        print("After remove from No (Nice to have): $providerlist2");
+
+        print("After remove from No (Nice to have) length: ${providerlist2.length}");
 
       }
       break;
@@ -1176,11 +1209,17 @@ class UserAboutMEProvider with ChangeNotifier{
 
 
     for (var solutionData in providerIterable5){
-      print("inside No (Must Have)");
+      print("remove from(Must Have)");
+      print("solutionData id: ${solutionData["id"]}");
+      print(" id: ${id}");
+      print(" InPlace: ${solutionData["InPlace"]}");
       if (solutionData["id"] == id && solutionData["InPlace"] == "No (Must Have)") {
-        print("providerlist5 id: ${solutionData["id"]}");
-        print("providerlist5 InPlace: ${solutionData["InPlace"]}");
+        print("inside if No (Must Have) id: ${solutionData["id"]}");
+        print("inside if No (Must Have) InPlace: ${solutionData["InPlace"]}");
         providerlist5.remove(solutionData);
+        print("After remove from No (Must Have): $providerlist5");
+
+        print("After remove from No (Must Have) length: ${providerlist5.length}");
 
       }
       break;

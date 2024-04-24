@@ -467,8 +467,7 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
   int _debouncetime = 1000;
 
 
-  int _currentPage = 1; // Current page number
-  int _totalPages = 31; // Total number of pages
+  // Total number of pages
 
   // Function to load next page
   // void _loadNextPage() {
@@ -554,1000 +553,991 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
             color: Colors.white.withOpacity(0.7),
             borderRadius: BorderRadius.circular(20),
           ),
-          child: Wrap(
-            children: [
-              HeaderWidget(),
-
-              Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.2,
-                          child: Consumer<ChallengesProvider>(
-                              builder: (c,challengesProvider, _){
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: TypeAheadField(
-                                    noItemsFoundBuilder: (ctx){
-                                      print("ccccc: $ctx");
-                                      return Container(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                HeaderWidget(),
+            
+                Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+            
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.2,
+                            child: Consumer<ChallengesProvider>(
+                                builder: (c,challengesProvider, _){
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TypeAheadField(
+                                      noItemsFoundBuilder: (ctx){
+                                        print("ccccc: $ctx");
+                                        return Container(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(15.0),
+                                              child: Text("No Keywords Found",style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),),
+                                            )
+                                        );
+                                      },
+                                      suggestionsBoxDecoration: SuggestionsBoxDecoration(
+                                          scrollbarTrackAlwaysVisible: true,
+                                          scrollbarThumbAlwaysVisible: true,
+                                          hasScrollbar: true,
+                                          borderRadius: BorderRadius.circular(5),
+                                          color: Colors.white,
+                                          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.3, )
+                                      ),
+                                      suggestionsCallback: (value) async {
+                                        // return await KeywordServices.getSuggestions(value, (addKeywordProvider.newselectedValue == null) ? addKeywordProvider.selectedValue : addKeywordProvider.newselectedValue);
+                                        // return await KeywordServices.getSuggestions(value, 'Thrivers Category');
+                                        return await ChallengeCategoryServices.getSuggestions(value);
+            
+                                      },
+                                      itemBuilder: (context, String suggestion) {
+                                        // print('selected multiple items before newselectedValue ${suggestion}');
+                                        // print('selected multiple items after newselectedValue ${addKeywordProvider.newKeyValues} ');
+                                        return Container(
+                                          // color: Colors.black,
                                           child: Padding(
                                             padding: const EdgeInsets.all(15.0),
-                                            child: Text("No Keywords Found",style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),),
-                                          )
-                                      );
-                                    },
-                                    suggestionsBoxDecoration: SuggestionsBoxDecoration(
-                                        scrollbarTrackAlwaysVisible: true,
-                                        scrollbarThumbAlwaysVisible: true,
-                                        hasScrollbar: true,
-                                        borderRadius: BorderRadius.circular(5),
-                                        color: Colors.white,
-                                        constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.3, )
-                                    ),
-                                    suggestionsCallback: (value) async {
-                                      // return await KeywordServices.getSuggestions(value, (addKeywordProvider.newselectedValue == null) ? addKeywordProvider.selectedValue : addKeywordProvider.newselectedValue);
-                                      // return await KeywordServices.getSuggestions(value, 'Thrivers Category');
-                                      return await ChallengeCategoryServices.getSuggestions(value);
-
-                                    },
-                                    itemBuilder: (context, String suggestion) {
-                                      // print('selected multiple items before newselectedValue ${suggestion}');
-                                      // print('selected multiple items after newselectedValue ${addKeywordProvider.newKeyValues} ');
-                                      return Container(
-                                        // color: Colors.black,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(15.0),
-                                          child: Text(suggestion,style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),),
+                                            child: Text(suggestion,style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),),
+                                          ),
+                                        );
+                                      },
+                                      // direction: AxisDirection.up,
+                                      onSuggestionSelected: (String suggestion) async {
+                                        print('onSuggestionSelected suggestion $suggestion before  ${challengesProvider.searchbycategory}');
+                                        // addKeywordProvider.addkeywordschip(suggestion,editKeywordssss);
+            
+                                        challengesProvider.addkeywordschip(suggestion,challengesProvider.searchbycategory);
+                                        // setState(() { });
+                                        searchbyCatcontroller.clear();
+                                        _challengeProvider.loadDataForPageFilter(1,'Keywords',_challengeProvider.searchbycategory);
+                                        _challengeProvider.setFirstpageNo();
+            
+                                        print('onSuggestionSelected after  ${_challengeProvider.searchbycategory}');
+                                      },
+                                      textFieldConfiguration: TextFieldConfiguration(
+                                        controller: searchbyCatcontroller,
+                                        style: GoogleFonts.poppins(
+                                          textStyle: Theme.of(context).textTheme.bodyLarge,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w400,fontStyle: FontStyle.normal,
                                         ),
-                                      );
-                                    },
-                                    // direction: AxisDirection.up,
-                                    onSuggestionSelected: (String suggestion) async {
-                                      print('onSuggestionSelected suggestion $suggestion before  ${challengesProvider.searchbycategory}');
-                                      // addKeywordProvider.addkeywordschip(suggestion,editKeywordssss);
-
-                                      challengesProvider.addkeywordschip(suggestion,challengesProvider.searchbycategory);
-                                      // setState(() { });
-                                      searchbyCatcontroller.clear();
-                                      _challengeProvider.loadDataForPageFilter(1,'Keywords',_challengeProvider.searchbycategory);
-                                      _challengeProvider.setFirstpageNo();
-
-                                      print('onSuggestionSelected after  ${_challengeProvider.searchbycategory}');
-                                    },
-                                    textFieldConfiguration: TextFieldConfiguration(
-                                      controller: searchbyCatcontroller,
-                                      style: GoogleFonts.poppins(
-                                        textStyle: Theme.of(context).textTheme.bodyLarge,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w400,fontStyle: FontStyle.normal,
-                                      ),
-                                      decoration: InputDecoration(
-                                        //errorText: userAccountSearchErrorText,
-                                        contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
-                                        labelText: "Search By Category",
-                                        hintText: "Search By Category",
-                                        errorStyle: GoogleFonts.montserrat(
-                                            textStyle: Theme.of(context).textTheme.bodyLarge,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.redAccent),
-
-                                        focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(color: Colors.black),
-                                            borderRadius: BorderRadius.circular(100)),
-                                        border: OutlineInputBorder(
-                                            borderSide: BorderSide(color: Colors.black12),
-                                            borderRadius: BorderRadius.circular(100)),
-                                        //hintText: "e.g Abouzied",
-                                        labelStyle: GoogleFonts.montserrat(
-                                            textStyle: Theme.of(context).textTheme.bodyLarge,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.black),
+                                        decoration: InputDecoration(
+                                          //errorText: userAccountSearchErrorText,
+                                          contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
+                                          labelText: "Search By Category",
+                                          hintText: "Search By Category",
+                                          errorStyle: GoogleFonts.montserrat(
+                                              textStyle: Theme.of(context).textTheme.bodyLarge,
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.redAccent),
+            
+                                          focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.black),
+                                              borderRadius: BorderRadius.circular(100)),
+                                          border: OutlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.black12),
+                                              borderRadius: BorderRadius.circular(100)),
+                                          //hintText: "e.g Abouzied",
+                                          labelStyle: GoogleFonts.montserrat(
+                                              textStyle: Theme.of(context).textTheme.bodyLarge,
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.black),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                );}
+                                  );}
+                            ),
                           ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.2,
-                          child: Consumer<ChallengesProvider>(
-                              builder: (c,challengesProvider, _){
-                                // print("searchbycattttt: $searchbycat");
-                                return (challengesProvider.searchbycategory.isNotEmpty) ? Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
-                                      controller: ScrollController(keepScrollOffset: true),
-                                      child: Wrap(
-                                        spacing: 10,
-                                        runSpacing: 10,
-                                        crossAxisAlignment: WrapCrossAlignment.start,
-                                        alignment: WrapAlignment.start,
-                                        runAlignment: WrapAlignment.start,
-                                        children: challengesProvider.searchbycategory.map((item){
-                                          print("item: $item");
-                                          print("searchbycat_challengeProvider: ${_challengeProvider.searchbycategory}");
-                                          return Container(
-                                            height: 40,
-                                            // width: 200,
-                                            // margin: EdgeInsets.only(bottom: 10),
-                                            padding: EdgeInsets.all(5),
-                                            decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(50),
-                                                border: Border.all(
-                                                    color: Colors.blue
-                                                )
-                                            ),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Text(item, style: TextStyle(
-                                                    fontWeight: FontWeight.w700,
-                                                    color: Colors.blue
-                                                ),),
-
-                                                IconButton(
-                                                    onPressed: ()async{
-                                                      setState(() {
-                                                        challengesProvider.removesearchcat(item);
-                                                        _challengeProvider.loadDataForPageFilter(1,'Keywords',_challengeProvider.searchbycategory);
-                                                        _challengeProvider.setFirstpageNo();
-                                                        _challengeProvider.lengthOfdocument = null;
-                                                      });
-                                                    },
-                                                    icon: Icon(Icons.dangerous_sharp,size: 15, color: Colors.black38,)
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        }).toList(),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.2,
+                            child: Consumer<ChallengesProvider>(
+                                builder: (c,challengesProvider, _){
+                                  // print("searchbycattttt: $searchbycat");
+                                  return (challengesProvider.searchbycategory.isNotEmpty) ? Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
+                                        controller: ScrollController(keepScrollOffset: true),
+                                        child: Wrap(
+                                          spacing: 10,
+                                          runSpacing: 10,
+                                          crossAxisAlignment: WrapCrossAlignment.start,
+                                          alignment: WrapAlignment.start,
+                                          runAlignment: WrapAlignment.start,
+                                          children: challengesProvider.searchbycategory.map((item){
+                                            print("item: $item");
+                                            print("searchbycat_challengeProvider: ${_challengeProvider.searchbycategory}");
+                                            return Container(
+                                              height: 40,
+                                              // width: 200,
+                                              // margin: EdgeInsets.only(bottom: 10),
+                                              padding: EdgeInsets.all(5),
+                                              decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(50),
+                                                  border: Border.all(
+                                                      color: Colors.blue
+                                                  )
+                                              ),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Text(item, style: TextStyle(
+                                                      fontWeight: FontWeight.w700,
+                                                      color: Colors.blue
+                                                  ),),
+            
+                                                  IconButton(
+                                                      onPressed: ()async{
+                                                        setState(() {
+                                                          challengesProvider.removesearchcat(item);
+                                                          _challengeProvider.loadDataForPageFilter(1,'Keywords',_challengeProvider.searchbycategory);
+                                                          _challengeProvider.setFirstpageNo();
+                                                          _challengeProvider.lengthOfdocument = null;
+                                                        });
+                                                      },
+                                                      icon: Icon(Icons.dangerous_sharp,size: 15, color: Colors.black38,)
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ) : Container(height: 40,);
-                              }),
-                        )
-                      ],
-                    ),
-
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.2,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: TypeAheadField(
-                              noItemsFoundBuilder: (c){
-                                print("tagcccccc: $c");
-                                return Container(
+                                  ) : Container(height: 40,);
+                                }),
+                          )
+                        ],
+                      ),
+            
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.2,
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: TypeAheadField(
+                                noItemsFoundBuilder: (c){
+                                  print("tagcccccc: $c");
+                                  return Container(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(15.0),
+                                        child: Text("No Tags Available",style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),
+                                        ),
+                                      )
+                                  );
+                                },
+                                // direction: AxisDirection.up,
+                                suggestionsBoxDecoration: SuggestionsBoxDecoration(
+                                    scrollbarTrackAlwaysVisible: true,
+                                    scrollbarThumbAlwaysVisible: true,
+                                    hasScrollbar: true,
+                                    borderRadius: BorderRadius.circular(5),
+                                    // color: Colors.white,
+                                    constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.3, )
+                                ),
+                                suggestionsCallback: (value) async {
+                                  print("taggggg value: $value");
+                                  return await TagServices.getSuggestions(searchbyTagcontroller.text.toLowerCase());
+                                },
+            
+                                itemBuilder: (context, String suggestion) {
+                                  return Container(
+                                    // color: Colors.black,
                                     child: Padding(
                                       padding: const EdgeInsets.all(15.0),
-                                      child: Text("No Tags Available",style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),
-                                      ),
-                                    )
-                                );
-                              },
-                              // direction: AxisDirection.up,
-                              suggestionsBoxDecoration: SuggestionsBoxDecoration(
-                                  scrollbarTrackAlwaysVisible: true,
-                                  scrollbarThumbAlwaysVisible: true,
-                                  hasScrollbar: true,
-                                  borderRadius: BorderRadius.circular(5),
-                                  // color: Colors.white,
-                                  constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.3, )
-                              ),
-                              suggestionsCallback: (value) async {
-                                print("taggggg value: $value");
-                                return await TagServices.getSuggestions(searchbyTagcontroller.text.toLowerCase());
-                              },
-
-                              itemBuilder: (context, String suggestion) {
-                                return Container(
-                                  // color: Colors.black,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(15.0),
-                                    child: Text(suggestion,style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),),
+                                      child: Text(suggestion,style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),),
+                                    ),
+                                  );
+                                },
+                                onSuggestionSelected: (String suggestion) {
+                                  print("Im selectedf $suggestion" );
+                                  print("Im selectedf ${searchbyTagcontroller.text}" );
+            
+                                  setState(() {
+                                    _challengeProvider.addtags(suggestion,_challengeProvider.searchbytag);
+                                    _challengeProvider.loadDataForPageFilter(1,'tags',_challengeProvider.searchbytag);
+                                    _challengeProvider.setFirstpageNo();
+                                  });
+                                  print("fenil tags added: ${_challengeProvider.searchbytag}");
+                                  searchbyTagcontroller.clear();
+            
+                                  // });
+                                },
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  controller: searchbyTagcontroller,
+                                  style: GoogleFonts.poppins(
+                                    textStyle: Theme.of(context).textTheme.bodyLarge,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,fontStyle: FontStyle.normal,
                                   ),
-                                );
-                              },
-                              onSuggestionSelected: (String suggestion) {
-                                print("Im selectedf $suggestion" );
-                                print("Im selectedf ${searchbyTagcontroller.text}" );
-
-                                setState(() {
-                                  _challengeProvider.addtags(suggestion,_challengeProvider.searchbytag);
-                                  _challengeProvider.loadDataForPageFilter(1,'tags',_challengeProvider.searchbytag);
-                                  _challengeProvider.setFirstpageNo();
-                                });
-                                print("fenil tags added: ${_challengeProvider.searchbytag}");
-                                searchbyTagcontroller.clear();
-
-                                // });
-                              },
-                              textFieldConfiguration: TextFieldConfiguration(
-                                controller: searchbyTagcontroller,
-                                style: GoogleFonts.poppins(
-                                  textStyle: Theme.of(context).textTheme.bodyLarge,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w400,fontStyle: FontStyle.normal,
+                                  decoration: InputDecoration(
+                                    //errorText: userAccountSearchErrorText,
+                                    contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
+                                    labelText: "Search by Tags",
+                                    hintText: "Search by Tags",
+                                    errorStyle: GoogleFonts.montserrat(
+                                        textStyle: Theme
+                                            .of(context)
+                                            .textTheme
+                                            .bodyLarge,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.redAccent),
+            
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(100)),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black12),
+                                        borderRadius: BorderRadius.circular(100)),
+                                    //hintText: "e.g Abouzied",
+                                    labelStyle: GoogleFonts.montserrat(
+                                        textStyle: Theme
+                                            .of(context)
+                                            .textTheme
+                                            .bodyLarge,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black),
+                                  ),
+            
                                 ),
-                                decoration: InputDecoration(
-                                  //errorText: userAccountSearchErrorText,
-                                  contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
-                                  labelText: "Search by Tags",
-                                  hintText: "Search by Tags",
-                                  errorStyle: GoogleFonts.montserrat(
-                                      textStyle: Theme
-                                          .of(context)
-                                          .textTheme
-                                          .bodyLarge,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.redAccent),
-
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.black),
-                                      borderRadius: BorderRadius.circular(100)),
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.black12),
-                                      borderRadius: BorderRadius.circular(100)),
-                                  //hintText: "e.g Abouzied",
-                                  labelStyle: GoogleFonts.montserrat(
-                                      textStyle: Theme
-                                          .of(context)
-                                          .textTheme
-                                          .bodyLarge,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black),
-                                ),
-
                               ),
                             ),
                           ),
-                        ),
-
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.2,
-                          child: Consumer<ChallengesProvider>(
-                              builder: (c,challengesProvider, _){
-                                return (challengesProvider.searchbytag.isNotEmpty) ? Padding(
-                                  padding: const EdgeInsets.only(left: 15.0),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Wrap(
-                                        spacing: 10,
-                                        runSpacing: 10,
-                                        crossAxisAlignment: WrapCrossAlignment.start,
-                                        alignment: WrapAlignment.start,
-                                        runAlignment: WrapAlignment.start,
-                                        children: challengesProvider.searchbytag.map((item){
-                                          return Container(
-                                            height: 40,
-                                            // margin: EdgeInsets.only(bottom: 10),
-                                            padding: EdgeInsets.all(5),
-                                            decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(50),
-                                                border: Border.all(
-                                                    color: Colors.green
-                                                )
-                                            ),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Text(item, style: TextStyle(
-                                                    fontWeight: FontWeight.w700,
-                                                    color: Colors.green
-                                                ),),
-                                                IconButton(
-                                                    onPressed: (){
-                                                      // setState(() {
-                                                      setState(() {
-                                                        challengesProvider.removesearchtags(item);
-                                                        _challengeProvider.loadDataForPageFilter(1,'tags',_challengeProvider.searchbytag);
-                                                        _challengeProvider.setFirstpageNo();
-                                                        _challengeProvider.lengthOfdocument = null;
-                                                      });
-                                                      // _challengeProvider.searchbytag.remove(item);
-                                                      // });
-                                                    },
-                                                    icon: Icon(Icons.dangerous_sharp,size: 15, color: Colors.black38,)
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        }).toList(),
-                                      ),
-                                    ),
-                                  ),
-                                ) : Container(height: 40,);
-
-                              }),
-                        ),
-                      ],
-                    ),
-
-                    Consumer<ChallengesProvider>(
-                        builder: (c,challengesProvider, _){
-                          // print("addKeywordProvider.lengthOfdocument :${challengesProvider.lengthOfdocument}");
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      margin:EdgeInsets.only(left: 20),
-                                      width: MediaQuery.of(context).size.width*0.3,
-                                      child: TextField(
-                                        controller: searchTextbyCKEditingController,
-                                        enableSuggestions: true,
-                                        onChanged: (val){
-                                          print("valuse ${val}");
-                                          if (_debounce?.isActive ?? false) _debounce?.cancel();
-                                          _debounce = Timer(Duration(milliseconds: _debouncetime), () {
-                                            if (searchTextbyCKEditingController.text != "") {
-                                              /// here you perform your search
-                                              _challengeProvider.loadDataForPageSearchFilter(searchTextbyCKEditingController.text.toString());
-                                            }
-                                            else {
-                                              _challengeProvider.loadDataForPage(1);
-                                              _challengeProvider.setFirstpageNo();
-                                            }
-                                          });
-                                          setState(() {
-                                            // searchKey = val;
-                                            // streamQuery = thriversCollection
-                                            //     .where('Name', isGreaterThanOrEqualTo: searchTextbyCKEditingController.text)
-                                            //     .where('Name', isLessThanOrEqualTo: searchTextbyCKEditingController.text + '\uf8ff').snapshots();
-                                          });
-                                        },
-
-                                        decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
-                                          hintText: (challengesProvider.selectAllAny == "All") ? 'Search All Challenges By (Label, Original Description, Description, Category, Tags)' : "Search Thrivers By Any",
-                                          border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(100.0),
-                                          ),
-                                          suffixIcon: (searchTextbyCKEditingController.text.isNotEmpty) ? InkWell(
-                                              onTap: (){
-                                                setState(() {
-                                                  searchTextbyCKEditingController.clear();
-                                                  _challengeProvider.loadDataForPage(1);
-                                                  _challengeProvider.setFirstpageNo();
-                                                  _challengeProvider.lengthOfdocument = null;
-                                                });
-                                              },
-                                              child: Icon(Icons.close)
-                                          ) : null,
-                                          enabledBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(100.0),
-                                            borderSide: BorderSide(color: Colors.black),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(100.0),
-                                            borderSide: BorderSide(color: Colors.black, width: 2.0),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      // height: MediaQuery.of(context).size.width*0.03,
-                                      width: MediaQuery.of(context).size.width*0.06,
-                                      // margin: EdgeInsets.symmetric(horizontal: 20),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: DropdownButtonFormField<String>(
-                                          value: challengesProvider.selectAllAny,
-                                          // value: 'Thrivers Category',
-                                          // value: ,
-                                          onChanged: (value) async {
-                                            challengesProvider.updateselectAllAny(value!,searchTextbyCKEditingController.text );
-                                          },
-                                          // onChanged: null,
-                                          items: challengesProvider.searchAllAny.map((item) {
-                                            return DropdownMenuItem<String>(
-                                              value: item,
-                                              child: Text(item),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.2,
+                            child: Consumer<ChallengesProvider>(
+                                builder: (c,challengesProvider, _){
+                                  return (challengesProvider.searchbytag.isNotEmpty) ? Padding(
+                                    padding: const EdgeInsets.only(left: 15.0),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: Wrap(
+                                          spacing: 10,
+                                          runSpacing: 10,
+                                          crossAxisAlignment: WrapCrossAlignment.start,
+                                          alignment: WrapAlignment.start,
+                                          runAlignment: WrapAlignment.start,
+                                          children: challengesProvider.searchbytag.map((item){
+                                            return Container(
+                                              height: 40,
+                                              // margin: EdgeInsets.only(bottom: 10),
+                                              padding: EdgeInsets.all(5),
+                                              decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(50),
+                                                  border: Border.all(
+                                                      color: Colors.green
+                                                  )
+                                              ),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Text(item, style: TextStyle(
+                                                      fontWeight: FontWeight.w700,
+                                                      color: Colors.green
+                                                  ),),
+                                                  IconButton(
+                                                      onPressed: (){
+                                                        // setState(() {
+                                                        setState(() {
+                                                          challengesProvider.removesearchtags(item);
+                                                          _challengeProvider.loadDataForPageFilter(1,'tags',_challengeProvider.searchbytag);
+                                                          _challengeProvider.setFirstpageNo();
+                                                          _challengeProvider.lengthOfdocument = null;
+                                                        });
+                                                        // _challengeProvider.searchbytag.remove(item);
+                                                        // });
+                                                      },
+                                                      icon: Icon(Icons.dangerous_sharp,size: 15, color: Colors.black38,)
+                                                  ),
+                                                ],
+                                              ),
                                             );
                                           }).toList(),
-                                          // onTap: null,
+                                        ),
+                                      ),
+                                    ),
+                                  ) : Container(height: 40,);
+            
+                                }),
+                          ),
+                        ],
+                      ),
+            
+                      Consumer<ChallengesProvider>(
+                          builder: (c,challengesProvider, _){
+                            // print("addKeywordProvider.lengthOfdocument :${challengesProvider.lengthOfdocument}");
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        padding:EdgeInsets.all(8),
+                                        width: MediaQuery.of(context).size.width*0.3,
+                                        child: TextField(
+                                          controller: searchTextbyCKEditingController,
+                                          enableSuggestions: true,
+                                          onChanged: (val){
+                                            print("valuse ${val}");
+                                            if (_debounce?.isActive ?? false) _debounce?.cancel();
+                                            _debounce = Timer(Duration(milliseconds: _debouncetime), () {
+                                              if (searchTextbyCKEditingController.text != "") {
+                                                /// here you perform your search
+                                                _challengeProvider.loadDataForPageSearchFilter(searchTextbyCKEditingController.text.toString());
+                                              }
+                                              else {
+                                                _challengeProvider.loadDataForPage(1);
+                                                _challengeProvider.setFirstpageNo();
+                                              }
+                                            });
+                                            setState(() {
+                                              // searchKey = val;
+                                              // streamQuery = thriversCollection
+                                              //     .where('Name', isGreaterThanOrEqualTo: searchTextbyCKEditingController.text)
+                                              //     .where('Name', isLessThanOrEqualTo: searchTextbyCKEditingController.text + '\uf8ff').snapshots();
+                                            });
+                                          },
+            
                                           decoration: InputDecoration(
-                                            // iconColor: Colors.black,
-                                            // contentPadding: EdgeInsets.only(
-                                            //     top: 20, bottom: 20, left: 32, right: 22),
-                                            contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                                            labelText: 'Search By',
-                                            hintText: 'Search By',
-                                            labelStyle: TextStyle(color: Colors.black),
+                                            contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
+                                            hintText: (challengesProvider.selectAllAny == "All") ? 'Search All Challenges By (Label, Original Description, Description, Category, Tags)' : "Search Thrivers By Any",
                                             border: OutlineInputBorder(
-                                                borderSide: BorderSide(color: Colors.black),
-                                                borderRadius: BorderRadius.circular(15)
+                                              borderRadius: BorderRadius.circular(100.0),
+                                            ),
+                                            suffixIcon: (searchTextbyCKEditingController.text.isNotEmpty) ? InkWell(
+                                                onTap: (){
+                                                  setState(() {
+                                                    searchTextbyCKEditingController.clear();
+                                                    _challengeProvider.loadDataForPage(1);
+                                                    _challengeProvider.setFirstpageNo();
+                                                    _challengeProvider.lengthOfdocument = null;
+                                                  });
+                                                },
+                                                child: Icon(Icons.close)
+                                            ) : null,
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(100.0),
+                                              borderSide: BorderSide(color: Colors.black),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(100.0),
+                                              borderSide: BorderSide(color: Colors.black, width: 2.0),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                (challengesProvider.lengthOfdocument != null) ?
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 8),
-                                  child: Row(
-                                    children: [
-                                      Text("Search results: ${challengesProvider.lengthOfdocument}",style: Theme.of(context).textTheme.bodyMedium),
-                                      SizedBox(width: 5,),
-                                      InkWell(
-                                          onTap: (){
-                                            challengesProvider.lengthOfdocument = null;
-                                            challengesProvider.searchbytag.clear();
-                                            challengesProvider.searchbycategory.clear();
-                                            searchTextbyCKEditingController.clear();
-                                            challengesProvider.loadDataForPage(1);
-                                            challengesProvider.setFirstpageNo();
-                                          },
-                                          child: Text("..clear all",style: TextStyle(color: Colors.blue))),
-
+                                      Container(
+                                        // height: MediaQuery.of(context).size.width*0.03,
+                                        width: 80,
+                                        margin: EdgeInsets.all(5),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: DropdownButtonFormField<String>(
+                                            iconSize: 12,
+                                            value: challengesProvider.selectAllAny,
+                                            // value: 'Thrivers Category',
+                                            // value: ,
+                                            onChanged: (value) async {
+                                              challengesProvider.updateselectAllAny(value!,searchTextbyCKEditingController.text );
+                                            },
+                                            // onChanged: null,
+                                            items: challengesProvider.searchAllAny.map((item) {
+                                              return DropdownMenuItem<String>(
+                                                value: item,
+                                                child: Text(item),
+                                              );
+                                            }).toList(),
+                                            // onTap: null,
+                                            decoration: InputDecoration(
+                                              // iconColor: Colors.black,
+                                              // contentPadding: EdgeInsets.only(
+                                              //     top: 20, bottom: 20, left: 32, right: 22),
+                                              contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                              labelText: 'Search By',
+                                              hintText: 'Search By',
+                                              labelStyle: TextStyle(color: Colors.black,fontSize: 12),
+                                              border: OutlineInputBorder(
+                                                  borderSide: BorderSide(color: Colors.black),
+                                                  borderRadius: BorderRadius.circular(15)
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                     ],
                                   ),
-                                ) :
-
-                                SizedBox(height: 35,)                      ],
-                            );
-                        }),
-
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(width: MediaQuery.of(context).size.width*0.01,),
-                          InkWell(
-                              onTap: (){
-                                showTreeView = !showTreeView;
-                                setState(() {});
-                              },
-                              // child: (!showTreeView)?FaIcon(FontAwesomeIcons.folderTree):FaIcon(FontAwesomeIcons.list))),
-                              child: (showTreeView)?FaIcon(FontAwesomeIcons.list):FaIcon(FontAwesomeIcons.folderTree)),
-                          InkWell(
-                              onTap: (){
-                                showAddChallengesDialogBox();
-                              },
-                              child: FaIcon(FontAwesomeIcons.add)),
-                          Container(width: MediaQuery.of(context).size.width*0.01,),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                  height: MediaQuery.of(context).size.height * .65,
-                  margin: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.7),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child:
-
-
-                  showTreeView?FutureBuilder(
-                    future: fetchDatasss(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Container(
-                          child: Center(child: CircularProgressIndicator()),
-                        );
-                      }
-                      if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      }
-                      print("Hola");
-
-                      return Container(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: nodes.length,
-                          itemBuilder: (context, index) {
-                            return nodes[index];
-                          },
+                                  (challengesProvider.lengthOfdocument != null) ?
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 8),
+                                    child: Row(
+                                      children: [
+                                        Text("Search results: ${challengesProvider.lengthOfdocument}",style: Theme.of(context).textTheme.bodyMedium),
+                                        SizedBox(width: 5,),
+                                        InkWell(
+                                            onTap: (){
+                                              challengesProvider.lengthOfdocument = null;
+                                              challengesProvider.searchbytag.clear();
+                                              challengesProvider.searchbycategory.clear();
+                                              searchTextbyCKEditingController.clear();
+                                              challengesProvider.loadDataForPage(1);
+                                              challengesProvider.setFirstpageNo();
+                                            },
+                                            child: Text("..clear all",style: TextStyle(color: Colors.blue))),
+            
+                                      ],
+                                    ),
+                                  ) :
+            
+                                  SizedBox(height: 35,)                      ],
+                              );
+                          }),
+            
+                      Expanded(
+                        child: Container(
+                          height: 80,
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // Container(width: MediaQuery.of(context).size.width*0.01,),
+                                InkWell(
+                                    onTap: (){
+                                      showTreeView = !showTreeView;
+                                      setState(() {});
+                                    },
+                                    // child: (!showTreeView)?FaIcon(FontAwesomeIcons.folderTree):FaIcon(FontAwesomeIcons.list))),
+                                    child: (showTreeView)?FaIcon(FontAwesomeIcons.list):FaIcon(FontAwesomeIcons.folderTree)),
+                                SizedBox(width: 30,),
+                                InkWell(
+                                    onTap: (){
+                                      showAddChallengesDialogBox();
+                                    },
+                                    child: FaIcon(FontAwesomeIcons.add)),
+                                // Container(width: MediaQuery.of(context).size.width*0.01,),
+                              ],
+                            ),
+                          ),
                         ),
-                      );
-                    },
-                  ) :
-                  Consumer<ChallengesProvider>(
-                      builder: (c,challengesProvider, _){
-                        // addKeywordProvider.getcategoryAndKeywords();
-                        // addKeywordProvider.newgetSource();
-                        // addKeywordProvider.getThriversStatus();
-                        return
-                          Column(
-                            children: [
-                              SizedBox(height: 20,),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      width: MediaQuery.of(context).size.width*0.2,
-                                      child:Row(
-                                        children: [
-                                          SizedBox(width: 10,),
-                                          Text("Sr.NO.",style: Theme.of(context).textTheme.titleMedium),
-                                          SizedBox(width: 20,),
-                                          Expanded(
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text("Label & Description",style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(width: 50),
-
-
-                                    Container(
-                                      width: MediaQuery.of(context).size.width*0.3,
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text("Original Description",style: Theme.of(context).textTheme.titleMedium),
-                                        ],
-                                      ),
-                                    ),
-                                    Column(
-                                        children:[
-                                          Container(
-                                            width: MediaQuery.of(context).size.width*0.33,
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Expanded(
-                                                  child: Text('Category & Tags',style: Theme.of(context).textTheme.titleMedium,),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-
-                                          SizedBox(height: 10,),
-
-                                        ]
-                                    ),
-
-
-                                  ],
-                                ),
-                              ),
-                              Divider(color: Colors.black,),
-
-                              Expanded(
-                                child: SingleChildScrollView(
-                                  child: Column(
+                      ),
+                    ],
+                  ),
+                ),
+            
+                Container(
+                    height: MediaQuery.of(context).size.height * .65,
+                    margin: EdgeInsets.only(bottom:20, left: 20,right: 20),
+                    // decoration: BoxDecoration(
+                    //   color: Colors.white.withOpacity(0.7),
+                    //   borderRadius: BorderRadius.circular(20),
+                    // ),
+                    child:
+            
+            
+                    showTreeView?FutureBuilder(
+                      future: fetchDatasss(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Container(
+                            child: Center(child: CircularProgressIndicator()),
+                          );
+                        }
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
+                        print("Hola");
+            
+                        return Container(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: nodes.length,
+                            itemBuilder: (context, index) {
+                              return nodes[index];
+                            },
+                          ),
+                        );
+                      },
+                    ) :
+                    Consumer<ChallengesProvider>(
+                        builder: (c,challengesProvider, _){
+                          // addKeywordProvider.getcategoryAndKeywords();
+                          // addKeywordProvider.newgetSource();
+                          // addKeywordProvider.getThriversStatus();
+                          return
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      (challengesProvider.isLoadingMore) ?
-                                      Center(child: CircularProgressIndicator()) :
-
-                                      ListView.separated(
-                                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                        physics: NeverScrollableScrollPhysics(), // Disable scrolling
-                                        shrinkWrap: true,
-                                        itemCount: challengesProvider.challengesdocuments.length,
-                                        separatorBuilder: (BuildContext context, int index) {
-                                          return Divider();
-                                        },
-                                        itemBuilder: (BuildContext context, int index) {
-                                          // int totalItems = documents.length;
-                                          // int totalPages = (totalItems / _perPage).ceil();
-                                          return Column(
-                                            children: [
-                                              ChallengesListTile(challengesProvider.challengesdocuments[index], index, challengesProvider.challengesdocuments),
-
-                                              // Your widget to display document data
-                                              // ListTile(
-                                              //   title: Text(documents[index]['your_field']),
-                                              // ),
-
-                                            ],
-                                          );
-                                        },
+                                      SizedBox(width: 10,),
+                                      Text("NO.",style: Theme.of(context).textTheme.titleMedium),
+                                      SizedBox(width: 20,),
+            
+                                      Expanded(
+                                        flex: 3,
+                                        child: Text("Label & Description",style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis),
                                       ),
-
+                                      SizedBox(width: 20),
+            
+            
+                                      Expanded(
+                                        flex: 2,
+                                        child: Text("Original Description",style: Theme.of(context).textTheme.titleMedium),
+                                      ),
+            
+                                      SizedBox(width: 20),
+            
+                                      Expanded(
+                                        flex: 3,
+                                        child: Text('Category & Tags',style: Theme.of(context).textTheme.titleMedium,),
+                                      ),
+            
+                                      SizedBox(width: 80,),
+            
+            
                                     ],
                                   ),
                                 ),
-                              ),
-
-                              (challengesProvider.challengesdocuments.isEmpty) ?
-                              Container() :
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: challengesProvider.loadPreviousPage,
-                                    child: Text('Previous'),
+                                Divider(color: Colors.black,),
+            
+                                Expanded(
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        (challengesProvider.isLoadingMore) ?
+                                        Center(child: CircularProgressIndicator()) :
+            
+                                        ListView.separated(
+                                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                          physics: NeverScrollableScrollPhysics(), // Disable scrolling
+                                          shrinkWrap: true,
+                                          itemCount: challengesProvider.challengesdocuments.length,
+                                          separatorBuilder: (BuildContext context, int index) {
+                                            return Divider();
+                                          },
+                                          itemBuilder: (BuildContext context, int index) {
+                                            // int totalItems = documents.length;
+                                            // int totalPages = (totalItems / _perPage).ceil();
+                                            return ChallengesListTile(challengesProvider.challengesdocuments[index], index, challengesProvider.challengesdocuments);
+                                          },
+                                        ),
+            
+                                      ],
+                                    ),
                                   ),
-                                  SizedBox(width: 10),
-                                  Text('Page ${challengesProvider.currentPage} of ${challengesProvider.totalPages}'),
-                                  SizedBox(width: 10),
-                                  ElevatedButton(
-                                    onPressed: challengesProvider.loadNextPage,
-                                    child: Text('Next'),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          );
-                      })
+                                ),
 
-//                   StreamBuilder(
-//                     // FirebaseFirestore.instance
-//                     //     .collection('users')
-//                     //     .where('age', isGreaterThan: 20)
-//                     //     .get()
-//                     //     .then(...);
-//                     //
-//                     // .where('age', isGreaterThan: 20)
-//                     // .get()
-//                     stream: challengesCollection
-//                         .where('Name', isGreaterThanOrEqualTo: textEditingController.text)
-//                         .where('Name', isLessThanOrEqualTo: textEditingController.text + '\uf8ff').limit(10).snapshots(),
-//                     builder: (ctx,AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-//                       if (streamSnapshot.connectionState ==
-//                           ConnectionState.waiting) {
-//                         return Center(
-//                             child: CircularProgressIndicator(
-//                               //color: primaryColorOfApp,
-//                             ));
-//                       }
-//
-//                       documents = (streamSnapshot.data?.docs)??[];
-//
-//                       if (streamSnapshot.data == null || streamSnapshot.data!.docs.isEmpty) {
-//                         print('No documents found in the stream.');
-//                         return Center(child: Text("No Challenges is Added Yet", style: Theme.of(context).textTheme.displaySmall,));
-//                       } else {
-//                         documents = streamSnapshot.data!.docs;
-//                         for (var doc in documents) {
-//                           // Your logic here
-//                           print('Document ID: ${doc.id}');
-//                         }
-//                       }
-//
-//
-//
-//
-//                       //todo Documents list added to filterTitle
-//                       String searchText = searchTextEditingController.text.toLowerCase();
-//                       String searchTexts = searchTextbyCKEditingController.text.toLowerCase();
-//                       // if (searchText.length > 0) {
-//                       //   documents = documents.where((element) {
-//                       //     return element.get('Name').toString().toLowerCase()
-//                       //         .contains(searchText.toLowerCase());
-//                       //   }).toList();
-//                       // }
-//                       // if (searchTexts.length > 0) {
-//                       //   documents = documents.where((element) {
-//                       //     return element
-//                       //         .get('Category')
-//                       //         .toString()
-//                       //         .toLowerCase()
-//                       //         .contains(searchTexts.toLowerCase());
-//                       //   }).toList();
-//                       // }
-//                       // if (searchTexts.length > 0) {
-//                       //   documents = documents.where((element) {
-//                       //     return element
-//                       //         .get('Keywords')
-//                       //         .toString()
-//                       //         .toLowerCase()
-//                       //         .contains(searchTexts.toLowerCase());
-//                       //   }).toList();
-//                       // }
-//                       ///
-//                       // if (searchTexts.length > 0 || selectAllAny == "Any") {
-//                       // documents = documents.where((element) {
-//                       // print("documentssssssss: $documents");
-//                       //
-//                       // String category = element.get('tags').toString().toLowerCase();
-//                       // String keywords = element.get('Keywords').toString().toLowerCase();
-//                       //
-//                       // return category.contains(searchTexts) || keywords.contains(searchTexts);
-//                       // }).toList();
-//                       // }
-//                       //
-//                       // if (searchTexts.length > 0 || selectAllAny=="All") {
-//                       //   documents = documents.where((element) {
-//                       //     String Name = element.get('Name').toString().toLowerCase();
-//                       //     String Description = element.get('Description').toString().toLowerCase();
-//                       //     String category = element.get('tags').toString().toLowerCase();
-//                       //     String keywords = element.get('Keywords').toString().toLowerCase();
-//                       //     return Name.contains(searchTexts) || Description.contains(searchTexts) || category.contains(searchTexts) || keywords.contains(searchTexts);
-//                       //   }).toList();
-//                       // }
-//                       /// search<
-//
-//                       //                   if (searchTexts.isNotEmpty && (selectAllAny == "Any" || selectAllAny == "All")) {
-// //                     documents = documents.where((element) {
-// //                       String name = element.get('Name').toString().toLowerCase();
-// //                       String description = element.get('Description').toString().toLowerCase();
-// //                       String category = element.get('tags').toString().toLowerCase();
-// //                       String keywords = element.get('Keywords').toString().toLowerCase();
-// //                       String original = element.get('Original Description').toString().toLowerCase();
-// //
-// //                       if (selectAllAny == "Any") {
-// //                         return category.contains(searchTexts) || keywords.contains(searchTexts);
-// //                       } else if (selectAllAny == "All") {
-// //                         return name.contains(searchTexts) ||
-// //                             description.contains(searchTexts) ||
-// //                             category.contains(searchTexts) ||
-// //                             original.contains(searchTexts) ||
-// //                             keywords.contains(searchTexts);
-// //                       }
-// //
-// //                       return false; // Default case
-// //                     }).toList();
-// //
-// //                     if (documents.isEmpty) {
-// //
-// //                       print('No data found in text: $searchTexts');
-// //
-// //                       return Center(child: Text("No data found in text $searchTexts"));
-// //                       // Display a message when no data is found
-// //                     }
-// //                   }
-//
-//                       /// >search
-//
-//
-//                       if (searchTexts.isNotEmpty && (selectAllAny == "Any" || selectAllAny == "All")) {
-//                         List<String> searchWords = searchTexts.toLowerCase().split(' ');
-//
-//                         documents = documents.where((element) {
-//                           String name = element.get('Name').toString().toLowerCase();
-//                           String description = element.get('Description').toString().toLowerCase();
-//                           String category = element.get('tags').toString().toLowerCase();
-//                           String keywords = element.get('Keywords').toString().toLowerCase();
-//                           String original = element.get('Original Description').toString().toLowerCase();
-//
-//                           if (selectAllAny == "Any") {
-//                             return searchWords.any((word) =>
-//                             name.contains(word) ||
-//                                 description.contains(word) ||
-//                                 category.contains(word) ||
-//                                 original.contains(word) ||
-//                                 keywords.contains(word));
-//                           } else if (selectAllAny == "All") {
-//                             return searchWords.every((word) =>
-//                             name.contains(word) ||
-//                                 description.contains(word) ||
-//                                 category.contains(word) ||
-//                                 original.contains(word) ||
-//                                 keywords.contains(word));
-//                           }
-//
-//                           return false; // Default case
-//                         }).toList();
-//
-//                         if (documents.isEmpty) {
-//                           // print('No data found for search text: $searchTexts');
-//                           return Center(child: Text("No data found for search text $searchTexts"));
-//                           // Display a message when no data is found
-//                         }
-//                       }
-//
-//                       if (_challengeProvider.searchbycategory.isNotEmpty || _challengeProvider.searchbytag.isNotEmpty) {
-//
-//                         // print("searchbycat_addKeywordProvider in stream after: ${_addKeywordProvider.searchbycategory} and ${_addKeywordProvider.searchbytag}");
-//
-//                         documents = documents.where((element) {
-//                           List<String> Category = (element.get('Keywords') as List<dynamic>).whereType<String>().map((tag) => tag.toString()).toList();
-//                           List<String> tags = (element.get('tags') as List<dynamic>).whereType<String>().map((tag) => tag.toString()).toList();
-//
-//
-//                           // print('Tags in document: $Category');
-//                           // print('Search tags: ${_addKeywordProvider.searchbycategory}');
-//
-//                           if(_challengeProvider.searchbycategory.isNotEmpty && _challengeProvider.searchbytag.isEmpty){
-//                             // print("if");
-//                             return _challengeProvider.searchbycategory.every((tag) => Category.contains(tag));
-//                           }
-//
-//                           else if (_challengeProvider.searchbytag.isNotEmpty && _challengeProvider.searchbycategory.isEmpty){
-//                             // print("else if");
-//                             return _challengeProvider.searchbytag.every((tag) => tags.contains(tag));
-//                           }
-//
-//                           else return _challengeProvider.searchbycategory.every((tag) => Category.contains(tag)) && _challengeProvider.searchbytag.every((tag) => tags.contains(tag));
-//                         }).toList();
-//
-//                         if (documents.isEmpty) {
-//                           // print('No data found for search text: ${_addKeywordProvider.searchbycategory.join('')} and ${_addKeywordProvider.searchbytag.join('')}');
-//                           return Center(child: (_challengeProvider.searchbycategory.isNotEmpty && _challengeProvider.searchbytag.isEmpty) ?
-//
-//                           Text("No data found for ${_challengeProvider.searchbycategory.join(', ')}") :
-//
-//                           (_challengeProvider.searchbytag.isNotEmpty && _challengeProvider.searchbycategory.isEmpty) ?
-//
-//                           Text("No data found for ${_challengeProvider.searchbytag.join(', ')}") :
-//
-//                           Text("No data found for ${_challengeProvider.searchbycategory.join(', ')} and ${_challengeProvider.searchbytag.join(', ')}"));
-//                           // Display a message when no data is found
-//                         }
-//                       }
-//
-//                       // if (_addKeywordProvider.searchbytag.isNotEmpty) {
-//                       //
-//                       //   print("searchbycat_addKeywordProvider in stream after: ${_addKeywordProvider.searchbytag}");
-//                       //
-//                       //   documents = documents.where((element) {
-//                       //     List<String> tags = (element.get('tags') as List<dynamic>).whereType<String>().map((tag) => tag.toString()).toList();
-//                       //     // String category = element.get('Keywords').toString().toLowerCase();
-//                       //
-//                       //     print('Tags in document: $tags');
-//                       //     print('Search tags: ${_addKeywordProvider.searchbytag}');
-//                       //
-//                       //     return _addKeywordProvider.searchbytag.every((tag) => tags.contains(tag));
-//                       //   }).toList();
-//                       //
-//                       //   if (documents.isEmpty) {
-//                       //     print('No data found for search text: ${_addKeywordProvider.searchbytag}');
-//                       //     return Center(child: Text("No data found for search text ${_addKeywordProvider.searchbytag}"));
-//                       //     // Display a message when no data is found
-//                       //   }
-//                       // }
-//
-//
-//                       documents.sort((a, b) {
-//                         String idA = a['id'];
-//                         // print("idA: $idA");
-//                         String idB = b['id'];
-//                         // print("idB: $idB");
-//                         int? numericA = int.tryParse(idA.substring(2));
-//                         int? numericB = int.tryParse(idB.substring(2));
-//
-//                         // If the conversion fails, default to comparing the strings
-//                         if (numericA == null && numericB == null) {
-//                           return idA.compareTo(idB);
-//                         } else if (numericA == null) {
-//                           return 1; // Place items with null numericA at the end
-//                         } else if (numericB == null) {
-//                           return -1; // Place items with null numericB at the end
-//                         }
-//
-//                         return numericA.compareTo(numericB);
-//                       });
-//                       return Column(
-//                         children: [
-//                           SizedBox(height: 20,),
-//                           Padding(
-//                             padding: const EdgeInsets.all(8.0),
-//                             child: Row(
-//                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                               children: [
-//                                 Container(
-//                                   width: MediaQuery.of(context).size.width*0.2,
-//                                   child:Row(
-//                                     children: [
-//                                       SizedBox(width: 10,),
-//                                       // Text(challengesDetails.id,style: Theme.of(context).textTheme.bodySmall),
-//                                       Text("Sr.NO.",style: Theme.of(context).textTheme.titleMedium),
-//                                       // Text("${challengesDetails['id']}",style: Theme.of(context).textTheme.bodySmall),
-//                                       SizedBox(width: 20,),
-//                                       Expanded(
-//                                         child: Column(
-//                                           mainAxisSize: MainAxisSize.min,
-//                                           crossAxisAlignment: CrossAxisAlignment.start,
-//                                           children: [
-//
-//                                             Text("Label & Description",style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis),
-//
-//                                             // SizedBox(height: 10),
-//
-//
-//                                           ],
-//                                         ),
-//                                       ),
-//                                     ],
-//                                   ),
-//                                 ),
-//                                 SizedBox(width: 50),
-//
-//
-//                                 Container(
-//                                   width: MediaQuery.of(context).size.width*0.3,
-//                                   child: Column(
-//                                     mainAxisAlignment: MainAxisAlignment.start,
-//                                     crossAxisAlignment: CrossAxisAlignment.start,
-//                                     children: [
-//                                       Text("Original Description",style: Theme.of(context).textTheme.titleMedium),
-//                                     ],
-//                                   ),
-//                                 ),
-//                                 Column(
-//                                     children:[
-//                                       Container(
-//                                         width: MediaQuery.of(context).size.width*0.33,
-//                                         child: Row(
-//                                           mainAxisAlignment: MainAxisAlignment.start,
-//                                           crossAxisAlignment: CrossAxisAlignment.start,
-//                                           children: [
-//                                             // Padding(
-//                                             //   padding: const EdgeInsets.symmetric(vertical: 2.0),
-//                                             //   child: Icon(Icons.tag,size: 16,),
-//                                             // ),
-//                                             // SizedBox(width: 5,),
-//                                             // Expanded(child: Text(keys.toString(),style: Theme.of(context).textTheme.bodySmall, )),
-//                                             Expanded(
-//                                               child: Text('Category & Tags',style: Theme.of(context).textTheme.titleMedium,),
-//                                             ),
-//                                             // Expanded(child: Text("No Country",style: Theme.of(context).textTheme.bodySmall,overflow: TextOverflow.ellipsis,)),
-//                                             // SizedBox(width: 10,),
-//                                           ],
-//                                         ),
-//                                       ),
-//
-//                                       SizedBox(height: 10,),
-//
-//                                     ]
-//                                 ),
-//
-//
-//                               ],
-//                             ),
-//                           ),
-//                           Divider(),
-//                           Expanded(
-//                             child: ListView.separated(
-//                               // reverse: true,
-//                               //  shrinkWrap: true,
-//                               padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-//                               physics: BouncingScrollPhysics(),
-//                               // itemCount: documents.length,
-//                               itemCount: documents.length > 30 ? 30 : documents.length,
-//                               separatorBuilder: (BuildContext context, int index) {
-//                                 return Divider();
-//                               },
-//                               itemBuilder: (BuildContext context, int index) {
-//                                 //print('Images ${documents[index]['Images'].length}');
-//                                 //todo Pass this time
-//                                 // print("documents[index] : ${documents[index]}");
-//                                 return Column(
-//                                   children: [
-//                                     ChallengesListTile(documents[index], index, documents),
-//                                   ],
-//                                 );
-//
-//                               },
-//                             ),
-//                           ),
-//                         ],
-//                       );
-//
-//                     },
-//                   )
-              ),
-            ],
+                                SizedBox(height: 20),
+
+
+                                (challengesProvider.challengesdocuments.isEmpty) ?
+                                Container() :
+
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: challengesProvider.loadFirstPage,
+                                      child: Text('1st page'),
+                                    ),
+                                    SizedBox(width: 10),
+                                    ElevatedButton(
+                                      onPressed: challengesProvider.loadPreviousPage,
+                                      child: Text('Previous'),
+                                    ),
+                                    SizedBox(width: 10),
+                                    Text('Page ${challengesProvider.currentPage} of ${challengesProvider.totalPages}'),
+                                    SizedBox(width: 10),
+                                    ElevatedButton(
+                                      onPressed: challengesProvider.loadNextPage,
+                                      child: Text('Next'),
+                                    ),
+                                    SizedBox(width: 10),
+                                    ElevatedButton(
+                                      onPressed: challengesProvider.loadLastPage,
+                                      child: Text('Last page'),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            );
+                        })
+            
+            //                   StreamBuilder(
+            //                     // FirebaseFirestore.instance
+            //                     //     .collection('users')
+            //                     //     .where('age', isGreaterThan: 20)
+            //                     //     .get()
+            //                     //     .then(...);
+            //                     //
+            //                     // .where('age', isGreaterThan: 20)
+            //                     // .get()
+            //                     stream: challengesCollection
+            //                         .where('Name', isGreaterThanOrEqualTo: textEditingController.text)
+            //                         .where('Name', isLessThanOrEqualTo: textEditingController.text + '\uf8ff').limit(10).snapshots(),
+            //                     builder: (ctx,AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+            //                       if (streamSnapshot.connectionState ==
+            //                           ConnectionState.waiting) {
+            //                         return Center(
+            //                             child: CircularProgressIndicator(
+            //                               //color: primaryColorOfApp,
+            //                             ));
+            //                       }
+            //
+            //                       documents = (streamSnapshot.data?.docs)??[];
+            //
+            //                       if (streamSnapshot.data == null || streamSnapshot.data!.docs.isEmpty) {
+            //                         print('No documents found in the stream.');
+            //                         return Center(child: Text("No Challenges is Added Yet", style: Theme.of(context).textTheme.displaySmall,));
+            //                       } else {
+            //                         documents = streamSnapshot.data!.docs;
+            //                         for (var doc in documents) {
+            //                           // Your logic here
+            //                           print('Document ID: ${doc.id}');
+            //                         }
+            //                       }
+            //
+            //
+            //
+            //
+            //                       //todo Documents list added to filterTitle
+            //                       String searchText = searchTextEditingController.text.toLowerCase();
+            //                       String searchTexts = searchTextbyCKEditingController.text.toLowerCase();
+            //                       // if (searchText.length > 0) {
+            //                       //   documents = documents.where((element) {
+            //                       //     return element.get('Name').toString().toLowerCase()
+            //                       //         .contains(searchText.toLowerCase());
+            //                       //   }).toList();
+            //                       // }
+            //                       // if (searchTexts.length > 0) {
+            //                       //   documents = documents.where((element) {
+            //                       //     return element
+            //                       //         .get('Category')
+            //                       //         .toString()
+            //                       //         .toLowerCase()
+            //                       //         .contains(searchTexts.toLowerCase());
+            //                       //   }).toList();
+            //                       // }
+            //                       // if (searchTexts.length > 0) {
+            //                       //   documents = documents.where((element) {
+            //                       //     return element
+            //                       //         .get('Keywords')
+            //                       //         .toString()
+            //                       //         .toLowerCase()
+            //                       //         .contains(searchTexts.toLowerCase());
+            //                       //   }).toList();
+            //                       // }
+            //                       ///
+            //                       // if (searchTexts.length > 0 || selectAllAny == "Any") {
+            //                       // documents = documents.where((element) {
+            //                       // print("documentssssssss: $documents");
+            //                       //
+            //                       // String category = element.get('tags').toString().toLowerCase();
+            //                       // String keywords = element.get('Keywords').toString().toLowerCase();
+            //                       //
+            //                       // return category.contains(searchTexts) || keywords.contains(searchTexts);
+            //                       // }).toList();
+            //                       // }
+            //                       //
+            //                       // if (searchTexts.length > 0 || selectAllAny=="All") {
+            //                       //   documents = documents.where((element) {
+            //                       //     String Name = element.get('Name').toString().toLowerCase();
+            //                       //     String Description = element.get('Description').toString().toLowerCase();
+            //                       //     String category = element.get('tags').toString().toLowerCase();
+            //                       //     String keywords = element.get('Keywords').toString().toLowerCase();
+            //                       //     return Name.contains(searchTexts) || Description.contains(searchTexts) || category.contains(searchTexts) || keywords.contains(searchTexts);
+            //                       //   }).toList();
+            //                       // }
+            //                       /// search<
+            //
+            //                       //                   if (searchTexts.isNotEmpty && (selectAllAny == "Any" || selectAllAny == "All")) {
+            // //                     documents = documents.where((element) {
+            // //                       String name = element.get('Name').toString().toLowerCase();
+            // //                       String description = element.get('Description').toString().toLowerCase();
+            // //                       String category = element.get('tags').toString().toLowerCase();
+            // //                       String keywords = element.get('Keywords').toString().toLowerCase();
+            // //                       String original = element.get('Original Description').toString().toLowerCase();
+            // //
+            // //                       if (selectAllAny == "Any") {
+            // //                         return category.contains(searchTexts) || keywords.contains(searchTexts);
+            // //                       } else if (selectAllAny == "All") {
+            // //                         return name.contains(searchTexts) ||
+            // //                             description.contains(searchTexts) ||
+            // //                             category.contains(searchTexts) ||
+            // //                             original.contains(searchTexts) ||
+            // //                             keywords.contains(searchTexts);
+            // //                       }
+            // //
+            // //                       return false; // Default case
+            // //                     }).toList();
+            // //
+            // //                     if (documents.isEmpty) {
+            // //
+            // //                       print('No data found in text: $searchTexts');
+            // //
+            // //                       return Center(child: Text("No data found in text $searchTexts"));
+            // //                       // Display a message when no data is found
+            // //                     }
+            // //                   }
+            //
+            //                       /// >search
+            //
+            //
+            //                       if (searchTexts.isNotEmpty && (selectAllAny == "Any" || selectAllAny == "All")) {
+            //                         List<String> searchWords = searchTexts.toLowerCase().split(' ');
+            //
+            //                         documents = documents.where((element) {
+            //                           String name = element.get('Name').toString().toLowerCase();
+            //                           String description = element.get('Description').toString().toLowerCase();
+            //                           String category = element.get('tags').toString().toLowerCase();
+            //                           String keywords = element.get('Keywords').toString().toLowerCase();
+            //                           String original = element.get('Original Description').toString().toLowerCase();
+            //
+            //                           if (selectAllAny == "Any") {
+            //                             return searchWords.any((word) =>
+            //                             name.contains(word) ||
+            //                                 description.contains(word) ||
+            //                                 category.contains(word) ||
+            //                                 original.contains(word) ||
+            //                                 keywords.contains(word));
+            //                           } else if (selectAllAny == "All") {
+            //                             return searchWords.every((word) =>
+            //                             name.contains(word) ||
+            //                                 description.contains(word) ||
+            //                                 category.contains(word) ||
+            //                                 original.contains(word) ||
+            //                                 keywords.contains(word));
+            //                           }
+            //
+            //                           return false; // Default case
+            //                         }).toList();
+            //
+            //                         if (documents.isEmpty) {
+            //                           // print('No data found for search text: $searchTexts');
+            //                           return Center(child: Text("No data found for search text $searchTexts"));
+            //                           // Display a message when no data is found
+            //                         }
+            //                       }
+            //
+            //                       if (_challengeProvider.searchbycategory.isNotEmpty || _challengeProvider.searchbytag.isNotEmpty) {
+            //
+            //                         // print("searchbycat_addKeywordProvider in stream after: ${_addKeywordProvider.searchbycategory} and ${_addKeywordProvider.searchbytag}");
+            //
+            //                         documents = documents.where((element) {
+            //                           List<String> Category = (element.get('Keywords') as List<dynamic>).whereType<String>().map((tag) => tag.toString()).toList();
+            //                           List<String> tags = (element.get('tags') as List<dynamic>).whereType<String>().map((tag) => tag.toString()).toList();
+            //
+            //
+            //                           // print('Tags in document: $Category');
+            //                           // print('Search tags: ${_addKeywordProvider.searchbycategory}');
+            //
+            //                           if(_challengeProvider.searchbycategory.isNotEmpty && _challengeProvider.searchbytag.isEmpty){
+            //                             // print("if");
+            //                             return _challengeProvider.searchbycategory.every((tag) => Category.contains(tag));
+            //                           }
+            //
+            //                           else if (_challengeProvider.searchbytag.isNotEmpty && _challengeProvider.searchbycategory.isEmpty){
+            //                             // print("else if");
+            //                             return _challengeProvider.searchbytag.every((tag) => tags.contains(tag));
+            //                           }
+            //
+            //                           else return _challengeProvider.searchbycategory.every((tag) => Category.contains(tag)) && _challengeProvider.searchbytag.every((tag) => tags.contains(tag));
+            //                         }).toList();
+            //
+            //                         if (documents.isEmpty) {
+            //                           // print('No data found for search text: ${_addKeywordProvider.searchbycategory.join('')} and ${_addKeywordProvider.searchbytag.join('')}');
+            //                           return Center(child: (_challengeProvider.searchbycategory.isNotEmpty && _challengeProvider.searchbytag.isEmpty) ?
+            //
+            //                           Text("No data found for ${_challengeProvider.searchbycategory.join(', ')}") :
+            //
+            //                           (_challengeProvider.searchbytag.isNotEmpty && _challengeProvider.searchbycategory.isEmpty) ?
+            //
+            //                           Text("No data found for ${_challengeProvider.searchbytag.join(', ')}") :
+            //
+            //                           Text("No data found for ${_challengeProvider.searchbycategory.join(', ')} and ${_challengeProvider.searchbytag.join(', ')}"));
+            //                           // Display a message when no data is found
+            //                         }
+            //                       }
+            //
+            //                       // if (_addKeywordProvider.searchbytag.isNotEmpty) {
+            //                       //
+            //                       //   print("searchbycat_addKeywordProvider in stream after: ${_addKeywordProvider.searchbytag}");
+            //                       //
+            //                       //   documents = documents.where((element) {
+            //                       //     List<String> tags = (element.get('tags') as List<dynamic>).whereType<String>().map((tag) => tag.toString()).toList();
+            //                       //     // String category = element.get('Keywords').toString().toLowerCase();
+            //                       //
+            //                       //     print('Tags in document: $tags');
+            //                       //     print('Search tags: ${_addKeywordProvider.searchbytag}');
+            //                       //
+            //                       //     return _addKeywordProvider.searchbytag.every((tag) => tags.contains(tag));
+            //                       //   }).toList();
+            //                       //
+            //                       //   if (documents.isEmpty) {
+            //                       //     print('No data found for search text: ${_addKeywordProvider.searchbytag}');
+            //                       //     return Center(child: Text("No data found for search text ${_addKeywordProvider.searchbytag}"));
+            //                       //     // Display a message when no data is found
+            //                       //   }
+            //                       // }
+            //
+            //
+            //                       documents.sort((a, b) {
+            //                         String idA = a['id'];
+            //                         // print("idA: $idA");
+            //                         String idB = b['id'];
+            //                         // print("idB: $idB");
+            //                         int? numericA = int.tryParse(idA.substring(2));
+            //                         int? numericB = int.tryParse(idB.substring(2));
+            //
+            //                         // If the conversion fails, default to comparing the strings
+            //                         if (numericA == null && numericB == null) {
+            //                           return idA.compareTo(idB);
+            //                         } else if (numericA == null) {
+            //                           return 1; // Place items with null numericA at the end
+            //                         } else if (numericB == null) {
+            //                           return -1; // Place items with null numericB at the end
+            //                         }
+            //
+            //                         return numericA.compareTo(numericB);
+            //                       });
+            //                       return Column(
+            //                         children: [
+            //                           SizedBox(height: 20,),
+            //                           Padding(
+            //                             padding: const EdgeInsets.all(8.0),
+            //                             child: Row(
+            //                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //                               children: [
+            //                                 Container(
+            //                                   width: MediaQuery.of(context).size.width*0.2,
+            //                                   child:Row(
+            //                                     children: [
+            //                                       SizedBox(width: 10,),
+            //                                       // Text(challengesDetails.id,style: Theme.of(context).textTheme.bodySmall),
+            //                                       Text("Sr.NO.",style: Theme.of(context).textTheme.titleMedium),
+            //                                       // Text("${challengesDetails['id']}",style: Theme.of(context).textTheme.bodySmall),
+            //                                       SizedBox(width: 20,),
+            //                                       Expanded(
+            //                                         child: Column(
+            //                                           mainAxisSize: MainAxisSize.min,
+            //                                           crossAxisAlignment: CrossAxisAlignment.start,
+            //                                           children: [
+            //
+            //                                             Text("Label & Description",style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis),
+            //
+            //                                             // SizedBox(height: 10),
+            //
+            //
+            //                                           ],
+            //                                         ),
+            //                                       ),
+            //                                     ],
+            //                                   ),
+            //                                 ),
+            //                                 SizedBox(width: 50),
+            //
+            //
+            //                                 Container(
+            //                                   width: MediaQuery.of(context).size.width*0.3,
+            //                                   child: Column(
+            //                                     mainAxisAlignment: MainAxisAlignment.start,
+            //                                     crossAxisAlignment: CrossAxisAlignment.start,
+            //                                     children: [
+            //                                       Text("Original Description",style: Theme.of(context).textTheme.titleMedium),
+            //                                     ],
+            //                                   ),
+            //                                 ),
+            //                                 Column(
+            //                                     children:[
+            //                                       Container(
+            //                                         width: MediaQuery.of(context).size.width*0.33,
+            //                                         child: Row(
+            //                                           mainAxisAlignment: MainAxisAlignment.start,
+            //                                           crossAxisAlignment: CrossAxisAlignment.start,
+            //                                           children: [
+            //                                             // Padding(
+            //                                             //   padding: const EdgeInsets.symmetric(vertical: 2.0),
+            //                                             //   child: Icon(Icons.tag,size: 16,),
+            //                                             // ),
+            //                                             // SizedBox(width: 5,),
+            //                                             // Expanded(child: Text(keys.toString(),style: Theme.of(context).textTheme.bodySmall, )),
+            //                                             Expanded(
+            //                                               child: Text('Category & Tags',style: Theme.of(context).textTheme.titleMedium,),
+            //                                             ),
+            //                                             // Expanded(child: Text("No Country",style: Theme.of(context).textTheme.bodySmall,overflow: TextOverflow.ellipsis,)),
+            //                                             // SizedBox(width: 10,),
+            //                                           ],
+            //                                         ),
+            //                                       ),
+            //
+            //                                       SizedBox(height: 10,),
+            //
+            //                                     ]
+            //                                 ),
+            //
+            //
+            //                               ],
+            //                             ),
+            //                           ),
+            //                           Divider(),
+            //                           Expanded(
+            //                             child: ListView.separated(
+            //                               // reverse: true,
+            //                               //  shrinkWrap: true,
+            //                               padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+            //                               physics: BouncingScrollPhysics(),
+            //                               // itemCount: documents.length,
+            //                               itemCount: documents.length > 30 ? 30 : documents.length,
+            //                               separatorBuilder: (BuildContext context, int index) {
+            //                                 return Divider();
+            //                               },
+            //                               itemBuilder: (BuildContext context, int index) {
+            //                                 //print('Images ${documents[index]['Images'].length}');
+            //                                 //todo Pass this time
+            //                                 // print("documents[index] : ${documents[index]}");
+            //                                 return Column(
+            //                                   children: [
+            //                                     ChallengesListTile(documents[index], index, documents),
+            //                                   ],
+            //                                 );
+            //
+            //                               },
+            //                             ),
+            //                           ),
+            //                         ],
+            //                       );
+            //
+            //                     },
+            //                   )
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -1790,153 +1780,100 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
 
 
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
-          width: MediaQuery.of(context).size.width*0.2,
-          child:Row(
-            children: [
-              SizedBox(width: 10,),
-              // Text(challengesDetails.id,style: Theme.of(context).textTheme.bodySmall),
-              // Text("${i+1}.",style: Theme.of(context).textTheme.bodySmall),
-              Text("CH0${challengesDetails['id']}",style: Theme.of(context).textTheme.bodySmall),
-              SizedBox(width: 20,),
-              Expanded(
-                child: InkWell(
-                  onTap: (){
-                    ViewChallengesDialog(challengesDetails.reference,challengesDetails.id, challengesDetails['Label'], challengesDetails['Description'], challengesDetails['Category']
-                        ,challengesDetails['Keywords'],challengesDetails['Created Date'],challengesDetails['Created By'],challengesDetails['tags'],challengesDetails['Modified By']
-                        ,challengesDetails['Modified Date'],challengesDetails['id']);
-                  },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      !selectedFieldNames.contains("Label")?Text(challengesDetails['Label'],style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis):Container(),
-                      !selectedFieldNames.contains("Description")?Text(challengesDetails['Description'],style: Theme.of(context).textTheme.subtitle1?.copyWith(color: Colors.grey,overflow: TextOverflow.ellipsis),maxLines: 2,):Container(),
-                      SizedBox(height: 10),
+    return Container(
+      // width: MediaQuery.of(context).size.width*0.2,
+      child:Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(width: 10,),
+          Text("CH0${challengesDetails['id']}",style: Theme.of(context).textTheme.bodySmall),
+          SizedBox(width: 20,),
 
-                    ],
-                  ),
-                ),
+          Expanded(
+            flex: 3,
+            child: InkWell(
+              onTap: (){
+                ViewChallengesDialog(challengesDetails.reference,challengesDetails.id, challengesDetails['Label'], challengesDetails['Description'], challengesDetails['Category']
+                    ,challengesDetails['Keywords'],challengesDetails['Created Date'],challengesDetails['Created By'],challengesDetails['tags'],challengesDetails['Modified By']
+                    ,challengesDetails['Modified Date'],challengesDetails['id']);
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  !selectedFieldNames.contains("Label")?Text(challengesDetails['Label'],style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis):Container(),
+                  !selectedFieldNames.contains("Description")?Text(challengesDetails['Description'],style: Theme.of(context).textTheme.subtitle1?.copyWith(color: Colors.grey,overflow: TextOverflow.ellipsis),maxLines: 2,):Container(),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-        SizedBox(width: 30),
 
+          SizedBox(width: 20),
 
-        Container(
-          width: MediaQuery.of(context).size.width*0.23,
-
-          child: Column(
-            children: [
-              Text("${challengesDetails['Original Description']}",),
-            ],
+          Expanded(
+              flex: 2,
+              child: Text("${challengesDetails['Original Description']}",
+              )
           ),
-        ),
-        SizedBox(width: 30,),
-        Column(
-            children:[
-              !selectedFieldNames.contains("Keywords")?Container(
-                width: MediaQuery.of(context).size.width*0.33,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2.0),
-                      child: Icon(Icons.tag,size: 16,),
+          SizedBox(width: 20,),
+
+          Expanded(
+            flex: 3,
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children:[
+                  !selectedFieldNames.contains("Keywords")?RichText(
+                    maxLines: null,
+                    text: TextSpan(
+                      style: Theme.of(context).textTheme.titleSmall,
+                      children: getClickableKeywords(keys),
                     ),
-                    SizedBox(width: 5,),
-                    // Expanded(child: Text(keys.toString(),style: Theme.of(context).textTheme.bodySmall, )),
-                    Expanded(
-                      child: RichText(
-                        maxLines: null,
-                        text: TextSpan(
-                          style: Theme.of(context).textTheme.titleSmall,
-                          children: getClickableKeywords(keys),
-                        ),
-                      ),
-                    )
-                    // Expanded(child: Text("No Country",style: Theme.of(context).textTheme.bodySmall,overflow: TextOverflow.ellipsis,)),
-                    // SizedBox(width: 10,),
-                  ],
-                ),
-              ):Container(),
+                  ):Container(),
 
-              SizedBox(height: 10,),
+                  SizedBox(height: 5,),
 
-              !selectedFieldNames.contains("Keywords")?Container(
-                width: MediaQuery.of(context).size.width*0.33,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      // child: Icon(Icons.arr,size: 10, color: Colors.black38,),
+                  !selectedFieldNames.contains("Keywords")?RichText(
+                    maxLines: null,
+                    text: TextSpan(
+                      style: Theme.of(context).textTheme.labelMedium,
+                      children: getClickableTags(tags),
                     ),
-                    SizedBox(width: 5,),
-                    // Expanded(child: Text(keys.toString(),style: Theme.of(context).textTheme.bodySmall, )),
-                    Expanded(
-                      child: RichText(
-                        maxLines: null,
-                        text: TextSpan(
-                          style: Theme.of(context).textTheme.labelMedium,
-                          children: getClickableTags(tags),
-                        ),
-                      ),
-                    ),
-                    // Expanded(child: Text("No Country",style: Theme.of(context).textTheme.bodySmall,overflow: TextOverflow.ellipsis,)),
-                    // SizedBox(width: 10,),
-                  ],
-                ),
-              ):Container(),
+                  ):Container(),
 
-            ]
-        ),
-
-
-
-        Flexible(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                  iconSize: 25,
-                  color: primaryColorOfApp,
-                  onPressed: () async {
-                    // print("object: ${challengesDetails.id} , ${challengesDetails['Name']}, ${challengesDetails['Description']}, ${challengesDetails['Category']}, ${challengesDetails['Keywords']} ,${challengesDetails['Created Date']},${challengesDetails['Created By']},${challengesDetails['Modified By']},${challengesDetails['Modified Date']}}");
-                    showEditChallengesDialogBox
-                      (challengesDetails.reference,challengesDetails.id, challengesDetails['Label'], challengesDetails['Description'], challengesDetails['Category']
-                        ,challengesDetails['Keywords'],challengesDetails['Created Date'],challengesDetails['Created By'],challengesDetails['tags'],challengesDetails['Modified By']
-                        ,challengesDetails['Modified Date'],challengesDetails['id']);
-                    // showEditThriverDialogBox(challengesDetails.id, challengesDetails['Name'], challengesDetails['Description'], challengesDetails['Category'] );
-                  },
-                  icon: Icon(Icons.edit,)),
-
-
-              IconButton(
-                  iconSize: 25,
-                  color: primaryColorOfApp,
-                  onPressed: () async {
-                    ProgressDialog.show(context, "Deleting Users",Icons.person);
-                    setState(() async {
-                      await ApiRepository().DeleteSectionPreset(challengesDetails.reference);
-                    });
-                    _challengeProvider.loadDataForPage(1);
-                    _challengeProvider.setFirstpageNo();
-
-                    ProgressDialog.hide();
-                  },
-                  icon: Icon(Icons.delete,)),
-              SizedBox(width: 20,),
-            ],
+                ]
+            ),
           ),
-        ),
-      ],
+
+          IconButton(
+              iconSize: 25,
+              color: primaryColorOfApp,
+              onPressed: () async {
+                // print("object: ${challengesDetails.id} , ${challengesDetails['Name']}, ${challengesDetails['Description']}, ${challengesDetails['Category']}, ${challengesDetails['Keywords']} ,${challengesDetails['Created Date']},${challengesDetails['Created By']},${challengesDetails['Modified By']},${challengesDetails['Modified Date']}}");
+                showEditChallengesDialogBox
+                  (challengesDetails.reference,challengesDetails.id, challengesDetails['Label'], challengesDetails['Description'], challengesDetails['Category']
+                    ,challengesDetails['Keywords'],challengesDetails['Created Date'],challengesDetails['Created By'],challengesDetails['tags'],challengesDetails['Modified By']
+                    ,challengesDetails['Modified Date'],challengesDetails['id']);
+                // showEditThriverDialogBox(challengesDetails.id, challengesDetails['Name'], challengesDetails['Description'], challengesDetails['Category'] );
+              },
+              icon: Icon(Icons.edit,)),
+          IconButton(
+              iconSize: 25,
+              color: primaryColorOfApp,
+              onPressed: () async {
+                ProgressDialog.show(context, "Deleting Users",Icons.person);
+                setState(() async {
+                  await ApiRepository().DeleteSectionPreset(challengesDetails.reference);
+                });
+                _challengeProvider.loadDataForPage(1);
+                _challengeProvider.setFirstpageNo();
+
+                ProgressDialog.hide();
+              },
+              icon: Icon(Icons.delete,)),
+
+        ],
+      ),
     );
   }
 

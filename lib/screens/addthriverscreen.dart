@@ -498,6 +498,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
   //
   //   print(formattedDate);
   // }
+
   QuerySnapshot? querySnapshotssss;
   @override
   void initState() {
@@ -565,6 +566,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
       print('Error fetching documents: $error');
     });
   }
+
   List<QueryDocumentSnapshot<Object?>>? docssssss;
   Future<String> getChatgptSettingsApiKey() async {
     String apiKey = "";
@@ -714,781 +716,759 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
             color: Colors.white.withOpacity(0.7),
             borderRadius: BorderRadius.circular(20),
           ),
-          child: Wrap(
-            children: [
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+            
+                HeaderWidget(),
 
-              HeaderWidget(),
-
-              Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.2,
-                            child: Consumer<AddKeywordProvider>(
-                                builder: (c,addKeywordProvider, _){
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: TypeAheadField(
-                                      noItemsFoundBuilder: (ctx){
-                                        print("ccccc: $ctx");
-                                        return Container(
+                Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+            
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.2,
+                              child: Consumer<AddKeywordProvider>(
+                                  builder: (c,addKeywordProvider, _){
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: TypeAheadField(
+                                        noItemsFoundBuilder: (ctx){
+                                          print("ccccc: $ctx");
+                                          return Container(
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(15.0),
+                                                child: Text("No Keywords Found",style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),),
+                                              )
+                                          );
+                                        },
+                                        suggestionsBoxDecoration: SuggestionsBoxDecoration(
+                                            scrollbarTrackAlwaysVisible: true,
+                                            scrollbarThumbAlwaysVisible: true,
+                                            hasScrollbar: true,
+                                            borderRadius: BorderRadius.circular(5),
+                                            color: Colors.white,
+                                            constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.3, )
+                                        ),
+                                        suggestionsCallback: (value) async {
+                                          return await KeywordServicessss.getSuggestions(value);
+            
+                                        },
+                                        itemBuilder: (context, String suggestion) {
+                                          return Container(
+                                            // color: Colors.black,
                                             child: Padding(
                                               padding: const EdgeInsets.all(15.0),
-                                              child: Text("No Keywords Found",style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),),
-                                            )
-                                        );
-                                      },
-                                      suggestionsBoxDecoration: SuggestionsBoxDecoration(
-                                          scrollbarTrackAlwaysVisible: true,
-                                          scrollbarThumbAlwaysVisible: true,
-                                          hasScrollbar: true,
-                                          borderRadius: BorderRadius.circular(5),
-                                          color: Colors.white,
-                                          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.3, )
-                                      ),
-                                      suggestionsCallback: (value) async {
-                                        return await KeywordServicessss.getSuggestions(value);
-
-                                      },
-                                      itemBuilder: (context, String suggestion) {
-                                        return Container(
-                                          // color: Colors.black,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(15.0),
-                                            child: Text(suggestion,style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),),
+                                              child: Text(suggestion,style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),),
+                                            ),
+                                          );
+                                        },
+                                        onSuggestionSelected: (String suggestion) async {
+                                          print('onSuggestionSelected suggestion $suggestion before  ${addKeywordProvider.searchbycategory}');
+            
+                                            addKeywordProvider.addkeywordschip(suggestion,addKeywordProvider.searchbycategory);
+                                          searchbyCatcontroller.clear();
+                                          _addKeywordProvider.loadDataForPageFilter(1,'Keywords',_addKeywordProvider.searchbycategory);
+                                          _addKeywordProvider.setFirstpageNo();
+            
+                                          print('onSuggestionSelected after  ${_addKeywordProvider.searchbycategory}');
+                                        },
+                                        textFieldConfiguration: TextFieldConfiguration(
+                                          controller: searchbyCatcontroller,
+                                          style: GoogleFonts.poppins(
+                                            textStyle: Theme.of(context).textTheme.bodyLarge,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w400,fontStyle: FontStyle.normal,
                                           ),
-                                        );
-                                      },
-                                      onSuggestionSelected: (String suggestion) async {
-                                        print('onSuggestionSelected suggestion $suggestion before  ${addKeywordProvider.searchbycategory}');
-
-                                          addKeywordProvider.addkeywordschip(suggestion,addKeywordProvider.searchbycategory);
-                                        searchbyCatcontroller.clear();
-                                        _addKeywordProvider.loadDataForPageFilter(1,'Keywords',_addKeywordProvider.searchbycategory);
-                                        _addKeywordProvider.setFirstpageNo();
-
-                                        print('onSuggestionSelected after  ${_addKeywordProvider.searchbycategory}');
-                                      },
-                                      textFieldConfiguration: TextFieldConfiguration(
-                                        controller: searchbyCatcontroller,
-                                        style: GoogleFonts.poppins(
-                                          textStyle: Theme.of(context).textTheme.bodyLarge,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w400,fontStyle: FontStyle.normal,
-                                        ),
-                                        decoration: InputDecoration(
-                                          //errorText: userAccountSearchErrorText,
-                                          contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
-                                          labelText: "Search By Category",
-                                          hintText: "Search By Category",
-                                          errorStyle: GoogleFonts.montserrat(
-                                              textStyle: Theme.of(context).textTheme.bodyLarge,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.redAccent),
-
-                                          focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.black),
-                                              borderRadius: BorderRadius.circular(100)),
-                                          border: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.black12),
-                                              borderRadius: BorderRadius.circular(100)),
-                                          //hintText: "e.g Abouzied",
-                                          labelStyle: GoogleFonts.montserrat(
-                                              textStyle: Theme.of(context).textTheme.bodyLarge,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.black),
+                                          decoration: InputDecoration(
+                                            //errorText: userAccountSearchErrorText,
+                                            contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
+                                            labelText: "Search By Category",
+                                            hintText: "Search By Category",
+                                            errorStyle: GoogleFonts.montserrat(
+                                                textStyle: Theme.of(context).textTheme.bodyLarge,
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.redAccent),
+            
+                                            focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(color: Colors.black),
+                                                borderRadius: BorderRadius.circular(100)),
+                                            border: OutlineInputBorder(
+                                                borderSide: BorderSide(color: Colors.black12),
+                                                borderRadius: BorderRadius.circular(100)),
+                                            //hintText: "e.g Abouzied",
+                                            labelStyle: GoogleFonts.montserrat(
+                                                textStyle: Theme.of(context).textTheme.bodyLarge,
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.black),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  );}
+                                    );}
+                              ),
                             ),
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.2,
-                            child: Consumer<AddKeywordProvider>(
-                                builder: (c,addKeywordProvider, _){
-                                  // print("searchbycattttt: $searchbycat");
-                                  return (addKeywordProvider.searchbycategory.isNotEmpty) ? Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: SingleChildScrollView(
-                                        scrollDirection: Axis.horizontal,
-                                        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
-                                        controller: ScrollController(keepScrollOffset: true),
-                                        child: Wrap(
-                                          spacing: 10,
-                                          runSpacing: 10,
-                                          crossAxisAlignment: WrapCrossAlignment.start,
-                                          alignment: WrapAlignment.start,
-                                          runAlignment: WrapAlignment.start,
-                                          children: addKeywordProvider.searchbycategory.map((item){
-                                            // print("item: $item");
-                                            // print("searchbycat_addKeywordProvider: ${_addKeywordProvider.searchbycategory}");
-                                            return Container(
-                                              height: 40,
-                                              // width: 200,
-                                              // margin: EdgeInsets.only(bottom: 10),
-                                              padding: EdgeInsets.all(5),
-                                              decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(50),
-                                                  border: Border.all(
-                                                      color: Colors.blue
-                                                  )
-                                              ),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Text(item, style: TextStyle(
-                                                      fontWeight: FontWeight.w700,
-                                                      color: Colors.blue
-
-                                                  ),),
-
-                                                  IconButton(
-                                                      onPressed: ()async{
-                                                        // _addKeywordProvider.removekeywords(item);
-                                                        setState(() {
-
-                                                          addKeywordProvider.removesearchcat(item);
-                                                          _addKeywordProvider.loadDataForPageFilter(1,'Keywords',_addKeywordProvider.searchbycategory);
-                                                          _addKeywordProvider.setFirstpageNo();
-                                                          _addKeywordProvider.lengthOfdocument = null;
-
-
-                                                        });
-                                                      },
-                                                      icon: Icon(Icons.dangerous_sharp,size: 15, color: Colors.black38,)
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          }).toList(),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.2,
+                              child: Consumer<AddKeywordProvider>(
+                                  builder: (c,addKeywordProvider, _){
+                                    // print("searchbycattttt: $searchbycat");
+                                    return (addKeywordProvider.searchbycategory.isNotEmpty) ? Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
+                                          controller: ScrollController(keepScrollOffset: true),
+                                          child: Wrap(
+                                            spacing: 10,
+                                            runSpacing: 10,
+                                            crossAxisAlignment: WrapCrossAlignment.start,
+                                            alignment: WrapAlignment.start,
+                                            runAlignment: WrapAlignment.start,
+                                            children: addKeywordProvider.searchbycategory.map((item){
+                                              // print("item: $item");
+                                              // print("searchbycat_addKeywordProvider: ${_addKeywordProvider.searchbycategory}");
+                                              return Container(
+                                                height: 40,
+                                                // width: 200,
+                                                // margin: EdgeInsets.only(bottom: 10),
+                                                padding: EdgeInsets.all(5),
+                                                decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(50),
+                                                    border: Border.all(
+                                                        color: Colors.blue
+                                                    )
+                                                ),
+                                                child: Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Text(item, style: TextStyle(
+                                                        fontWeight: FontWeight.w700,
+                                                        color: Colors.blue
+            
+                                                    ),),
+            
+                                                    IconButton(
+                                                        onPressed: ()async{
+                                                          // _addKeywordProvider.removekeywords(item);
+                                                          setState(() {
+            
+                                                            addKeywordProvider.removesearchcat(item);
+                                                            _addKeywordProvider.loadDataForPageFilter(1,'Keywords',_addKeywordProvider.searchbycategory);
+                                                            _addKeywordProvider.setFirstpageNo();
+                                                            _addKeywordProvider.lengthOfdocument = null;
+            
+            
+                                                          });
+                                                        },
+                                                        icon: Icon(Icons.dangerous_sharp,size: 15, color: Colors.black38,)
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            }).toList(),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ) : Container(height: 40,);
-                                }),
-                          )
-                        ],
-                      ),
-
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.2,
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: TypeAheadField(
-                                noItemsFoundBuilder: (c){
-                                  print("tagcccccc: $c");
-                                  return Container(
+                                    ) : Container(height: 40,);
+                                  }),
+                            )
+                          ],
+                        ),
+            
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.2,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TypeAheadField(
+                                  noItemsFoundBuilder: (c){
+                                    print("tagcccccc: $c");
+                                    return Container(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(15.0),
+                                          child: Text("Search Tags ${searchbyTagcontroller.text}",style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),
+                                          ),
+                                        )
+                                    );
+                                  },
+                                  // direction: AxisDirection.up,
+                                  suggestionsBoxDecoration: SuggestionsBoxDecoration(
+                                      scrollbarTrackAlwaysVisible: true,
+                                      scrollbarThumbAlwaysVisible: true,
+                                      hasScrollbar: true,
+                                      borderRadius: BorderRadius.circular(5),
+                                      // color: Colors.white,
+                                      constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.3, )
+                                  ),
+                                  suggestionsCallback: (value) async {
+                                    print("taggggg value: $value");
+                                    return await TagServices.getSuggestions(searchbyTagcontroller.text.toLowerCase());
+                                  },
+            
+                                  itemBuilder: (context, String suggestion) {
+                                    return Container(
+                                      // color: Colors.black,
                                       child: Padding(
                                         padding: const EdgeInsets.all(15.0),
-                                        child: Text("Search Tags ${searchbyTagcontroller.text}",style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),
-                                        ),
-                                      )
-                                  );
-                                },
-                                // direction: AxisDirection.up,
-                                suggestionsBoxDecoration: SuggestionsBoxDecoration(
-                                    scrollbarTrackAlwaysVisible: true,
-                                    scrollbarThumbAlwaysVisible: true,
-                                    hasScrollbar: true,
-                                    borderRadius: BorderRadius.circular(5),
-                                    // color: Colors.white,
-                                    constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.3, )
-                                ),
-                                suggestionsCallback: (value) async {
-                                  print("taggggg value: $value");
-                                  return await TagServices.getSuggestions(searchbyTagcontroller.text.toLowerCase());
-                                },
-
-                                itemBuilder: (context, String suggestion) {
-                                  return Container(
-                                    // color: Colors.black,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(15.0),
-                                      child: Text(suggestion,style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),),
-                                    ),
-                                  );
-                                },
-                                onSuggestionSelected: (String suggestion) {
-                                  print("Im selectedf $suggestion" );
-                                  print("Im selectedf ${searchbyTagcontroller.text}" );
-                                  // setState(() {
-                                  // tagscontroller.text = suggestion;
-                                  setState(() {
-                                    _addKeywordProvider.addtags(suggestion,_addKeywordProvider.searchbytag);
-                                    _addKeywordProvider.loadDataForPageFilter(1,'tags',_addKeywordProvider.searchbytag);
-                                    _addKeywordProvider.setFirstpageNo();
-
-                                  });
-                                  print("fenil tags added: ${_addKeywordProvider.searchbytag}");
-                                  searchbyTagcontroller.clear();
-
-                                  // });
-                                },
-                                textFieldConfiguration: TextFieldConfiguration(
-                                  controller: searchbyTagcontroller,
-                                  style: GoogleFonts.poppins(
-                                    textStyle: Theme.of(context).textTheme.bodyLarge,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400,fontStyle: FontStyle.normal,
-                                  ),
-                                  onSubmitted: (suggestion){
+                                        child: Text(suggestion,style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),),
+                                      ),
+                                    );
+                                  },
+                                  onSuggestionSelected: (String suggestion) {
+                                    print("Im selectedf $suggestion" );
+                                    print("Im selectedf ${searchbyTagcontroller.text}" );
+                                    // setState(() {
+                                    // tagscontroller.text = suggestion;
                                     setState(() {
                                       _addKeywordProvider.addtags(suggestion,_addKeywordProvider.searchbytag);
                                       _addKeywordProvider.loadDataForPageFilter(1,'tags',_addKeywordProvider.searchbytag);
                                       _addKeywordProvider.setFirstpageNo();
-
+            
                                     });
                                     print("fenil tags added: ${_addKeywordProvider.searchbytag}");
                                     searchbyTagcontroller.clear();
+            
+                                    // });
                                   },
-                                  decoration: InputDecoration(
-                                    //errorText: userAccountSearchErrorText,
-                                    contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
-                                    labelText: "Search by Tags",
-                                    hintText: "Search by Tags",
-                                    errorStyle: GoogleFonts.montserrat(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.redAccent),
-
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(100)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black12),
-                                        borderRadius: BorderRadius.circular(100)),
-                                    //hintText: "e.g Abouzied",
-                                    labelStyle: GoogleFonts.montserrat(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black),
+                                  textFieldConfiguration: TextFieldConfiguration(
+                                    controller: searchbyTagcontroller,
+                                    style: GoogleFonts.poppins(
+                                      textStyle: Theme.of(context).textTheme.bodyLarge,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400,fontStyle: FontStyle.normal,
+                                    ),
+                                    onSubmitted: (suggestion){
+                                      setState(() {
+                                        _addKeywordProvider.addtags(suggestion,_addKeywordProvider.searchbytag);
+                                        _addKeywordProvider.loadDataForPageFilter(1,'tags',_addKeywordProvider.searchbytag);
+                                        _addKeywordProvider.setFirstpageNo();
+            
+                                      });
+                                      print("fenil tags added: ${_addKeywordProvider.searchbytag}");
+                                      searchbyTagcontroller.clear();
+                                    },
+                                    decoration: InputDecoration(
+                                      //errorText: userAccountSearchErrorText,
+                                      contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
+                                      labelText: "Search by Tags",
+                                      hintText: "Search by Tags",
+                                      errorStyle: GoogleFonts.montserrat(
+                                          textStyle: Theme
+                                              .of(context)
+                                              .textTheme
+                                              .bodyLarge,
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.redAccent),
+            
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: Colors.black),
+                                          borderRadius: BorderRadius.circular(100)),
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(color: Colors.black12),
+                                          borderRadius: BorderRadius.circular(100)),
+                                      //hintText: "e.g Abouzied",
+                                      labelStyle: GoogleFonts.montserrat(
+                                          textStyle: Theme
+                                              .of(context)
+                                              .textTheme
+                                              .bodyLarge,
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.black),
+                                    ),
+            
                                   ),
-
                                 ),
                               ),
                             ),
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.2,
-                            child: Consumer<AddKeywordProvider>(
-                                builder: (c,addKeywordProvider, _){
-                                  return (addKeywordProvider.searchbytag.isNotEmpty) ? Padding(
-                                    padding: const EdgeInsets.only(left: 15.0),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: SingleChildScrollView(
-                                        scrollDirection: Axis.horizontal,
-                                        child: Wrap(
-                                          spacing: 10,
-                                          runSpacing: 10,
-                                          crossAxisAlignment: WrapCrossAlignment.start,
-                                          alignment: WrapAlignment.start,
-                                          runAlignment: WrapAlignment.start,
-                                          children: addKeywordProvider.searchbytag.map((item){
-                                            return Container(
-                                              height: 40,
-                                              // margin: EdgeInsets.only(bottom: 10),
-                                              padding: EdgeInsets.all(5),
-                                              decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(50),
-                                                  border: Border.all(
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.2,
+                              child: Consumer<AddKeywordProvider>(
+                                  builder: (c,addKeywordProvider, _){
+                                    return (addKeywordProvider.searchbytag.isNotEmpty) ? Padding(
+                                      padding: const EdgeInsets.only(left: 15.0),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Wrap(
+                                            spacing: 10,
+                                            runSpacing: 10,
+                                            crossAxisAlignment: WrapCrossAlignment.start,
+                                            alignment: WrapAlignment.start,
+                                            runAlignment: WrapAlignment.start,
+                                            children: addKeywordProvider.searchbytag.map((item){
+                                              return Container(
+                                                height: 40,
+                                                // margin: EdgeInsets.only(bottom: 10),
+                                                padding: EdgeInsets.all(5),
+                                                decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(50),
+                                                    border: Border.all(
+                                                        color: Colors.green
+                                                    )
+                                                ),
+                                                child: Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Text(item, style: TextStyle(
+                                                        fontWeight: FontWeight.w700,
                                                       color: Colors.green
-                                                  )
-                                              ),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Text(item, style: TextStyle(
-                                                      fontWeight: FontWeight.w700,
-                                                    color: Colors.green
-                                                  ),),
-                                                  IconButton(
-                                                      onPressed: (){
-                                                        // setState(() {
-                                                        setState(() {
-                                                          addKeywordProvider.removesearchtags(item);
-                                                          _addKeywordProvider.loadDataForPageFilter(1,'tags',_addKeywordProvider.searchbytag);
-                                                          _addKeywordProvider.setFirstpageNo();
-                                                          _addKeywordProvider.lengthOfdocument = null;
-                                                        });
-                                                        // _addKeywordProvider.searchbytag.remove(item);
-                                                        // });
-                                                      },
-                                                      icon: Icon(Icons.dangerous_sharp,size: 15, color: Colors.black38,)
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          }).toList(),
-                                        ),
-                                      ),
-                                    ),
-                                  ) : Container(height: 40,);
-
-                                }),
-                          ),
-                        ],
-                      ),
-
-                      Consumer<AddKeywordProvider>(
-                          builder: (c,addKeywordProvider, _){
-                            // print("addKeywordProvider.lengthOfdocument :${addKeywordProvider.lengthOfdocument}");
-                            return
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-
-                                      Container(
-                                        margin:EdgeInsets.only(left: 20),
-                                        width: MediaQuery.of(context).size.width*0.3,
-                                        child: TextField(
-                                          controller: searchTextbyCKEditingController,
-                                          onChanged: (val){
-                                            print("valuse ${val}");
-                                            if (_debounce?.isActive ?? false) _debounce?.cancel();
-                                            _debounce = Timer(Duration(milliseconds: _debouncetime), () {
-                                              if (searchTextbyCKEditingController.text != "") {
-                                                ///here you perform your search
-                                                // _loadDataForPageFilter(1,'tags',_addKeywordProvider.searchbytag); //(searchTextbyCKEditingController.text.toString());
-                                                // _loadDataForPageSearchFilter(searchTextbyCKEditingController.text.toString(),selectAllAny);
-                                                addKeywordProvider.loadDataForPageSearchFilter(searchTextbyCKEditingController.text.toString());
-                                                print("documentssssssss: ${_addKeywordProvider.documents}");
-
-                                              }
-                                              else {
-                                                addKeywordProvider.loadDataForPage(1);
-                                                addKeywordProvider.setFirstpageNo();
-
-                                              }
-                                            });
-                                          },
-
-                                          decoration: InputDecoration(
-                                            contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
-                                            hintText: (addKeywordProvider.selectAllAny == "All") ? 'Search All Solutions By (Label, Description, Category, Tags)' : "Search Thrivers By Any",
-                                            border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(100.0),
-                                            ),
-                                            suffixIcon:
-                                            // (searchTextbyCKEditingController.text.isNotEmpty) ?
-                                            GestureDetector(
-                                                onTap: (){
-                                                  setState(() {
-                                                    searchTextbyCKEditingController.clear();
-                                                    _addKeywordProvider.loadDataForPage(1);
-                                                    _addKeywordProvider.setFirstpageNo();
-                                                    _addKeywordProvider.lengthOfdocument = null;
-                                                  });
-                                                },
-                                                child: Icon(Icons.close,)
-                                            ),
-                                            // ) : null,
-                                            enabledBorder: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(100.0),
-                                              borderSide: BorderSide(color: Colors.black),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(100.0),
-                                              borderSide: BorderSide(color: Colors.black, width: 2.0),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        // height: MediaQuery.of(context).size.width*0.03,
-                                        width: MediaQuery.of(context).size.width*0.06,
-                                        margin: EdgeInsets.symmetric(horizontal: 20),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: DropdownButtonFormField<String>(
-                                            value: addKeywordProvider.selectAllAny,
-                                            // value: 'Thrivers Category',
-                                            // value: ,
-                                            onChanged: (value) async {
-                                                addKeywordProvider.updateselectAllAny(value!,searchTextbyCKEditingController.text );
-                                            },
-                                            // onChanged: null,
-                                            items: addKeywordProvider.searchAllAny.map((item) {
-                                              return DropdownMenuItem<String>(
-                                                value: item,
-                                                child: Text(item),
+                                                    ),),
+                                                    IconButton(
+                                                        onPressed: (){
+                                                          // setState(() {
+                                                          setState(() {
+                                                            addKeywordProvider.removesearchtags(item);
+                                                            _addKeywordProvider.loadDataForPageFilter(1,'tags',_addKeywordProvider.searchbytag);
+                                                            _addKeywordProvider.setFirstpageNo();
+                                                            _addKeywordProvider.lengthOfdocument = null;
+                                                          });
+                                                          // _addKeywordProvider.searchbytag.remove(item);
+                                                          // });
+                                                        },
+                                                        icon: Icon(Icons.dangerous_sharp,size: 15, color: Colors.black38,)
+                                                    ),
+                                                  ],
+                                                ),
                                               );
                                             }).toList(),
-                                            // onTap: null,
+                                          ),
+                                        ),
+                                      ),
+                                    ) : Container(height: 40,);
+            
+                                  }),
+                            ),
+                          ],
+                        ),
+            
+                        Consumer<AddKeywordProvider>(
+                            builder: (c,addKeywordProvider, _){
+                              // print("addKeywordProvider.lengthOfdocument :${addKeywordProvider.lengthOfdocument}");
+                              return
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+
+                                        Container(
+                                          padding:EdgeInsets.all(8),
+                                          width: MediaQuery.of(context).size.width*0.3,
+                                          child: TextField(
+                                            controller: searchTextbyCKEditingController,
+                                            onChanged: (val){
+                                              print("valuse ${val}");
+                                              if (_debounce?.isActive ?? false) _debounce?.cancel();
+                                              _debounce = Timer(Duration(milliseconds: _debouncetime), () {
+                                                if (searchTextbyCKEditingController.text != "") {
+                                                  ///here you perform your search
+                                                  // _loadDataForPageFilter(1,'tags',_addKeywordProvider.searchbytag); //(searchTextbyCKEditingController.text.toString());
+                                                  // _loadDataForPageSearchFilter(searchTextbyCKEditingController.text.toString(),selectAllAny);
+                                                  addKeywordProvider.loadDataForPageSearchFilter(searchTextbyCKEditingController.text.toString());
+                                                  print("documentssssssss: ${_addKeywordProvider.documents}");
+
+                                                }
+                                                else {
+                                                  addKeywordProvider.loadDataForPage(1);
+                                                  addKeywordProvider.setFirstpageNo();
+
+                                                }
+                                              });
+                                            },
+
                                             decoration: InputDecoration(
-                                              // iconColor: Colors.black,
-                                              // contentPadding: EdgeInsets.only(
-                                              //     top: 20, bottom: 20, left: 32, right: 22),
-                                              contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                                              labelText: 'Search By',
-                                              hintText: 'Search By',
-                                              labelStyle: TextStyle(color: Colors.black),
+                                              contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
+                                              hintText: (addKeywordProvider.selectAllAny == "All") ? 'Search All Solutions By (Label, Description, Category, Tags)' : "Search Thrivers By Any",
                                               border: OutlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.black),
-                                                  borderRadius: BorderRadius.circular(15)
+                                                borderRadius: BorderRadius.circular(100.0),
+                                              ),
+                                              suffixIcon:
+                                              // (searchTextbyCKEditingController.text.isNotEmpty) ?
+                                              GestureDetector(
+                                                  onTap: (){
+                                                    setState(() {
+                                                      searchTextbyCKEditingController.clear();
+                                                      _addKeywordProvider.loadDataForPage(1);
+                                                      _addKeywordProvider.setFirstpageNo();
+                                                      _addKeywordProvider.lengthOfdocument = null;
+                                                    });
+                                                  },
+                                                  child: Icon(Icons.close,)
+                                              ),
+                                              // ) : null,
+                                              enabledBorder: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(100.0),
+                                                borderSide: BorderSide(color: Colors.black),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(100.0),
+                                                borderSide: BorderSide(color: Colors.black, width: 2.0),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
-
-                                    ],
-                                  ),
-                                  (addKeywordProvider.lengthOfdocument != null) ?
-
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 8),
-                                    child: Row(
-                                      children: [
-                                        Text("Search results: ${addKeywordProvider.lengthOfdocument}",style: Theme.of(context).textTheme.bodyMedium),
-                                        SizedBox(width: 5,),
-                                        InkWell(
-                                          onTap: (){
-                                            addKeywordProvider.lengthOfdocument = null;
-                                            addKeywordProvider.searchbytag.clear();
-                                            addKeywordProvider.searchbycategory.clear();
-                                            searchTextbyCKEditingController.clear();
-                                            addKeywordProvider.loadDataForPage(1);
-                                            addKeywordProvider.setFirstpageNo();
-                                          },
-                                            child: Text("..clear all",style: TextStyle(color: Colors.blue))),
+                                        Container(
+                                          // width: MediaQuery.of(context).size.width*0.06,
+                                          width: 80,
+                                          margin: EdgeInsets.all(5),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: DropdownButtonFormField<String>(
+                                              iconSize: 12,
+                                              value: addKeywordProvider.selectAllAny,
+                                              style: TextStyle(fontSize: 12),
+                                              onChanged: (value) async {
+                                                  addKeywordProvider.updateselectAllAny(value!,searchTextbyCKEditingController.text );
+                                              },
+                                              // onChanged: null,
+                                              items: addKeywordProvider.searchAllAny.map((item) {
+                                                return DropdownMenuItem<String>(
+                                                  value: item,
+                                                  child: Text(item),
+                                                );
+                                              }).toList(),
+                                              // onTap: null,
+                                              decoration: InputDecoration(
+                                                // iconColor: Colors.black,
+                                                // contentPadding: EdgeInsets.only(
+                                                //     top: 20, bottom: 20, left: 32, right: 22),
+                                                contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                                labelText: 'Search By',
+                                                hintText: 'Search By',
+                                                labelStyle: TextStyle(color: Colors.black, fontSize: 12),
+                                                border: OutlineInputBorder(
+                                                    borderSide: BorderSide(color: Colors.black),
+                                                    borderRadius: BorderRadius.circular(15)
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+            
                                       ],
                                     ),
-                                  ) :
-
-                                  SizedBox(height: 35,)
-                                ],
-                              );
-                          }),
-
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(width: MediaQuery.of(context).size.width*0.01,),
-                            InkWell(
-                                onTap: (){
-                                  showTreeView = !showTreeView;
-                                  setState(() {});
-                                },
-                                // child: (!showTreeView)?FaIcon(FontAwesomeIcons.folderTree):FaIcon(FontAwesomeIcons.list))),
-                                child: (showTreeView)?FaIcon(FontAwesomeIcons.list):FaIcon(FontAwesomeIcons.folderTree)),
-                            InkWell(
-                                onTap: (){
-                                  showAddThriverDialogBox();
-                                },
-                                child: FaIcon(FontAwesomeIcons.add)),
-                            Container(width: MediaQuery.of(context).size.width*0.01,),
-                          ],
-                        ),
-                      ),
-
-
-                    ],
-                  )
-              ),
-
-              Container(
-                height: MediaQuery.of(context).size.height * .65,
-                margin: EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.7),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child:
-            //  backgroundColor: Colors.grey.withOpacity(0.2),
-
-
-              showTreeView?FutureBuilder(
-                future: fetchDatasss(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Container(
-                      child: Center(child: CircularProgressIndicator()),
-                    );
-                  }
-                  if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  }
-
-                  // Reset the list of nodes
-                  // nodes.clear();
-
-                  print("Hola");
-                  print(nodes.length);
-
-                  return Container(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: nodes.length,
-                      itemBuilder: (context, index) {
-                        return nodes[index];
-                      },
-                    ),
-                  );
-                },
-              ) :
-              Consumer<AddKeywordProvider>(
-                  builder: (c,addKeywordProvider, _){
-                    // addKeywordProvider.getcategoryAndKeywords();
-                    // addKeywordProvider.newgetSource();
-                    // addKeywordProvider.getThriversStatus();
-                    return
-                      Column(
-                        children: [
-                          SizedBox(height: 20,),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  width: MediaQuery.of(context).size.width*0.2,
-                                  child:Row(
-                                    children: [
-                                      SizedBox(width: 10,),
-                                      // Text(thriversDetails.id,style: Theme.of(context).textTheme.bodySmall),
-                                      Text("NO.",style: Theme.of(context).textTheme.titleMedium),
-                                      // Text("${thriversDetails['id']}",style: Theme.of(context).textTheme.bodySmall),
-                                      SizedBox(width: 20,),
-                                      Expanded(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-
-                                            Text("Label & Description",style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis),
-
-                                            // SizedBox(height: 10),
-
-
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(width: 50),
-
-
-                                Container(
-                                  width: MediaQuery.of(context).size.width*0.15,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text("Source ",style: Theme.of(context).textTheme.titleMedium),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  width: MediaQuery.of(context).size.width*0.165,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text("Status",style: Theme.of(context).textTheme.titleMedium),
-                                    ],
-                                  ),
-                                ),
-
-                                Column(
-                                    children:[
-                                      Container(
-                                        width: MediaQuery.of(context).size.width*0.33,
+                                    (addKeywordProvider.lengthOfdocument != null) ?
+            
+                                    Container(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 8),
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            // Padding(
-                                            //   padding: const EdgeInsets.symmetric(vertical: 2.0),
-                                            //   child: Icon(Icons.tag,size: 16,),
-                                            // ),
-                                            // SizedBox(width: 5,),
-                                            // Expanded(child: Text(keys.toString(),style: Theme.of(context).textTheme.bodySmall, )),
-                                            Expanded(
-                                              child: Text('Category & Tags',style: Theme.of(context).textTheme.titleMedium,),
-                                            ),
-                                            // Expanded(child: Text("No Country",style: Theme.of(context).textTheme.bodySmall,overflow: TextOverflow.ellipsis,)),
-                                            // SizedBox(width: 10,),
+                                            Text("Search results: ${addKeywordProvider.lengthOfdocument}",style: Theme.of(context).textTheme.bodyMedium),
+                                            SizedBox(width: 5,),
+                                            InkWell(
+                                              onTap: (){
+                                                addKeywordProvider.lengthOfdocument = null;
+                                                addKeywordProvider.searchbytag.clear();
+                                                addKeywordProvider.searchbycategory.clear();
+                                                searchTextbyCKEditingController.clear();
+                                                addKeywordProvider.loadDataForPage(1);
+                                                addKeywordProvider.setFirstpageNo();
+                                              },
+                                                child: Text("..clear all",style: TextStyle(color: Colors.blue))),
                                           ],
                                         ),
                                       ),
+                                    ) :
+            
+                                    SizedBox(height: 35,)
+                                  ],
+                                );
+                            }),
 
-                                      SizedBox(height: 10,),
+                        Expanded(
+                          child: Container(
+                            height: 80,
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  // Container(width: MediaQuery.of(context).size.width*0.01,),
+                                  InkWell(
+                                      onTap: (){
+                                        showTreeView = !showTreeView;
+                                        setState(() {});
+                                      },
+                                      child: (!showTreeView)?FaIcon(FontAwesomeIcons.folderTree):FaIcon(FontAwesomeIcons.list)),
+                                      // child: (showTreeView)?Icon(Icons.list):Icon(Icons.menu_open)),
+                                  SizedBox(width: 30,),
+                                  InkWell(
+                                      onTap: (){
+                                        showAddThriverDialogBox();
+                                      },
+                                      child: FaIcon(FontAwesomeIcons.add)),
+                                  // Container(width: MediaQuery.of(context).size.width*0.01,),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+            
+                      ],
+                    )
+                ),
+            
+                Container(
+                  height: MediaQuery.of(context).size.height * .65,
+                  margin: EdgeInsets.only(bottom:20, left: 20,right: 20),
+                  // decoration: BoxDecoration(
+                  //   color: Colors.white.withOpacity(0.7),
+                  //   borderRadius: BorderRadius.circular(20),
+                  // ),
+                  child:
+                showTreeView ? FutureBuilder(
+                  future: fetchDatasss(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Container(
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    }
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    }
 
-                                    ]
+                    // Reset the list of nodes
+                    // nodes.clear();
+
+                    print("Hola");
+                    print(nodes.length);
+
+                    return Container(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: nodes.length,
+                        itemBuilder: (context, index) {
+                          return nodes[index];
+                        },
+                      ),
+                    );
+                  },
+                ) :
+                Consumer<AddKeywordProvider>(
+                    builder: (c,addKeywordProvider, _){
+                      return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(width: 10,),
+                                  Text("NO.",style: Theme.of(context).textTheme.titleMedium),
+
+                                  SizedBox(width: 20,),
+
+                                  Expanded(
+                                    flex: 3,
+                                    // width: MediaQuery.of(context).size.width*0.15,
+                                    child: Text("Label & Description",style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis),
+                                  ),
+                                  SizedBox(width: 20),
+
+                                  Expanded(
+                                    flex: 1,
+                                    // width: MediaQuery.of(context).size.width*0.15,
+                                    child: Text("Source",textAlign: TextAlign.center,style: Theme.of(context).textTheme.titleMedium),
+                                  ),
+
+                                  SizedBox(width: 20),
+
+                                  Expanded(
+                                    flex: 1,
+                                    // width: MediaQuery.of(context).size.width*0.165,
+                                    child: Text("Status",textAlign: TextAlign.center,style: Theme.of(context).textTheme.titleMedium),
+                                  ),
+
+                                  SizedBox(width: 20),
+
+
+                                  Expanded(
+                                    flex: 3,
+                                    // width: MediaQuery.of(context).size.width*0.33,
+                                    child: Text('Category & Tags',style: Theme.of(context).textTheme.titleMedium,),
+                                  ),
+
+
+
+                                  SizedBox(width: 80,),
+
+
+                                ],
+                              ),
+                            ),
+
+                            Divider(color: Colors.black,),
+
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+
+                                     (addKeywordProvider.isLoadingMore) ?
+                                      Center(child: CircularProgressIndicator()) :
+                                      ListView.separated(
+                                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                      physics: NeverScrollableScrollPhysics(), // Disable scrolling
+                                      shrinkWrap: true,
+                                      itemCount: addKeywordProvider.documents.length,
+                                      separatorBuilder: (BuildContext context, int index) {
+                                        return Divider();
+                                      },
+                                      itemBuilder: (BuildContext context, int index) {
+                                        // print("after search documentssssssss: ${addKeywordProvider.documents}");
+
+                                        return ThriversListTile(addKeywordProvider.documents[index], index, addKeywordProvider.documents);
+                                      },
+                                    ),
+
+                                  ],
                                 ),
+                              ),
+                            ),
 
+                            SizedBox(height: 20),
 
+                            (addKeywordProvider.documents.isEmpty) ?
+
+                            Container() :
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: addKeywordProvider.loadFirstPage,
+                                  child: Text('1st page'),
+                                ),
+                                SizedBox(width: 10),
+                                ElevatedButton(
+                                  onPressed: addKeywordProvider.loadPreviousPage,
+                                  child: Text('Previous'),
+                                ),
+                                SizedBox(width: 10),
+                                Text('Page ${addKeywordProvider.currentPage} of ${addKeywordProvider.totalPages}'),
+                                SizedBox(width: 10),
+                                ElevatedButton(
+                                  onPressed: addKeywordProvider.loadNextPage,
+                                  child: Text('Next'),
+                                ),
+                                SizedBox(width: 10),
+                                ElevatedButton(
+                                  onPressed: addKeywordProvider.loadLastPage,
+                                  child: Text('Last page'),
+                                ),
                               ],
                             ),
-                          ),
-                          Divider(color: Colors.black,),
+                          ],
+                        );
+                    })
 
-                          Expanded(
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  // (documents.isEmpty) ?
-                                  // Center(child: Text("No Solutions Added Yet", style: Theme.of(context).textTheme.displaySmall,)):
-                                   (addKeywordProvider.isLoadingMore) ?
-                                    Center(child: CircularProgressIndicator()) :
-                                    ListView.separated(
-                                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                    physics: NeverScrollableScrollPhysics(), // Disable scrolling
-                                    shrinkWrap: true,
-                                    itemCount: addKeywordProvider.documents.length,
-                                    separatorBuilder: (BuildContext context, int index) {
-                                      return Divider();
-                                    },
-                                    itemBuilder: (BuildContext context, int index) {
-                                      // print("after search documentssssssss: ${addKeywordProvider.documents}");
-
-                                      return Column(
-                                        children: [
-                                          ThriversListTile(addKeywordProvider.documents[index], index, addKeywordProvider.documents),
-                                        ],
-                                      );
-                                    },
-                                  ),
-
-                                ],
-                              ),
-                            ),
-                          ),
-                          (addKeywordProvider.documents.isEmpty) ?
-
-                          Container() :
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ElevatedButton(
-                                onPressed: addKeywordProvider.loadPreviousPage,
-                                child: Text('Previous'),
-                              ),
-                              SizedBox(width: 10),
-                              Text('Page ${addKeywordProvider.currentPage} of ${addKeywordProvider.totalPages}'),
-                              SizedBox(width: 10),
-                              ElevatedButton(
-                                onPressed: addKeywordProvider.loadNextPage,
-                                child: Text('Next'),
-                              ),
-                            ],
-                          ),
-                        ],
-                      );
-                  })
-
-              ),
-
-
-                // StreamBuilder<QuerySnapshot>(
-                //   stream: thriversCollection
-                //
-                //       .orderBy('id') // Sort by ID
-                //       // .startAfterDocument(_lastDocument!) // Start after the last document retrieved
-                //       .limit(_perPage) // Limit the number of documents retrieved per page
-                //       .snapshots(),
-                //       builder: (context, snapshot) {
-                //       if (snapshot.connectionState == ConnectionState.waiting) {
-                //       return Center(child: CircularProgressIndicator());
-                //       }
-                //
-                //       // Check for errors
-                //       if (snapshot.hasError) {
-                //       return Center(child: Text('Error: ${snapshot.error}'));
-                //       }
-                //
-                //       // Extract the documents from the snapshot
-                //       List<DocumentSnapshot> newDocuments = snapshot.data!.docs;
-                //
-                //       // Update the last document retrieved
-                //       if (newDocuments.isNotEmpty) {
-                //       // _lastDocument = newDocuments[newDocuments.length - 1];
-                //         _lastindex =snapshot.data!.docs.last["id"];
-                //       print("inside set last document $_lastDocument");
-                //       }
-                //     //
-                //     // WriteBatch batch = FirebaseFirestore.instance.batch();
-                //     //
-                //     //               snapshot.data!.docs.forEach((element) {
-                //     //               var id = element['id'];
-                //     //               // snapshot.data!.
-                //     //               // Remove the "TH" prefix from the ID
-                //     //               // String newId = id.replaceFirst('TH0', '');
-                //     //               if(id != "" || id != null) {
-                //     //                 print("id.runtimeType  ${id.runtimeType}");
-                //     //                 if(id.runtimeType == String) {
-                //     //                   String newIdString = id.replaceFirst(
-                //     //                       'TH0', ''); // Remove prefix and convert to string
-                //     //                   int newId = int.tryParse(newIdString) ?? 0;
-                //     //                   // print("newId ${newId}");
-                //     //                   batch.update(element.reference, {'id': newId});
-                //     //                 }
-                //     //               }
-                //     //               // snapshot.data!.docs.up
-                //     //               });
-                //     //               batch.commit().then((_) {
-                //     //               print('Batch update completed successfully.');
-                //     //               }).catchError((error) {
-                //     //               print('Error performing batch update: $error');
-                //     //               });
-                //
-                //     documents.addAll(snapshot.data!.docs);
-                //
-                //
-                //     _isLoadingMore = false;
-                //
-                //     return ListView.separated(
-                //       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                //       physics: BouncingScrollPhysics(),
-                //       itemCount: documents.length,
-                //       separatorBuilder: (BuildContext context, int index) {
-                //         return Divider();
-                //       },
-                //       itemBuilder: (BuildContext context, int index) {
-                //         return Column(
-                //           children: [
-                //             ThriversListTile(documents[index], index, documents),
-                //           ],
-                //         );
-                //       },
-                //     );
-                //   },
-                // )
-
-
-              // ),
-
-            ],
+                ),
+            
+            
+            
+                  // StreamBuilder<QuerySnapshot>(
+                  //   stream: thriversCollection
+                  //
+                  //       .orderBy('id') // Sort by ID
+                  //       // .startAfterDocument(_lastDocument!) // Start after the last document retrieved
+                  //       .limit(_perPage) // Limit the number of documents retrieved per page
+                  //       .snapshots(),
+                  //       builder: (context, snapshot) {
+                  //       if (snapshot.connectionState == ConnectionState.waiting) {
+                  //       return Center(child: CircularProgressIndicator());
+                  //       }
+                  //
+                  //       // Check for errors
+                  //       if (snapshot.hasError) {
+                  //       return Center(child: Text('Error: ${snapshot.error}'));
+                  //       }
+                  //
+                  //       // Extract the documents from the snapshot
+                  //       List<DocumentSnapshot> newDocuments = snapshot.data!.docs;
+                  //
+                  //       // Update the last document retrieved
+                  //       if (newDocuments.isNotEmpty) {
+                  //       // _lastDocument = newDocuments[newDocuments.length - 1];
+                  //         _lastindex =snapshot.data!.docs.last["id"];
+                  //       print("inside set last document $_lastDocument");
+                  //       }
+                  //     //
+                  //     // WriteBatch batch = FirebaseFirestore.instance.batch();
+                  //     //
+                  //     //               snapshot.data!.docs.forEach((element) {
+                  //     //               var id = element['id'];
+                  //     //               // snapshot.data!.
+                  //     //               // Remove the "TH" prefix from the ID
+                  //     //               // String newId = id.replaceFirst('TH0', '');
+                  //     //               if(id != "" || id != null) {
+                  //     //                 print("id.runtimeType  ${id.runtimeType}");
+                  //     //                 if(id.runtimeType == String) {
+                  //     //                   String newIdString = id.replaceFirst(
+                  //     //                       'TH0', ''); // Remove prefix and convert to string
+                  //     //                   int newId = int.tryParse(newIdString) ?? 0;
+                  //     //                   // print("newId ${newId}");
+                  //     //                   batch.update(element.reference, {'id': newId});
+                  //     //                 }
+                  //     //               }
+                  //     //               // snapshot.data!.docs.up
+                  //     //               });
+                  //     //               batch.commit().then((_) {
+                  //     //               print('Batch update completed successfully.');
+                  //     //               }).catchError((error) {
+                  //     //               print('Error performing batch update: $error');
+                  //     //               });
+                  //
+                  //     documents.addAll(snapshot.data!.docs);
+                  //
+                  //
+                  //     _isLoadingMore = false;
+                  //
+                  //     return ListView.separated(
+                  //       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  //       physics: BouncingScrollPhysics(),
+                  //       itemCount: documents.length,
+                  //       separatorBuilder: (BuildContext context, int index) {
+                  //         return Divider();
+                  //       },
+                  //       itemBuilder: (BuildContext context, int index) {
+                  //         return Column(
+                  //           children: [
+                  //             ThriversListTile(documents[index], index, documents),
+                  //           ],
+                  //         );
+                  //       },
+                  //     );
+                  //   },
+                  // )
+            
+            
+                // ),
+            
+              ],
+            ),
           ),
         ),
       ),
@@ -1801,210 +1781,103 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
 
 
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
-          width: MediaQuery.of(context).size.width*0.2,
-          child:Row(
-            children: [
-              SizedBox(width: 10,),
-              // Text(thriversDetails.id,style: Theme.of(context).textTheme.bodySmall),
-              // Text("${i+1}.",style: Theme.of(context).textTheme.bodySmall),
-              Text("SH0${thriversDetails['id']}",style: Theme.of(context).textTheme.bodySmall),
-              SizedBox(width: 20,),
-              Expanded(
-                child: InkWell(
-                  onTap: (){
-                    ViewSolutionDialog(thriversDetails.reference,thriversDetails.id, thriversDetails['Label'], thriversDetails['Description'], thriversDetails['Category']
-                        ,thriversDetails['Keywords'],thriversDetails['Created Date'],thriversDetails['Created By'],thriversDetails['tags'],thriversDetails['Modified By']
-                        ,thriversDetails['Modified Date'],thriversDetails['id']);
-
-                  },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      !selectedFieldNames.contains("Label")?Text(thriversDetails['Label'],style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis):Container(),
-                      !selectedFieldNames.contains("Description")?Text(thriversDetails['Description'],style: Theme.of(context).textTheme.subtitle1?.copyWith(color: Colors.grey,overflow: TextOverflow.ellipsis),maxLines: 2,):Container(),
-                      SizedBox(height: 10),
-
-                    ],
-                  ),
-                ),
+    return Container(
+      // margin: EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(width: 10),
+          Text("SH0${thriversDetails['id']}", style: Theme.of(context).textTheme.bodySmall),
+          SizedBox(width: 20),
+          Expanded(
+            flex: 3,
+            child: InkWell(
+              onTap: () {
+                ViewSolutionDialog(
+                    thriversDetails.reference, thriversDetails.id, thriversDetails['Label'], thriversDetails['Description'], thriversDetails['Category'],
+                    thriversDetails['Keywords'], thriversDetails['Created Date'], thriversDetails['Created By'], thriversDetails['tags'], thriversDetails['Modified By'],
+                    thriversDetails['Modified Date'], thriversDetails['id']
+                );
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  !selectedFieldNames.contains("Label") ? Text(thriversDetails['Label'], style: Theme.of(context).textTheme.titleMedium, overflow: TextOverflow.ellipsis) : Container(),
+                  !selectedFieldNames.contains("Description") ? Text(thriversDetails['Description'], style: Theme.of(context).textTheme.subtitle1?.copyWith(color: Colors.grey, overflow: TextOverflow.ellipsis), maxLines: 2) : Container(),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-        SizedBox(width: 30),
 
+          SizedBox(width: 20,),
 
-        Container(
-          width: MediaQuery.of(context).size.width*0.115,
-
-          child: Column(
-            children: [
-              (thriversDetails['Source']==null||thriversDetails['Source']=="") ? Text('-') :  Text("${thriversDetails['Source']}",),
-            ],
+          Expanded(
+            flex: 1,
+            child: Text(thriversDetails['Source'] ?? '-',textAlign: TextAlign.center,),
           ),
-        ),
-        SizedBox(width: 100,),
 
-         Container(
-          width: MediaQuery.of(context).size.width*0.115,
+          SizedBox(width: 20),
 
-          child: Column(
-            children: [
-              (thriversDetails['Thirver Status']==null||thriversDetails['Thirver Status']=="") ? Text('-') : Text("${thriversDetails['Thirver Status']}",),
-            ],
+          Expanded(
+            flex: 1,
+            child: Text(thriversDetails['Thirver Status'] ?? 'New',textAlign: TextAlign.center,),
           ),
-        ),
-        SizedBox(width: 30,),
-        Column(
-            children:[
-              !selectedFieldNames.contains("Keywords")?Container(
-                width: MediaQuery.of(context).size.width*0.33,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2.0),
-                      child: Icon(Icons.tag,size: 16,),
-                    ),
-                    SizedBox(width: 5,),
-                    // Expanded(child: Text(keys.toString(),style: Theme.of(context).textTheme.bodySmall, )),
-                    Expanded(
-                      child: RichText(
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 3,
-                        text: TextSpan(
-                          style: Theme.of(context).textTheme.titleSmall,
-                          children: getClickableKeywords(keys),
-                        ),
-                      ),
-                    )
-                    // Expanded(child: Text("No Country",style: Theme.of(context).textTheme.bodySmall,overflow: TextOverflow.ellipsis,)),
-                    // SizedBox(width: 10,),
-                  ],
-                ),
-              ):Container(),
+          SizedBox(width: 20),
 
-              SizedBox(height: 10,),
-
-              !selectedFieldNames.contains("Keywords")?Container(
-                width: MediaQuery.of(context).size.width*0.33,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      // child: Icon(Icons.arr,size: 10, color: Colors.black38,),
-                    ),
-                    SizedBox(width: 5,),
-                    // Expanded(child: Text(keys.toString(),style: Theme.of(context).textTheme.bodySmall, )),
-                    Expanded(
-                      child: RichText(
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 3,
-                        text: TextSpan(
-                          style: Theme.of(context).textTheme.labelMedium,
-                          children: getClickableTags(tags),
-                        ),
-                      ),
-                    ),
-                    // Expanded(child: Text("No Country",style: Theme.of(context).textTheme.bodySmall,overflow: TextOverflow.ellipsis,)),
-                    // SizedBox(width: 10,),
-                  ],
-                ),
-              ):Container(),
-
-            ]
-        ),
-
-
-
-        Flexible(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              /*Row(
-                children: [
-
-                  */
-              /*Column(
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.credit_card_outlined),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Text("credits",style: TextStyle(fontWeight: FontWeight.bold),textScaleFactor: 1.5,),
-                          ),
-                        ],
-                      ),
-                      Text("Credits",style: TextStyle(fontWeight: FontWeight.bold),textScaleFactor: 0.8,),
-
-                    ],
+          Expanded(
+            flex: 3,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                !selectedFieldNames.contains("Keywords") ? RichText(
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
+                  text: TextSpan(
+                    style: Theme.of(context).textTheme.titleSmall,
+                    children: getClickableKeywords(keys),
                   ),
-                  */
-              /*
-
-                ],
-              ),*/
-              IconButton(
-                  iconSize: 25,
-                  color: primaryColorOfApp,
-                  onPressed: () async {
-                    // print("object: ${thriversDetails.id} , ${thriversDetails['Label']}, ${thriversDetails['Description']}, ${thriversDetails['Category']}, ${thriversDetails['Keywords']} ,${thriversDetails['Created Date']},${thriversDetails['Created By']},${thriversDetails['Modified By']},${thriversDetails['Modified Date']}}");
-                    showEditThriverDialogBox
-                      (thriversDetails.reference,thriversDetails.id, thriversDetails['Label'], thriversDetails['Description'], thriversDetails['Category']
-                        ,thriversDetails['Keywords'],thriversDetails['Created Date'],thriversDetails['Created By'],thriversDetails['tags'],thriversDetails['Modified By']
-                        ,thriversDetails['Modified Date'],thriversDetails['id']);
-                    // showEditThriverDialogBox(thriversDetails.id, thriversDetails['Label'], thriversDetails['Description'], thriversDetails['Category'] );
-                  },
-                  icon: Icon(Icons.edit,)),
-
-              // SizedBox(width: 20,),
-              /*Row(
-                children: [
-
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.note_alt_sharp),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Text(thriversDetails['ListOfBoughtTests'].length.toString(),style: TextStyle(fontWeight: FontWeight.bold),textScaleFactor: 1.5,),
-                          ),
-                        ],
-                      ),
-                      Text("Tests Bought",style: TextStyle(fontWeight: FontWeight.bold),textScaleFactor: 0.8,),
-
-                    ],
+                ) : Container(),
+                SizedBox(height: 5),
+                !selectedFieldNames.contains("Keywords") ? RichText(
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
+                  text: TextSpan(
+                    style: Theme.of(context).textTheme.labelMedium,
+                    children: getClickableTags(tags),
                   ),
-
-                ],
-              ),*/
-
-              IconButton(
-                  iconSize: 25,
-                  color: primaryColorOfApp,
-                  onPressed: () async {
-                    ProgressDialog.show(context, "Deleting Users",Icons.person);
-                    await ApiRepository().DeleteSectionPreset(thriversDetails.reference);
-                    _addKeywordProvider.loadDataForPage(1);
-                    _addKeywordProvider.setFirstpageNo();
-                    ProgressDialog.hide();
-                  },
-                  icon: Icon(Icons.delete,)),
-              // SizedBox(width: 20,),
-            ],
+                ) : Container(),
+              ],
+            ),
           ),
-        ),
-      ],
+
+          IconButton(
+            iconSize: 25,
+            color: primaryColorOfApp,
+            onPressed: () async {
+              showEditThriverDialogBox(
+                  thriversDetails.reference, thriversDetails.id, thriversDetails['Label'], thriversDetails['Description'], thriversDetails['Category'],
+                  thriversDetails['Keywords'], thriversDetails['Created Date'], thriversDetails['Created By'], thriversDetails['tags'], thriversDetails['Modified By'],
+                  thriversDetails['Modified Date'], thriversDetails['id']
+              );
+            },
+            icon: Icon(Icons.edit),
+          ),
+          IconButton(
+            iconSize: 25,
+            color: primaryColorOfApp,
+            onPressed: () async {
+              ProgressDialog.show(context, "Deleting Users",Icons.person);
+              await ApiRepository().DeleteSectionPreset(thriversDetails.reference);
+              _addKeywordProvider.loadDataForPage(1);
+              _addKeywordProvider.setFirstpageNo();
+              ProgressDialog.hide();
+            },
+            icon: Icon(Icons.delete),
+          ),
+        ],
+      ),
     );
   }
 
@@ -6406,313 +6279,3 @@ class KeywordServicessss {
 
 
 
-      //
-          // /*  Padding(
-          //   child: Container(
-          //     child: TypeAheadField(
-          //       textFieldConfiguration: TextFieldConfiguration(
-          //         controller: solutionsTextEditingController,
-          //         style: GoogleFonts.montserrat(
-          //           textStyle: Theme.of(context).textTheme.bodyLarge,
-          //           fontWeight: FontWeight.w400,),
-          //         decoration: InputDecoration(
-          //           contentPadding: EdgeInsets.all(25),
-          //           hintText:  "Type & Search",
-          //           labelText: "Select Solutions",
-          //           errorStyle: GoogleFonts.montserrat(
-          //               textStyle: Theme.of(context).textTheme.bodyLarge,
-          //               fontWeight: FontWeight.w400,
-          //               color: Colors.redAccent),
-          //           enabledBorder:OutlineInputBorder(
-          //               borderSide: BorderSide(color: Colors.black),
-          //               borderRadius: BorderRadius.circular(15)),
-          //           focusedBorder: OutlineInputBorder(
-          //               borderSide: BorderSide(color: Colors.black),
-          //               borderRadius: BorderRadius.circular(15)),
-          //           border: OutlineInputBorder(
-          //               borderSide: BorderSide(color: Colors.black),
-          //               borderRadius: BorderRadius.circular(15)),
-          //           labelStyle: GoogleFonts.montserrat(
-          //               textStyle: Theme.of(context).textTheme.bodyLarge,
-          //               fontWeight: FontWeight.w400,
-          //               color: Colors.black),
-          //         ),
-          //       ),
-          //       suggestionsCallback: (pattern) async {
-          //         List<DocumentSnapshot> itemList = [];
-          //         await FirebaseFirestore.instance.collection('Solutions')
-          //             .where('Label', isGreaterThanOrEqualTo: pattern)
-          //             .where('Label', isLessThanOrEqualTo: pattern + '\uf8ff')
-          //             .get().then((value) {
-          //           itemList.addAll(value.docs);
-          //         });
-          //         return itemList;
-          //       },
-          //       itemBuilder: (context, suggestion) {
-          //         return CheckboxListTile(
-          //           value: solutions.contains(suggestion.get("Label")),
-          //           title: Text(suggestion.get("Label")),
-          //           onChanged: (value){
-          //             if(solutions.contains(suggestion.get("Label"))){
-          //               solutions.remove(suggestion.get("Label"));
-          //               solutionsDocRefs.remove(suggestion.reference);
-          //             }else{
-          //               solutions.add(suggestion.get("Label"));
-          //               solutionsDocRefs.add(suggestion.reference);
-          //             }
-          //             print("solutions");
-          //             print(solutions);
-          //           },
-          //           //subtitle: Text("Add Some Details Here"),
-          //         );
-          //       },
-          //
-          //       onSuggestionSelected: (suggestion) {
-          //         print("Im selected");
-          //         print(suggestion);
-          //         solutions.forEach((element) {
-          //           solutionsTextEditingController.text +=element + ",";
-          //         });
-          //         //  challanges
-          //         // textEditingController.clear();
-          //         //mySelectedUsers.add(suggestion.toString());
-          //         //innerState((){});
-          //       },
-          //     ),
-          //   ),
-          //   padding: const EdgeInsets.all(8.0),
-          // ),*/
-          // Padding(
-          //   padding: const EdgeInsets.only(left: 20.0,top: 10,bottom: 10),
-          //   child: Text("Optional Fields",style: GoogleFonts.montserrat(
-          //       color: Colors.black)),
-          // ),
-          //
-          // //Country
-          // Padding(
-          //   child: Container(
-          //     //width: size.width * 0.9,
-          //     child: TypeAheadField(
-          //       noItemsFoundBuilder: (BuildContext context) {
-          //
-          //         return ListTile(
-          //
-          //           title: Text("Enter a Valid Email Address",style: TextStyle(color: Colors.redAccent),),
-          //           //subtitle: Text("Add Some Details Here"),
-          //         );
-          //       },
-          //       textFieldConfiguration: TextFieldConfiguration(
-          //         controller: countryTextEditingController,
-          //         //autofocus: true,
-          //
-          //         style: GoogleFonts.montserrat(
-          //           textStyle: Theme.of(context).textTheme.bodyLarge,
-          //           fontWeight: FontWeight.w400,),
-          //
-          //         //   cursorColor: primaryColorOfApp,
-          //
-          //         decoration: InputDecoration(
-          //           //errorText: firstNameErrorText,
-          //
-          //           contentPadding: EdgeInsets.all(25),
-          //           hintText:  "Type & Search",
-          //           labelText: "Select Country",
-          //           errorStyle: GoogleFonts.montserrat(
-          //               textStyle: Theme.of(context).textTheme.bodyLarge,
-          //               fontWeight: FontWeight.w400,
-          //               color: Colors.redAccent),
-          //           enabledBorder:OutlineInputBorder(
-          //               borderSide: BorderSide(color: Colors.black),
-          //               borderRadius: BorderRadius.circular(15)),
-          //           focusedBorder: OutlineInputBorder(
-          //               borderSide: BorderSide(color: Colors.black),
-          //               borderRadius: BorderRadius.circular(15)),
-          //           border: OutlineInputBorder(
-          //               borderSide: BorderSide(color: Colors.black),
-          //               borderRadius: BorderRadius.circular(15)),
-          //           //hintText: "e.g Abouzied",
-          //           labelStyle: GoogleFonts.montserrat(
-          //               textStyle: Theme.of(context).textTheme.bodyLarge,
-          //               fontWeight: FontWeight.w400,
-          //               color: Colors.black),
-          //         ),
-          //       ),
-          //       suggestionsCallback: (pattern) async {
-          //         List<String> itemList = [];
-          //         await getAllCountries().then((value) {
-          //           value.forEach((element) {
-          //             if(element.name.contains(pattern)){
-          //               itemList.add(element.name);
-          //             }
-          //           });
-          //         });
-          //         return itemList;
-          //       },
-          //       itemBuilder: (context, suggestion) {
-          //         return ListTile(
-          //           title: Text(suggestion.toString()),
-          //           //subtitle: Text("Add Some Details Here"),
-          //         );
-          //       },
-          //
-          //       onSuggestionSelected: (suggestion) {
-          //         print("Im selected");
-          //         print(suggestion);
-          //         countryTextEditingController.text = suggestion;
-          //         // textEditingController.clear();
-          //         //mySelectedUsers.add(suggestion.toString());
-          //         //innerState((){});
-          //       },
-          //     ),
-          //   ),
-          //   padding: const EdgeInsets.all(8.0),
-          // ),
-          // //Job Roles
-          // Padding(
-          //   padding: const EdgeInsets.all(8.0),
-          //   child: TextField(
-          //     // maxLines: null,
-          //     controller: textControllers[0],
-          //     //cursorColor: primaryColorOfApp,
-          //     onChanged: (value) {
-          //
-          //     },
-          //     style: GoogleFonts.montserrat(
-          //         textStyle: Theme.of(context).textTheme.bodyLarge,
-          //         fontWeight: FontWeight.w400,
-          //         color: Colors.black),
-          //     decoration: InputDecoration(
-          //       //errorText: userAccountSearchErrorText,
-          //       contentPadding: EdgeInsets.all(25),
-          //       labelText: "Job Roles",
-          //       hintText: "Job Roles",
-          //       /*prefixIcon: Padding(
-          //         padding: const EdgeInsets.all(8.0),
-          //         child: Icon(Icons.question_mark_outlined,
-          //          // color: primaryColorOfApp
-          //           ),
-          //       ),*/
-          //       errorStyle: GoogleFonts.montserrat(
-          //           textStyle: Theme.of(context).textTheme.bodyLarge,
-          //           fontWeight: FontWeight.w400,
-          //           color: Colors.redAccent),
-          //
-          //       focusedBorder: OutlineInputBorder(
-          //           borderSide: BorderSide(color: Colors.black),
-          //           borderRadius: BorderRadius.circular(15)),
-          //       border: OutlineInputBorder(
-          //           borderSide: BorderSide(color: Colors.black12),
-          //           borderRadius: BorderRadius.circular(15)),
-          //       //hintText: "e.g Abouzied",
-          //       labelStyle: GoogleFonts.montserrat(
-          //           textStyle: Theme.of(context).textTheme.bodyLarge,
-          //           fontWeight: FontWeight.w400,
-          //           color: Colors.black),
-          //     ),
-          //   ),
-          // ),
-          // //Industry
-          // Padding(
-          //   padding: const EdgeInsets.all(8.0),
-          //   child: TextField(
-          //     // maxLines: null,
-          //     controller: industryTextEditingController,
-          //     //cursorColor: primaryColorOfApp,
-          //     onChanged: (value) {
-          //
-          //     },
-          //     style: GoogleFonts.montserrat(
-          //         textStyle: Theme.of(context).textTheme.bodyLarge,
-          //         fontWeight: FontWeight.w400,
-          //         color: Colors.black),
-          //     decoration: InputDecoration(
-          //       //errorText: userAccountSearchErrorText,
-          //       contentPadding: EdgeInsets.all(25),
-          //       labelText: "Industry",
-          //       hintText: "Industry",
-          //       /*prefixIcon: Padding(
-          //         padding: const EdgeInsets.all(8.0),
-          //         child: Icon(Icons.question_mark_outlined,
-          //           // color: primaryColorOfApp
-          //         ),
-          //       ),*/
-          //       errorStyle: GoogleFonts.montserrat(
-          //           textStyle: Theme.of(context).textTheme.bodyLarge,
-          //           fontWeight: FontWeight.w400,
-          //           color: Colors.redAccent),
-          //
-          //       focusedBorder: OutlineInputBorder(
-          //           borderSide: BorderSide(color: Colors.black),
-          //           borderRadius: BorderRadius.circular(15)),
-          //       border: OutlineInputBorder(
-          //           borderSide: BorderSide(color: Colors.black12),
-          //           borderRadius: BorderRadius.circular(15)),
-          //       //hintText: "e.g Abouzied",
-          //       labelStyle: GoogleFonts.montserrat(
-          //           textStyle: Theme.of(context).textTheme.bodyLarge,
-          //           fontWeight: FontWeight.w400,
-          //           color: Colors.black),
-          //     ),
-          //   ),
-          // ),
-          //
-          //
-          // /* Padding(
-          //   padding: const EdgeInsets.symmetric(vertical: 10.0),
-          //   child: TextButton(onPressed: (){
-          //         showSelectChallengesWidget();
-          //   }, child: Row(
-          //     children: [
-          //       Icon(Icons.arrow_drop_down_sharp),
-          //       Text("Select Challenges",
-          //             style: TextStyle(fontSize: 20),
-          //
-          //       ),
-          //     ],
-          //   )),
-          // ),*/
-          // false?Wrap(
-          //   spacing: 5,
-          //   children: List.generate(
-          //     10,
-          //         (index) {
-          //       return Chip(
-          //         label: Text(_animals[index].name),
-          //         onDeleted: () {
-          //           setState(() {
-          //             _animals.removeAt(index);
-          //           });
-          //         },
-          //       );
-          //     },
-          //   ),
-          // ):Container(),
-          // /* Padding(
-          //   padding: const EdgeInsets.symmetric(vertical: 10.0),
-          //   child: TextButton(onPressed: (){
-          //     showSelectChallengesWidget();
-          //   }, child: Row(
-          //     children: [
-          //       Icon(Icons.arrow_drop_down_sharp),
-          //       Text("Select Solutions",
-          //         style: TextStyle(fontSize: 20),
-          //       ),
-          //     ],
-          //   )),
-          // ),*/
-          // false?Wrap(
-          //   spacing: 5,
-          //   children: List.generate(
-          //     10,
-          //         (index) {
-          //       return Chip(
-          //         label: Text(_animals[index].name),
-          //         onDeleted: () {
-          //           setState(() {
-          //             _animals.removeAt(index);
-          //           });
-          //         },
-          //       );
-          //     },
-          //   ),
-          // ):Container(),

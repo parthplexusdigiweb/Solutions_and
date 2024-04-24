@@ -113,30 +113,70 @@ class _UserListScreenForAdminState extends State<UserListScreenForAdmin> {
                         //
                         //   ],
                         // ),
-                        child: ListTile(
-                          leading: Text("SR NO.",
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              SizedBox(width: 50,),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(width: 10,),
+                            Container(
+                                child: Text("NO.",style: Theme.of(context).textTheme.titleLarge,)),
+                            SizedBox(width: 20,),
 
-                              Text("User Name", style: Theme.of(context).textTheme.titleLarge,
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                  child: Text("User Name",style: Theme.of(context).textTheme.titleLarge,overflow: TextOverflow.ellipsis)),
+                            ),
+                            SizedBox(width: 20),
+
+
+                            Expanded(
+                              flex: 3,
+                              child: Container(
+                                  child: Text("Email",style: Theme.of(context).textTheme.titleLarge)),
+                            ),
+
+
+                            Expanded(
+                              child: Container(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  mainAxisSize: MainAxisSize.min,
+
+                                  children: [
+                                    SizedBox(width: 20),
+                                  ],
+                                ),
                               ),
-                              SizedBox(width: 150,),
+                            ),
 
-                              Text("Email", style: Theme.of(context).textTheme.titleLarge,),
-                            ],
-                          ),
-                          trailing:  Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SizedBox(width: 50,),
-                              SizedBox(width: 50,),
-                            ],
-                          ),
+
+                          ],
                         ),
+                        // child: ListTile(
+                        //   leading: Text("SR NO.",
+                        //     style: Theme.of(context).textTheme.titleLarge,
+                        //   ),
+                        //   title: Row(
+                        //     mainAxisAlignment: MainAxisAlignment.start,
+                        //     children: [
+                        //       SizedBox(width: 50,),
+                        //
+                        //       Text("User Name", style: Theme.of(context).textTheme.titleLarge,
+                        //       ),
+                        //       SizedBox(width: 150,),
+                        //
+                        //       Text("Email", style: Theme.of(context).textTheme.titleLarge,),
+                        //     ],
+                        //   ),
+                        //   trailing:  Row(
+                        //     mainAxisSize: MainAxisSize.min,
+                        //     children: [
+                        //       SizedBox(width: 50,),
+                        //       SizedBox(width: 50,),
+                        //     ],
+                        //   ),
+                        // ),
                       ),
                       Divider(color: Colors.black,),
                       Expanded(
@@ -184,37 +224,60 @@ class _UserListScreenForAdminState extends State<UserListScreenForAdmin> {
                                         String userName = userData['UserName'];
                                         String userEmail = userData['email'];
 
-                                        return ListTile(
-                                          leading: Text("${index+1}.",
-                                            style: Theme.of(context).textTheme.titleSmall,
-                                          ),
-                                          title: Row(
+                                        return Container(
+                                          child: Row(
                                             mainAxisAlignment: MainAxisAlignment.start,
                                             children: [
-                                              SizedBox(width: 100,),
+                                              SizedBox(width: 10),
 
-                                              Text(userName, style: Theme.of(context).textTheme.titleMedium,
+                                              Container(
+                                                width: 30,
+                                                child: Text("${index+1}.",
+                                                  style: Theme.of(context).textTheme.titleSmall,
+                                                ),
                                               ),
-                                              SizedBox(width: 100,),
 
-                                              Text(userEmail, style: Theme.of(context).textTheme.titleMedium,),
-                                            ],
-                                          ),
-                                          trailing:  Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              IconButton(
-                                                  iconSize: 25,
-                                                  color: primaryColorOfApp,
-                                                  onPressed: () async {
-                                                    ProgressDialog.show(context, "Deleting Users",Icons.person);
-                                                    // await ApiRepository().DeleteSectionPreset(thriversDetails.reference);
-                                                    ProgressDialog.hide();
-                                                  },
-                                                  icon: Icon(Icons.delete,)),
+                                              SizedBox(width: 20),
+
+
+                                              Expanded(
+                                                flex: 1,
+                                                child: Container(
+                                                  child: Text(userName, style: Theme.of(context).textTheme.titleMedium,
+                                                  ),
+                                                ),
+                                              ),
+
                                               SizedBox(width: 20,),
+
+                                              Expanded(
+                                                  flex: 3,
+                                                  child: Container(
+                                                      child: Text(userEmail, style: Theme.of(context).textTheme.titleMedium,))),
+
+                                              Expanded(
+                                                child: Container(
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                    mainAxisSize: MainAxisSize.min,
+
+                                                    children: [
+                                                      IconButton(
+                                                          iconSize: 25,
+                                                          color: primaryColorOfApp,
+                                                          onPressed: () async {
+                                                            ProgressDialog.show(context, "Deleting Users",Icons.person);
+                                                            // await ApiRepository().DeleteSectionPreset(thriversDetails.reference);
+                                                            ProgressDialog.hide();
+                                                          },
+                                                          icon: Icon(Icons.delete,)),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
                                             ],
                                           ),
+
                                         );
                                       },
                                     );

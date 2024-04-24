@@ -4304,8 +4304,6 @@ Date
                                     children: previewProvider.PreviewChallengesList.map((solution) {
                                       int index = previewProvider.PreviewChallengesList.indexOf(solution);
 
-                                      print("PreviewChallengesList Available: ");
-                                      print("PreviewChallengesList check remove: ${solution['Impact_on_me']}");
                                       return Padding(
                                         padding: EdgeInsets.only(bottom: 20.0),
                                         child: Row(
@@ -4477,41 +4475,45 @@ Date
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: previewProvider.PreviewSolutionMyResposibilty.map((solution) {
 
-                                      print("Check PreviewSolutionMyResposibilty = ${_previewProvider.PreviewSolutionMyResposibilty}");
                                       return Padding(
                                         padding: EdgeInsets.only(bottom: 20.0),
                                         child: Row(
                                           children: [
-                                            RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                      text: ' •  ',
-                                                      style: TextStyle(fontSize: 20)
-                                                  ),
-                                                  TextSpan(
-                                                      text: '${solution['Label']}',
-                                                      style: GoogleFonts.lato(textStyle: Theme
-                                                          .of(context)
-                                                          .textTheme
-                                                          .titleMedium,fontWeight: FontWeight.bold,)
-                                                  ),
-                                                  TextSpan(
-                                                      text: ' - ${solution['Final_description']}\n',
-                                                      style: GoogleFonts.lato(textStyle: Theme
-                                                          .of(context)
-                                                          .textTheme
-                                                          .bodyMedium,fontWeight: FontWeight.w400
-                                                      )
-                                                  ),
-                                                  TextSpan(
-                                                      text: '  ${solution['AboutMe_Notes']}',
-                                                      style: GoogleFonts.lato(textStyle: Theme
-                                                          .of(context)
-                                                          .textTheme
-                                                          .titleMedium,color: Colors.grey,)
-                                                  ),
-                                                ],
+                                            Flexible(
+                                              child: RichText(
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                        text: ' •  ',
+                                                        style: TextStyle(fontSize: 20)
+                                                    ),
+                                                    TextSpan(
+                                                        text: '${solution['Label']}',
+                                                        style: GoogleFonts.lato(textStyle: Theme
+                                                            .of(context)
+                                                            .textTheme
+                                                            .titleMedium,fontWeight: FontWeight.bold,)
+                                                    ),
+                                                    TextSpan(
+                                                        text: ' - ${solution['Final_description']}\n',
+                                                        style: GoogleFonts.lato(textStyle: Theme
+                                                            .of(context)
+                                                            .textTheme
+                                                            .bodyMedium,fontWeight: FontWeight.w400
+                                                        )
+                                                    ),
+                                                    TextSpan(
+                                                        text: '  ${solution['AboutMe_Notes']}',
+                                                        style: GoogleFonts.lato(
+                                                          textStyle: Theme
+                                                            .of(context)
+                                                            .textTheme
+                                                            .titleMedium,color: Colors.grey,),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                             SizedBox(width: 50,),
@@ -4594,36 +4596,40 @@ Date
                                         padding: EdgeInsets.only(bottom: 20.0),
                                         child: Row(
                                           children: [
-                                            RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                      text: ' •  ',
-                                                      style: TextStyle(fontSize: 20)
-                                                  ),
-                                                  TextSpan(
-                                                      text: '${solution['Label']}',
-                                                      style: GoogleFonts.lato(textStyle: Theme
-                                                          .of(context)
-                                                          .textTheme
-                                                          .titleMedium,fontWeight: FontWeight.bold,)
-                                                  ),
-                                                  TextSpan(
-                                                      text: ' - ${solution['Final_description']}\n',
-                                                      style: GoogleFonts.lato(textStyle: Theme
-                                                          .of(context)
-                                                          .textTheme
-                                                          .bodyMedium,fontWeight: FontWeight.w400
-                                                      )
-                                                  ),
-                                                  TextSpan(
-                                                      text: '  ${solution['AboutMe_Notes']}',
-                                                      style: GoogleFonts.lato(textStyle: Theme
-                                                          .of(context)
-                                                          .textTheme
-                                                          .titleMedium,color: Colors.grey,)
-                                                  ),
-                                                ],
+                                            Flexible(
+                                              child: RichText(
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                        text: ' •  ',
+                                                        style: TextStyle(fontSize: 20)
+                                                    ),
+                                                    TextSpan(
+                                                        text: '${solution['Label']}',
+                                                        style: GoogleFonts.lato(textStyle: Theme
+                                                            .of(context)
+                                                            .textTheme
+                                                            .titleMedium,fontWeight: FontWeight.bold,)
+                                                    ),
+                                                    TextSpan(
+                                                        text: ' - ${solution['Final_description']}\n',
+                                                        style: GoogleFonts.lato(textStyle: Theme
+                                                            .of(context)
+                                                            .textTheme
+                                                            .bodyMedium,fontWeight: FontWeight.w400
+                                                        )
+                                                    ),
+                                                    TextSpan(
+                                                        text: '  ${solution['AboutMe_Notes']}',
+                                                        style: GoogleFonts.lato(textStyle: Theme
+                                                            .of(context)
+                                                            .textTheme
+                                                            .titleMedium,color: Colors.grey,)
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                             SizedBox(width: 50,),
@@ -4691,36 +4697,40 @@ Date
                                         padding: EdgeInsets.only(bottom: 20.0),
                                         child: Row(
                                           children: [
-                                            RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                      text: ' •  ',
-                                                      style: TextStyle(fontSize: 20)
-                                                  ),
-                                                  TextSpan(
-                                                      text: '${solution['Label']}',
-                                                      style: GoogleFonts.lato(textStyle: Theme
-                                                          .of(context)
-                                                          .textTheme
-                                                          .titleMedium,fontWeight: FontWeight.bold,)
-                                                  ),
-                                                  TextSpan(
-                                                      text: ' - ${solution['Final_description']}\n',
-                                                      style: GoogleFonts.lato(textStyle: Theme
-                                                          .of(context)
-                                                          .textTheme
-                                                          .bodyMedium,fontWeight: FontWeight.w400
-                                                      )
-                                                  ),
-                                                  TextSpan(
-                                                      text: '  ${solution['AboutMe_Notes']}',
-                                                      style: GoogleFonts.lato(textStyle: Theme
-                                                          .of(context)
-                                                          .textTheme
-                                                          .titleMedium,color: Colors.grey,)
-                                                  ),
-                                                ],
+                                            Flexible(
+                                              child: RichText(
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                        text: ' •  ',
+                                                        style: TextStyle(fontSize: 20)
+                                                    ),
+                                                    TextSpan(
+                                                        text: '${solution['Label']}',
+                                                        style: GoogleFonts.lato(textStyle: Theme
+                                                            .of(context)
+                                                            .textTheme
+                                                            .titleMedium,fontWeight: FontWeight.bold,)
+                                                    ),
+                                                    TextSpan(
+                                                        text: ' - ${solution['Final_description']}\n',
+                                                        style: GoogleFonts.lato(textStyle: Theme
+                                                            .of(context)
+                                                            .textTheme
+                                                            .bodyMedium,fontWeight: FontWeight.w400
+                                                        )
+                                                    ),
+                                                    TextSpan(
+                                                        text: '  ${solution['AboutMe_Notes']}',
+                                                        style: GoogleFonts.lato(textStyle: Theme
+                                                            .of(context)
+                                                            .textTheme
+                                                            .titleMedium,color: Colors.grey,)
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                             SizedBox(width: 50,),
@@ -4788,36 +4798,40 @@ Date
                                         padding: EdgeInsets.only(bottom: 20.0),
                                         child: Row(
                                           children: [
-                                            RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                      text: ' •  ',
-                                                      style: TextStyle(fontSize: 20)
-                                                  ),
-                                                  TextSpan(
-                                                      text: '${solution['Label']}',
-                                                      style: GoogleFonts.lato(textStyle: Theme
-                                                          .of(context)
-                                                          .textTheme
-                                                          .titleMedium,fontWeight: FontWeight.bold,)
-                                                  ),
-                                                  TextSpan(
-                                                      text: ' - ${solution['Final_description']}\n',
-                                                      style: GoogleFonts.lato(textStyle: Theme
-                                                          .of(context)
-                                                          .textTheme
-                                                          .bodyMedium,fontWeight: FontWeight.w400
-                                                      )
-                                                  ),
-                                                  TextSpan(
-                                                      text: '  ${solution['AboutMe_Notes']}',
-                                                      style: GoogleFonts.lato(textStyle: Theme
-                                                          .of(context)
-                                                          .textTheme
-                                                          .titleMedium,color: Colors.grey,)
-                                                  ),
-                                                ],
+                                            Flexible(
+                                              child: RichText(
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                        text: ' •  ',
+                                                        style: TextStyle(fontSize: 20)
+                                                    ),
+                                                    TextSpan(
+                                                        text: '${solution['Label']}',
+                                                        style: GoogleFonts.lato(textStyle: Theme
+                                                            .of(context)
+                                                            .textTheme
+                                                            .titleMedium,fontWeight: FontWeight.bold,)
+                                                    ),
+                                                    TextSpan(
+                                                        text: ' - ${solution['Final_description']}\n',
+                                                        style: GoogleFonts.lato(textStyle: Theme
+                                                            .of(context)
+                                                            .textTheme
+                                                            .bodyMedium,fontWeight: FontWeight.w400
+                                                        )
+                                                    ),
+                                                    TextSpan(
+                                                        text: '  ${solution['AboutMe_Notes']}',
+                                                        style: GoogleFonts.lato(textStyle: Theme
+                                                            .of(context)
+                                                            .textTheme
+                                                            .titleMedium,color: Colors.grey,)
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                             SizedBox(width: 50,),
@@ -4885,36 +4899,40 @@ Date
                                         padding: EdgeInsets.only(bottom: 20.0),
                                         child: Row(
                                           children: [
-                                            RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                      text: ' •  ',
-                                                      style: TextStyle(fontSize: 20)
-                                                  ),
-                                                  TextSpan(
-                                                      text: '${solution['Label']}',
-                                                      style: GoogleFonts.lato(textStyle: Theme
-                                                          .of(context)
-                                                          .textTheme
-                                                          .titleMedium,fontWeight: FontWeight.bold,)
-                                                  ),
-                                                  TextSpan(
-                                                      text: ' - ${solution['Final_description']}\n',
-                                                      style: GoogleFonts.lato(textStyle: Theme
-                                                          .of(context)
-                                                          .textTheme
-                                                          .bodyMedium,fontWeight: FontWeight.w400
-                                                      )
-                                                  ),
-                                                  TextSpan(
-                                                      text: '  ${solution['AboutMe_Notes']}',
-                                                      style: GoogleFonts.lato(textStyle: Theme
-                                                          .of(context)
-                                                          .textTheme
-                                                          .titleMedium,color: Colors.grey,)
-                                                  ),
-                                                ],
+                                            Flexible(
+                                              child: RichText(
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                        text: ' •  ',
+                                                        style: TextStyle(fontSize: 20)
+                                                    ),
+                                                    TextSpan(
+                                                        text: '${solution['Label']}',
+                                                        style: GoogleFonts.lato(textStyle: Theme
+                                                            .of(context)
+                                                            .textTheme
+                                                            .titleMedium,fontWeight: FontWeight.bold,)
+                                                    ),
+                                                    TextSpan(
+                                                        text: ' - ${solution['Final_description']}\n',
+                                                        style: GoogleFonts.lato(textStyle: Theme
+                                                            .of(context)
+                                                            .textTheme
+                                                            .bodyMedium,fontWeight: FontWeight.w400
+                                                        )
+                                                    ),
+                                                    TextSpan(
+                                                        text: '  ${solution['AboutMe_Notes']}',
+                                                        style: GoogleFonts.lato(textStyle: Theme
+                                                            .of(context)
+                                                            .textTheme
+                                                            .titleMedium,color: Colors.grey,)
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                             SizedBox(width: 50,),
@@ -5050,7 +5068,7 @@ Date
                             };
 
                             String solutionJson = json.encode(AboutMEDatas);
-                            print(solutionJson);
+                            print("About_Me_Label: ${AboutMEDatas['About_Me_Label']}");
 
                             ProgressDialog.show(context, "Completing", Icons.save);
                             await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
@@ -5448,7 +5466,7 @@ Date
                           print(solutionJson);
 
                           ProgressDialog.show(context, "Sending", Icons.save);
-                          await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
+                          // await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
 
 
                           final Uint8List pdfBytes = await makePdf(dataList,dataList2);
@@ -10367,7 +10385,7 @@ Date
     _userAboutMEProvider.selectedInPlace = InPlace;
 
     print("Inside showconfirmrDialogBox");
-    print("Id: SH0$Id");
+    print("pop up Id: $Id");
     print("label: $label");
     print("description: $description");
     print("source: $source");
@@ -10490,6 +10508,8 @@ Date
 
                                   if(userAboutMEProvider.selectedProvider == 'My Responsibilty'){
 
+                                    // e
+
                                     userAboutMEProvider.updateEditConfirmSolution1(Id,_previewProvider.PreviewSolutionMyResposibilty);
                                     userAboutMEProvider.updateEditConfirmSolution2(Id,_previewProvider.PreviewSolutionStillNeeded);
                                     userAboutMEProvider.updateEditConfirmSolution3(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
@@ -10498,11 +10518,28 @@ Date
 
                                     userAboutMEProvider.updateInplaceValue(userAboutMEProvider.selectedInPlace);
 
-                                    _previewProvider.PreviewSolutionMyResposibilty.add(solutionData);
+                                    // if(solutionData['id']==Id){
+                                    //   _previewProvider.PreviewSolutionMyResposibilty.
+                                    // }
 
-                                    userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
+                              int index = _previewProvider.PreviewSolutionMyResposibilty.indexWhere((solution) => solution['id'] == Id);
 
-                                  }
+                              if (index != -1) {
+                                print("inside replace My Resposibilty");
+                                print("index: $index");
+                                // _previewProvider.PreviewSolutionMyResposibilty[index] = solutionData;
+                                _previewProvider.PreviewSolutionMyResposibilty.removeAt(index); // Remove the old solution
+                                _previewProvider.PreviewSolutionMyResposibilty.add(solutionData);
+                              }
+
+                              else
+                                  _previewProvider.PreviewSolutionMyResposibilty.add(solutionData);
+                                  print("Add in My Resposibilty");
+                                  print(_previewProvider.PreviewSolutionMyResposibilty.length);
+                                  userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
+                                  print("Update solutionsList My Resposibilty");
+
+                              }
 
                                  else if(userAboutMEProvider.selectedInPlace == "No (Must Have)"){
 
@@ -10513,62 +10550,94 @@ Date
                                     userAboutMEProvider.updateEditConfirmSolution5(Id,_previewProvider.PreviewSolutionMustHave);
 
 
-                                    _previewProvider.PreviewSolutionMustHave.add(solutionData);
-                                    userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
-
-                                  }
+                                    int index = _previewProvider.PreviewSolutionMustHave.indexWhere((solution) => solution['id'] == Id);
+                                    if (index != -1) {
+                                      print("inside replace No (Must Have)");
+                                      // _previewProvider.PreviewSolutionMustHave[index] = solutionData;
+                                      _previewProvider.PreviewSolutionMustHave.removeAt(index);
+                                      _previewProvider.PreviewSolutionMustHave.add(solutionData);
+                                    }
+                                    else
+                                  _previewProvider.PreviewSolutionMustHave.add(solutionData);
+                                  print("Add in No (Must Have)");
+                                  userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
+                                  print("Update solutionsList No (Must Have)");
+                              }
 
                                  else if(userAboutMEProvider.selectedInPlace == "Yes (Still Needed)"){
-
                                     userAboutMEProvider.updateEditConfirmSolution1(Id,_previewProvider.PreviewSolutionMyResposibilty);
                                     userAboutMEProvider.updateEditConfirmSolution2(Id,_previewProvider.PreviewSolutionStillNeeded);
                                     userAboutMEProvider.updateEditConfirmSolution3(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
                                     userAboutMEProvider.updateEditConfirmSolution4(Id,_previewProvider.PreviewSolutionNiceToHave);
                                     userAboutMEProvider.updateEditConfirmSolution5(Id,_previewProvider.PreviewSolutionMustHave);
 
+                                    int index = _previewProvider.PreviewSolutionStillNeeded.indexWhere((solution) => solution['id'] == Id);
+                                    if (index != -1) {
+                                      print("inside replace Yes (Still Needed)");
+                                      // _previewProvider.PreviewSolutionStillNeeded[index] = solutionData;
+                                      _previewProvider.PreviewSolutionStillNeeded.removeAt(index); // Remove the old solution
+                                      _previewProvider.PreviewSolutionStillNeeded.add(solutionData);
+                                    }
+                                    else
+                                  _previewProvider.PreviewSolutionStillNeeded.add(solutionData);
+                                  print("Add in Yes (Still Needed)");
+                                  userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
+                                  print("Update solutionsList Yes (Still Needed)");
+                              }
 
-                                    _previewProvider.PreviewSolutionStillNeeded.add(solutionData);
-                                    userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
-
-                                  }
-
-                                  else if(userAboutMEProvider.selectedInPlace == "Yes (Not Needed Anymore)"){
-
+                                 else if(userAboutMEProvider.selectedInPlace == "Yes (Not Needed Anymore)"){
                                     userAboutMEProvider.updateEditConfirmSolution1(Id,_previewProvider.PreviewSolutionMyResposibilty);
                                     userAboutMEProvider.updateEditConfirmSolution2(Id,_previewProvider.PreviewSolutionStillNeeded);
                                     userAboutMEProvider.updateEditConfirmSolution3(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
                                     userAboutMEProvider.updateEditConfirmSolution4(Id,_previewProvider.PreviewSolutionNiceToHave);
                                     userAboutMEProvider.updateEditConfirmSolution5(Id,_previewProvider.PreviewSolutionMustHave);
 
+                                    int index = _previewProvider.PreviewSolutionNotNeededAnyMore.indexWhere((solution) => solution['id'] == Id);
+                                    if (index != -1) {
+                                      print("inside replace Yes (Not Needed Anymore)");
+                                      // _previewProvider.PreviewSolutionNotNeededAnyMore[index] = solutionData;
+                                      _previewProvider.PreviewSolutionNotNeededAnyMore.removeAt(index); // Remove the old solution
+                                      _previewProvider.PreviewSolutionNotNeededAnyMore.add(solutionData);
+                                    }
+                                    else
+                                  _previewProvider.PreviewSolutionNotNeededAnyMore.add(solutionData);
+                                  print("Add in Yes (Not Needed Anymore)");
+                                  userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
+                                  print("Update solutionsList Yes (Not Needed Anymore)");
+                              }
 
-                                    _previewProvider.PreviewSolutionNotNeededAnyMore.add(solutionData);
-                                    userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
-
-                                  }
-
-                                  else if(userAboutMEProvider.selectedInPlace == "No (Nice to have)"){
-
+                                 else if(userAboutMEProvider.selectedInPlace == "No (Nice to have)"){
                                     userAboutMEProvider.updateEditConfirmSolution1(Id,_previewProvider.PreviewSolutionMyResposibilty);
                                     userAboutMEProvider.updateEditConfirmSolution2(Id,_previewProvider.PreviewSolutionStillNeeded);
                                     userAboutMEProvider.updateEditConfirmSolution3(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
                                     userAboutMEProvider.updateEditConfirmSolution4(Id,_previewProvider.PreviewSolutionNiceToHave);
                                     userAboutMEProvider.updateEditConfirmSolution5(Id,_previewProvider.PreviewSolutionMustHave);
 
+                                    int index = _previewProvider.PreviewSolutionNiceToHave.indexWhere((solution) => solution['id'] == Id);
+                                    if (index != -1) {
+                                      print("inside replace No (Nice to have)");
+                                      // _previewProvider.PreviewSolutionNiceToHave[index] = solutionData;
+                                      _previewProvider.PreviewSolutionNiceToHave.removeAt(index); // Remove the old solution
+                                      _previewProvider.PreviewSolutionNiceToHave.add(solutionData);
+                                      // userAboutMEProvider.updateconfirmList(_previewProvider.PreviewSolutionNiceToHave, index, solutionData);
 
-                                    _previewProvider.PreviewSolutionNiceToHave.add(solutionData);
-                                    userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
-
-                                  }
-
+                                    }
+                                    else
+                                  _previewProvider.PreviewSolutionNiceToHave.add(solutionData);
+                                  print("Add in No (Nice to have)");
+                                  userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
+                                  print("Update solutionsList No (Nice to have)");
+                              }
 
 
                                   print("solutionsList after edit: $solutionsList");
-                                  print("solutionsList after edit: ${solutionsList.length}");
+                                  print("solutionsList length after edit: ${solutionsList.length}");
                                   // userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
                                   userAboutMEProvider.updatenewprovider(solutionData["Provider"], solutionData["id"]);
                                   userAboutMEProvider.updatenewInplace(solutionData["InPlace"], solutionData["id"]);
+                                }
 
-                                } else {
+                                else {
                                   // Handle case where 'id' does not exist in the list
                                   print("Id not found in solutionData.");
                                 }
@@ -10576,15 +10645,10 @@ Date
 
 
 
-
-                                // solutionsList.add(solutionData);
-
-
                                 ProgressDialog.hide();
 
 
-                                print("solutionsList.length: ${solutionsList.length}");
-                                print("solutionsList: ${solutionsList}");
+
                                 NotesController.clear();
                                 userAboutMEProvider.selectedPriority = null;
                                 userAboutMEProvider.selectedProvider = null;
