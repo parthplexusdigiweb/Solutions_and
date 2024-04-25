@@ -542,7 +542,7 @@ class ApiRepository{
             "name": "Solutions Inclutions",
             "email": "admin@solutioninclution.com"
           },
-          'to' :[{ "email": email1, "name": name1 },{ "email": email2, "name": name2 }],
+          'to' :[{ "email": email1, "name": name1 }, { "email": email2 == "" ? email1 : email2, "name": name2 == "" ? name1 : name2 }],
           'attachment': [{
             "content": filebytes,
             "name": filename

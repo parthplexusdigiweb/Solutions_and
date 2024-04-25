@@ -2918,6 +2918,105 @@ class backup {
           );
         });
   }  /// this is new one
+///
+///
+
+
+  pw.Table(
+  border: pw.TableBorder.all(),
+  children: [
+  pw.TableRow(
+  children: [
+  pw.Container(
+  width: 40,
+  padding: const pw.EdgeInsets.all(8),
+  child: pw.Text('Id'),
+  ),
+  pw.Container(
+  width: 120,
+  padding: const pw.EdgeInsets.all(8),
+  child: pw.Text('Label'),
+  ),
+  pw.Container(
+  width: 120,
+  padding: const pw.EdgeInsets.all(8),
+  child: pw.Text('Impact'),
+  ),
+  pw.Container(
+  width: 150,
+  padding: const pw.EdgeInsets.all(8),
+  child: pw.Text('Description'),
+  ),
+  pw.Container(
+  width: 120,
+  padding: const pw.EdgeInsets.all(8),
+  child: pw.Text('Impact on me'),
+  ),
+  pw.Container(
+  width: 110,
+  padding: const pw.EdgeInsets.all(8),
+  child: pw.Text('Attachment'),
+  ),
+  // Add more cells as needed
+  ],
+  ),
+  ...ChallengetableRows,
+  // Add more rows as needed
+
+  // Add Table Rows from dataList
+  ],
+  ),
+
+
+  pw.Table(
+  border: pw.TableBorder.all(),
+  children: [
+  pw.TableRow(
+  children: [
+  pw.Container(
+  width: 40,
+  padding: const pw.EdgeInsets.all(8),
+  child: pw.Text('Id'),
+  ),
+  pw.Container(
+  width: 110,
+  padding: const pw.EdgeInsets.all(8),
+  child: pw.Text('Label'),
+  ),
+  pw.Container(
+  width: 100,
+  padding: const pw.EdgeInsets.all(8),
+  child: pw.Text('Impact'),
+  ),
+  pw.Container(
+  width: 120,
+  padding: const pw.EdgeInsets.all(8),
+  child: pw.Text('Description'),
+  ),
+  pw.Container(
+  width: 110,
+  padding: const pw.EdgeInsets.all(8),
+  child: pw.Text('Provider'),
+  ),
+  pw.Container(
+  width: 90,
+  padding: const pw.EdgeInsets.all(8),
+  child: pw.Text('InPlace'),
+  ),
+  pw.Container(
+  width: 110,
+  padding: const pw.EdgeInsets.all(8),
+  child: pw.Text('Attachment'),
+  ),
+  // Add more cells as needed
+  ],
+  ),
+  ...SolutiontableRows,
+  // Add more rows as needed
+
+  // Add Table Rows from dataList
+  ],
+  ),
 
 
 }

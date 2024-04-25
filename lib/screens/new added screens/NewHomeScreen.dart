@@ -470,8 +470,11 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
                           ],
                         ),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Expanded(
+                              flex: 1,
                               child: InkWell(
                                 onTap: () async {
                                   // sideMenu.changePage(5);
@@ -488,7 +491,7 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
                                       children: [
                                         // Icon(Icons.person_outline_outlined,color: Colors.black,size: 30,),
                                         Icon(Icons.laptop_chromebook_outlined,color: Colors.black,size: 30,),
@@ -511,47 +514,49 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
 
                               ),
                             ),
-                            Expanded(
-                              child: InkWell(
-                                onTap: () async {
-                                  // sideMenu.changePage(6);
-                                },
-                                child: Container(
-                                  margin: EdgeInsets.all(10),
-                                  height: 60,
 
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(color:primaryColorOfApp, width: 1.0),
-                                    borderRadius: BorderRadius.circular(20.0),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        // Icon(Icons.article,color: Colors.black,size: 30,),
-                                        Icon(Icons.admin_panel_settings,color: Colors.black,size: 30,),
-                                        SizedBox(width: 5,),
+                            // Expanded(
+                            //   child: InkWell(
+                            //     onTap: () async {
+                            //       // sideMenu.changePage(6);
+                            //     },
+                            //     child: Container(
+                            //       margin: EdgeInsets.all(10),
+                            //       height: 60,
+                            //
+                            //       decoration: BoxDecoration(
+                            //         color: Colors.white,
+                            //         border: Border.all(color:primaryColorOfApp, width: 1.0),
+                            //         borderRadius: BorderRadius.circular(20.0),
+                            //       ),
+                            //       child: Padding(
+                            //         padding: const EdgeInsets.all(8.0),
+                            //         child: Row(
+                            //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            //           children: [
+                            //             // Icon(Icons.article,color: Colors.black,size: 30,),
+                            //             Icon(Icons.admin_panel_settings,color: Colors.black,size: 30,),
+                            //             SizedBox(width: 5,),
+                            //
+                            //             Expanded(
+                            //               child: Text(
+                            //                 // 'Solutions',
+                            //                 'Super admin',
+                            //                 overflow: TextOverflow.ellipsis,
+                            //                 style: GoogleFonts.montserrat(
+                            //                     textStyle:
+                            //                     Theme.of(context).textTheme.titleLarge,
+                            //                     color: Colors.black),
+                            //               ),
+                            //             ),
+                            //           ],
+                            //         ),
+                            //       ),
+                            //     ),
+                            //
+                            //   ),
+                            // ),
 
-                                        Expanded(
-                                          child: Text(
-                                            // 'Solutions',
-                                            'Super admin',
-                                            overflow: TextOverflow.ellipsis,
-                                            style: GoogleFonts.montserrat(
-                                                textStyle:
-                                                Theme.of(context).textTheme.titleLarge,
-                                                color: Colors.black),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-
-                              ),
-                            ),
                           ],
                         )
                       ],

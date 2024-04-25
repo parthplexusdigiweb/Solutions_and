@@ -565,6 +565,251 @@ Date
 
   Widget MyLibrary(){
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        forceMaterialTransparency: true,
+        title: Row(
+          children: [
+            Expanded(
+              child: InkWell(
+                onTap: () async {
+                  // _navigateToTab(3);
+                  // await showAddAddAboutMeDialogBox();
+                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+
+                  // Check if there are any documents
+
+                  print("querySnapshot :${querySnapshot}");
+                  print("querySnapshot :${querySnapshot.docs.length}");
+
+                  if (querySnapshot.docs.isNotEmpty) {
+                    // Get the last document
+                    DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                    print("lastDocument :$lastDocument");
+                    showEditAboutMeDialogBox(lastDocument,0);
+                  }
+                  else{
+                    _navigateToTab(0);
+                    await showAddAddAboutMeDialogBox();
+                  }
+                },
+                child: Container(
+                  margin: EdgeInsets.all(10),
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color:primaryColorOfApp, width: 1.0),
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      // 'Thrivers',
+                      'Employee data',
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.montserrat(
+                          textStyle:
+                          Theme.of(context).textTheme.titleMedium,
+                          color: Colors.black),
+                    ),
+                  ),
+                ),
+
+              ),
+            ),
+            Expanded(
+              child: InkWell(
+                onTap: () async {
+                  // sideMenu.changePage(3);
+                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+
+                  // Check if there are any documents
+
+                  print("querySnapshot :${querySnapshot}");
+                  print("querySnapshot :${querySnapshot.docs.length}");
+
+                  if (querySnapshot.docs.isNotEmpty) {
+                    // Get the last document
+                    DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                    print("lastDocument :$lastDocument");
+                    showEditAboutMeDialogBox(lastDocument,1);
+                  }
+                  else{
+                    _navigateToTab(1);
+                    await showAddAddAboutMeDialogBox();
+                  }
+                },
+                child: Container(
+                  margin: EdgeInsets.all(10),
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color:primaryColorOfApp, width: 1.0),
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Insight about me',
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.montserrat(
+                          textStyle:
+                          Theme.of(context).textTheme.titleMedium,
+                          color: Colors.black),
+                    ),
+                  ),
+                ),
+
+              ),
+            ),
+            Expanded(
+              child: InkWell(
+                onTap: () async {
+                  // sideMenu.changePage(5);
+                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+
+                  // Check if there are any documents
+
+                  print("querySnapshot :${querySnapshot}");
+                  print("querySnapshot :${querySnapshot.docs.length}");
+
+                  if (querySnapshot.docs.isNotEmpty) {
+                    // Get the last document
+                    DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                    print("lastDocument :$lastDocument");
+                    showEditAboutMeDialogBox(lastDocument,2);
+                  }
+                  else{
+                    _navigateToTab(2);
+                    await showAddAddAboutMeDialogBox();
+                  }
+                },
+                child: Container(
+                  margin: EdgeInsets.all(10),
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color:primaryColorOfApp, width: 1.0),
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      // 'User',
+                      'My attributes',
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.montserrat(
+                          textStyle:
+                          Theme.of(context).textTheme.titleMedium,
+                          color: Colors.black),
+                    ),
+                  ),
+                ),
+
+              ),
+            ),
+            Expanded(
+              child: InkWell(
+                onTap: () async {
+                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+
+                  // Check if there are any documents
+
+                  print("querySnapshot :${querySnapshot}");
+                  print("querySnapshot :${querySnapshot.docs.length}");
+
+                  if (querySnapshot.docs.isNotEmpty) {
+                    // Get the last document
+                    DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                    print("lastDocument :$lastDocument");
+                    showEditAboutMeDialogBox(lastDocument,3);
+                  }
+                  else{
+                    _navigateToTab(3);
+                    await showAddAddAboutMeDialogBox();
+                  }
+                },
+                child: Container(
+                  margin: EdgeInsets.all(10),
+                  height: 40,
+
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color:primaryColorOfApp, width: 1.0),
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      // 'User',
+                      'My challenges',
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.montserrat(
+                          textStyle:
+                          Theme.of(context).textTheme.titleMedium,
+                          color: Colors.black),
+                    ),
+                  ),
+                ),
+
+              ),
+            ),
+            Expanded(
+              child: InkWell(
+                onTap: () async {
+                  // sideMenu.changePage(6);
+                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+
+                  // Check if there are any documents
+
+                  print("querySnapshot :${querySnapshot}");
+                  print("querySnapshot :${querySnapshot.docs.length}");
+
+                  if (querySnapshot.docs.isNotEmpty) {
+                    // Get the last document
+                    DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                    print("lastDocument :$lastDocument");
+                    showEditAboutMeDialogBox(lastDocument,4);
+                  } else{
+                    _navigateToTab(4);
+                    await showAddAddAboutMeDialogBox();
+                  }
+                },
+                child: Container(
+                  margin: EdgeInsets.all(10),
+                  height: 40,
+
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color:primaryColorOfApp, width: 1.0),
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      // 'Solutions',
+                      'My solutions',
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.montserrat(
+                          textStyle:
+                          Theme.of(context).textTheme.titleMedium,
+                          color: Colors.black),
+                    ),
+                  ),
+                ),
+
+              ),
+            ),
+
+          ],
+        ),
+
+      ),
       backgroundColor: Colors.grey.withOpacity(0.2),
       body:SingleChildScrollView(
         child: Column(
@@ -721,6 +966,18 @@ Date
                                 child: Text('Status',style: Theme.of(context).textTheme.titleMedium)
                             ),
                           ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.175,
+                            child: Center(
+                                child: Text('Sent to',style: Theme.of(context).textTheme.titleMedium)
+                            ),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.12,
+                            child: Center(
+                                child: Text('Date sent',style: Theme.of(context).textTheme.titleMedium)
+                            ),
+                          ),
 
                           //
                           // Container(
@@ -812,7 +1069,17 @@ Date
                                       overallIndex += (dataList[j]['Solutions'] as List).length;
                                     }
 
-                                       return Column(
+                                    var sentTo,sentTo2, sentDate,sentDate2 ,email, email2;
+
+                                    sentTo = dataList[i]['Report_sent_to'].isNotEmpty ? dataList[i]['Report_sent_to'][0]["Sent_to"] ?? "" : "";
+                                    sentTo2 = dataList[i]['Report_sent_to'].length > 1 ? dataList[i]['Report_sent_to'][1]["Sent_to"] ?? "" : "";
+                                    email = dataList[i]['Report_sent_to'].isNotEmpty ? dataList[i]['Report_sent_to'][0]["email"] ?? "" : "";
+                                    email2 = dataList[i]['Report_sent_to'].length > 1 ? dataList[i]['Report_sent_to'][1]["email"] ?? "" : "";
+                                    sentDate = dataList[i]['Report_sent_to'].isNotEmpty ? dataList[i]['Report_sent_to'][0]["Date_sent"] ?? "" : "";
+                                    sentDate2 = dataList[i]['Report_sent_to'].length > 1 ? dataList[i]['Report_sent_to'][1]["Date_sent"] ?? "" : "";
+
+
+                                    return Column(
                                                children: [
                                                  Container(
                                                    padding: EdgeInsets.all(10),
@@ -860,18 +1127,28 @@ Date
 
                                                        Container(
                                                            width: MediaQuery.of(context).size.width * 0.15,
-                                                           // child: Center(child: Text(dataList[index]['User_Name'].toString())))),
                                                            child: Center(child: Text(dataList[i]['Created_Date'].toString(),style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
                                                        Container(
                                                            width: MediaQuery.of(context).size.width * 0.14,
-                                                           // child: Center(child: Text(dataList[index]['User_Name'].toString())))),
                                                            child: Center(child: Text(dataList[i]['AB_Status'].toString(),style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
-                                                       // Container(
-                                                       //     width: MediaQuery.of(context).size.width * 0.08,
-                                                       //     // child: Center(child: Text(dataList[index]['User_Name'].toString())))),
-                                                       //     child: Center(child: Text(dataList[i]['Solutions'].length.toString(),style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
+
+                                                       Column(
+                                                         children: [
+                                                           Container(
+                                                               width: MediaQuery.of(context).size.width * 0.178,
+                                                               child: Center(child: Text( sentTo == "" && email == "" ? "_" : "$sentTo: $email",style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
 
                                                            Container(
+                                                               width: MediaQuery.of(context).size.width * 0.175,
+                                                               child: Center(child: Text(sentTo2 == "" && email2 == ""? "" : "$sentTo2: $email2",style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
+                                                         ],
+                                                       ),
+
+                                                       Container(
+                                                           width: MediaQuery.of(context).size.width * 0.12,
+                                                           child: Center(child: Text(sentDate == "" ? "_" : "$sentDate",style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
+
+                                                       Container(
                                                                width: MediaQuery.of(context).size.width * 0.12,
                                                            child: Center(child: Row(
                                                              mainAxisAlignment: MainAxisAlignment.end,
@@ -1508,6 +1785,23 @@ Date
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text("Employee Home",style: GoogleFonts.montserrat(
+                          textStyle: Theme.of(context).textTheme.headlineLarge,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),),
+                    ),
+                    // Padding(
+                    //   padding: EdgeInsets.only(left: 10.0,bottom: 5),
+                    //   child: Text("",style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    //       color: Colors.grey,
+                    //       fontWeight: FontWeight.w300
+                    //
+                    //   ),),
+                    // ),
+///
                     // Align(
                     //   alignment: Alignment.topLeft,
                     //   child: Row(
@@ -1861,7 +2155,7 @@ Date
                                         Expanded(
                                           child: Text(
                                             // 'Solutions',
-                                            'My report',
+                                            'Generate report',
                                             overflow: TextOverflow.ellipsis,
                                             style: GoogleFonts.montserrat(
                                                 textStyle:
@@ -1877,6 +2171,7 @@ Date
                             ),
                           ],
                         ),
+
                         InkWell(
                           onTap: () async {
                             // sideMenu.changePage(5);
@@ -1916,6 +2211,89 @@ Date
                           ),
 
                         ),
+
+                        Row(
+                          children: [
+                            Expanded(
+                              child: InkWell(
+                                onTap: () {},
+                                child: Container(
+                                  margin: EdgeInsets.all(10),
+                                  height: 60,
+
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        // Icon(Icons.article,color: Colors.black,size: 30,),
+                                        Icon(Icons.medical_information_outlined,color: Colors.black,size: 30,),
+                                        SizedBox(width: 5,),
+
+                                        Expanded(
+                                          child: Text(
+                                            // 'Solutions',
+                                            'Medical and Personal',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.montserrat(
+                                                textStyle:
+                                                Theme.of(context).textTheme.titleLarge,
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+
+                              ),
+                            ),
+                            Expanded(
+                              child: InkWell(
+                                onTap: () {},
+                                child: Container(
+                                  margin: EdgeInsets.all(10),
+                                  height: 60,
+
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        // Icon(Icons.article,color: Colors.black,size: 30,),
+                                        Icon(Icons.perm_device_info_sharp,color: Colors.black,size: 30,),
+                                        SizedBox(width: 5,),
+
+                                        Expanded(
+                                          child: Text(
+                                            // 'Solutions',
+                                            'Useful info',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.montserrat(
+                                                textStyle:
+                                                Theme.of(context).textTheme.titleLarge,
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
                       ],
                     )
                   ],
@@ -2094,13 +2472,13 @@ Date
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children: [
                                         // Icon(Icons.article,color: Colors.black,size: 30,),
-                                        Icon(Icons.checklist_rtl,color: Colors.black,size: 30,),
+                                        Icon(Icons.picture_as_pdf_outlined,color: Colors.black,size: 30,),
                                         SizedBox(width: 5,),
 
                                         Expanded(
                                           child: Text(
                                             // 'Solutions',
-                                            'View Report as Pdf',
+                                            'View report as pdf',
                                             overflow: TextOverflow.ellipsis,
                                             style: GoogleFonts.montserrat(
                                                 textStyle:
@@ -2153,13 +2531,13 @@ Date
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children: [
                                         // Icon(Icons.article,color: Colors.black,size: 30,),
-                                        Icon(Icons.insert_drive_file,color: Colors.black,size: 30,),
+                                        Icon(Icons.create,color: Colors.black,size: 30,),
                                         SizedBox(width: 5,),
 
                                         Expanded(
                                           child: Text(
                                             // 'Solutions',
-                                            'My report',
+                                            'Edit Master report',
                                             overflow: TextOverflow.ellipsis,
                                             style: GoogleFonts.montserrat(
                                                 textStyle:
@@ -2988,6 +3366,7 @@ Date
                     "Created_Date": createdAt,
                     "Modified_By": "",
                     "Modified_Date": "",
+                    "Report_sent_to": []
                     // Add other fields as needed
                   };
 
@@ -8353,6 +8732,9 @@ Date
 
                             sendMailPopUp(challengesList,solutionsList);
 
+                            downloadAboutMePdf(challengesList,solutionsList);
+
+
                             // selectedEmail = null;
                             // nameController.clear();
                             // searchEmailcontroller.clear();
@@ -8737,9 +9119,27 @@ Date
                   SizedBox(width: 5, height: 5,),
                   InkWell(
                     onTap: () async {
+
+                      DateTime date = DateTime.now();
+                      final DateFormat formatter = DateFormat('dd MMMM yyyy');
+                      String formattedDate = formatter.format(date);
+                      // AboutMeDatetextController.text = formattedDate;
+
+                      Map<String, dynamic> sentTojson1 ={
+                        "Sent_to" : SendNametextController.text,
+                        "email": SendEmailtextController.text,
+                        "Date_sent" : formattedDate,
+                      };
+                      Map<String, dynamic> sentTojson2 ={
+                        "Sent_to" : CopySendEmailtextController.text.isEmpty ? "" : CopySendEmailtextController.text,
+                        "email": CopySendNametextController.text.isEmpty ? "" : CopySendNametextController.text,
+                        "Date_sent" : CopySendEmailtextController.text.isEmpty ? "" : formattedDate,
+                      };
+
                       Map<String, dynamic> AboutMEDatas = {
                         // 'About_Me_Label': AboutMeLabeltextController.text,
-                        'AB_Status' : "Complete and Sent"
+                        'AB_Status' : "Complete and Sent",
+                        'Report_sent_to' : [sentTojson1,sentTojson2]
                       };
 
                       String solutionJson = json.encode(AboutMEDatas);
@@ -8754,7 +9154,7 @@ Date
                       String filename = "${About_Me_Label}.pdf";
                       print("sendMailPopUp chunks: ${base64EncodedData}");
                       print("sendMailPopUp filename: ${ filename}");
-                      ApiRepository().sendEmailWithAttachment(
+                     await ApiRepository().sendEmailWithAttachment(
                           context,
                           SendEmailtextController.text,
                           SendNametextController.text,
@@ -8764,7 +9164,7 @@ Date
                           filename
                       );
 
-                      downloadAboutMePdf(dataList,dataList2);
+                     await downloadAboutMePdf(dataList,dataList2);
 
 
                       ProgressDialog.hide();
@@ -8806,9 +9206,9 @@ Date
                       _previewProvider.PreviewChallengesList.clear();
                       _previewProvider.PreviewSolutionList.clear();
                       _navigateToTab(0);
-                      Navigator.pop(context);
                       setState(() {
                         page.jumpToPage(1);
+                        Navigator.pop(context);
                       });
                     },
                     child: Container(
@@ -8885,15 +9285,24 @@ Date
           _previewProvider.myorganization = myOrganisationController.text;
           myOrganisation2Controller.text = aboutMeData['My_Challenges_Organisation']==null ? "" : aboutMeData['My_Challenges_Organisation'];
           _previewProvider.mychallenge = myOrganisation2Controller.text;
-          List<dynamic> challengesList = aboutMeData['Challenges'] ?? [];
-          List<dynamic> solutionsList = aboutMeData['Solutions'] ?? [];
+
+          // challengesList = aboutMeData['Challenges'];
+          // solutionsList = aboutMeData['Solutions'];
+
+          List<dynamic> challengesLists = aboutMeData['Challenges'] ?? [];
+          List<dynamic> solutionsLists = aboutMeData['Solutions'] ?? [];
+
+
 
 // Convert the lists into Iterable<Map<String, dynamic>>
-          Iterable<Map<String, dynamic>> challengesIterable = challengesList.map((item) => item as Map<String, dynamic>);
-          Iterable<Map<String, dynamic>> solutionsIterable = solutionsList.map((item) => item as Map<String, dynamic>);
+          Iterable<Map<String, dynamic>> challengesIterable = challengesLists.map((item) => item as Map<String, dynamic>);
+          Iterable<Map<String, dynamic>> solutionsIterable = solutionsLists.map((item) => item as Map<String, dynamic>);
 
 // Add the iterables to _previewProvider.PreviewChallengesList and _previewProvider.PreviewSolutionList
           _previewProvider.PreviewChallengesList.addAll(challengesIterable);
+          challengesList.addAll(challengesIterable);
+          solutionsList.addAll(solutionsIterable);
+
 
           for (var solutionData in solutionsIterable) {
             if (solutionData["Provider"] == "My Responsibilty") {
@@ -9216,20 +9625,21 @@ Date
     final Reportfont = await PdfGoogleFonts.latoBoldItalic();
     final Reportansfont = await PdfGoogleFonts.latoItalic();
 
+    final headingfont1 = await PdfGoogleFonts.latoBold();
+    final bodyfont1 = await PdfGoogleFonts.latoRegular();
+
     pdf.addPage(
         pw.MultiPage(
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           pageFormat: PdfPageFormat.a4,
-          margin: pw.EdgeInsets.all(15),
+          margin: pw.EdgeInsets.all(20),
           build: (context) {
-            List<pw.TableRow> ChallengetableRows = generateChallengeTableRows(dataList);
+            // List<pw.Widget> ChallengetableRows = generateChallengeWidgets(dataList,headingfont1,bodyfont1);
             List<pw.TableRow> SolutiontableRows = generateSolutionTableRows(dataList2);
-
-
             return [
               pw.Padding(
                 padding: const pw.EdgeInsets.symmetric(
-                    vertical: 10.0, horizontal: 8),
+                    vertical: 10.0,),
                 child: pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.start,
                   children: [
@@ -9243,25 +9653,23 @@ Date
 
               pw.SizedBox(height: 5,),
 
+
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.start,
                 children: [
                   pw.Container(
-                    width: 100,
+                    width: 120,
                     child: pw.Text(
                       "Date: ",
                       style: pw.TextStyle(
-                        font: Reportansfont,
+                        font: headingfont1,
                         fontWeight: pw.FontWeight.bold,
                       ),
                     ),
                   ),
-                  pw.Expanded(
-                    flex: 5,
-                    child: pw.Text(
-                      "${AboutMeDatetextController.text}",
-                      style: pw.TextStyle(font: Reportansfont),
-                    ),
+                  pw.Text(
+                    "${AboutMeDatetextController.text}",
+                    style: pw.TextStyle(font: bodyfont1),
                   ),
                 ],
               ),
@@ -9273,354 +9681,339 @@ Date
                 mainAxisAlignment: pw.MainAxisAlignment.start,
                 children: [
                   pw.Container(
-                    width: 100,
+                    width: 120,
                     child: pw.Text(
                       "Name: ",
                       style: pw.TextStyle(
-                        font: Reportansfont,
+                        font: headingfont1,
                         fontWeight: pw.FontWeight.bold,
                       ),
                     ),
                   ),
-                  pw.Expanded(
-                    flex: 5,
+                  pw.Text(
+                    "${nameController.text}",
+                    style: pw.TextStyle(font: bodyfont1),
+                  ),
+                ],
+              ),
+
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.start,
+                children: [
+                  pw.Container(
+                    width: 120,
                     child: pw.Text(
-                      "${nameController.text}",
-                      style: pw.TextStyle(font: Reportansfont),
+                      "Role: ",
+                      style: pw.TextStyle(
+                        font: headingfont1,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
                     ),
+                  ),
+                  pw.Text(
+                    "${RoleController.text}",
+                    style: pw.TextStyle(font: bodyfont1),
                   ),
                 ],
               ),
 
-
-              pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(
-                    vertical: 10.0, horizontal: 8),
-                child: pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.start,
-                  children: [
-                    pw.Text("Description: ",),
-
-                    pw.Text(
-                      "${AboutMeDescriptiontextController.text}",),
-
-                  ],
-                ),
-              ),
-
-            pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(
-                    vertical: 10.0, horizontal: 5),
-                child: pw.Text("Personal Info",style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 24))
-            ),
-
-            pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(
-                  vertical: 10.0, horizontal: 8),
-              child: pw.Row(
+              pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.start,
                 children: [
-                  pw.Text("1. Email: ",),
-
-                  pw.Text("${selectedEmail ?? ""}",),
-                ],
-              ),
-            ),
-            pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(
-                  vertical: 10.0, horizontal: 8),
-              child: pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.start,
-                children: [
-                  pw.Text("2. Name: ",),
-
-                  pw.Text("${nameController.text}",),
-                ],
-              ),
-            ),
-            pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(
-                  vertical: 10.0, horizontal: 8),
-              child: pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.start,
-                children: [
-                  pw.Text("3. Employer: ",),
-
-                  pw.Text(
-                    "${employerController.text}",),
-                ],
-              ),
-            ),
-            pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(
-                  vertical: 10.0, horizontal: 8),
-              child: pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.start,
-                children: [
-                  pw.Text("4. Division or section: ",),
-
-                  pw.Text(
-                    "${divisionOrSectionController.text}",),
-                ],
-              ),
-            ),
-            pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(
-                  vertical: 10.0, horizontal: 8),
-              child: pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.start,
-
-                children: [
-                  pw.Text("5. Role: ",),
-
-                  pw.Text("${RoleController.text}",),
-                ],
-              ),
-            ),
-            pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(
-                  vertical: 10.0, horizontal: 8),
-              child: pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.start,
-
-                children: [
-                  pw.Text("6. Location: ",),
-
-                  pw.Text(
-                    "${LocationController.text}",),
-                ],
-              ),
-            ),
-            pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(
-                  vertical: 10.0, horizontal: 5),
-              child: pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.start,
-                children: [
-                  pw.Text("7. Employee number: ",),
-
-                  pw.Text("${EmployeeNumberController.text}",),
-                ],
-              ),
-            ),
-            pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(
-                  vertical: 10.0, horizontal: 8),
-              child: pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.start,
-                children: [
-                  pw.Text("8. Line manager:",),
-
-                  pw.Text(
-                    "${LineManagerController.text}",),
-
-
-                ],
-              ),
-            ),
-
-            pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(
-                    vertical: 10.0, horizontal: 5),
-                child: pw.Text("Details",style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 24))
-            ),
-
-
-
-            pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(
-                  vertical: 10.0, horizontal: 8),
-              child:
-              pw.Text("1. About me and my circumstance: ",),),
-
-            pw.Text(
-              "${mycircumstancesController.text}",),
-
-
-            pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(
-                  vertical: 10.0, horizontal: 8),
-              child:
-              pw.Text("2. My strengths that I want to have the opportunity to use in my role: ",),),
-
-            pw.Text(
-              "${MystrengthsController.text}",),
-
-            pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(
-                  vertical: 10.0, horizontal: 8),
-              child:
-              pw.Text("3. What I value about [my organisation] and workplace environment that helps me perform to my best: ",),),
-
-            pw.Text(
-              "${myOrganisationController.text}",),
-
-            pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(
-                  vertical: 10.0, horizontal: 8),
-              child:
-              pw.Text("4: What I find challenging about [My Organisation] and the workplace environment that makes it harder for me to perform my best: ",),),
-
-            pw.Text(
-              "${myOrganisation2Controller.text}",),
-
-            pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(
-                vertical: 10.0,
-                horizontal: 5,
-              ),
-              child: pw.Text(
-                "Challenges",
-                style: pw.TextStyle(
-                  fontWeight: pw.FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-            ),
-
-
-            pw.Table(
-              border: pw.TableBorder.all(),
-              children: [
-                pw.TableRow(
-                  children: [
-                    pw.Container(
-                      width: 40,
-                      padding: const pw.EdgeInsets.all(8),
-                      child: pw.Text('Id'),
+                  pw.Container(
+                    width: 120,
+                    child: pw.Text(
+                      "Location: ",
+                      style: pw.TextStyle(
+                        font: headingfont1,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
                     ),
-                    pw.Container(
-                      width: 120,
-                      padding: const pw.EdgeInsets.all(8),
-                      child: pw.Text('Label'),
-                    ),
-                    pw.Container(
-                      width: 120,
-                      padding: const pw.EdgeInsets.all(8),
-                      child: pw.Text('Impact'),
-                    ),
-                    pw.Container(
-                      width: 150,
-                      padding: const pw.EdgeInsets.all(8),
-                      child: pw.Text('Description'),
-                    ),
-                    pw.Container(
-                      width: 120,
-                      padding: const pw.EdgeInsets.all(8),
-                      child: pw.Text('Impact on me'),
-                    ),
-                    pw.Container(
-                      width: 110,
-                      padding: const pw.EdgeInsets.all(8),
-                      child: pw.Text('Attachment'),
-                    ),
-                    // Add more cells as needed
-                  ],
-                ),
-                ...ChallengetableRows,
-                // Add more rows as needed
-
-            // Add Table Rows from dataList
-              ],
-            ),
-
-              pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(
-                  vertical: 10.0,
-                  horizontal: 5,
-                ),
-                child: pw.Text(
-                  "Solutions",
-                  style: pw.TextStyle(
-                    fontWeight: pw.FontWeight.bold,
-                    fontSize: 20,
                   ),
-                ),
-              ),
-
-
-              pw.Table(
-                border: pw.TableBorder.all(),
-                children: [
-                  pw.TableRow(
-                    children: [
-                      pw.Container(
-                        width: 40,
-                        padding: const pw.EdgeInsets.all(8),
-                        child: pw.Text('Id'),
-                      ),
-                      pw.Container(
-                        width: 110,
-                        padding: const pw.EdgeInsets.all(8),
-                        child: pw.Text('Label'),
-                      ),
-                      pw.Container(
-                        width: 100,
-                        padding: const pw.EdgeInsets.all(8),
-                        child: pw.Text('Impact'),
-                      ),
-                      pw.Container(
-                        width: 120,
-                        padding: const pw.EdgeInsets.all(8),
-                        child: pw.Text('Description'),
-                      ),
-                      pw.Container(
-                        width: 110,
-                        padding: const pw.EdgeInsets.all(8),
-                        child: pw.Text('Provider'),
-                      ),
-                      pw.Container(
-                        width: 90,
-                        padding: const pw.EdgeInsets.all(8),
-                        child: pw.Text('InPlace'),
-                      ),
-                      pw.Container(
-                        width: 110,
-                        padding: const pw.EdgeInsets.all(8),
-                        child: pw.Text('Attachment'),
-                      ),
-                      // Add more cells as needed
-                    ],
+                  pw.Text(
+                    "${LocationController.text}",
+                    style: pw.TextStyle(font: bodyfont1),
                   ),
-                  ...SolutiontableRows,
-                  // Add more rows as needed
-
-                  // Add Table Rows from dataList
                 ],
               ),
 
-              pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(
-                    vertical: 10.0, horizontal: 8),
-                child: pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.start,
-                  children: [
-
-                    pw.Text("Useful Info: ",),
-                    pw.Text("${AboutMeUseFulInfotextController.text}",),
-
-                  ],
-                ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.start,
+                children: [
+                  pw.Container(
+                    width: 120,
+                    child: pw.Text(
+                      "Employee number: ",
+                      style: pw.TextStyle(
+                        font: headingfont1,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  pw.Text(
+                    "${EmployeeNumberController.text}",
+                    style: pw.TextStyle(font: bodyfont1),
+                  ),
+                ],
               ),
 
-              pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(
-                    vertical: 10.0, horizontal: 8),
-                child: pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.start,
-                  children: [
-
-                    pw.Text("Attachment: ",),
-                    pw.Text("Attachment",),
-
-                  ],
-                ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.start,
+                children: [
+                  pw.Container(
+                    width: 120,
+                    child: pw.Text(
+                      "Team Leader: ",
+                      style: pw.TextStyle(
+                        font: headingfont1,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  pw.Text(
+                    "${LineManagerController.text}",
+                    style: pw.TextStyle(font: bodyfont1),
+                  ),
+                ],
               ),
 
+              pw.SizedBox(height: 10,),
+
+              pw.Padding(
+                  padding: const pw.EdgeInsets.symmetric(
+                      vertical: 10.0,),
+                  child: pw.Text("Performing to my best in my role ${employerController.text}: ",
+                      style: pw.TextStyle(fontWeight: pw.FontWeight.bold, font:headingfont1))
+              ),
+
+              pw.SizedBox(height: 5,),
+
+
+              pw.Text(
+                "${AboutMeDescriptiontextController.text}",
+                style: pw.TextStyle(font: bodyfont1),
+              ),
+
+
+              pw.SizedBox(height: 20,),
 
 
           ];
         },));
+
+    pdf.addPage(
+        pw.MultiPage(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          pageFormat: PdfPageFormat.a4,
+          margin: pw.EdgeInsets.all(20),
+          build: (context) {
+            List<pw.Widget> ChallengetableRows = generateChallengeWidgets(dataList,headingfont1,bodyfont1);
+            List<pw.Widget> SolutiontableRows1 =  generateSolutionsMyResponsibiltyWidgets(dataList2,headingfont1,bodyfont1);
+            List<pw.Widget> SolutiontableRows2 =  generateSolutionsStillNeededWidgets(dataList2,headingfont1,bodyfont1);
+            List<pw.Widget> SolutiontableRows3 =  generateSolutionsNotNeededAnymoreWidgets(dataList2,headingfont1,bodyfont1);
+            List<pw.Widget> SolutiontableRows4 =  generateSolutionsNoNicetohaveWidgets(dataList2,headingfont1,bodyfont1);
+            List<pw.Widget> SolutiontableRows5 =  generateSolutionsMustHaveWidgets(dataList2,headingfont1,bodyfont1);
+            return [
+
+              pw.Container(
+                  width: 1000,
+                  padding: pw.EdgeInsets.all(5),
+                  decoration: pw.BoxDecoration(
+                    border: pw.Border.all(color:PdfColors.black,),
+                    // borderRadius: pw.BorderRadius.circular(10),
+                  ),
+                  child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+
+                      children: [
+                        pw.Text("To perform to my best in my role, I’d like to share this information about me: ",
+                            style: pw.TextStyle(fontWeight: pw.FontWeight.bold, font:headingfont1)),
+
+                        pw.SizedBox(height: 10,),
+
+                        pw.Text(
+                          "Me and My circumstances: ",
+                          style: pw.TextStyle(font: bodyfont1, decoration: pw.TextDecoration.underline),
+                        ),
+
+                        pw.SizedBox(height: 10,),
+
+                        pw.Text(
+                          "${mycircumstancesController.text}",
+                          style: pw.TextStyle(font: bodyfont1),
+                        ),
+
+
+                        pw.SizedBox(height: 10,),
+
+                        pw.Text(
+                          "My strengths that I want to have the opportunity to use in my role: ",
+                          style: pw.TextStyle(font: bodyfont1, decoration: pw.TextDecoration.underline),
+                        ),
+
+                        pw.SizedBox(height: 10,),
+
+                        pw.Text(
+                          "${MystrengthsController.text}",
+                          style: pw.TextStyle(font: bodyfont1),
+                        ),
+
+                        pw.SizedBox(height: 10,),
+
+                        pw.Text(
+                          "Things I find challenging in life that make it harder for me to perform my best: ",
+                          style: pw.TextStyle(font: bodyfont1, decoration: pw.TextDecoration.underline),
+                        ),
+
+                        pw.SizedBox(height: 10,),
+
+                        ...ChallengetableRows,
+
+
+                        pw.SizedBox(height: 10,),
+
+                        pw.Text(
+                          "What I value about ${employerController.text} and workplace environment that helps me perform to my best: ",
+                          style: pw.TextStyle(font: bodyfont1, decoration: pw.TextDecoration.underline),
+                        ),
+
+                        pw.SizedBox(height: 10,),
+
+                        pw.Text(
+                          "${myOrganisationController.text}",
+                          style: pw.TextStyle(font: bodyfont1),
+                        ),
+
+
+                        pw.SizedBox(height: 10,),
+
+                        pw.Text(
+                          "What I find challenging about ${employerController.text} and the workplace environment that makes it harder for me to perform my best: ",
+                          style: pw.TextStyle(font: bodyfont1, decoration: pw.TextDecoration.underline),
+                        ),
+
+                        pw.SizedBox(height: 10,),
+
+                        pw.Text(
+                          "${myOrganisation2Controller.text}",
+                          style: pw.TextStyle(font: bodyfont1),
+                        ),
+
+                        pw.SizedBox(height: 10,),
+
+
+
+                      ])),
+
+              pw.SizedBox(height: 10,),
+
+              pw.Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${employerController.text}",
+                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold, font:headingfont1)),
+
+              pw.SizedBox(height: 10,),
+
+              (SolutiontableRows1.isNotEmpty) ?  pw.Text(
+                "Personal Responsibility ",
+                style: pw.TextStyle(font: headingfont1, decoration: pw.TextDecoration.underline),
+              ) :
+
+              pw.SizedBox(),
+
+              (SolutiontableRows1.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+
+
+              (SolutiontableRows1.isNotEmpty) ? pw.Text("Things I already or will do to help myself:",
+                  style: pw.TextStyle( font:bodyfont1)) :
+
+              pw.SizedBox(),
+
+              (SolutiontableRows1.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+
+              ...SolutiontableRows1,
+
+              (SolutiontableRows1.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+
+              (SolutiontableRows2.isNotEmpty || SolutiontableRows3.isNotEmpty || SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty ) ? pw.Text(
+                "Requests of ${employerController.text}",
+                style: pw.TextStyle(font: headingfont1, decoration: pw.TextDecoration.underline),
+              ) : pw.SizedBox(),
+
+              (SolutiontableRows2.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+
+              (SolutiontableRows2.isNotEmpty) ?  pw.Text("${employerController.text} already provides the following assistance to me, which I’d like to continue to receive:",
+                  style: pw.TextStyle( font:bodyfont1)) : pw.SizedBox(),
+
+              (SolutiontableRows2.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+
+
+              ...SolutiontableRows2,
+
+
+              (SolutiontableRows2.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+
+              (SolutiontableRows3.isNotEmpty) ? pw.Text("I’m asking ${employerController.text} to start providing for me:",
+                  style: pw.TextStyle( font:bodyfont1)) : pw.SizedBox(),
+
+              (SolutiontableRows3.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+
+              ...SolutiontableRows3,
+
+
+              (SolutiontableRows3.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+
+              (SolutiontableRows4.isNotEmpty) ? pw.Text("I’m asking ${employerController.text} to start providing for me but they are not essential:",
+                  style: pw.TextStyle( font:bodyfont1)) : pw.SizedBox(),
+
+              (SolutiontableRows4.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+
+              ...SolutiontableRows4,
+
+
+              (SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+
+              (SolutiontableRows5.isNotEmpty) ? pw.Text("${employerController.text} already provides for me but are not needed anymore:",
+                  style: pw.TextStyle( font:bodyfont1)) : pw.SizedBox(),
+
+              (SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+
+              ...SolutiontableRows5,
+
+
+              // pw.Padding(
+              //   padding: const pw.EdgeInsets.symmetric(
+              //       vertical: 10.0, horizontal: 8),
+              //   child: pw.Row(
+              //     mainAxisAlignment: pw.MainAxisAlignment.start,
+              //     children: [
+              //
+              //       pw.Text("Useful Info: ",),
+              //       pw.Text("${AboutMeUseFulInfotextController.text}",),
+              //
+              //     ],
+              //   ),
+              // ),
+              //
+              // pw.Padding(
+              //   padding: const pw.EdgeInsets.symmetric(
+              //       vertical: 10.0, horizontal: 8),
+              //   child: pw.Row(
+              //     mainAxisAlignment: pw.MainAxisAlignment.start,
+              //     children: [
+              //
+              //       pw.Text("Attachment: ",),
+              //       pw.Text("Attachment",),
+              //
+              //     ],
+              //   ),
+              // ),
+
+            ];
+          },));
+
+
+
+
+
     return pdf.save();
   }
 
@@ -9804,6 +10197,359 @@ Date
     }
 
     return tableRows;
+  }
+
+  List<pw.Widget> generateChallengeWidgets(List<Map<String, dynamic>> dataList,headingfont1,bodyfont1) {
+    List<pw.Widget> widgets = [];
+
+    for (var solution in dataList) {
+
+
+      pw.Widget widget = pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Padding(
+            padding: pw.EdgeInsets.only(bottom: 20.0, right: 20,),
+            child: pw.Row(
+              children: [
+                pw.Expanded(
+                  child: pw.RichText(
+                    maxLines: 4,
+                    overflow: pw.TextOverflow.span,
+                    text: pw.TextSpan(
+                      children: [
+                        pw.TextSpan(
+                          text: ' • ',
+                          style: pw.TextStyle(
+                            font: bodyfont1,
+                          ),
+                        ),
+                        pw.TextSpan(
+                          text: '${solution['Label']}',
+                          style: pw.TextStyle(
+                            font: headingfont1,
+                            fontWeight: pw.FontWeight.bold,
+                          ),
+                        ),
+                        pw.TextSpan(
+                          text: ' - ${solution['Final_description']}\n',
+                          style: pw.TextStyle(
+                            fontWeight: pw.FontWeight.normal,
+                            font: bodyfont1,
+                          ),
+                        ),
+                        pw.TextSpan(
+                          text: ' ${solution['Impact_on_me']}',
+                          style: pw.TextStyle(
+                              color: PdfColors.grey, font: bodyfont1),
+                        ),
+                      ],
+                    ),
+                  ),),
+              ],
+            ),
+          ),
+        ],
+      );
+      widgets.add(widget);
+    }
+
+    return widgets;
+  }
+
+  List<pw.Widget> generateSolutionsMyResponsibiltyWidgets(List<Map<String, dynamic>> dataList2,headingfont1,bodyfont1) {
+    List<pw.Widget> widgets = [];
+
+    for (var solution in dataList2) {
+
+      if(solution["Provider"] == "My Responsibilty") {
+        pw.Widget widget = pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            pw.Padding(
+              padding: pw.EdgeInsets.only(bottom: 20.0, right: 20,),
+              child: pw.Row(
+                children: [
+                  pw.Expanded(
+                    child: pw.RichText(
+                    maxLines: 4,
+                    overflow: pw.TextOverflow.span,
+                    text: pw.TextSpan(
+                      children: [
+                        pw.TextSpan(
+                          text: ' • ',
+                          style: pw.TextStyle(
+                            font: bodyfont1,
+                          ),
+                        ),
+                        pw.TextSpan(
+                          text: '${solution['Label']}',
+                          style: pw.TextStyle(
+                            font: headingfont1,
+                            fontWeight: pw.FontWeight.bold,
+                          ),
+                        ),
+                         pw.TextSpan(
+                          text: ' - ${solution['Final_description']}\n',
+                          style: pw.TextStyle(
+                              fontWeight: pw.FontWeight.normal,
+                              font: bodyfont1,
+                          ),
+                        ),
+                        pw.TextSpan(
+                          text: ' ${solution['AboutMe_Notes']}',
+                          style: pw.TextStyle(
+                              color: PdfColors.grey, font: bodyfont1),
+                        ),
+                      ],
+                    ),
+                  ),),
+                ],
+              ),
+            ),
+          ],
+        );
+        widgets.add(widget);
+      }
+    }
+
+    return widgets;
+  }
+
+  List<pw.Widget> generateSolutionsStillNeededWidgets(List<Map<String, dynamic>> dataList2,headingfont1,bodyfont1) {
+    List<pw.Widget> widgets = [];
+
+    for (var solution in dataList2) {
+
+      if(solution["InPlace"] == "Yes (Still Needed)") {
+        pw.Widget widget = pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            pw.Padding(
+              padding: pw.EdgeInsets.only(bottom: 20.0, right: 20),
+              child: pw.Row(
+                children: [
+                  pw.Expanded(
+                    child: pw.RichText(
+                      maxLines: 4,
+                      overflow: pw.TextOverflow.span,
+                      text: pw.TextSpan(
+                        children: [
+                          pw.TextSpan(
+                            text: ' • ',
+                            style: pw.TextStyle(
+                              font: bodyfont1,
+                            ),
+                          ),
+                          pw.TextSpan(
+                            text: '${solution['Label']}',
+                            style: pw.TextStyle(
+                              font: headingfont1,
+                              fontWeight: pw.FontWeight.bold,
+                            ),
+                          ),
+                          pw.TextSpan(
+                            text: ' - ${solution['Final_description']}\n',
+                            style: pw.TextStyle(
+                              fontWeight: pw.FontWeight.normal,
+                              font: bodyfont1,
+                            ),
+                          ),
+                          pw.TextSpan(
+                            text: ' ${solution['AboutMe_Notes']}',
+                            style: pw.TextStyle(
+                                color: PdfColors.grey, font: bodyfont1),
+                          ),
+                        ],
+                      ),
+                    ),),
+                ],
+              ),
+            ),
+          ],
+        );
+        widgets.add(widget);
+      }
+    }
+
+    return widgets;
+  }
+
+  List<pw.Widget> generateSolutionsNotNeededAnymoreWidgets(List<Map<String, dynamic>> dataList2,headingfont1,bodyfont1) {
+    List<pw.Widget> widgets = [];
+
+    for (var solution in dataList2) {
+
+      if(solution["InPlace"] == "Yes (Not Needed Anymore)") {
+        pw.Widget widget = pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            pw.Padding(
+              padding: pw.EdgeInsets.only(bottom: 20.0, right: 20),
+              child: pw.Row(
+                children: [
+                  pw.Expanded(
+                    child: pw.RichText(
+                      maxLines: 4,
+                      overflow: pw.TextOverflow.span,
+                      text: pw.TextSpan(
+                        children: [
+                          pw.TextSpan(
+                            text: ' • ',
+                            style: pw.TextStyle(
+                              font: bodyfont1,
+                            ),
+                          ),
+                          pw.TextSpan(
+                            text: '${solution['Label']}',
+                            style: pw.TextStyle(
+                              font: headingfont1,
+                              fontWeight: pw.FontWeight.bold,
+                            ),
+                          ),
+                          pw.TextSpan(
+                            text: ' - ${solution['Final_description']}\n',
+                            style: pw.TextStyle(
+                              fontWeight: pw.FontWeight.normal,
+                              font: bodyfont1,
+                            ),
+                          ),
+                          pw.TextSpan(
+                            text: ' ${solution['AboutMe_Notes']}',
+                            style: pw.TextStyle(
+                                color: PdfColors.grey, font: bodyfont1),
+                          ),
+                        ],
+                      ),
+                    ),),
+                ],
+              ),
+            ),
+          ],
+        );
+        widgets.add(widget);
+      }
+    }
+
+    return widgets;
+  }
+
+  List<pw.Widget> generateSolutionsNoNicetohaveWidgets(List<Map<String, dynamic>> dataList2,headingfont1,bodyfont1) {
+    List<pw.Widget> widgets = [];
+
+    for (var solution in dataList2) {
+
+      if(solution["InPlace"] == "No (Nice to have)") {
+        pw.Widget widget = pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            pw.Padding(
+              padding: pw.EdgeInsets.only(bottom: 20.0, right: 20),
+              child: pw.Row(
+                children: [
+                  pw.Expanded(
+                    child: pw.RichText(
+                      maxLines: 4,
+                      overflow: pw.TextOverflow.span,
+                      text: pw.TextSpan(
+                        children: [
+                          pw.TextSpan(
+                            text: ' • ',
+                            style: pw.TextStyle(
+                              font: bodyfont1,
+                            ),
+                          ),
+                          pw.TextSpan(
+                            text: '${solution['Label']}',
+                            style: pw.TextStyle(
+                              font: headingfont1,
+                              fontWeight: pw.FontWeight.bold,
+                            ),
+                          ),
+                          pw.TextSpan(
+                            text: ' - ${solution['Final_description']}\n',
+                            style: pw.TextStyle(
+                              fontWeight: pw.FontWeight.normal,
+                              font: bodyfont1,
+                            ),
+                          ),
+                          pw.TextSpan(
+                            text: ' ${solution['AboutMe_Notes']}',
+                            style: pw.TextStyle(
+                                color: PdfColors.grey, font: bodyfont1),
+                          ),
+                        ],
+                      ),
+                    ),),
+                ],
+              ),
+            ),
+          ],
+        );
+        widgets.add(widget);
+      }
+    }
+
+    return widgets;
+  }
+
+  List<pw.Widget> generateSolutionsMustHaveWidgets(List<Map<String, dynamic>> dataList2,headingfont1,bodyfont1) {
+    List<pw.Widget> widgets = [];
+
+    for (var solution in dataList2) {
+
+      if(solution["InPlace"] == "No (Must Have)") {
+        pw.Widget widget = pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            pw.Padding(
+              padding: pw.EdgeInsets.only(bottom: 20.0, right: 20),
+              child: pw.Row(
+                children: [
+                  pw.Expanded(
+                    child: pw.RichText(
+                      maxLines: 2,
+                      overflow: pw.TextOverflow.span,
+                      text: pw.TextSpan(
+                        children: [
+                          pw.TextSpan(
+                            text: ' • ',
+                            style: pw.TextStyle(
+                              font: bodyfont1,
+                            ),
+                          ),
+                          pw.TextSpan(
+                            text: '${solution['Label']}',
+                            style: pw.TextStyle(
+                              font: headingfont1,
+                              fontWeight: pw.FontWeight.bold,
+                            ),
+                          ),
+                          pw.TextSpan(
+                            text: ' - ${solution['Final_description']}\n',
+                            style: pw.TextStyle(
+                              fontWeight: pw.FontWeight.normal,
+                              font: bodyfont1,
+                            ),
+                          ),
+                          pw.TextSpan(
+                            text: ' ${solution['AboutMe_Notes']}',
+                            style: pw.TextStyle(
+                                color: PdfColors.grey, font: bodyfont1),
+                          ),
+                        ],
+                      ),
+                    ),),
+                ],
+              ),
+            ),
+          ],
+        );
+        widgets.add(widget);
+      }
+    }
+
+    return widgets;
   }
 
   List<pw.TableRow> generateSolutionTableRows(List<Map<String, dynamic>> dataList) {
