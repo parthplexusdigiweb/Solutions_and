@@ -26,9 +26,9 @@ import 'package:toastification/toastification.dart';
 import '../model/challenges_table_model.dart';
 
 class EditAboutMEScreen extends StatefulWidget {
-  var aboutMeData, refreshPage, AdminName, tabindex, page;
+  var aboutMeData, refreshPage, AdminName, tabindex, page,MyReportScreen;
 
-  EditAboutMEScreen({this.aboutMeData, this.refreshPage, this.AdminName, this.tabindex, this.page});
+  EditAboutMEScreen({this.aboutMeData, this.refreshPage, this.AdminName, this.tabindex, this.page, this.MyReportScreen});
 
   @override
   State<EditAboutMEScreen> createState() => _EditAboutMEScreenState();
@@ -157,7 +157,7 @@ Date
     super.initState();
     _addKeywordProvider.getdatasearch();
     _challengesProvider.getdatasearch();
-    _tabController = TabController(length: 6, vsync: this); // Initialize the TabController
+    _tabController = TabController(length: 7, vsync: this); // Initialize the TabController
     _tabController.index = widget.tabindex;
     _addKeywordProvider.lengthOfdocument = null;
     _challengesProvider.lengthOfdocument = null;
@@ -228,7 +228,8 @@ Date
                                 Tab(icon: Icon(Icons.edit_attributes),text: "My attributes"),
                                 Tab(icon: Icon(Icons.sync_problem),text: "My challenges"),
                                 Tab(icon: Icon(Icons.checklist_rtl),text: "My solutions"),
-                                Tab(icon: Icon(Icons.insert_drive_file),text: "My report"),
+                                Tab(icon: Icon(Icons.insert_drive_file),text: "Generate reports"),
+                                Tab(icon: Icon(Icons.library_books),text: "My Library"),
                               ],
                             ),
                             Expanded(
@@ -241,8 +242,9 @@ Date
                                   AssesmentAssistant(),
                                   AddChallengesPage(context, widget.aboutMeData),
                                   AddSolutionsPage(context, widget.aboutMeData),
-                                  PreviewPage(widget.aboutMeData)
-                                  // PreviewPage(context),
+                                  MyReportScreen(widget.aboutMeData),
+                                  MyLibraryScreen(),
+                                  // PreviewPage(widget.aboutMeData)
                                 ],
                               ),
                             ),
@@ -315,22 +317,537 @@ Date
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Icon(Icons.home),
+                              Icon(Icons.home, size: 24),
                               Text("Home ",
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(),
+                                style: Theme.of(context).textTheme.titleMedium?.copyWith(),
                               ),
                             ],
                           )
                       ),
                       SizedBox(width: 20),
-                      Text("${About_Me_Label}",
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-                      )
+                      // Text("${About_Me_Label}",
+                      //   style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                      // )
                     ],
                   ),
                   iconPadding: EdgeInsets.only(left: 15,top: 15),
                 );
             })
+    );
+  }
+
+  Widget MyReportScreen(aboutMeData){
+    return Center(
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.5,
+        height: MediaQuery.of(context).size.height * 0.5,
+        child: Card(
+          color: Colors.white,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+              
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text("Generate reports",style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      color: primaryColorOfApp,
+                      fontWeight: FontWeight.bold,
+              
+                    ),),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.0,bottom: 10),
+                    child: Text("Here is where you can generate reports to use as a record of your findings and to communicate and collaborate with your work colleagues.",style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w300
+              
+                    ),),
+                  ),
+                  Divider(),
+                  Column(
+                    children: [
+              
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 10.0,bottom: 10),
+                              child: Text("Here is your master report summarising your findings as a result of your most recent input.",style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w300
+              
+                              ),),
+                            ),
+                          ),
+              
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 10.0,bottom: 10),
+                              child: Text("Here is where you can Edit your master report and decide who you want to send it to.  You can create as many different versions as you wish.",style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w300
+              
+                              ),),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height : 10),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: InkWell(
+                              onTap: () async {
+                                // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+                                //
+                                //
+                                // print("querySnapshot :${querySnapshot}");
+                                // print("querySnapshot :${querySnapshot.docs.length}");
+                                //
+                                // if (querySnapshot.docs.isNotEmpty) {
+                                //   // Get the last document
+                                //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                                //   print("lastDocument :$lastDocument");
+                                  ///
+                                  // showEditAboutMeDialogBox(lastDocument,4);
+                                  // showReportViewPageDialogBox(lastDocument);
+              
+                                  About_Me_Label = aboutMeData['About_Me_Label']==null ? "" : aboutMeData['About_Me_Label'];
+                                  AboutMeLabeltextController.text = aboutMeData['About_Me_Label']==null ? "" : aboutMeData['About_Me_Label'];
+                                  AboutMeDescriptiontextController.text = aboutMeData['AB_Description']==null ? "" : aboutMeData['AB_Description'];
+                                  AboutMeUseFulInfotextController.text = aboutMeData['AB_Useful_Info']==null ? "" : aboutMeData['AB_Useful_Info'];
+                                  AboutMeDatetextController.text = aboutMeData['AB_Date']==null ? "" : aboutMeData['AB_Date'];
+                                  selectedEmail = aboutMeData['Email']==null ? "" : aboutMeData['Email'];
+                                  _previewProvider.email = selectedEmail;
+                                  searchEmailcontroller.text = aboutMeData['Email']==null ? "" : aboutMeData['Email'];
+                                  // _previewProvider.email = selectedEmail;
+                                  nameController.text = aboutMeData['User_Name']==null ? "" : aboutMeData['User_Name'];
+                                  _previewProvider.name = nameController.text;
+                                  employerController.text = aboutMeData['Employer']==null ? "" : aboutMeData['Employer'];
+                                  _previewProvider.employer = employerController.text;
+                                  divisionOrSectionController.text = aboutMeData['Division_or_Section']==null ? "" : aboutMeData['Division_or_Section'];
+                                  _previewProvider.division = divisionOrSectionController.text;
+                                  RoleController.text = aboutMeData['Role']==null ? "" : aboutMeData['Role'];
+                                  _previewProvider.role = RoleController.text;
+                                  LocationController.text = aboutMeData['Location']==null ? "" : aboutMeData['Location'];
+                                  _previewProvider.location = LocationController.text;
+                                  EmployeeNumberController.text = aboutMeData['Employee_Number']==null ? "" : aboutMeData['Employee_Number'];
+                                  _previewProvider.employeeNumber = EmployeeNumberController.text;
+                                  LineManagerController.text = aboutMeData['Line_Manager']==null ? "" : aboutMeData['Line_Manager'];
+                                  _previewProvider.linemanager = LineManagerController.text;
+              
+                                  mycircumstancesController.text = aboutMeData['My_Circumstance']==null ? "" : aboutMeData['My_Circumstance'];
+                                  _previewProvider.mycircumstance = mycircumstancesController.text;
+                                  MystrengthsController.text = aboutMeData['My_Strength']==null ? "" : aboutMeData['My_Strength'];
+                                  _previewProvider.mystrength = MystrengthsController.text;
+                                  myOrganisationController.text = aboutMeData['My_Organisation']==null ? "" : aboutMeData['My_Organisation'];
+                                  _previewProvider.myorganization = myOrganisationController.text;
+                                  myOrganisation2Controller.text = aboutMeData['My_Challenges_Organisation']==null ? "" : aboutMeData['My_Challenges_Organisation'];
+                                  _previewProvider.mychallenge = myOrganisation2Controller.text;
+              
+                                  List<dynamic> challengesList = aboutMeData['Challenges'] ?? [];
+                                  List<dynamic> solutionsList = aboutMeData['Solutions'] ?? [];
+              
+                                  Iterable<Map<String, dynamic>> challengesIterable = challengesList.map((item) => item as Map<String, dynamic>);
+                                  Iterable<Map<String, dynamic>> solutionsIterable = solutionsList.map((item) => item as Map<String, dynamic>);
+              
+                                  List<Map<String, dynamic>> abc = [];
+                                  List<Map<String, dynamic>> xyz = [];
+              
+                                  abc.addAll(challengesIterable);
+                                  xyz.addAll(solutionsIterable);
+              
+              
+              
+                                  Uint8List pdfBytes = await makePdf(abc, xyz);
+              
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return  AlertDialog(
+                                            icon: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text("${About_Me_Label}",
+                                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                                                ),
+                                                IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.close)),
+                                              ],
+                                            ),
+                                            backgroundColor: Colors.white,
+                                            content: SizedBox(
+                                              width: double.maxFinite,
+                                              child: PdfPreview(
+                                                maxPageWidth: MediaQuery.of(context).size.width * .6,
+                                                allowSharing: false,
+                                                canChangeOrientation: false,
+                                                canChangePageFormat: false,
+                                                canDebug: false,
+                                                allowPrinting: false,
+                                                pdfFileName: About_Me_Label,
+                                                previewPageMargin: EdgeInsets.all(10),
+                                                useActions: true,
+                                                pdfPreviewPageDecoration: BoxDecoration(color: Colors.white),
+                                                build: (format) => pdfBytes,
+                                              ),
+                                            ));
+                                      });
+              
+                                // }
+                                // else{
+                                //   _navigateToTab(4);
+                                //   await showAddAddAboutMeDialogBox();
+                                // }
+                              },
+                              child: Container(
+                                margin: EdgeInsets.all(10),
+                                height: 60,
+              
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      // Icon(Icons.article,color: Colors.black,size: 30,),
+                                      Icon(Icons.picture_as_pdf_outlined,color: Colors.black,size: 30,),
+                                      SizedBox(width: 5,),
+              
+                                      Expanded(
+                                        child: Text(
+                                          // 'Solutions',
+                                          'Current master report',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.montserrat(
+                                              textStyle:
+                                              Theme.of(context).textTheme.titleLarge,
+                                              color: Colors.black),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+              
+                            ),
+                          ),
+                          Expanded(
+                            child: InkWell(
+                              onTap: () async {
+                                // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+                                //
+                                // // Check if there are any documents
+                                //
+                                // print("querySnapshot :${querySnapshot}");
+                                // print("querySnapshot :${querySnapshot.docs.length}");
+                                //
+                                // if (querySnapshot.docs.isNotEmpty) {
+                                //   // Get the last document
+                                //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                                //   print("lastDocument :$lastDocument");
+                                  showEditAboutMeDialogBox(aboutMeData,5);
+                                // }
+                                ///
+                                // else{
+                                //   _navigateToTab(5);
+                                //   await showAddAddAboutMeDialogBox();
+                                //
+                                // }
+                              },
+                              child: Container(
+                                margin: EdgeInsets.all(10),
+                                height: 60,
+              
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      // Icon(Icons.article,color: Colors.black,size: 30,),
+                                      Icon(Icons.edit_document,color: Colors.black,size: 30,),
+                                      SizedBox(width: 5,),
+              
+                                      Expanded(
+                                        child: Text(
+                                          // 'Solutions',
+                                          'Edit Master report',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.montserrat(
+                                              textStyle:
+                                              Theme.of(context).textTheme.titleLarge,
+                                              color: Colors.black),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget MyLibraryScreen(){
+    return Center(
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: MediaQuery.of(context).size.height * 0.2,
+        child: Card(
+          color: Colors.white,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+              
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text("My library",style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      color: primaryColorOfApp,
+                      fontWeight: FontWeight.bold,
+              
+                    ),),
+                  ),
+                  Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: InkWell(
+                              onTap: (){
+                                selectedEmail = null;
+                                searchEmailcontroller.clear();
+                                nameController.clear();
+                                employerController.clear();
+                                divisionOrSectionController.clear();
+                                RoleController.clear();
+                                LocationController.clear();
+                                EmployeeNumberController.clear();
+                                LineManagerController.clear();
+                                mycircumstancesController.clear();
+                                MystrengthsController.clear();
+                                mycircumstancesController.clear();
+                                AboutMeLabeltextController.clear();
+                                AboutMeUseFulInfotextController.clear();
+                                AboutMeDatetextController.clear();
+                                AboutMeDescriptiontextController.clear();
+                                RefineController.clear();
+                                solutionsList.clear();
+                                _userAboutMEProvider.solutionss.clear();
+                                _userAboutMEProvider.challengess.clear();
+                                _userAboutMEProvider.editchallengess.clear();
+                                _userAboutMEProvider.editsolutionss.clear();
+                                _userAboutMEProvider.combinedSolutionsResults.clear();
+                                _userAboutMEProvider.combinedResults.clear();
+                                _userAboutMEProvider.isEditChallengeListAdded.clear();
+                                _userAboutMEProvider.isEditSolutionListAdded.clear();
+                                _previewProvider.email=null;
+                                _previewProvider.name=null;
+                                _previewProvider.employer=null;
+                                _previewProvider.division=null;
+                                _previewProvider.role=null;
+                                _previewProvider.location=null;
+                                _previewProvider.employeeNumber=null ;
+                                _previewProvider.linemanager=null;
+                                _previewProvider.title=null;
+                                _previewProvider.mycircumstance=null;
+                                _previewProvider.mystrength=null ;
+                                _previewProvider.myorganization=null ;
+                                _previewProvider.mychallenge=null ;
+                                _previewProvider.PreviewChallengesList.clear();
+                                _previewProvider.PreviewSolutionList.clear();
+                                _previewProvider.PreviewSolutionMyResposibilty.clear();
+                                _previewProvider.PreviewSolutionStillNeeded.clear();
+                                _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
+                                _previewProvider.PreviewSolutionNiceToHave.clear();
+                                _previewProvider.PreviewSolutionMustHave.clear();
+                                widget.refreshPage();
+                                Navigator.pop(context);
+                                widget.page.jumpToPage(1);
+                              },
+                              child: Container(
+                                margin: EdgeInsets.all(10),
+                                height: 60,
+              
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      // Icon(Icons.article,color: Colors.black,size: 30,),
+                                      Icon(Icons.insert_drive_file_outlined,color: Colors.black,size: 30,),
+                                      SizedBox(width: 5,),
+              
+                                      Expanded(
+                                        child: Text(
+                                          // 'Solutions',
+                                          'My reports',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.montserrat(
+                                              textStyle:
+                                              Theme.of(context).textTheme.titleLarge,
+                                              color: Colors.black),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+              
+                            ),
+                          ),
+                          Expanded(
+                            child: InkWell(
+                              child: Container(
+                                margin: EdgeInsets.all(10),
+                                height: 60,
+              
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      // Icon(Icons.article,color: Colors.black,size: 30,),
+                                      Icon(Icons.medical_information_outlined,color: Colors.black,size: 30,),
+                                      SizedBox(width: 5,),
+              
+                                      Expanded(
+                                        child: Text(
+                                          // 'Solutions',
+                                          'Medical and personal document',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.montserrat(
+                                              textStyle:
+                                              Theme.of(context).textTheme.titleLarge,
+                                              color: Colors.black),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: InkWell(
+                              child: Container(
+                                margin: EdgeInsets.all(10),
+                                height: 60,
+              
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      // Icon(Icons.article,color: Colors.black,size: 30,),
+                                      Icon(Icons.perm_device_info_sharp,color: Colors.black,size: 30,),
+                                      SizedBox(width: 5,),
+              
+                                      Expanded(
+                                        child: Text(
+                                          // 'Solutions',
+                                          'Other useful info',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.montserrat(
+                                              textStyle:
+                                              Theme.of(context).textTheme.titleLarge,
+                                              color: Colors.black),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+
+  void showEditAboutMeDialogBox(aboutMeData, int tabindex){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Theme(
+              data: Theme.of(context).copyWith(dialogBackgroundColor: Colors.white),
+          child:  Consumer<UserAboutMEProvider>(
+          builder: (c,userAboutMEProvider, _){
+          return AlertDialog(
+              icon: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  InkWell(
+                      onTap: (){
+                        // userAboutMEProvider.editpreviewname = null;
+                        // userAboutMEProvider.editpreviewDescription = null;
+                        // userAboutMEProvider.editpreviewFinalDescription = null;
+                        // userAboutMEProvider.editpreviewId = null;
+                        // userAboutMEProvider.editpreviewImpact = null;
+                        // userAboutMEProvider.editpreviewKeywordssss.clear();
+                        // userAboutMEProvider.editpreviewtags.clear();
+                        // userAboutMEProvider.editpreview = null;
+                        Navigator.pop(context);
+                      },
+                      child: Icon(Icons.close)),
+                ],
+              ),
+              content: SizedBox(
+          width: double.maxFinite,
+            child: PreviewPage(widget.aboutMeData),
+          )
+          );
+          }));
+        }
     );
   }
 
@@ -4311,36 +4828,39 @@ Date
                                         padding: EdgeInsets.only(bottom: 20.0),
                                         child: Row(
                                           children: [
-                                            RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                      text: ' •  ',
-                                                      style:TextStyle(fontSize: 20)
-                                                  ),
-                                                  TextSpan(
-                                                      text: '${solution['Label']}',
-                                                      style: GoogleFonts.lato(textStyle: Theme
-                                                          .of(context)
-                                                          .textTheme
-                                                          .titleMedium,fontWeight: FontWeight.bold,)
-                                                  ),
-                                                  TextSpan(
-                                                      text: ' - ${solution['Final_description']}\n',
-                                                      style: GoogleFonts.lato(textStyle: Theme
-                                                          .of(context)
-                                                          .textTheme
-                                                          .bodyMedium,fontWeight: FontWeight.w400
-                                                      )
-                                                  ),
-                                                  TextSpan(
-                                                      text: '  ${solution['Impact_on_me']}',
-                                                      style: GoogleFonts.lato(textStyle: Theme
-                                                          .of(context)
-                                                          .textTheme
-                                                          .titleMedium,color: Colors.grey,)
-                                                  ),
-                                                ],
+                                            Flexible(
+                                              child: RichText(
+                                                maxLines: 4,
+                                                text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                        text: ' •  ',
+                                                        style:TextStyle(fontSize: 20)
+                                                    ),
+                                                    TextSpan(
+                                                        text: '${solution['Label']}',
+                                                        style: GoogleFonts.lato(textStyle: Theme
+                                                            .of(context)
+                                                            .textTheme
+                                                            .titleMedium,fontWeight: FontWeight.bold,)
+                                                    ),
+                                                    TextSpan(
+                                                        text: ' - ${solution['Final_description']}\n',
+                                                        style: GoogleFonts.lato(textStyle: Theme
+                                                            .of(context)
+                                                            .textTheme
+                                                            .bodyMedium,fontWeight: FontWeight.w400
+                                                        )
+                                                    ),
+                                                    TextSpan(
+                                                        text: '  ${solution['Impact_on_me']}',
+                                                        style: GoogleFonts.lato(textStyle: Theme
+                                                            .of(context)
+                                                            .textTheme
+                                                            .titleMedium,color: Colors.grey,)
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                             SizedBox(width: 50,),
@@ -4976,6 +5496,8 @@ Date
                             ],
                           ),
                         ) : Container(),
+
+                        SizedBox(height: 5,),
                       ],
                     ),
                   ),
