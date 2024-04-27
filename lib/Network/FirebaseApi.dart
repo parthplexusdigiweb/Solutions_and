@@ -116,7 +116,7 @@ class ApiRepository{
    }
 
 
-   Future<String?> createAboutMe(Map<String, dynamic> AboutMeData) async {
+   Future<String?> oldcreateAboutMe(Map<String, dynamic> AboutMeData) async {
      try {
        // Replace 'your_collection' with your actual collection name
        CollectionReference collectionReference = FirebaseFirestore.instance.collection('AboutMe');
@@ -152,6 +152,31 @@ class ApiRepository{
      }
    }
 
+   Future<String?> createAboutMe(Map<String, dynamic> AboutMeData) async {
+     print("inside new createAboutMe ");
+     print("${AboutMeData.runtimeType}");
+
+     try {
+       CollectionReference collectionReference = FirebaseFirestore.instance.collection('AboutMe');
+
+       // Add the document to the collection and get the DocumentReference
+       DocumentReference documentReference = await collectionReference.add(AboutMeData);
+
+       // Get the ID assigned by Firestore
+       String documentId = documentReference.id;
+
+       // Print the document ID
+       print('Document created with ID: $documentId');
+
+       // Return the document ID
+       return documentId;
+
+     }  catch (e) {
+       print('Error creating document: $e');
+       return null; // Return null in case of error
+     }
+   }
+
    Future<void> updateAboutMe(Map<String, dynamic> updatedData,documentId) async {
      try {
        CollectionReference collectionReference =
@@ -177,8 +202,6 @@ class ApiRepository{
        print('Error creating document: $e');
      }
    }
-
-
 
    Future<void> updateThriver(Map<String, dynamic> thriversData,Id) async {
      try {

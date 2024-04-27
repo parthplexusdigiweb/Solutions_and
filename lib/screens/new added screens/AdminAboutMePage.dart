@@ -618,23 +618,30 @@ Date
                 },
                 child: Container(
                   margin: EdgeInsets.all(10),
-                  height: 40,
+                  height: 70,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    border: Border.all(color:primaryColorOfApp, width: 1.0),
-                    borderRadius: BorderRadius.circular(20.0),
+                    // border: Border.all(color:primaryColorOfApp, width: 1.0),
+                    // borderRadius: BorderRadius.circular(20.0),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      // 'Thrivers',
-                      'Employee data',
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.montserrat(
-                          textStyle:
-                          Theme.of(context).textTheme.titleMedium,
-                          color: Colors.black),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.add_box_outlined),
+                        Text(
+                          // 'Thrivers',
+                          'Employee data',
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.montserrat(
+                              textStyle:
+                              Theme.of(context).textTheme.titleMedium,
+                              color: Colors.black),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -665,22 +672,29 @@ Date
                 },
                 child: Container(
                   margin: EdgeInsets.all(10),
-                  height: 40,
+                  height: 70,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    border: Border.all(color:primaryColorOfApp, width: 1.0),
-                    borderRadius: BorderRadius.circular(20.0),
+                    // border: Border.all(color:primaryColorOfApp, width: 1.0),
+                    // borderRadius: BorderRadius.circular(20.0),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Insight about me',
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.montserrat(
-                          textStyle:
-                          Theme.of(context).textTheme.titleMedium,
-                          color: Colors.black),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.person_add_outlined),
+                        Text(
+                          'Insight about me',
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.montserrat(
+                              textStyle:
+                              Theme.of(context).textTheme.titleMedium,
+                              color: Colors.black),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -711,23 +725,30 @@ Date
                 },
                 child: Container(
                   margin: EdgeInsets.all(10),
-                  height: 40,
+                  height: 70,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    border: Border.all(color:primaryColorOfApp, width: 1.0),
-                    borderRadius: BorderRadius.circular(20.0),
+                    // border: Border.all(color:primaryColorOfApp, width: 1.0),
+                    // borderRadius: BorderRadius.circular(20.0),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      // 'User',
-                      'My attributes',
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.montserrat(
-                          textStyle:
-                          Theme.of(context).textTheme.titleMedium,
-                          color: Colors.black),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.edit_attributes),
+                        Text(
+                          // 'User',
+                          'My attributes',
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.montserrat(
+                              textStyle:
+                              Theme.of(context).textTheme.titleMedium,
+                              color: Colors.black),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -757,24 +778,31 @@ Date
                 },
                 child: Container(
                   margin: EdgeInsets.all(10),
-                  height: 40,
+                  height: 70,
 
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    border: Border.all(color:primaryColorOfApp, width: 1.0),
-                    borderRadius: BorderRadius.circular(20.0),
+                    // border: Border.all(color:primaryColorOfApp, width: 1.0),
+                    // borderRadius: BorderRadius.circular(20.0),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      // 'User',
-                      'My challenges',
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.montserrat(
-                          textStyle:
-                          Theme.of(context).textTheme.titleMedium,
-                          color: Colors.black),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.sync_problem),
+                        Text(
+                          // 'User',
+                          'My challenges',
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.montserrat(
+                              textStyle:
+                              Theme.of(context).textTheme.titleMedium,
+                              color: Colors.black),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -804,31 +832,37 @@ Date
                 },
                 child: Container(
                   margin: EdgeInsets.all(10),
-                  height: 40,
+                  height: 70,
 
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    border: Border.all(color:primaryColorOfApp, width: 1.0),
-                    borderRadius: BorderRadius.circular(20.0),
+                    // border: Border.all(color:primaryColorOfApp, width: 1.0),
+                    // borderRadius: BorderRadius.circular(20.0),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      // 'Solutions',
-                      'My solutions',
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.montserrat(
-                          textStyle:
-                          Theme.of(context).textTheme.titleMedium,
-                          color: Colors.black),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.checklist_rtl),
+                        Text(
+                          // 'Solutions',
+                          'My solutions',
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.montserrat(
+                              textStyle:
+                              Theme.of(context).textTheme.titleMedium,
+                              color: Colors.black),
+                        ),
+                      ],
                     ),
                   ),
                 ),
 
               ),
             ),
-
             Expanded(
               child: InkWell(
                 onTap: () async {
@@ -852,24 +886,30 @@ Date
                 },
                 child: Container(
                   margin: EdgeInsets.all(10),
-                  height: 40,
-
+                  height: 70,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    border: Border.all(color:primaryColorOfApp, width: 1.0),
-                    borderRadius: BorderRadius.circular(20.0),
+                    // border: Border.all(color:primaryColorOfApp, width: 1.0),
+                    // borderRadius: BorderRadius.circular(20.0),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      // 'Solutions',
-                      'Generate reports',
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.montserrat(
-                          textStyle:
-                          Theme.of(context).textTheme.titleMedium,
-                          color: Colors.black),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.insert_drive_file_outlined),
+                        Text(
+                          // 'Solutions',
+                          'Generate reports',
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.montserrat(
+                              textStyle:
+                              Theme.of(context).textTheme.titleSmall,
+                              color: Colors.black),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -899,24 +939,31 @@ Date
                 },
                 child: Container(
                   margin: EdgeInsets.all(10),
-                  height: 40,
+                  height: 70,
 
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    border: Border.all(color:primaryColorOfApp, width: 1.0),
-                    borderRadius: BorderRadius.circular(20.0),
+                    // border: Border.all(color:primaryColorOfApp, width: 1.0),
+                    // borderRadius: BorderRadius.circular(20.0),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      // 'Solutions',
-                      'My library',
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.montserrat(
-                          textStyle:
-                          Theme.of(context).textTheme.titleMedium,
-                          color: Colors.black),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.library_books),
+                        Text(
+                          // 'Solutions',
+                          'My library',
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.montserrat(
+                              textStyle:
+                              Theme.of(context).textTheme.titleSmall,
+                              color: Colors.black),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -958,25 +1005,25 @@ Date
                             //       sendMailPopUp(challengesList,solutionsList);
                             //     },
                             //     icon: Icon(Icons.add)),
-
-                            InkWell(
-                              onTap: () async {
-                              await showAddAddAboutMeDialogBox();
-                            },
-                              child: Container(
-                                width: MediaQuery.of(context).size.width * 0.15,
-                                padding: EdgeInsets.all(10),
-                                margin: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Colors.blue,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Text('Create new report',textAlign: TextAlign.center,style: GoogleFonts.montserrat(
-                                    textStyle: Theme.of(context).textTheme.titleSmall,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),)),
-                            ),
-
+///
+                            // InkWell(
+                            //   onTap: () async {
+                            //   await showAddAddAboutMeDialogBox();
+                            // },
+                            //   child: Container(
+                            //     width: MediaQuery.of(context).size.width * 0.15,
+                            //     padding: EdgeInsets.all(10),
+                            //     margin: EdgeInsets.all(10),
+                            //     decoration: BoxDecoration(
+                            //       color: Colors.blue,
+                            //       borderRadius: BorderRadius.circular(10),
+                            //     ),
+                            //     child: Text('Create new report',textAlign: TextAlign.center,style: GoogleFonts.montserrat(
+                            //         textStyle: Theme.of(context).textTheme.titleSmall,
+                            //         fontWeight: FontWeight.bold,
+                            //         color: Colors.white),)),
+                            // ),
+///
                           //  SizedBox(width: 5,),
 
 
@@ -3432,16 +3479,18 @@ Date
                   x = x + 1;
                   var createdAt = DateFormat('yyyy-MM-dd, HH:mm:ss').format(DateTime.now());
 
-                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-                      .collection('AboutMe')
-                      .orderBy('Created_Date', descending: true)
-                      .limit(1)
-                      .get();
-                  final abc =   querySnapshot.docs.first;
-                  print("AB_id; ${abc['AB_id']}");
-                  print("AB_id; ${abc['AB_id'].runtimeType}");
-                  var ids = abc['AB_id'] + 1;
+                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').orderBy('Created_Date', descending: true).limit(1).get();
 
+                  int ids;
+                  if (querySnapshot.size == 0) {
+                    // Collection doesn't exist, set 'AB_id' to 1 by default
+                    ids = 1;
+                  } else {
+                    final abc = querySnapshot.docs.first;
+                    print("AB_id; ${abc['AB_id']}");
+                    print("AB_id; ${abc['AB_id'].runtimeType}");
+                    ids = abc['AB_id'] + 1;
+                  }
                   Map<String, dynamic> AboutMEDatas = {
                     'AB_id': ids,
                     'Email': selectedEmail,
@@ -3474,6 +3523,9 @@ Date
 
                   String solutionJson = json.encode(AboutMEDatas);
                   print(solutionJson);
+
+                  print("runtimeType :${AboutMEDatas.runtimeType}");
+
 
                   // ProgressDialog.show(context, "Creating About Me", Icons.chair);
                   documentId = await ApiRepository().createAboutMe(AboutMEDatas);
@@ -6571,7 +6623,7 @@ Date
                     // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
 
-                      Text("Report :   ", style: GoogleFonts.lato(
+                      Text("Report file name :   ", style: GoogleFonts.lato(
                           textStyle: Theme.of(context).textTheme.titleMedium,
                           fontStyle: FontStyle.italic,
                         fontWeight: FontWeight.bold
@@ -7885,7 +7937,7 @@ Date
                     // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
 
-                      Text("Report :   ", style: GoogleFonts.lato(
+                      Text("Report file name :   ", style: GoogleFonts.lato(
                           textStyle: Theme.of(context).textTheme.titleMedium,
                           fontStyle: FontStyle.italic,
                           fontWeight: FontWeight.bold
@@ -8013,6 +8065,8 @@ Date
                             ),
                           ],
                         ),
+
+
                         SizedBox(height: 10,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -8932,7 +8986,7 @@ Date
         builder: (BuildContext context) {
           return EditAboutMEScreen(aboutMeData:  aboutMeData,
               refreshPage: refreshPage,
-              MyReportScreen: MyReportScreen,
+              showAddAddAboutMeDialogBox: showAddAddAboutMeDialogBox,
               AdminName: widget.AdminName,
               tabindex: tabindex,
               page: page);
@@ -9746,7 +9800,7 @@ Date
                 child: pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.start,
                   children: [
-                    pw.Text("Report: ", style: pw.TextStyle(font: Reportfont)),
+                    pw.Text("Report file name: ", style: pw.TextStyle(font: Reportfont)),
 
                     pw.Text("${AboutMeLabeltextController.text}",style: pw.TextStyle(font: Reportansfont,color: PdfColors.black)),
 

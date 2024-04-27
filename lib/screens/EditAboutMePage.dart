@@ -26,9 +26,9 @@ import 'package:toastification/toastification.dart';
 import '../model/challenges_table_model.dart';
 
 class EditAboutMEScreen extends StatefulWidget {
-  var aboutMeData, refreshPage, AdminName, tabindex, page,MyReportScreen;
+  var aboutMeData, refreshPage, AdminName, tabindex, page,showAddAddAboutMeDialogBox;
 
-  EditAboutMEScreen({this.aboutMeData, this.refreshPage, this.AdminName, this.tabindex, this.page, this.MyReportScreen});
+  EditAboutMEScreen({this.aboutMeData, this.refreshPage, this.AdminName, this.tabindex, this.page, this.showAddAddAboutMeDialogBox});
 
   @override
   State<EditAboutMEScreen> createState() => _EditAboutMEScreenState();
@@ -339,28 +339,52 @@ Date
   Widget MyReportScreen(aboutMeData){
     return Center(
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.5,
-        height: MediaQuery.of(context).size.height * 0.5,
+        width: MediaQuery.of(context).size.width ,
+        height: MediaQuery.of(context).size.height ,
         child: Card(
           color: Colors.white,
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: SingleChildScrollView(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
               
                   Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: Text("Generate reports",style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: primaryColorOfApp,
-                      fontWeight: FontWeight.bold,
-              
-                    ),),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Generate reports",style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          color: primaryColorOfApp,
+                          fontWeight: FontWeight.bold,
+
+                        ),),
+
+                        InkWell(
+                          onTap: () async {
+                            await widget.showAddAddAboutMeDialogBox();
+                          },
+                          child: Container(
+                              width: MediaQuery.of(context).size.width * 0.15,
+                              padding: EdgeInsets.all(10),
+                              margin: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text('Create new report',textAlign: TextAlign.center,style: GoogleFonts.montserrat(
+                                  textStyle: Theme.of(context).textTheme.titleSmall,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),)),
+                        ),
+
+                      ],
+                    ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 10.0,bottom: 10),
+                    padding: EdgeInsets.only(left: 10.0,bottom: 5),
                     child: Text("Here is where you can generate reports to use as a record of your findings and to communicate and collaborate with your work colleagues.",style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: Colors.grey,
                         fontWeight: FontWeight.w300
@@ -369,9 +393,13 @@ Date
                   ),
                   Divider(),
                   Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
               
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
                             child: Padding(
@@ -398,6 +426,8 @@ Date
                       ),
                       SizedBox(height : 10),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
                             child: InkWell(
@@ -505,12 +535,12 @@ Date
                               },
                               child: Container(
                                 margin: EdgeInsets.all(10),
-                                height: 60,
+                                height: 40,
               
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   border: Border.all(color:primaryColorOfApp, width: 1.0),
-                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -518,7 +548,7 @@ Date
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
                                       // Icon(Icons.article,color: Colors.black,size: 30,),
-                                      Icon(Icons.picture_as_pdf_outlined,color: Colors.black,size: 30,),
+                                      Icon(Icons.picture_as_pdf_outlined,color: Colors.black,size: 25,),
                                       SizedBox(width: 5,),
               
                                       Expanded(
@@ -528,7 +558,7 @@ Date
                                           overflow: TextOverflow.ellipsis,
                                           style: GoogleFonts.montserrat(
                                               textStyle:
-                                              Theme.of(context).textTheme.titleLarge,
+                                              Theme.of(context).textTheme.titleMedium,
                                               color: Colors.black),
                                         ),
                                       ),
@@ -564,12 +594,12 @@ Date
                               },
                               child: Container(
                                 margin: EdgeInsets.all(10),
-                                height: 60,
+                                height: 40,
               
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   border: Border.all(color:primaryColorOfApp, width: 1.0),
-                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -577,7 +607,7 @@ Date
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
                                       // Icon(Icons.article,color: Colors.black,size: 30,),
-                                      Icon(Icons.edit_document,color: Colors.black,size: 30,),
+                                      Icon(Icons.edit_document,color: Colors.black,size: 25,),
                                       SizedBox(width: 5,),
               
                                       Expanded(
@@ -587,7 +617,7 @@ Date
                                           overflow: TextOverflow.ellipsis,
                                           style: GoogleFonts.montserrat(
                                               textStyle:
-                                              Theme.of(context).textTheme.titleLarge,
+                                              Theme.of(context).textTheme.titleMedium,
                                               color: Colors.black),
                                         ),
                                       ),
@@ -599,8 +629,11 @@ Date
                           ),
                         ],
                       ),
+                      SizedBox(height : 10),
                     ],
-                  )
+                  ),
+
+
                 ],
               ),
             ),
@@ -613,198 +646,196 @@ Date
   Widget MyLibraryScreen(){
     return Center(
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.8,
+        width: MediaQuery.of(context).size.width ,
         height: MediaQuery.of(context).size.height * 0.2,
         child: Card(
           color: Colors.white,
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-              
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Text("My library",style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: primaryColorOfApp,
-                      fontWeight: FontWeight.bold,
-              
-                    ),),
-                  ),
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: InkWell(
-                              onTap: (){
-                                selectedEmail = null;
-                                searchEmailcontroller.clear();
-                                nameController.clear();
-                                employerController.clear();
-                                divisionOrSectionController.clear();
-                                RoleController.clear();
-                                LocationController.clear();
-                                EmployeeNumberController.clear();
-                                LineManagerController.clear();
-                                mycircumstancesController.clear();
-                                MystrengthsController.clear();
-                                mycircumstancesController.clear();
-                                AboutMeLabeltextController.clear();
-                                AboutMeUseFulInfotextController.clear();
-                                AboutMeDatetextController.clear();
-                                AboutMeDescriptiontextController.clear();
-                                RefineController.clear();
-                                solutionsList.clear();
-                                _userAboutMEProvider.solutionss.clear();
-                                _userAboutMEProvider.challengess.clear();
-                                _userAboutMEProvider.editchallengess.clear();
-                                _userAboutMEProvider.editsolutionss.clear();
-                                _userAboutMEProvider.combinedSolutionsResults.clear();
-                                _userAboutMEProvider.combinedResults.clear();
-                                _userAboutMEProvider.isEditChallengeListAdded.clear();
-                                _userAboutMEProvider.isEditSolutionListAdded.clear();
-                                _previewProvider.email=null;
-                                _previewProvider.name=null;
-                                _previewProvider.employer=null;
-                                _previewProvider.division=null;
-                                _previewProvider.role=null;
-                                _previewProvider.location=null;
-                                _previewProvider.employeeNumber=null ;
-                                _previewProvider.linemanager=null;
-                                _previewProvider.title=null;
-                                _previewProvider.mycircumstance=null;
-                                _previewProvider.mystrength=null ;
-                                _previewProvider.myorganization=null ;
-                                _previewProvider.mychallenge=null ;
-                                _previewProvider.PreviewChallengesList.clear();
-                                _previewProvider.PreviewSolutionList.clear();
-                                _previewProvider.PreviewSolutionMyResposibilty.clear();
-                                _previewProvider.PreviewSolutionStillNeeded.clear();
-                                _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
-                                _previewProvider.PreviewSolutionNiceToHave.clear();
-                                _previewProvider.PreviewSolutionMustHave.clear();
-                                widget.refreshPage();
-                                Navigator.pop(context);
-                                widget.page.jumpToPage(1);
-                              },
-                              child: Container(
-                                margin: EdgeInsets.all(10),
-                                height: 60,
-              
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(color:primaryColorOfApp, width: 1.0),
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      // Icon(Icons.article,color: Colors.black,size: 30,),
-                                      Icon(Icons.insert_drive_file_outlined,color: Colors.black,size: 30,),
-                                      SizedBox(width: 5,),
-              
-                                      Expanded(
-                                        child: Text(
-                                          // 'Solutions',
-                                          'My reports',
-                                          overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.montserrat(
-                                              textStyle:
-                                              Theme.of(context).textTheme.titleLarge,
-                                              color: Colors.black),
-                                        ),
+          child: Center(
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Text("My library",style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        color: primaryColorOfApp,
+                        fontWeight: FontWeight.bold,
+
+                      ),),
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            onTap: (){
+                              selectedEmail = null;
+                              searchEmailcontroller.clear();
+                              nameController.clear();
+                              employerController.clear();
+                              divisionOrSectionController.clear();
+                              RoleController.clear();
+                              LocationController.clear();
+                              EmployeeNumberController.clear();
+                              LineManagerController.clear();
+                              mycircumstancesController.clear();
+                              MystrengthsController.clear();
+                              mycircumstancesController.clear();
+                              AboutMeLabeltextController.clear();
+                              AboutMeUseFulInfotextController.clear();
+                              AboutMeDatetextController.clear();
+                              AboutMeDescriptiontextController.clear();
+                              RefineController.clear();
+                              solutionsList.clear();
+                              _userAboutMEProvider.solutionss.clear();
+                              _userAboutMEProvider.challengess.clear();
+                              _userAboutMEProvider.editchallengess.clear();
+                              _userAboutMEProvider.editsolutionss.clear();
+                              _userAboutMEProvider.combinedSolutionsResults.clear();
+                              _userAboutMEProvider.combinedResults.clear();
+                              _userAboutMEProvider.isEditChallengeListAdded.clear();
+                              _userAboutMEProvider.isEditSolutionListAdded.clear();
+                              _previewProvider.email=null;
+                              _previewProvider.name=null;
+                              _previewProvider.employer=null;
+                              _previewProvider.division=null;
+                              _previewProvider.role=null;
+                              _previewProvider.location=null;
+                              _previewProvider.employeeNumber=null ;
+                              _previewProvider.linemanager=null;
+                              _previewProvider.title=null;
+                              _previewProvider.mycircumstance=null;
+                              _previewProvider.mystrength=null ;
+                              _previewProvider.myorganization=null ;
+                              _previewProvider.mychallenge=null ;
+                              _previewProvider.PreviewChallengesList.clear();
+                              _previewProvider.PreviewSolutionList.clear();
+                              _previewProvider.PreviewSolutionMyResposibilty.clear();
+                              _previewProvider.PreviewSolutionStillNeeded.clear();
+                              _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
+                              _previewProvider.PreviewSolutionNiceToHave.clear();
+                              _previewProvider.PreviewSolutionMustHave.clear();
+                              widget.refreshPage();
+                              Navigator.pop(context);
+                              widget.page.jumpToPage(1);
+                            },
+                            child: Container(
+                              margin: EdgeInsets.all(10),
+                              height: 40,
+
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    // Icon(Icons.article,color: Colors.black,size: 30,),
+                                    Icon(Icons.insert_drive_file_outlined,color: Colors.black,size: 25,),
+                                    SizedBox(width: 5,),
+
+                                    Expanded(
+                                      child: Text(
+                                        // 'Solutions',
+                                        'My reports',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: GoogleFonts.montserrat(
+                                            textStyle:
+                                            Theme.of(context).textTheme.titleMedium,
+                                            color: Colors.black),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
-              
                             ),
+
                           ),
-                          Expanded(
-                            child: InkWell(
-                              child: Container(
-                                margin: EdgeInsets.all(10),
-                                height: 60,
-              
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(color:primaryColorOfApp, width: 1.0),
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      // Icon(Icons.article,color: Colors.black,size: 30,),
-                                      Icon(Icons.medical_information_outlined,color: Colors.black,size: 30,),
-                                      SizedBox(width: 5,),
-              
-                                      Expanded(
-                                        child: Text(
-                                          // 'Solutions',
-                                          'Medical and personal document',
-                                          overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.montserrat(
-                                              textStyle:
-                                              Theme.of(context).textTheme.titleLarge,
-                                              color: Colors.black),
-                                        ),
+                        ),
+                        Expanded(
+                          child: InkWell(
+                            child: Container(
+                              margin: EdgeInsets.all(10),
+                              height: 40,
+
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    // Icon(Icons.article,color: Colors.black,size: 30,),
+                                    Icon(Icons.medical_information_outlined,color: Colors.black,size: 25,),
+                                    SizedBox(width: 5,),
+
+                                    Expanded(
+                                      child: Text(
+                                        // 'Solutions',
+                                        'Medical and personal document',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: GoogleFonts.montserrat(
+                                            textStyle:
+                                            Theme.of(context).textTheme.titleMedium,
+                                            color: Colors.black),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
                           ),
-                          Expanded(
-                            child: InkWell(
-                              child: Container(
-                                margin: EdgeInsets.all(10),
-                                height: 60,
-              
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(color:primaryColorOfApp, width: 1.0),
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      // Icon(Icons.article,color: Colors.black,size: 30,),
-                                      Icon(Icons.perm_device_info_sharp,color: Colors.black,size: 30,),
-                                      SizedBox(width: 5,),
-              
-                                      Expanded(
-                                        child: Text(
-                                          // 'Solutions',
-                                          'Other useful info',
-                                          overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.montserrat(
-                                              textStyle:
-                                              Theme.of(context).textTheme.titleLarge,
-                                              color: Colors.black),
-                                        ),
+                        ),
+                        Expanded(
+                          child: InkWell(
+                            child: Container(
+                              margin: EdgeInsets.all(10),
+                              height: 40,
+
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    // Icon(Icons.article,color: Colors.black,size: 30,),
+                                    Icon(Icons.perm_device_info_sharp,color: Colors.black,size: 25,),
+                                    SizedBox(width: 5,),
+
+                                    Expanded(
+                                      child: Text(
+                                        // 'Solutions',
+                                        'Other useful info',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: GoogleFonts.montserrat(
+                                            textStyle:
+                                            Theme.of(context).textTheme.titleMedium,
+                                            color: Colors.black),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
                           ),
-                        ],
-                      ),
-                    ],
-                  )
-                ],
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
           ),
@@ -812,7 +843,6 @@ Date
       ),
     );
   }
-
 
   void showEditAboutMeDialogBox(aboutMeData, int tabindex){
     showDialog(
@@ -2547,157 +2577,153 @@ Date
                                   ),
                                   // width: MediaQuery.of(context).size.width,
                                   child:SingleChildScrollView(
-                                    child: DataTable(
-                                      dataRowMaxHeight:60 ,
-                                      headingTextStyle: GoogleFonts.montserrat(
-                                          textStyle: Theme.of(context).textTheme.titleMedium,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black),
-                                      // border: TableBorder.all(color: Colors.black),
-                                      columnSpacing: 15,
-                                      columns: [
+                                    scrollDirection: Axis.vertical,
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: DataTable(
+                                        dataRowMaxHeight:60,
+                                        headingTextStyle: GoogleFonts.montserrat(
+                                            textStyle: Theme.of(context).textTheme.titleMedium,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.black),
+                                        // border: TableBorder.all(color: Colors.black),
+                                        columnSpacing: 15,
+                                        columns: [
 
-                                        // DataColumn(
-                                        //   label: Container(
-                                        //     // color: Colors.blue,
-                                        //     // width: 60,
-                                        //     child: Text('Id.',textAlign: TextAlign.center,),
-                                        //   ),
-                                        //
-                                        // ),
-                                        DataColumn(
-                                          label: Container(
-                                            // width: 180,
-                                            child: Text('Label',),
-                                          ),
-                                        ),
-                                        DataColumn(
-                                          label: Container(
-                                            // width: 250,
-                                            child: Text('Impact',),
-                                          ),
-                                        ),
-                                        DataColumn(
-                                          label: Container(
-                                            // width: 400,
-                                              child: Text('Description')
-                                          ),
-                                        ),
-                                        DataColumn(
+                                          // DataColumn(
+                                          //   label: Container(
+                                          //     // color: Colors.blue,
+                                          //     // width: 60,
+                                          //     child: Text('Id.',textAlign: TextAlign.center,),
+                                          //   ),
+                                          //
+                                          // ),
+                                          DataColumn(
                                             label: Container(
-                                              // width: 140,
-                                                child: Text('Confirm/Cancel')
-                                            )
-                                        ),
-                                      ],
-                                      rows: userAboutMEProvider.editchallengess.map((challenge) {
-                                        int index = userAboutMEProvider.editchallengess.indexOf(challenge);
-                                        // print(jsonString);
-                                        return DataRow(
-                                          cells: [
-                                            // DataCell(
-                                            //     Container(
-                                            //       // width: 60,
-                                            //       //   child: Text("${index + 1}.", style: GoogleFonts.montserrat(
-                                            //         child: Text("${challenge.id}.", style: GoogleFonts.montserrat(
-                                            //             textStyle: Theme.of(context).textTheme.bodySmall,
-                                            //             fontWeight: FontWeight.w600,
-                                            //             color: Colors.black),))
-                                            // ),
-                                            DataCell(
-                                                Text(challenge.label,
-                                                    overflow: TextOverflow.ellipsis,maxLines: 1,
-                                                    style: GoogleFonts.montserrat(
-                                                        textStyle: Theme.of(context).textTheme.bodySmall,
-                                                        fontWeight: FontWeight.w600,
-                                                        color: Colors.black)
-                                                )),
-                                            DataCell(
-                                                Container(
-                                                  // width: 250,
-                                                    child: Text(challenge.Impact,
-                                                        overflow: TextOverflow.ellipsis,maxLines: 2,
-                                                        style: GoogleFonts.montserrat(
-                                                            textStyle: Theme.of(context).textTheme.bodySmall,
-                                                            fontWeight: FontWeight.w600,
-                                                            color: Colors.black)
-                                                    ))),
-                                            DataCell(
-                                                Container(
-                                                  // width: 400,
-                                                    child: Text(challenge.Final_description,
-                                                        overflow: TextOverflow.ellipsis,maxLines: 2,
-                                                        style: GoogleFonts.montserrat(
-                                                            textStyle: Theme.of(context).textTheme.bodySmall,
-                                                            fontWeight: FontWeight.w600,
-                                                            color: Colors.black)
-                                                    ))),
-                                            DataCell(
-                                              Container(
-                                                // height: 100,
-                                                margin: EdgeInsets.all(5),
+                                              // width: 180,
+                                              child: Text('Label',),
+                                            ),
+                                          ),
+                                          DataColumn(
+                                            label: Container(
+                                              // width: 250,
+                                              child: Text('Impact',),
+                                            ),
+                                          ),
+                                          DataColumn(
+                                            label: Container(
+                                              // width: 400,
+                                                child: Text('Description')
+                                            ),
+                                          ),
+                                          DataColumn(
+                                              label: Container(
                                                 // width: 140,
-                                                child: (challenge.isConfirmed==true) ?
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  children: [
-                                                    IconButton(
-                                                      onPressed: () {
-                                                        NewViewDialog(challenge.label,challenge.description,challenge.Impact,challenge.Final_description, challenge.Keywords,challenge.tags,challenge.id,challenge, userAboutMEProvider.isEditChallengeListAdded,userAboutMEProvider.EditRecommendedChallengeAdd);
-                                                        print("challenge.isConfirmed: ${challenge.isConfirmed}");
-                                                      },
-                                                      icon: Icon(Icons.visibility, color: Colors.blue),
-                                                    ),
-                                                    IconButton(
-                                                      onPressed: () {
-                                                        userAboutMEProvider.removeEditConfirmChallenge(index,challenge.id,challengesList,_previewProvider.PreviewChallengesList);
-                                                      },
-                                                      icon: Icon(Icons.close, color: Colors.red),
-                                                    ),
-                                                    // SizedBox(width: 10,),
-                                                    Text('Confirmed',
-                                                      style: TextStyle(color: Colors.green),
-                                                    ),
-                                                  ],
-                                                )
-                                                    :
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  children: [
-                                                    IconButton(
-                                                      onPressed: () {
-                                                        NewViewDialog(challenge.label,challenge.description,challenge.Impact,challenge.Final_description, challenge.Keywords,challenge.tags,challenge.id,challenge, userAboutMEProvider.isEditChallengeListAdded,userAboutMEProvider.EditRecommendedChallengeAdd);
-                                                        print("challenge.isConfirmed: ${challenge.isConfirmed}");
-                                                      },
-                                                      icon: Icon(Icons.visibility, color: Colors.blue),
-                                                    ),
-                                                    SizedBox(width: 3,),
-                                                    IconButton(
-                                                      onPressed: () {
-                                                        showconfirmChallengeDialogBox(challenge.id, challenge.label,challenge.description, challenge.Source, challenge.Status,challenge.tags,challenge.CreatedBy,
-                                                            challenge.CreatedDate,challenge.ModifiedBy,challenge.ModifiedDate,challenge.OriginalDescription,challenge.Impact,challenge.Final_description,
-                                                            challenge.Category,challenge.Keywords,challenge.PotentialStrengths,challenge.HiddenStrengths, index,userAboutMEProvider.editchallengess,challenge.notes,challenge.attachment);                                        print("challenge.isConfirmed: ${challenge.isConfirmed}");
-                                                      },
-                                                      icon: Icon(Icons.check, color: Colors.green),
-                                                    ),
-                                                    SizedBox(width: 3,),
-                                                    IconButton(
-                                                      onPressed: () {
-                                                        userAboutMEProvider.removeEditChallenge(index,challenge);
-                                                      },
-                                                      icon: Icon(Icons.close, color: Colors.red),
-                                                    )
-                                                    //      :
+                                                  child: Text('Confirm/Cancel')
+                                              )
+                                          ),
+                                        ],
+                                        rows: userAboutMEProvider.editchallengess.map((challenge) {
+                                          int index = userAboutMEProvider.editchallengess.indexOf(challenge);
+                                          // print(jsonString);
+                                          return DataRow(
+                                            cells: [
 
-                                                  ],
+                                              DataCell(
+                                                  Text(challenge.label,
+                                                      overflow: TextOverflow.ellipsis,maxLines: 1,
+                                                      style: GoogleFonts.montserrat(
+                                                          textStyle: Theme.of(context).textTheme.bodySmall,
+                                                          fontWeight: FontWeight.w600,
+                                                          color: Colors.black)
+                                                  )),
+                                              DataCell(
+                                                  Container(
+                                                    width: MediaQuery.of(context).size.width * .15,
+                                                      child: Text(challenge.Impact,
+                                                          overflow: TextOverflow.ellipsis,maxLines: 2,
+                                                          style: GoogleFonts.montserrat(
+                                                              textStyle: Theme.of(context).textTheme.bodySmall,
+                                                              fontWeight: FontWeight.w600,
+                                                              color: Colors.black)
+                                                      ))),
+                                              DataCell(
+                                                  Container(
+                                                      width: MediaQuery.of(context).size.width * .15,
+                                                      child: Text(challenge.Final_description,
+                                                          overflow: TextOverflow.ellipsis,maxLines: 2,
+                                                          style: GoogleFonts.montserrat(
+                                                              textStyle: Theme.of(context).textTheme.bodySmall,
+                                                              fontWeight: FontWeight.w600,
+                                                              color: Colors.black)
+                                                      ))),
+                                              DataCell(
+                                                Container(
+                                                  // height: 100,
+                                                  margin: EdgeInsets.all(5),
+                                                  // width: 140,
+                                                  child: (challenge.isConfirmed==true) ?
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: [
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          NewViewDialog(challenge.label,challenge.description,challenge.Impact,challenge.Final_description, challenge.Keywords,challenge.tags,challenge.id,challenge, userAboutMEProvider.isEditChallengeListAdded,userAboutMEProvider.EditRecommendedChallengeAdd);
+                                                          print("challenge.isConfirmed: ${challenge.isConfirmed}");
+                                                        },
+                                                        icon: Icon(Icons.visibility, color: Colors.blue),
+                                                      ),
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          userAboutMEProvider.removeEditConfirmChallenge(index,challenge.id,challengesList,_previewProvider.PreviewChallengesList);
+                                                        },
+                                                        icon: Icon(Icons.close, color: Colors.red),
+                                                      ),
+                                                      // SizedBox(width: 10,),
+                                                      Text('Confirmed',
+                                                        style: TextStyle(color: Colors.green),
+                                                      ),
+                                                    ],
+                                                  )
+                                                      :
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: [
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          NewViewDialog(challenge.label,challenge.description,challenge.Impact,challenge.Final_description, challenge.Keywords,challenge.tags,challenge.id,challenge, userAboutMEProvider.isEditChallengeListAdded,userAboutMEProvider.EditRecommendedChallengeAdd);
+                                                          print("challenge.isConfirmed: ${challenge.isConfirmed}");
+                                                        },
+                                                        icon: Icon(Icons.visibility, color: Colors.blue),
+                                                      ),
+                                                      SizedBox(width: 3,),
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          showconfirmChallengeDialogBox(challenge.id, challenge.label,challenge.description, challenge.Source, challenge.Status,challenge.tags,challenge.CreatedBy,
+                                                              challenge.CreatedDate,challenge.ModifiedBy,challenge.ModifiedDate,challenge.OriginalDescription,challenge.Impact,challenge.Final_description,
+                                                              challenge.Category,challenge.Keywords,challenge.PotentialStrengths,challenge.HiddenStrengths, index,userAboutMEProvider.editchallengess,challenge.notes,challenge.attachment);                                        print("challenge.isConfirmed: ${challenge.isConfirmed}");
+                                                        },
+                                                        icon: Icon(Icons.check, color: Colors.green),
+                                                      ),
+                                                      SizedBox(width: 3,),
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          userAboutMEProvider.removeEditChallenge(index,challenge);
+                                                        },
+                                                        icon: Icon(Icons.close, color: Colors.red),
+                                                      )
+                                                      //      :
+
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
-                                        );
-                                      }).toList(),
+                                            ],
+                                          );
+                                        }).toList(),
+                                      ),
                                     ),
                                   ),
 
@@ -2968,176 +2994,183 @@ Date
                                     ),
                                     // width: MediaQuery.of(context).size.width,
                                     child:SingleChildScrollView(
-                                      child: DataTable(
-                                        dataRowMaxHeight:85 ,
-                                        headingTextStyle: GoogleFonts.montserrat(
-                                            textStyle: Theme.of(context).textTheme.titleMedium,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.black),
-                                        columnSpacing: 15,
-                                        columns: [
-                                          // DataColumn(
-                                          //   label: Container(
-                                          //     // color: Colors.blue,
-                                          //     // width: 60,
-                                          //     child: Text('Id.',textAlign: TextAlign.center,),
-                                          //   ),
-                                          //
-                                          // ),
-                                          DataColumn(
-                                            label: Text('Label',),
-                                          ),
-                                          DataColumn(
-                                            label: Text('Impact',),
-                                          ),
-                                          DataColumn(
-                                            label: Container(
-                                              // width: 400,
-                                                child: Text('Description')
+                                      scrollDirection: Axis.horizontal,
+                                      child: SingleChildScrollView(
+                                        scrollDirection: Axis.vertical,
+                                        child: DataTable(
+                                          dataRowMaxHeight:85 ,
+                                          headingTextStyle: GoogleFonts.montserrat(
+                                              textStyle: Theme.of(context).textTheme.titleMedium,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black),
+                                          columnSpacing: 15,
+                                          columns: [
+                                            // DataColumn(
+                                            //   label: Container(
+                                            //     // color: Colors.blue,
+                                            //     // width: 60,
+                                            //     child: Text('Id.',textAlign: TextAlign.center,),
+                                            //   ),
+                                            //
+                                            // ),
+                                            DataColumn(
+                                              label: Text('Label',),
                                             ),
-                                          ),
-                                          DataColumn(
+                                            DataColumn(
+                                              label: Text('Impact',),
+                                            ),
+                                            DataColumn(
                                               label: Container(
-                                                // width: 140,
-                                                  child: Text('Confirm/Cancel')
-                                              )
-                                          ),
+                                                // width: 400,
+                                                  child: Text('Description')
+                                              ),
+                                            ),
+                                            DataColumn(
+                                                label: Container(
+                                                  // width: 140,
+                                                    child: Text('Confirm/Cancel')
+                                                )
+                                            ),
 
 
-                                        ],
+                                          ],
 
-                                        rows: userAboutMEProvider.editsolutionss.map((solution) {
-                                          int index = userAboutMEProvider.editsolutionss.indexOf(solution);
+                                          rows: userAboutMEProvider.editsolutionss.map((solution) {
+                                            int index = userAboutMEProvider.editsolutionss.indexOf(solution);
 
 
-                                          // print(jsonString);
+                                            // print(jsonString);
 
-                                          return DataRow(
-                                            cells: [
-                                              // DataCell(
-                                              //     Container(
-                                              //       // width: 60,
-                                              //       child: Text("${solution.id}.", style: GoogleFonts.montserrat(
-                                              //         // child: Text("${index + 1}.", style: GoogleFonts.montserrat(
-                                              //             textStyle: Theme.of(context).textTheme.bodySmall,
-                                              //             fontWeight: FontWeight.w600,
-                                              //             color: Colors.black),))),
-                                              DataCell(
-                                                  Text(solution.label,
-                                                      overflow: TextOverflow.ellipsis,
-                                                      maxLines: 1,
-                                                      style: GoogleFonts.montserrat(
-                                                          textStyle: Theme.of(context).textTheme.bodySmall,
-                                                          fontWeight: FontWeight.w600,
-                                                          color: Colors.black)
-                                                  )),
-                                              DataCell(
-                                                  Text(solution.Impact,
-                                                      overflow: TextOverflow.ellipsis,maxLines: 2,
-                                                      style: GoogleFonts.montserrat(
-                                                          textStyle: Theme.of(context).textTheme.bodySmall,
-                                                          fontWeight: FontWeight.w600,
-                                                          color: Colors.black)
-                                                  )),
-                                              DataCell(
-                                                  Container(
-                                                    // width: 400,
-                                                      child: Text(solution.Final_description,
+                                            return DataRow(
+                                              cells: [
+                                                // DataCell(
+                                                //     Container(
+                                                //       // width: 60,
+                                                //       child: Text("${solution.id}.", style: GoogleFonts.montserrat(
+                                                //         // child: Text("${index + 1}.", style: GoogleFonts.montserrat(
+                                                //             textStyle: Theme.of(context).textTheme.bodySmall,
+                                                //             fontWeight: FontWeight.w600,
+                                                //             color: Colors.black),))),
+                                                DataCell(
+                                                    Text(solution.label,
+                                                        overflow: TextOverflow.ellipsis,
+                                                        maxLines: 1,
+                                                        style: GoogleFonts.montserrat(
+                                                            textStyle: Theme.of(context).textTheme.bodySmall,
+                                                            fontWeight: FontWeight.w600,
+                                                            color: Colors.black)
+                                                    )),
+                                                DataCell(
+                                                    Container(
+                                                      width: MediaQuery.of(context).size.width * .15,
+                                                      child: Text(solution.Impact,
                                                           overflow: TextOverflow.ellipsis,maxLines: 2,
                                                           style: GoogleFonts.montserrat(
                                                               textStyle: Theme.of(context).textTheme.bodySmall,
                                                               fontWeight: FontWeight.w600,
                                                               color: Colors.black)
-                                                      ))),
-                                              DataCell(
-                                                Container(
-                                                  // height: 100,
-                                                  // margin: EdgeInsets.all(5),
-                                                  // width: 140,
-                                                  child: (solution.isConfirmed==true) ?
-                                                  Column(
-                                                    children: [
-                                                      Row(
-                                                        mainAxisAlignment: MainAxisAlignment.start,
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                        children: [
-                                                          IconButton(
-                                                            onPressed: () {
-                                                              NewSolViewDialog(solution.label, solution.description, solution.Impact, solution.Final_description, solution.Keywords, solution.tags, solution.id,solution,userAboutMEProvider.isEditSolutionListAdded,userAboutMEProvider.EditRecommendedSolutionAdd);
-                                                            },
-                                                            icon: Icon(Icons.visibility, color: Colors.blue),
-                                                          ),
-                                                          IconButton(
-                                                            onPressed: () {
-                                                              userAboutMEProvider.removeEditConfirmSolution(
-                                                                solution.id,solutionsList,
-                                                                _previewProvider.PreviewSolutionMyResposibilty,
-                                                                _previewProvider.PreviewSolutionStillNeeded,
-                                                                _previewProvider.PreviewSolutionNotNeededAnyMore,
-                                                                _previewProvider.PreviewSolutionNiceToHave,
-                                                                _previewProvider.PreviewSolutionMustHave,
-                                                              );
+                                                      ),
+                                                    )),
+                                                DataCell(
+                                                    Container(
+                                                        width: MediaQuery.of(context).size.width * .15,
+                                                        child: Text(solution.Final_description,
+                                                            overflow: TextOverflow.ellipsis,maxLines: 2,
+                                                            style: GoogleFonts.montserrat(
+                                                                textStyle: Theme.of(context).textTheme.bodySmall,
+                                                                fontWeight: FontWeight.w600,
+                                                                color: Colors.black)
+                                                        ))),
+                                                DataCell(
+                                                  Container(
+                                                    // height: 100,
+                                                    // margin: EdgeInsets.all(5),
+                                                    // width: 140,
+                                                    child: (solution.isConfirmed==true) ?
+                                                    Column(
+                                                      children: [
+                                                        Row(
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                          children: [
+                                                            IconButton(
+                                                              onPressed: () {
+                                                                NewSolViewDialog(solution.label, solution.description, solution.Impact, solution.Final_description, solution.Keywords, solution.tags, solution.id,solution,userAboutMEProvider.isEditSolutionListAdded,userAboutMEProvider.EditRecommendedSolutionAdd);
+                                                              },
+                                                              icon: Icon(Icons.visibility, color: Colors.blue),
+                                                            ),
+                                                            IconButton(
+                                                              onPressed: () {
+                                                                userAboutMEProvider.removeEditConfirmSolution(
+                                                                  solution.id,solutionsList,
+                                                                  _previewProvider.PreviewSolutionMyResposibilty,
+                                                                  _previewProvider.PreviewSolutionStillNeeded,
+                                                                  _previewProvider.PreviewSolutionNotNeededAnyMore,
+                                                                  _previewProvider.PreviewSolutionNiceToHave,
+                                                                  _previewProvider.PreviewSolutionMustHave,
+                                                                );
 
-                                                              // userAboutMEProvider.EditSolutionProvideradd(_previewProvider.PreviewSolutionMyResposibilty);
-                                                              // userAboutMEProvider.EditSolutionInPlaceadd(_previewProvider.PreviewSolutionStillNeeded,_previewProvider.PreviewSolutionNotNeededAnyMore,
-                                                              //     _previewProvider.PreviewSolutionNiceToHave,_previewProvider.PreviewSolutionMustHave);
-                                                              // _previewProvider.PreviewSolutionMyResposibilty.clear();
-                                                              // _previewProvider.PreviewSolutionStillNeeded.clear();
-                                                              // _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
-                                                              // _previewProvider.PreviewSolutionNiceToHave.clear();
-                                                              // _previewProvider.PreviewSolutionMustHave.clear();
+                                                                // userAboutMEProvider.EditSolutionProvideradd(_previewProvider.PreviewSolutionMyResposibilty);
+                                                                // userAboutMEProvider.EditSolutionInPlaceadd(_previewProvider.PreviewSolutionStillNeeded,_previewProvider.PreviewSolutionNotNeededAnyMore,
+                                                                //     _previewProvider.PreviewSolutionNiceToHave,_previewProvider.PreviewSolutionMustHave);
+                                                                // _previewProvider.PreviewSolutionMyResposibilty.clear();
+                                                                // _previewProvider.PreviewSolutionStillNeeded.clear();
+                                                                // _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
+                                                                // _previewProvider.PreviewSolutionNiceToHave.clear();
+                                                                // _previewProvider.PreviewSolutionMustHave.clear();
 
-                                                            },
-                                                            icon: Icon(Icons.close, color: Colors.red),
-                                                          ),
-                                                          // SizedBox(width: 10,),
-                                                          Text('Confirmed',
-                                                            style: TextStyle(color: Colors.green),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      Text('${(userAboutMEProvider.newprovider[solution.id] == "Request of my employer") ? userAboutMEProvider.newInplace[solution.id] : userAboutMEProvider.newprovider[solution.id]}',
-                                                        style: TextStyle(color: Colors.red,fontSize: 10),
-                                                      ),
-                                                    ],
-                                                  )
-                                                      :
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      IconButton(
-                                                        onPressed: () {
-                                                          NewSolViewDialog(solution.label, solution.description, solution.Impact, solution.Final_description, solution.Keywords, solution.tags, solution.id,solution,userAboutMEProvider.isEditSolutionListAdded,userAboutMEProvider.EditRecommendedSolutionAdd);
-                                                        },
-                                                        icon: Icon(Icons.visibility, color: Colors.blue),
-                                                      ),
-                                                      SizedBox(width: 3,),
-                                                      IconButton(
-                                                        onPressed: () {
-                                                          showconfirmSolutionsDialogBox(solution.id, solution.label,solution.description, solution.Source, solution.Status,solution.tags,solution.CreatedBy,
-                                                              solution.CreatedDate,solution.ModifiedBy,solution.ModifiedDate,solution.OriginalDescription,solution.Impact,solution.Final_description,
-                                                              solution.Category,solution.Keywords,"","", index,userAboutMEProvider.editsolutionss,solution.notes,solution.attachment,solution.InPlace,solution.Provider);
-                                                          print("solution.isConfirmed: ${solution.isConfirmed}");
-                                                        },
-                                                        icon: Icon(Icons.check, color: Colors.green),
-                                                      ),
-                                                      SizedBox(width: 3,),
-                                                      IconButton(
-                                                        onPressed: () {
-                                                          userAboutMEProvider.removeEditSolution(index,solution);
-                                                        },
-                                                        icon: Icon(Icons.close, color: Colors.red),
-                                                      )
-                                                    ],
+                                                              },
+                                                              icon: Icon(Icons.close, color: Colors.red),
+                                                            ),
+                                                            // SizedBox(width: 10,),
+                                                            Text('Confirmed',
+                                                              style: TextStyle(color: Colors.green),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Text('${(userAboutMEProvider.newprovider[solution.id] == "Request of my employer") ? userAboutMEProvider.newInplace[solution.id] : userAboutMEProvider.newprovider[solution.id]}',
+                                                          style: TextStyle(color: Colors.red,fontSize: 10),
+                                                        ),
+                                                      ],
+                                                    )
+                                                        :
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        IconButton(
+                                                          onPressed: () {
+                                                            NewSolViewDialog(solution.label, solution.description, solution.Impact, solution.Final_description, solution.Keywords, solution.tags, solution.id,solution,userAboutMEProvider.isEditSolutionListAdded,userAboutMEProvider.EditRecommendedSolutionAdd);
+                                                          },
+                                                          icon: Icon(Icons.visibility, color: Colors.blue),
+                                                        ),
+                                                        SizedBox(width: 3,),
+                                                        IconButton(
+                                                          onPressed: () {
+                                                            showconfirmSolutionsDialogBox(solution.id, solution.label,solution.description, solution.Source, solution.Status,solution.tags,solution.CreatedBy,
+                                                                solution.CreatedDate,solution.ModifiedBy,solution.ModifiedDate,solution.OriginalDescription,solution.Impact,solution.Final_description,
+                                                                solution.Category,solution.Keywords,"","", index,userAboutMEProvider.editsolutionss,solution.notes,solution.attachment,solution.InPlace,solution.Provider);
+                                                            print("solution.isConfirmed: ${solution.isConfirmed}");
+                                                          },
+                                                          icon: Icon(Icons.check, color: Colors.green),
+                                                        ),
+                                                        SizedBox(width: 3,),
+                                                        IconButton(
+                                                          onPressed: () {
+                                                            userAboutMEProvider.removeEditSolution(index,solution);
+                                                          },
+                                                          icon: Icon(Icons.close, color: Colors.red),
+                                                        )
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
 
 
-                                            ],
-                                          );
-                                        }).toList(),
+                                              ],
+                                            );
+                                          }).toList(),
+                                        ),
                                       ),
                                     ),
 
@@ -4460,11 +4493,14 @@ Date
                     // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
 
-                      Text("Report :   ", style: GoogleFonts.lato(
-                          textStyle: Theme.of(context).textTheme.titleMedium,
-                          fontStyle: FontStyle.italic,
-                          fontWeight: FontWeight.bold
-                      )),
+                      Container(
+                        width: MediaQuery.of(context).size.width * .1,
+                        child: Text("Report file name :   ", style: GoogleFonts.lato(
+                            textStyle: Theme.of(context).textTheme.titleMedium,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.bold
+                        )),
+                      ),
 
                       Flexible(
                         child: Container(
@@ -4582,6 +4618,266 @@ Date
                             ),
                           ],
                         ),
+
+                        SizedBox(height: 5,),
+
+                        Row(
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width * .1,
+                              child: Text("To: ",style: GoogleFonts.lato(
+                                textStyle:
+                                Theme
+                                    .of(context)
+                                    .textTheme
+                                    .titleMedium,
+                                  fontWeight: FontWeight.w700
+                              ),),
+                            ),
+                            Expanded(
+                              child:Container(
+                                height: 40,
+                                width: MediaQuery.of(context).size.width * .19,
+                                child: TextField(
+                                  controller: SendNametextController,
+
+                                  style: GoogleFonts.lato(
+                                      textStyle: Theme.of(context).textTheme.bodySmall,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black),
+                                  decoration: InputDecoration(
+                                    hintText: "Name",
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(10)),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black12),
+                                        borderRadius: BorderRadius.circular(10)),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 5,),
+
+                            Expanded(
+                              child: Container(
+                                height: 40,
+                                width: MediaQuery.of(context).size.width * .19,
+                                child: TextField(
+                                  controller: SendEmailtextController,
+                                  style: GoogleFonts.lato(
+                                      textStyle: Theme.of(context).textTheme.bodySmall,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black),
+                                  decoration: InputDecoration(
+                                    hintText: "Email",
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(10)),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black12),
+                                        borderRadius: BorderRadius.circular(10)),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 5,),
+
+                        Row(
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.1,
+                              child: Text("Cc: ",style: GoogleFonts.lato(
+                                textStyle:
+                                Theme
+                                    .of(context)
+                                    .textTheme
+                                    .titleMedium,
+                                  fontWeight: FontWeight.w700
+                              ),),
+                            ),
+                            Expanded(
+                              child: Container(
+                                height: 40,
+                                width: MediaQuery.of(context).size.width * .19,
+                                child: TextField(
+                                  controller: CopySendNametextController,
+
+                                  style: GoogleFonts.lato(
+                                      textStyle: Theme.of(context).textTheme.bodySmall,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black),
+                                  decoration: InputDecoration(
+                                    hintText: "Name",
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(10)),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black12),
+                                        borderRadius: BorderRadius.circular(10)),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 5,),
+
+                            Expanded(
+                              child: Container(
+                                height: 40,
+                                width: MediaQuery.of(context).size.width * .19,
+                                child: TextField(
+                                  controller: CopySendEmailtextController,
+                                  style: GoogleFonts.lato(
+                                      textStyle: Theme.of(context).textTheme.bodySmall,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black),
+                                  decoration: InputDecoration(
+                                    hintText: "Email",
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(10)),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black12),
+                                        borderRadius: BorderRadius.circular(10)),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        SizedBox(height: 5,),
+
+                        Row(
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.1,
+                              child: Text("Cc: ",style: GoogleFonts.lato(
+                                  textStyle:
+                                  Theme
+                                      .of(context)
+                                      .textTheme
+                                      .titleMedium,
+                                  fontWeight: FontWeight.w700
+                              ),),
+                            ),
+                            Expanded(
+                              child: Container(
+                                height: 40,
+                                width: MediaQuery.of(context).size.width * .19,
+                                child: TextField(
+                                  controller: CopySendNametextController,
+
+                                  style: GoogleFonts.lato(
+                                      textStyle: Theme.of(context).textTheme.bodySmall,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black),
+                                  decoration: InputDecoration(
+                                    hintText: "Name",
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(10)),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black12),
+                                        borderRadius: BorderRadius.circular(10)),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 5,),
+
+                            Expanded(
+                              child: Container(
+                                height: 40,
+                                width: MediaQuery.of(context).size.width * .19,
+                                child: TextField(
+                                  controller: CopySendEmailtextController,
+                                  style: GoogleFonts.lato(
+                                      textStyle: Theme.of(context).textTheme.bodySmall,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black),
+                                  decoration: InputDecoration(
+                                    hintText: "Email",
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(10)),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black12),
+                                        borderRadius: BorderRadius.circular(10)),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        SizedBox(height: 5,),
+
+                        Row(
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.1,
+                              child: Text("Cc: ",style: GoogleFonts.lato(
+                                  textStyle:
+                                  Theme
+                                      .of(context)
+                                      .textTheme
+                                      .titleMedium,
+                                  fontWeight: FontWeight.w700
+                              ),),
+                            ),
+                            Expanded(
+                              child: Container(
+                                height: 40,
+                                width: MediaQuery.of(context).size.width * .19,
+                                child: TextField(
+                                  controller: CopySendNametextController,
+
+                                  style: GoogleFonts.lato(
+                                      textStyle: Theme.of(context).textTheme.bodySmall,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black),
+                                  decoration: InputDecoration(
+                                    hintText: "Name",
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(10)),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black12),
+                                        borderRadius: BorderRadius.circular(10)),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 5,),
+
+                            Expanded(
+                              child: Container(
+                                height: 40,
+                                width: MediaQuery.of(context).size.width * .19,
+                                child: TextField(
+                                  controller: CopySendEmailtextController,
+                                  style: GoogleFonts.lato(
+                                      textStyle: Theme.of(context).textTheme.bodySmall,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black),
+                                  decoration: InputDecoration(
+                                    hintText: "Email",
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(10)),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black12),
+                                        borderRadius: BorderRadius.circular(10)),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
                         SizedBox(height: 10,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -6144,7 +6440,7 @@ Date
                 child: pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.start,
                   children: [
-                    pw.Text("Report: ", style: pw.TextStyle(font: Reportfont)),
+                    pw.Text("Report file name: ", style: pw.TextStyle(font: Reportfont)),
 
                     pw.Text("${AboutMeLabeltextController.text}",style: pw.TextStyle(font: Reportansfont,color: PdfColors.black)),
 
