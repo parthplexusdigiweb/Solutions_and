@@ -11,6 +11,20 @@ class PreviewProvider with ChangeNotifier{
   List<Map<String, dynamic>> PreviewSolutionNiceToHave = [];
   List<Map<String, dynamic>> PreviewSolutionMustHave = [];
 
+  List<String> ccEmails = [];
+  List<String> ccNames = [];
+
+  void addCCRecipient(email,name) {
+      ccEmails.add(email);
+      ccNames.add(name);
+      notifyListeners();
+  }
+
+  void removeCCRecipient(int index) {
+      ccEmails.removeAt(index);
+      ccNames.removeAt(index);
+      notifyListeners();
+  }
 
   updateEmail(value){
     email = value;

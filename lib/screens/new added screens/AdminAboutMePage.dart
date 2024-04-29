@@ -10976,6 +10976,8 @@ Date
 
   ScrollController _scrollController1 = ScrollController();
   ScrollController _scrollController2 = ScrollController();
+  ScrollController _scrollController3 = ScrollController();
+  ScrollController _scrollController4 = ScrollController();
 
 
   void ViewChallengesDialog(documentReference,Id, Name, Description, newvalues, keywords,
@@ -12901,12 +12903,16 @@ Date
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               // Text("Impact: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
-                                              Flexible(child: Text(Impact,  style: GoogleFonts.montserrat(
+                                              Flexible(
+                                                  child: Text(Impact,
+                                                    style: GoogleFonts.montserrat(
                                                   fontWeight: FontWeight.w500,
                                                   fontStyle: FontStyle.italic,
                                                   fontSize: 20,
                                                   color: Colors.grey),
-                                                maxLines: null,)),
+                                                maxLines: null,
+                                                  )
+                                              ),
                                             ],
                                           ),
 
@@ -12996,7 +13002,8 @@ Date
 
                                           SizedBox(height: 10),
 
-                                          (_challengesProvider.ProviderEditTags==""|| _challengesProvider.ProviderEditTags==null||_challengesProvider.ProviderEditTags.isEmpty) ? Container() :  Row(
+                                          (_challengesProvider.ProviderEditTags==""|| _challengesProvider.ProviderEditTags==null||_challengesProvider.ProviderEditTags.isEmpty) ? Container() :
+                                          Row(
                                             mainAxisAlignment: MainAxisAlignment.start,
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
@@ -13100,173 +13107,207 @@ Date
                                                                 color: Colors.black)
                                                         ),
                                                       ),
-                                                      Flexible(
-                                                        child: ListView.builder(
-                                                          scrollDirection: Axis.horizontal,
-                                                          shrinkWrap: true,
-                                                          itemCount: relatedSolutions?.length,
-                                                          itemBuilder: (c, i) {
-                                                            // relatedSolutionlength = relatedSolutions?.length;
-                                                            // print("relatedSolutionlength: $relatedSolutionlength");
-                                                            var solutionData = relatedSolutions?[i].data() as Map<String, dynamic>;
-                                                            print("solutionData: ${solutionData}");
-                                                            return Container(
-                                                              margin: EdgeInsets.symmetric(horizontal: 15),
-                                                              padding: EdgeInsets.all(12),
-                                                              width: 330,
-                                                              decoration: BoxDecoration(
-                                                                border: Border.all(color: Colors.green),
-                                                                borderRadius: BorderRadius.circular(20),
-                                                              ),
-                                                              child: SingleChildScrollView(
-                                                                child: Column(
-                                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                  children: [
-                                                                    Row(
-                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                      children: [
-                                                                        Flexible(
-                                                                          child: Text("${solutionData['Label']}",
-                                                                              maxLines: null,
-                                                                              style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                                                                                  fontSize: 18,
-                                                                                  color: Colors.black)),
-                                                                        ),
-                                                                        SizedBox(width: 5,),
-                                                                        // InkWell(
-                                                                        //   onTap: (){
-                                                                        //     _userAboutMEProvider.isRecommendedAddedSolutions(true, relatedSolutions![i]);
-                                                                        //   },
-                                                                        //   child: Container(
-                                                                        //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                                                        //     width: MediaQuery.of(context).size.width * .05,
-                                                                        //     // width: MediaQuery.of(context).size.width * .15,
-                                                                        //
-                                                                        //     // height: 60,
-                                                                        //     decoration: BoxDecoration(
-                                                                        //       color:Colors.blue ,
-                                                                        //       border: Border.all(
-                                                                        //           color:Colors.blue ,
-                                                                        //           width: 1.0),
-                                                                        //       borderRadius: BorderRadius.circular(8.0),
-                                                                        //     ),
-                                                                        //     child: Center(
-                                                                        //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                                                        //       child: Text(
-                                                                        //         'Add',
-                                                                        //         style: GoogleFonts.montserrat(
-                                                                        //           textStyle:
-                                                                        //           Theme
-                                                                        //               .of(context)
-                                                                        //               .textTheme
-                                                                        //               .titleSmall,
-                                                                        //           fontWeight: FontWeight.bold,
-                                                                        //           color:Colors.white ,
-                                                                        //         ),
-                                                                        //       ),
-                                                                        //     ),
-                                                                        //   ),
-                                                                        // ),
+                                                      Expanded(
+                                                        child: Row(
+                                                          children: [
+                                                            IconButton(
+                                                              onPressed: () {
+                                                                // Scroll the ListView.builder to the left
+                                                                // You can adjust the scroll distance according to your requirement
+                                                                // by changing the offset value
+                                                                _scrollController3.animateTo(
+                                                                  _scrollController3.offset - 200,
+                                                                  curve: Curves.linear,
+                                                                  duration: Duration(milliseconds: 300),
+                                                                );
+                                                              },
+                                                              icon: Icon(Icons.arrow_back),
+                                                            ),
+                                                            Expanded(
+                                                              child: ListView.builder(
+                                                                scrollDirection: Axis.horizontal,
+                                                                controller: _scrollController3,
+                                                                shrinkWrap: true,
+                                                                itemCount: relatedSolutions?.length,
+                                                                itemBuilder: (c, i) {
+                                                                  // relatedSolutionlength = relatedSolutions?.length;
+                                                                  // print("relatedSolutionlength: $relatedSolutionlength");
+                                                                  var solutionData = relatedSolutions?[i].data() as Map<String, dynamic>;
+                                                                  print("solutionData: ${solutionData}");
+                                                                  return Container(
+                                                                    margin: EdgeInsets.symmetric(horizontal: 15),
+                                                                    padding: EdgeInsets.all(12),
+                                                                    width: 330,
+                                                                    decoration: BoxDecoration(
+                                                                      border: Border.all(color: Colors.green),
+                                                                      borderRadius: BorderRadius.circular(20),
+                                                                    ),
+                                                                    child: SingleChildScrollView(
+                                                                      child: Column(
+                                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          Row(
+                                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                                            children: [
+                                                                              Flexible(
+                                                                                child: Text("${solutionData['Label']}",
+                                                                                    maxLines: null,
+                                                                                    style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                                                                        fontSize: 18,
+                                                                                        color: Colors.black)),
+                                                                              ),
+                                                                              SizedBox(width: 5,),
+                                                                              // InkWell(
+                                                                              //   onTap: (){
+                                                                              //     _userAboutMEProvider.isRecommendedAddedSolutions(true, relatedSolutions![i]);
+                                                                              //   },
+                                                                              //   child: Container(
+                                                                              //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                              //     width: MediaQuery.of(context).size.width * .05,
+                                                                              //     // width: MediaQuery.of(context).size.width * .15,
+                                                                              //
+                                                                              //     // height: 60,
+                                                                              //     decoration: BoxDecoration(
+                                                                              //       color:Colors.blue ,
+                                                                              //       border: Border.all(
+                                                                              //           color:Colors.blue ,
+                                                                              //           width: 1.0),
+                                                                              //       borderRadius: BorderRadius.circular(8.0),
+                                                                              //     ),
+                                                                              //     child: Center(
+                                                                              //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                              //       child: Text(
+                                                                              //         'Add',
+                                                                              //         style: GoogleFonts.montserrat(
+                                                                              //           textStyle:
+                                                                              //           Theme
+                                                                              //               .of(context)
+                                                                              //               .textTheme
+                                                                              //               .titleSmall,
+                                                                              //           fontWeight: FontWeight.bold,
+                                                                              //           color:Colors.white ,
+                                                                              //         ),
+                                                                              //       ),
+                                                                              //     ),
+                                                                              //   ),
+                                                                              // ),
 
-                                                                        Row(
-                                                                          children: [
-                                                                            IconButton(
-                                                                                onPressed: (){
-                                                                                  userAboutMEProvider.updateSolutionPreview(
-                                                                                      solutionData['Label'],
-                                                                                      solutionData['Description'],
-                                                                                      solutionData['Final_Description'],
-                                                                                      solutionData['Impact'],
-                                                                                      solutionData['Keywords'],
-                                                                                      solutionData['tags'],
-                                                                                      solutionData['id'],
-                                                                                      isTrueOrFalse,
-                                                                                      solutionData
-                                                                                  );
-                                                                                },
-
-                                                                                icon: Icon(Icons.visibility, color: Colors.blue,)
-                                                                            ),
-                                                                            SizedBox(width: 5,),
-
-                                                                            Consumer<UserAboutMEProvider>(
-                                                                                builder: (c,userAboutMEProvider, _){
-                                                                                  return
-                                                                                    (userAboutMEProvider.isRecommendedSolutionsCheckedMap[solutionData['id']] == true) ? Text(
-                                                                                      'Added',
-                                                                                      style: GoogleFonts.montserrat(
-                                                                                        textStyle:
-                                                                                        Theme
-                                                                                            .of(context)
-                                                                                            .textTheme
-                                                                                            .titleSmall,
-                                                                                        fontStyle: FontStyle.italic,
-                                                                                        color:Colors.green ,
-                                                                                      ),
-                                                                                    ) : InkWell(
-                                                                                      onTap: (){
-                                                                                        // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
-                                                                                        userAboutMEProvider.isRecommendedAddedSolutions(true, relatedSolutions![i]);
-                                                                                        toastification.show(context: context,
-                                                                                            title: Text('${solutionData['Label']} added to basket'),
-                                                                                            autoCloseDuration: Duration(milliseconds: 2500),
-                                                                                            alignment: Alignment.center,
-                                                                                            backgroundColor: Colors.green,
-                                                                                            foregroundColor: Colors.white,
-                                                                                            icon: Icon(Icons.check_circle, color: Colors.white,),
-                                                                                            animationDuration: Duration(milliseconds: 1000),
-                                                                                            showProgressBar: false
+                                                                              Row(
+                                                                                children: [
+                                                                                  IconButton(
+                                                                                      onPressed: (){
+                                                                                        userAboutMEProvider.updateSolutionPreview(
+                                                                                            solutionData['Label'],
+                                                                                            solutionData['Description'],
+                                                                                            solutionData['Final_Description'],
+                                                                                            solutionData['Impact'],
+                                                                                            solutionData['Keywords'],
+                                                                                            solutionData['tags'],
+                                                                                            solutionData['id'],
+                                                                                            isTrueOrFalse,
+                                                                                            solutionData
                                                                                         );
                                                                                       },
-                                                                                      child: Container(
-                                                                                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                                                                        width: MediaQuery.of(context).size.width * .05,
-                                                                                        // width: MediaQuery.of(context).size.width * .15,
 
-                                                                                        // height: 60,
-                                                                                        decoration: BoxDecoration(
-                                                                                          color:Colors.blue ,
-                                                                                          border: Border.all(
-                                                                                              color:Colors.blue ,
-                                                                                              width: 1.0),
-                                                                                          borderRadius: BorderRadius.circular(8.0),
-                                                                                        ),
-                                                                                        child: Center(
-                                                                                          // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                                                                          child: Text(
-                                                                                            'Add',
+                                                                                      icon: Icon(Icons.visibility, color: Colors.blue,)
+                                                                                  ),
+                                                                                  SizedBox(width: 5,),
+
+                                                                                  Consumer<UserAboutMEProvider>(
+                                                                                      builder: (c,userAboutMEProvider, _){
+                                                                                        return
+                                                                                          (userAboutMEProvider.isRecommendedSolutionsCheckedMap[solutionData['id']] == true) ? Text(
+                                                                                            'Added',
                                                                                             style: GoogleFonts.montserrat(
                                                                                               textStyle:
                                                                                               Theme
                                                                                                   .of(context)
                                                                                                   .textTheme
                                                                                                   .titleSmall,
-                                                                                              fontWeight: FontWeight.bold,
-                                                                                              color:Colors.white ,
+                                                                                              fontStyle: FontStyle.italic,
+                                                                                              color:Colors.green ,
                                                                                             ),
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                    );
-                                                                                }),
-                                                                          ],
-                                                                        )
-                                                                      ],
+                                                                                          ) : InkWell(
+                                                                                            onTap: (){
+                                                                                              // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
+                                                                                              userAboutMEProvider.isRecommendedAddedSolutions(true, relatedSolutions![i]);
+                                                                                              toastification.show(context: context,
+                                                                                                  title: Text('${solutionData['Label']} added to basket'),
+                                                                                                  autoCloseDuration: Duration(milliseconds: 2500),
+                                                                                                  alignment: Alignment.center,
+                                                                                                  backgroundColor: Colors.green,
+                                                                                                  foregroundColor: Colors.white,
+                                                                                                  icon: Icon(Icons.check_circle, color: Colors.white,),
+                                                                                                  animationDuration: Duration(milliseconds: 1000),
+                                                                                                  showProgressBar: false
+                                                                                              );
+                                                                                            },
+                                                                                            child: Container(
+                                                                                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                                              width: MediaQuery.of(context).size.width * .05,
+                                                                                              // width: MediaQuery.of(context).size.width * .15,
+
+                                                                                              // height: 60,
+                                                                                              decoration: BoxDecoration(
+                                                                                                color:Colors.blue ,
+                                                                                                border: Border.all(
+                                                                                                    color:Colors.blue ,
+                                                                                                    width: 1.0),
+                                                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                                              ),
+                                                                                              child: Center(
+                                                                                                // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                                                child: Text(
+                                                                                                  'Add',
+                                                                                                  style: GoogleFonts.montserrat(
+                                                                                                    textStyle:
+                                                                                                    Theme
+                                                                                                        .of(context)
+                                                                                                        .textTheme
+                                                                                                        .titleSmall,
+                                                                                                    fontWeight: FontWeight.bold,
+                                                                                                    color:Colors.white ,
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          );
+                                                                                      }),
+                                                                                ],
+                                                                              )
+                                                                            ],
+                                                                          ),
+                                                                          SizedBox(height: 5,),
+                                                                          // Icon(Icons.add, color: Colors.blue, size: 24,),
+                                                                          Text("${solutionData['Final_description']}",
+                                                                              maxLines: 3,
+                                                                              style: GoogleFonts.montserrat(
+                                                                                  fontSize: 15,
+                                                                                  color: Colors.black)),
+                                                                        ],
+                                                                      ),
                                                                     ),
-                                                                    SizedBox(height: 5,),
-                                                                    // Icon(Icons.add, color: Colors.blue, size: 24,),
-                                                                    Text("${solutionData['Final_description']}",
-                                                                        maxLines: 3,
-                                                                        style: GoogleFonts.montserrat(
-                                                                            fontSize: 15,
-                                                                            color: Colors.black)),
-                                                                  ],
-                                                                ),
+                                                                  );
+                                                                },
                                                               ),
-                                                            );
-                                                          },
+                                                            ),
+                                                            IconButton(
+                                                              onPressed: () {
+                                                                // Scroll the ListView.builder to the right
+                                                                // You can adjust the scroll distance according to your requirement
+                                                                // by changing the offset value
+                                                                _scrollController3.animateTo(
+                                                                  _scrollController3.offset + 200,
+                                                                  curve: Curves.linear,
+                                                                  duration: Duration(milliseconds: 300),
+                                                                );
+                                                              },
+                                                              icon: Icon(Icons.arrow_forward),
+                                                            ),
+
+                                                          ],
                                                         ),
                                                       ),
                                                     ],
@@ -13331,15 +13372,54 @@ Date
                                                   children: [
                                                     Padding(
                                                       padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-                                                      child: Text("Suggested challenges (${relatedChallenges?.length}):",
-                                                          style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                                                              fontSize: 20,
-                                                              color: Colors.black)
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          Text("Suggested challenges (${relatedChallenges?.length}):",
+                                                              style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                                                  fontSize: 20,
+                                                                  color: Colors.black)
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              IconButton(
+                                                                onPressed: () {
+                                                                  // Scroll the ListView.builder to the left
+                                                                  // You can adjust the scroll distance according to your requirement
+                                                                  // by changing the offset value
+                                                                  _scrollController4.animateTo(
+                                                                    _scrollController4.offset - 200,
+                                                                    curve: Curves.linear,
+                                                                    duration: Duration(milliseconds: 300),
+                                                                  );
+                                                                },
+                                                                icon: Icon(Icons.arrow_back),
+                                                              ),
+                                                              SizedBox(width: 10,),
+                                                              IconButton(
+                                                                onPressed: () {
+                                                                  // Scroll the ListView.builder to the right
+                                                                  // You can adjust the scroll distance according to your requirement
+                                                                  // by changing the offset value
+                                                                  _scrollController4.animateTo(
+                                                                    _scrollController4.offset + 200,
+                                                                    curve: Curves.linear,
+                                                                    duration: Duration(milliseconds: 300),
+                                                                  );
+                                                                },
+                                                                icon: Icon(Icons.arrow_forward),
+                                                              ),
+
+                                                            ],
+                                                          ),
+
+                                                        ],
                                                       ),
                                                     ),
                                                     Expanded(
                                                       child: ListView.builder(
                                                         scrollDirection: Axis.horizontal,
+                                                        controller: _scrollController4,
                                                         shrinkWrap: true,
                                                         itemCount: relatedChallenges?.length,
                                                         itemBuilder: (c, i) {
@@ -16126,7 +16206,7 @@ Date
                                     Text("Impact on me: ",
                                         style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
                                         fontWeight: FontWeight.w600)),
-                                    Text("edit as appropriate",
+                                    Text(" edit as appropriate",
                                         style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
                                             fontSize: 14,
                                             color: Colors.red,
@@ -16501,7 +16581,7 @@ Date
                                     Text("Impact on me: ",
                                         style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
                                         fontWeight: FontWeight.w600)),
-                                    Text("edit as appropriate",
+                                    Text(" edit as appropriate",
                                         style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
                                             fontSize: 14,
                                             color: Colors.red,
@@ -17016,7 +17096,7 @@ Date
                                     Text("How this solutions helps me :",
                                         style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
                                             fontWeight: FontWeight.w600)),
-                                    Text("edit as appropriate",
+                                    Text(" edit as appropriate",
                                         style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
                                             fontSize: 14,
                                             color: Colors.red,
@@ -17641,7 +17721,7 @@ Date
                                     Text("How this solutions helps me :",
                                         style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
                                             fontWeight: FontWeight.w600)),
-                                    Text("edit as appropriate",
+                                    Text(" edit as appropriate",
                                         style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
                                             fontSize: 14,
                                             color: Colors.red,

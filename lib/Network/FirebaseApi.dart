@@ -543,7 +543,9 @@ class ApiRepository{
   }
 
 
-  Future<void> sendEmailWithAttachment(context, email1,name1,email2,name2,filebytes,filename) async {
+  Future<void> sendEmailWithAttachment(context, email1,name1,email2,name2,filebytes,filename,
+  {List<String> ccEmails = const [], List<String> ccNames = const []}
+      ) async {
     String apiUrl = 'https://api.brevo.com/sendEmail'; // Example API endpoint, replace with actual endpoint
 
     String BREVO_API_KEY_FROM_BACKEND = await getBrevoApiKey();
@@ -565,7 +567,15 @@ class ApiRepository{
             "name": "Solutions Inclutions",
             "email": "admin@solutioninclution.com"
           },
-          'to' :[{ "email": email1, "name": name1 }, { "email": email2 == "" ? email1 : email2, "name": name2 == "" ? name1 : name2 }],
+          'to' :[{ "email": email1, "name": name1 },
+            // { "email": email2 == "" ? email1 : email2, "name": name2 == "" ? name1 : name2 }
+          ],
+          'cc': List.generate(
+              ccEmails.length,
+                  (index) => {
+                "email": ccEmails[index],
+                "name": ccNames.length > index ? ccNames[index] : "",
+              }),
           'attachment': [{
             "content": filebytes,
             "name": filename
