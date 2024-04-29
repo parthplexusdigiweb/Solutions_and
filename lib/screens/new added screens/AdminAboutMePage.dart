@@ -3658,7 +3658,7 @@ Date
                               IconButton(
                                   icon: Icon(Icons.info_outline,),
                                 onPressed: (){},
-                                tooltip: "- Anything you want to share about eg\n- Your family circumstances\n- Where you live\n- Your education and professional qualifications\n- Your life stages or life events\n- Your ethnicity, faith, identification\n- What matters most to you in life",
+                                tooltip: "Anything you want to share about eg\nYour family circumstances\nYour education and professional qualifications\nYour life stages or life events\nYour ethnicity, faith, identification\nWhat matters most to you in life",
                               )
                             ],
                           ),
@@ -5881,7 +5881,7 @@ Date
                             children: [
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-                                child: Text("Basket of Solutions (${userAboutMEProvider.editsolutionss.length}): ",
+                                child: Text("Basket of solutions (${userAboutMEProvider.editsolutionss.length}): ",
                                   style: GoogleFonts.montserrat(
                                       textStyle: Theme.of(context).textTheme.titleLarge,
                                       fontWeight: FontWeight.bold,
@@ -6025,6 +6025,15 @@ Date
                                                           ),
                                                           IconButton(
                                                             onPressed: () {
+                                                              showconfirmSolutionsDialogBox(solution.id, solution.label,solution.description, solution.Source, solution.Status,solution.tags,solution.CreatedBy,
+                                                                  solution.CreatedDate,solution.ModifiedBy,solution.ModifiedDate,solution.OriginalDescription,solution.Impact,solution.Final_description,
+                                                                  solution.Category,solution.Keywords,"","", index,userAboutMEProvider.solutionss,solution.notes);
+                                                              print("solution.isConfirmed: ${solution.isConfirmed}");
+                                                            },
+                                                            icon: Icon(Icons.check, color: Colors.green),
+                                                          ),
+                                                          IconButton(
+                                                            onPressed: () {
                                                               // List<String> InPlace = ['My Responsibilty','Yes (Still Needed)','Yes (Not Needed Anymore)','No (Nice to have)', 'No (Must Have)'];
 
                                                               userAboutMEProvider.removeConfirmSolution(index,solution.id,solutionsList,
@@ -6037,12 +6046,14 @@ Date
                                                             },
                                                             icon: Icon(Icons.close, color: Colors.red),
                                                           ),
-                                                          SizedBox(width: 10,),
-                                                          Text('Confirmed',
-                                                            style: TextStyle(color: Colors.green),
-                                                          ),
+                                                          // SizedBox(width: 10,),
+
                                                         ],
                                                       ),
+                                                      Text('Confirmed',
+                                                        style: TextStyle(color: Colors.green),
+                                                      ),
+
                                                       Text('${(userAboutMEProvider.newprovider[solution.id] == "Request of my employer") ? userAboutMEProvider.newInplace[solution.id] : userAboutMEProvider.newprovider[solution.id]}',
                                                         style: TextStyle(color: Colors.red,fontSize: 10),
 
@@ -6059,7 +6070,6 @@ Date
                                                         },
                                                         icon: Icon(Icons.visibility, color: Colors.blue),
                                                       ),
-                                                      SizedBox(width: 3,),
                                                       IconButton(
                                                         onPressed: () {
                                                           showconfirmSolutionsDialogBox(solution.id, solution.label,solution.description, solution.Source, solution.Status,solution.tags,solution.CreatedBy,
@@ -6069,7 +6079,6 @@ Date
                                                         },
                                                         icon: Icon(Icons.check, color: Colors.green),
                                                       ),
-                                                      SizedBox(width: 3,),
                                                       IconButton(
                                                         onPressed: () {
                                                           userAboutMEProvider.removeSolution(index,solution);
@@ -14455,7 +14464,7 @@ Date
       _messages.insert(0, defaulttext);
       // _typingUsers.add(_gptChatUser);
     });
-    ProgressDialog.show(context, "Refine", Icons.search);
+    ProgressDialog.show(context, "Searching challenges", Icons.search);
 
     List<Messages> _messagesHistory = _messages.reversed.map((m) {
       return Messages(role: Role.user, content: defaulttext);
@@ -14506,7 +14515,7 @@ Date
       _messages.insert(0, defaulttext);
       // _typingUsers.add(_gptChatUser);
     });
-    ProgressDialog.show(context, "Search", Icons.search);
+    ProgressDialog.show(context, "Searching challenges", Icons.search);
 
     List<Messages> _messagesHistory = _messages.reversed.map((m) {
       return Messages(role: Role.user, content: defaulttext);
@@ -16050,7 +16059,7 @@ Date
                       children: [
 
                         Padding(
-                          padding: const EdgeInsets.only(left: 20.0),
+                          padding: const EdgeInsets.only(left: 0.0),
                           child: Text("Edit/Confirm Challenge",
                               overflow: TextOverflow.ellipsis,
                               style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
@@ -16078,7 +16087,7 @@ Date
                               //           color: Colors.black)),
                               // ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 20.0),
+                                padding: const EdgeInsets.only(left: 0.0),
                                 child: Text("${label}",
                                     overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
@@ -16086,7 +16095,7 @@ Date
                                         color: Colors.black)),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 20.0),
+                                padding: const EdgeInsets.only(left: 0.0),
                                 child: Container(
                                   // width: 400,
                                   child: Text("${Final_description}",
@@ -16100,21 +16109,30 @@ Date
 
                               Divider(),
 
-                              Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 0),
-                                child: Text("* Edit as appropriate",
-                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
-                                        fontSize: 14,
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.w400)),
-                              ),
+                              // Padding(
+                              //   padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 0),
+                              //   child: Text("* Edit as appropriate",
+                              //       style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                              //           fontSize: 14,
+                              //           color: Colors.red,
+                              //           fontWeight: FontWeight.w400)),
+                              // ),
                               // SizedBox(height: 5,),
 
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 5),
-                                child: Text("Impact on me: ",
-                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
-                                    fontWeight: FontWeight.w600)),
+                                child: Row(
+                                  children: [
+                                    Text("Impact on me: ",
+                                        style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                        fontWeight: FontWeight.w600)),
+                                    Text("edit as appropriate",
+                                        style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                            fontSize: 14,
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.w400)),
+                                  ],
+                                ),
                               ),
 
                               TextField(
@@ -16416,7 +16434,7 @@ Date
                       children: [
 
                         Padding(
-                          padding: const EdgeInsets.only(left: 20.0),
+                          padding: const EdgeInsets.only(left: 0.0),
                           child: Text("Edit/Confirm Challenge",
                               overflow: TextOverflow.ellipsis,
                               style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
@@ -16444,7 +16462,7 @@ Date
                               //           color: Colors.black)),
                               // ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 20.0),
+                                padding: const EdgeInsets.only(left: 0.0),
                                 child: Text("${label}",
                                     overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
@@ -16452,7 +16470,7 @@ Date
                                         color: Colors.black)),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 20.0),
+                                padding: const EdgeInsets.only(left: 0.0),
                                 child: Container(
                                   // width: 400,
                                   child: Text("${Final_description}",
@@ -16466,21 +16484,30 @@ Date
 
                               Divider(),
 
-                              Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 0),
-                                child: Text("* Edit as appropriate",
-                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
-                                        fontSize: 14,
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.w400)),
-                              ),
+                              // Padding(
+                              //   padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 0),
+                              //   child: Text("* Edit as appropriate",
+                              //       style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                              //           fontSize: 14,
+                              //           color: Colors.red,
+                              //           fontWeight: FontWeight.w400)),
+                              // ),
                               // SizedBox(height: 5,),
 
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 5),
-                                child: Text("Impact on me: ",
-                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
-                                    fontWeight: FontWeight.w600)),
+                                child: Row(
+                                  children: [
+                                    Text("Impact on me: ",
+                                        style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                        fontWeight: FontWeight.w600)),
+                                    Text("edit as appropriate",
+                                        style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                            fontSize: 14,
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.w400)),
+                                  ],
+                                ),
                               ),
 
                               TextField(
@@ -16686,7 +16713,34 @@ Date
                               //   }
                               // }
                               // else
-                              {
+
+                              if(_userAboutMEProvider.selectedProvider == null){
+                                toastification.show(context: context,
+                                    title: Text('Who would you like to provide this? Select one'),
+                                    autoCloseDuration: Duration(milliseconds: 2500),
+                                    alignment: Alignment.center,
+                                    backgroundColor: Colors.red,
+                                    foregroundColor: Colors.white,
+                                    icon: Icon(Icons.error, color: Colors.white,),
+                                    animationDuration: Duration(milliseconds: 1000),
+                                    showProgressBar: false
+                                );
+                              }
+
+                              else if(_userAboutMEProvider.selectedProvider == "Request of my employer" && _userAboutMEProvider.selectedInPlace == null){
+                                toastification.show(context: context,
+                                    title: Text('InPlace? Select one'),
+                                    autoCloseDuration: Duration(milliseconds: 2500),
+                                    alignment: Alignment.center,
+                                    backgroundColor: Colors.red,
+                                    foregroundColor: Colors.white,
+                                    icon: Icon(Icons.error, color: Colors.white,),
+                                    animationDuration: Duration(milliseconds: 1000),
+                                    showProgressBar: false
+                                );
+                              }
+
+                              else {
                                 ProgressDialog.show(context, "Confirming", Icons.check_circle_outline);
 
                                 if(userAboutMEProvider.aadhar != null) {
@@ -16945,21 +16999,30 @@ Date
 
                               Divider(),
 
-                              Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 0),
-                                child: Text("* Edit as appropriate",
-                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
-                                        fontSize: 14,
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.w400)),
-                              ),
+                              // Padding(
+                              //   padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 0),
+                              //   child: Text("edit as appropriate",
+                              //       style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                              //           fontSize: 14,
+                              //           color: Colors.red,
+                              //           fontWeight: FontWeight.w400)),
+                              // ),
                               // SizedBox(height: 5,),
 
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                                child: Text("How this solutions helps me :",
-                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
-                                        fontWeight: FontWeight.w600)),
+                                child: Row(
+                                  children: [
+                                    Text("How this solutions helps me :",
+                                        style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                            fontWeight: FontWeight.w600)),
+                                    Text("edit as appropriate",
+                                        style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                            fontSize: 14,
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.w400)),
+                                  ],
+                                ),
                               ),
 
                               TextField(
@@ -17313,7 +17376,33 @@ Date
                           InkWell(
                             onTap: () async {
 
-                              {
+                              if(_userAboutMEProvider.selectedProvider == null){
+                                toastification.show(context: context,
+                                    title: Text('Who would you like to provide this? Select one'),
+                                    autoCloseDuration: Duration(milliseconds: 2500),
+                                    alignment: Alignment.center,
+                                    backgroundColor: Colors.red,
+                                    foregroundColor: Colors.white,
+                                    icon: Icon(Icons.error, color: Colors.white,),
+                                    animationDuration: Duration(milliseconds: 1000),
+                                    showProgressBar: false
+                                );
+                              }
+
+                              else if(_userAboutMEProvider.selectedProvider == "Request of my employer" && _userAboutMEProvider.selectedInPlace == null){
+                                toastification.show(context: context,
+                                    title: Text('InPlace? Select one'),
+                                    autoCloseDuration: Duration(milliseconds: 2500),
+                                    alignment: Alignment.center,
+                                    backgroundColor: Colors.red,
+                                    foregroundColor: Colors.white,
+                                    icon: Icon(Icons.error, color: Colors.white,),
+                                    animationDuration: Duration(milliseconds: 1000),
+                                    showProgressBar: false
+                                );
+                              }
+
+                              else {
                                 ProgressDialog.show(context, "Confirming", Icons.check_circle_outline);
 
                                 if(userAboutMEProvider.aadhar != null) {
@@ -17535,21 +17624,30 @@ Date
 
                               Divider(),
 
-                              Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 0),
-                                child: Text("* Edit as appropriate",
-                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
-                                        fontSize: 14,
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.w400)),
-                              ),
+                              // Padding(
+                              //   padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 0),
+                              //   child: Text("edit as appropriate",
+                              //       style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                              //           fontSize: 14,
+                              //           color: Colors.red,
+                              //           fontWeight: FontWeight.w400)),
+                              // ),
                               // SizedBox(height: 5,),
 
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                                child: Text("How this solutions helps me :",
-                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
-                                        fontWeight: FontWeight.w600)),
+                                child: Row(
+                                  children: [
+                                    Text("How this solutions helps me :",
+                                        style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                            fontWeight: FontWeight.w600)),
+                                    Text("edit as appropriate",
+                                        style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                            fontSize: 14,
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.w400)),
+                                  ],
+                                ),
                               ),
 
                               TextField(

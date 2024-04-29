@@ -1758,7 +1758,7 @@ Date
                                 IconButton(
                                   icon: Icon(Icons.info_outline,),
                                   onPressed: (){},
-                                  tooltip: "- Anything you want to share about eg\n- Your family circumstances\n- Where you live\n- Your education and professional qualifications\n- Your life stages or life events\n- Your ethnicity, faith, identification\n- What matters most to you in life",
+                                  tooltip: "Anything you want to share about eg\nYour family circumstances\nYour education and professional qualifications\nYour life stages or life events\nYour ethnicity, faith, identification\nWhat matters most to you in life",
                                 )
                               ],
                             ),
@@ -2854,6 +2854,7 @@ Date
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+
                     // SizedBox(height: 5,),
                     // Padding(
                     //   padding: const EdgeInsets.only(left: 20.0),
@@ -2961,7 +2962,7 @@ Date
                             children: [
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-                                child: Text("Basket of Solutions (${userAboutMEProvider.editsolutionss.length}): ",
+                                child: Text("Basket of solutions (${userAboutMEProvider.editsolutionss.length}): ",
                                   style: GoogleFonts.montserrat(
                                       textStyle: Theme.of(context).textTheme.titleLarge,
                                       fontWeight: FontWeight.bold,
@@ -3101,6 +3102,15 @@ Date
                                                             ),
                                                             IconButton(
                                                               onPressed: () {
+                                                                showconfirmSolutionsDialogBox(solution.id, solution.label,solution.description, solution.Source, solution.Status,solution.tags,solution.CreatedBy,
+                                                                    solution.CreatedDate,solution.ModifiedBy,solution.ModifiedDate,solution.OriginalDescription,solution.Impact,solution.Final_description,
+                                                                    solution.Category,solution.Keywords,"","", index,userAboutMEProvider.editsolutionss,solution.notes,solution.attachment,solution.InPlace,solution.Provider);
+                                                                print("solution.isConfirmed: ${solution.isConfirmed}");
+                                                              },
+                                                              icon: Icon(Icons.check, color: Colors.green),
+                                                            ),
+                                                            IconButton(
+                                                              onPressed: () {
                                                                 userAboutMEProvider.removeEditConfirmSolution(
                                                                   solution.id,solutionsList,
                                                                   _previewProvider.PreviewSolutionMyResposibilty,
@@ -3123,10 +3133,11 @@ Date
                                                               icon: Icon(Icons.close, color: Colors.red),
                                                             ),
                                                             // SizedBox(width: 10,),
-                                                            Text('Confirmed',
-                                                              style: TextStyle(color: Colors.green),
-                                                            ),
+
                                                           ],
+                                                        ),
+                                                        Text('Confirmed',
+                                                          style: TextStyle(color: Colors.green),
                                                         ),
                                                         Text('${(userAboutMEProvider.newprovider[solution.id] == "Request of my employer") ? userAboutMEProvider.newInplace[solution.id] : userAboutMEProvider.newprovider[solution.id]}',
                                                           style: TextStyle(color: Colors.red,fontSize: 10),
@@ -3144,7 +3155,6 @@ Date
                                                           },
                                                           icon: Icon(Icons.visibility, color: Colors.blue),
                                                         ),
-                                                        SizedBox(width: 3,),
                                                         IconButton(
                                                           onPressed: () {
                                                             showconfirmSolutionsDialogBox(solution.id, solution.label,solution.description, solution.Source, solution.Status,solution.tags,solution.CreatedBy,
@@ -3154,7 +3164,6 @@ Date
                                                           },
                                                           icon: Icon(Icons.check, color: Colors.green),
                                                         ),
-                                                        SizedBox(width: 3,),
                                                         IconButton(
                                                           onPressed: () {
                                                             userAboutMEProvider.removeEditSolution(index,solution);
@@ -10482,7 +10491,7 @@ Date
                       children: [
 
                         Padding(
-                          padding: const EdgeInsets.only(left: 20.0),
+                          padding: const EdgeInsets.only(left: 0.0),
                           child: Text("Edit/Confirm Challenge",
                               overflow: TextOverflow.ellipsis,
                               style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
@@ -10510,7 +10519,7 @@ Date
                               //           color: Colors.black)),
                               // ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 20.0),
+                                padding: const EdgeInsets.only(left: 0.0),
                                 child: Text("${label}",
                                     overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
@@ -10518,7 +10527,7 @@ Date
                                         color: Colors.black)),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 20.0),
+                                padding: const EdgeInsets.only(left: 0.0),
                                 child: Container(
                                   // width: 400,
                                   child: Text("${Final_description}",
@@ -10532,19 +10541,28 @@ Date
 
                               Divider(),
 
-                              Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 0),
-                                child: Text("* Edit as appropriate",
-                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
-                                        fontSize: 14,
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.w400)),
-                              ),
+                              // Padding(
+                              //   padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 0),
+                              //   child: Text("edit as appropriate",
+                              //       style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                              //           fontSize: 14,
+                              //           color: Colors.red,
+                              //           fontWeight: FontWeight.w400)),
+                              // ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                                child: Text("Impact on me:",
-                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
-                                        fontWeight: FontWeight.w600)),
+                                child: Row(
+                                  children: [
+                                    Text("Impact on me:",
+                                        style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                            fontWeight: FontWeight.w600)),
+                                    Text("edit as appropriate",
+                                        style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                            fontSize: 14,
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.w400)),
+                                  ],
+                                ),
                               ),
                               TextField(
                                 maxLines: 4,
@@ -10845,7 +10863,7 @@ Date
                       children: [
 
                         Padding(
-                          padding: const EdgeInsets.only(left: 20.0),
+                          padding: const EdgeInsets.only(left: 0.0),
                           child: Text("Edit/Confirm Challenge",
                               overflow: TextOverflow.ellipsis,
                               style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
@@ -10873,7 +10891,7 @@ Date
                               //           color: Colors.black)),
                               // ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 20.0),
+                                padding: const EdgeInsets.only(left: 0.0),
                                 child: Text("${label}",
                                     overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
@@ -10881,7 +10899,7 @@ Date
                                         color: Colors.black)),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 20.0),
+                                padding: const EdgeInsets.only(left: 0.0),
                                 child: Container(
                                   // width: 400,
                                   child: Text("${Final_description}",
@@ -10895,21 +10913,30 @@ Date
 
                               Divider(),
 
-                              Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 0),
-                                child: Text("* Edit as appropriate",
-                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
-                                        fontSize: 14,
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.w400)),
-                              ),
+                              // Padding(
+                              //   padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 0),
+                              //   child: Text("edit as appropriate",
+                              //       style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                              //           fontSize: 14,
+                              //           color: Colors.red,
+                              //           fontWeight: FontWeight.w400)),
+                              // ),
                               // SizedBox(height: 5,),
 
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 5),
-                                child: Text("Impact on me: ",
-                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
-                                        fontWeight: FontWeight.w600)),
+                                child: Row(
+                                  children: [
+                                    Text("Impact on me: ",
+                                        style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                            fontWeight: FontWeight.w600)),
+                                    Text("edit as appropriate",
+                                        style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                            fontSize: 14,
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.w400)),
+                                  ],
+                                ),
                               ),
 
                               TextField(
@@ -11111,93 +11138,42 @@ Date
                           InkWell(
                             onTap: () async {
 
-                              {
-                                ProgressDialog.show(context, "Confirming", Icons.check_circle_outline);
-
-                                if(userAboutMEProvider.aadhar != null) {
-                                  await userAboutMEProvider.uploadFile(
-                                      userAboutMEProvider.fileBytes,
-                                      userAboutMEProvider.aadhar);
+                                if(_userAboutMEProvider.selectedProvider == null){
+                                  toastification.show(context: context,
+                                      title: Text('Who would you like to provide this? Select one'),
+                                      autoCloseDuration: Duration(milliseconds: 2500),
+                                      alignment: Alignment.center,
+                                      backgroundColor: Colors.red,
+                                      foregroundColor: Colors.white,
+                                      icon: Icon(Icons.error, color: Colors.white,),
+                                      animationDuration: Duration(milliseconds: 1000),
+                                      showProgressBar: false
+                                  );
                                 }
 
-                                Map<String, dynamic> solutionData = {
-                                  'id': Id,
-                                  'Label': label,
-                                  'Description': description,
-                                  'Source': source,
-                                  'Challenge Status': ChallengeStatus,
-                                  'tags': tags,
-                                  'Created By': CreatedBy,
-                                  'Created Date': createdDate,
-                                  'Modified By': ModifiedBy,
-                                  'Modified Date': ModifiedDate,
-                                  'Original Description': OriginalDescription,
-                                  'Impact': Impact,
-                                  'Final_description': Final_description,
-                                  'Category': Category,
-                                  'Keywords': Keywords,
-                                  'Potential Strengths': PotentialStrengths,
-                                  'Hidden Strengths': HiddenStrengths,
-                                  'AboutMe_Notes': NotesController.text,
-                                  'Provider': userAboutMEProvider.selectedProvider,
-                                  'InPlace': userAboutMEProvider.selectedInPlace,
-                                  // 'Priority': userAboutMEProvider.selectedPriority,
-                                  // 'Attachment': downloadURLs,
-                                  'Attachment_link': userAboutMEProvider.downloadURL==null ? Attachment != null ? Attachment : "" : userAboutMEProvider.downloadURL,
-                                  'Attachment': userAboutMEProvider.aadhar== null ? Attachment != null ? Attachment : "" : userAboutMEProvider.aadhar
-                                  // 'confirmed': false, // Add a 'confirmed' field
-                                };
-
-
-                                Map<String, dynamic> solutionDataSaved = {
-                                  'id': Id,
-                                  'Label': label,
-                                  'Description': description,
-                                  'Source': source,
-                                  'Thirver Status': ChallengeStatus,
-                                  'tags': tags,
-                                  'Created By': CreatedBy,
-                                  'Created Date': createdDate,
-                                  'Modified By': ModifiedBy,
-                                  'Modified Date': ModifiedDate,
-                                  'Original Description': OriginalDescription,
-                                  'Impact': Impact,
-                                  'Final_description': Final_description,
-                                  'Category': Category,
-                                  'Keywords': Keywords,
-                                  'Notes': Notes,
-                                };
-
-                                QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-                                    .collection('Thrivers')
-                                    .orderBy('Created Date', descending: true)
-                                    .limit(1)
-                                    .get();
-                                final abcd =   querySnapshot.docs.first;
-                                print("abcccccd; ${abcd['id']}");
-                                print("abcccccd; ${abcd['id'].runtimeType}");
-                                print("Idddddd; ${Id}");
-                                print("Iddddd; ${Id.runtimeType}");
-                                // var ids = abc['id'] + 1;
-
-                                if(Id > abcd['id']){
-                                  print("Yes $Id is greater than ${abcd['id']}. ");
-                                  print("solutionDataSaved To Add Solutions: ${solutionDataSaved['id']}");
-
-                                  ProgressDialog.show(context, "Adding a new Challenge", Icons.new_label_outlined);
-
-                                  await ApiRepository().createThriversss(solutionDataSaved);
-
-                                  ProgressDialog.hide();
+                                else if(_userAboutMEProvider.selectedProvider == "Request of my employer" && _userAboutMEProvider.selectedInPlace == null){
+                                  toastification.show(context: context,
+                                      title: Text('InPlace? Select one'),
+                                      autoCloseDuration: Duration(milliseconds: 2500),
+                                      alignment: Alignment.center,
+                                      backgroundColor: Colors.red,
+                                      foregroundColor: Colors.white,
+                                      icon: Icon(Icons.error, color: Colors.white,),
+                                      animationDuration: Duration(milliseconds: 1000),
+                                      showProgressBar: false
+                                  );
                                 }
+                                else {
+                                  ProgressDialog.show(context, "Confirming", Icons.check_circle_outline);
 
-                                else if(Id == abcd['id']){
-                                  print("Yes $Id is equal to ${abcd['id']}. ");
+                                  if(userAboutMEProvider.aadhar != null) {
+                                    await userAboutMEProvider.uploadFile(
+                                        userAboutMEProvider.fileBytes,
+                                        userAboutMEProvider.aadhar);
+                                  }
 
-                                  int newId = Id + 1;
-
-                                  Map<String, dynamic> solutionNewDataSaved = {
-                                    'id': newId,
+                                  Map<String, dynamic> solutionData = {
+                                    'id': Id,
                                     'Label': label,
                                     'Description': description,
                                     'Source': source,
@@ -11212,70 +11188,148 @@ Date
                                     'Final_description': Final_description,
                                     'Category': Category,
                                     'Keywords': Keywords,
+                                    'Potential Strengths': PotentialStrengths,
+                                    'Hidden Strengths': HiddenStrengths,
+                                    'AboutMe_Notes': NotesController.text,
+                                    'Provider': userAboutMEProvider.selectedProvider,
+                                    'InPlace': userAboutMEProvider.selectedInPlace,
+                                    // 'Priority': userAboutMEProvider.selectedPriority,
+                                    // 'Attachment': downloadURLs,
+                                    'Attachment_link': userAboutMEProvider.downloadURL==null ? Attachment != null ? Attachment : "" : userAboutMEProvider.downloadURL,
+                                    'Attachment': userAboutMEProvider.aadhar== null ? Attachment != null ? Attachment : "" : userAboutMEProvider.aadhar
+                                    // 'confirmed': false, // Add a 'confirmed' field
+                                  };
+
+                                  Map<String, dynamic> solutionDataSaved = {
+                                    'id': Id,
+                                    'Label': label,
+                                    'Description': description,
+                                    'Source': source,
+                                    'Thirver Status': ChallengeStatus,
+                                    'tags': tags,
+                                    'Created By': CreatedBy,
+                                    'Created Date': createdDate,
+                                    'Modified By': ModifiedBy,
+                                    'Modified Date': ModifiedDate,
+                                    'Original Description': OriginalDescription,
+                                    'Impact': Impact,
+                                    'Final_description': Final_description,
+                                    'Category': Category,
+                                    'Keywords': Keywords,
                                     'Notes': Notes,
                                   };
 
-                                  print("solutionNewDataSaved To Add Solution: ${solutionNewDataSaved['id']}");
+                                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+                                      .collection('Thrivers')
+                                      .orderBy('Created Date', descending: true)
+                                      .limit(1)
+                                      .get();
+                                  final abcd =   querySnapshot.docs.first;
+                                  print("abcccccd; ${abcd['id']}");
+                                  print("abcccccd; ${abcd['id'].runtimeType}");
+                                  print("Idddddd; ${Id}");
+                                  print("Iddddd; ${Id.runtimeType}");
+                                  // var ids = abc['id'] + 1;
+
+                                  if(Id > abcd['id']){
+                                    print("Yes $Id is greater than ${abcd['id']}. ");
+                                    print("solutionDataSaved To Add Solutions: ${solutionDataSaved['id']}");
+
+                                    ProgressDialog.show(context, "Adding a new Challenge", Icons.new_label_outlined);
+
+                                    await ApiRepository().createThriversss(solutionDataSaved);
+
+                                    ProgressDialog.hide();
+                                  }
+
+                                  else if(Id == abcd['id']){
+                                    print("Yes $Id is equal to ${abcd['id']}. ");
+
+                                    int newId = Id + 1;
+
+                                    Map<String, dynamic> solutionNewDataSaved = {
+                                      'id': newId,
+                                      'Label': label,
+                                      'Description': description,
+                                      'Source': source,
+                                      'Challenge Status': ChallengeStatus,
+                                      'tags': tags,
+                                      'Created By': CreatedBy,
+                                      'Created Date': createdDate,
+                                      'Modified By': ModifiedBy,
+                                      'Modified Date': ModifiedDate,
+                                      'Original Description': OriginalDescription,
+                                      'Impact': Impact,
+                                      'Final_description': Final_description,
+                                      'Category': Category,
+                                      'Keywords': Keywords,
+                                      'Notes': Notes,
+                                    };
+
+                                    print("solutionNewDataSaved To Add Solution: ${solutionNewDataSaved['id']}");
 
 
-                                  ProgressDialog.show(context, "Adding a new Challenge", Icons.new_label_outlined);
+                                    ProgressDialog.show(context, "Adding a new Challenge", Icons.new_label_outlined);
 
-                                  await ApiRepository().createThriversss(solutionNewDataSaved);
+                                    await ApiRepository().createThriversss(solutionNewDataSaved);
+
+                                    ProgressDialog.hide();
+                                  }
+
+                                  print("tags: $tags");
+                                  print("Keywords: $Keywords");
+
+                                  generatedsolutionstags.addAll(tags);
+                                  generatedsolutionscategory.addAll(Keywords);
+
+                                  print(
+                                      "generatedsolutionstags: $generatedsolutionstags");
+
+                                  print(
+                                      "generatedsolutionscategory: $generatedsolutionscategory");
+
+                                  userAboutMEProvider.confirmed(index, true, listname);
+
+                                  // setState(() {
+                                  //   isConfirmed = userAboutMEProvider.isConfirm;
+                                  //   solutionData['confirmed'] = isConfirmed;
+                                  // });
+
+                                  // print("solutionData['confirmed']: $isConfirmed");
+
+                                  solutionsList.add(solutionData);
+                                  // _previewProvider.PreviewSolutionList.add(solutionData);
+                                  userAboutMEProvider.updatenewprovider(solutionData["Provider"],solutionData["id"]);
+                                  userAboutMEProvider.updatenewInplace(solutionData["InPlace"],solutionData["id"]);
+
+                                  if(_userAboutMEProvider.selectedProvider == "My Responsibilty"){
+                                    _previewProvider.PreviewSolutionMyResposibilty.add(solutionData);
+                                  }
+                                  if(_userAboutMEProvider.selectedInPlace == "Yes (Still Needed)"){
+                                    _previewProvider.PreviewSolutionStillNeeded.add(solutionData);}
+                                  if(_userAboutMEProvider.selectedInPlace == "Yes (Not Needed Anymore)"){
+                                    _previewProvider.PreviewSolutionNotNeededAnyMore.add(solutionData);}
+                                  if(_userAboutMEProvider.selectedInPlace == "No (Nice to have)"){
+                                    _previewProvider.PreviewSolutionNiceToHave.add(solutionData);}
+                                  if(_userAboutMEProvider.selectedInPlace == "No (Must Have)"){
+                                    _previewProvider.PreviewSolutionMustHave.add(solutionData);}
 
                                   ProgressDialog.hide();
+
+
+                                  print("solutionsList.length: ${solutionsList.length}");
+                                  print("solutionsList: ${solutionsList}");
+                                  NotesController.clear();
+                                  userAboutMEProvider.selectedPriority = null;
+                                  userAboutMEProvider.selectedProvider = null;
+                                  userAboutMEProvider.selectedInPlace = null;
+                                  userAboutMEProvider.aadhar = null;
+                                  userAboutMEProvider.fileBytes = null;
+                                  Navigator.pop(context);
                                 }
 
-                                print("tags: $tags");
-                                print("Keywords: $Keywords");
-
-                                generatedsolutionstags.addAll(tags);
-                                generatedsolutionscategory.addAll(Keywords);
-
-                                print(
-                                    "generatedsolutionstags: $generatedsolutionstags");
-
-                                print(
-                                    "generatedsolutionscategory: $generatedsolutionscategory");
-
-                                userAboutMEProvider.confirmed(index, true, listname);
-
-                                // setState(() {
-                                //   isConfirmed = userAboutMEProvider.isConfirm;
-                                //   solutionData['confirmed'] = isConfirmed;
-                                // });
-
-                                // print("solutionData['confirmed']: $isConfirmed");
-
-                                solutionsList.add(solutionData);
-                                // _previewProvider.PreviewSolutionList.add(solutionData);
-                                userAboutMEProvider.updatenewprovider(solutionData["Provider"],solutionData["id"]);
-                                userAboutMEProvider.updatenewInplace(solutionData["InPlace"],solutionData["id"]);
-
-                                if(_userAboutMEProvider.selectedProvider == "My Responsibilty"){
-                                  _previewProvider.PreviewSolutionMyResposibilty.add(solutionData);
-                                }
-                                if(_userAboutMEProvider.selectedInPlace == "Yes (Still Needed)"){
-                                  _previewProvider.PreviewSolutionStillNeeded.add(solutionData);}
-                                if(_userAboutMEProvider.selectedInPlace == "Yes (Not Needed Anymore)"){
-                                  _previewProvider.PreviewSolutionNotNeededAnyMore.add(solutionData);}
-                                if(_userAboutMEProvider.selectedInPlace == "No (Nice to have)"){
-                                  _previewProvider.PreviewSolutionNiceToHave.add(solutionData);}
-                                if(_userAboutMEProvider.selectedInPlace == "No (Must Have)"){
-                                  _previewProvider.PreviewSolutionMustHave.add(solutionData);}
-
-                                ProgressDialog.hide();
 
 
-                                print("solutionsList.length: ${solutionsList.length}");
-                                print("solutionsList: ${solutionsList}");
-                                NotesController.clear();
-                                userAboutMEProvider.selectedPriority = null;
-                                userAboutMEProvider.selectedProvider = null;
-                                userAboutMEProvider.selectedInPlace = null;
-                                userAboutMEProvider.aadhar = null;
-                                userAboutMEProvider.fileBytes = null;
-                                Navigator.pop(context);
-                              }
                             },
                             child: Container(
                               width: MediaQuery.of(context).size.width * .2,
@@ -11314,7 +11368,7 @@ Date
                       children: [
 
                         Padding(
-                          padding: const EdgeInsets.only(left: 20.0),
+                          padding: const EdgeInsets.only(left: 0.0),
                           child: Text("Edit/Confirm Solution",
                               overflow: TextOverflow.ellipsis,
                               style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
@@ -11344,7 +11398,7 @@ Date
                               // ),
 
                               Padding(
-                                padding: const EdgeInsets.only(left: 20.0),
+                                padding: const EdgeInsets.only(left: 0.0),
                                 child: Text("${label}",
                                     overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
@@ -11353,7 +11407,7 @@ Date
                               ),
 
                               Padding(
-                                padding: const EdgeInsets.only(left: 20.0),
+                                padding: const EdgeInsets.only(left: 0.0),
                                 child: Container(
                                   // width: 400,
                                   child: Text("${Final_description}",
@@ -11367,20 +11421,29 @@ Date
 
                               Divider(),
 
-                              Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 0),
-                                child: Text("* Edit as appropriate",
-                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
-                                        fontSize: 14,
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.w400)),
-                              ),
+                              // Padding(
+                              //   padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 0),
+                              //   child: Text("* Edit as appropriate",
+                              //       style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                              //           fontSize: 14,
+                              //           color: Colors.red,
+                              //           fontWeight: FontWeight.w400)),
+                              // ),
 
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                                child: Text("How this solutions helps me :",
-                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
-                                        fontWeight: FontWeight.w600)),
+                                child: Row(
+                                  children: [
+                                    Text("How this solutions helps me :",
+                                        style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                            fontWeight: FontWeight.w600)),
+                                    Text("edit as appropriate",
+                                        style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                            fontSize: 14,
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.w400)),
+                                  ],
+                                ),
                               ),
 
                               TextField(
@@ -11699,7 +11762,33 @@ Date
                           InkWell(
                             onTap: () async {
 
-                              {
+                              if(_userAboutMEProvider.selectedProvider == null){
+                                toastification.show(context: context,
+                                    title: Text('Who would you like to provide this? Select one'),
+                                    autoCloseDuration: Duration(milliseconds: 2500),
+                                    alignment: Alignment.center,
+                                    backgroundColor: Colors.red,
+                                    foregroundColor: Colors.white,
+                                    icon: Icon(Icons.error, color: Colors.white,),
+                                    animationDuration: Duration(milliseconds: 1000),
+                                    showProgressBar: false
+                                );
+                              }
+
+                              else if(_userAboutMEProvider.selectedProvider == "Request of my employer" && _userAboutMEProvider.selectedInPlace == null){
+                                toastification.show(context: context,
+                                    title: Text('InPlace? Select one'),
+                                    autoCloseDuration: Duration(milliseconds: 2500),
+                                    alignment: Alignment.center,
+                                    backgroundColor: Colors.red,
+                                    foregroundColor: Colors.white,
+                                    icon: Icon(Icons.error, color: Colors.white,),
+                                    animationDuration: Duration(milliseconds: 1000),
+                                    showProgressBar: false
+                                );
+                              }
+
+                              else {
                                 ProgressDialog.show(context, "Confirming", Icons.check_circle_outline);
 
                                 if(userAboutMEProvider.aadhar != null) {
@@ -11888,6 +11977,7 @@ Date
                                 userAboutMEProvider.fileBytes = null;
                                 Navigator.pop(context);
                               }
+
                             },
                             child: Container(
                               width: MediaQuery.of(context).size.width * .2,
@@ -11926,7 +12016,7 @@ Date
                       children: [
 
                         Padding(
-                          padding: const EdgeInsets.only(left: 20.0),
+                          padding: const EdgeInsets.only(left: 0.0),
                           child: Text("Edit/Confirm Solution",
                               overflow: TextOverflow.ellipsis,
                               style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
@@ -11956,7 +12046,7 @@ Date
                               // ),
 
                               Padding(
-                                padding: const EdgeInsets.only(left: 20.0),
+                                padding: const EdgeInsets.only(left: 0.0),
                                 child: Text("${label}",
                                     overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
@@ -11965,7 +12055,7 @@ Date
                               ),
 
                               Padding(
-                                padding: const EdgeInsets.only(left: 20.0),
+                                padding: const EdgeInsets.only(left: 0.0),
                                 child: Container(
                                   // width: 400,
                                   child: Text("${Final_description}",
@@ -11979,21 +12069,30 @@ Date
 
                               Divider(),
 
-                              Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 0),
-                                child: Text("* Edit as appropriate",
-                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
-                                        fontSize: 14,
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.w400)),
-                              ),
+                              // Padding(
+                              //   padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 0),
+                              //   child: Text("edit as appropriate",
+                              //       style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                              //           fontSize: 14,
+                              //           color: Colors.red,
+                              //           fontWeight: FontWeight.w400)),
+                              // ),
                               // SizedBox(height: 5,),
 
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                                child: Text("How this solutions helps me :",
-                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
-                                        fontWeight: FontWeight.w600)),
+                                child: Row(
+                                  children: [
+                                    Text("How this solutions helps me :",
+                                        style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                            fontWeight: FontWeight.w600)),
+                                    Text("* Edit as appropriate",
+                                        style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                            fontSize: 14,
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.w400)),
+                                  ],
+                                ),
                               ),
 
                               TextField(
