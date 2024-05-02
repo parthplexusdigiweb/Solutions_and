@@ -73,6 +73,7 @@ dependencies:
   flutter_mail_server: ^0.0.2
   http:
   mailer: ^6.1.0
+  chat_bubbles:
 
 dev_dependencies:
   flutter_test:

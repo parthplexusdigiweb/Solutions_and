@@ -997,7 +997,6 @@ Date
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text("My reports", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.headlineMedium,)),
-
                         Row(
                           children: [
                             // IconButton(
@@ -1006,23 +1005,23 @@ Date
                             //     },
                             //     icon: Icon(Icons.add)),
 ///
-                            // InkWell(
-                            //   onTap: () async {
-                            //   await showAddAddAboutMeDialogBox();
-                            // },
-                            //   child: Container(
-                            //     width: MediaQuery.of(context).size.width * 0.15,
-                            //     padding: EdgeInsets.all(10),
-                            //     margin: EdgeInsets.all(10),
-                            //     decoration: BoxDecoration(
-                            //       color: Colors.blue,
-                            //       borderRadius: BorderRadius.circular(10),
-                            //     ),
-                            //     child: Text('Create new report',textAlign: TextAlign.center,style: GoogleFonts.montserrat(
-                            //         textStyle: Theme.of(context).textTheme.titleSmall,
-                            //         fontWeight: FontWeight.bold,
-                            //         color: Colors.white),)),
-                            // ),
+                            InkWell(
+                              onTap: () async {
+                              await showAddAddAboutMeDialogBox();
+                            },
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.15,
+                                padding: EdgeInsets.all(10),
+                                margin: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Text('Create new report',textAlign: TextAlign.center,style: GoogleFonts.montserrat(
+                                    textStyle: Theme.of(context).textTheme.titleSmall,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),)),
+                            ),
 ///
                           //  SizedBox(width: 5,),
 
@@ -1216,12 +1215,12 @@ Date
 
                                     var sentTo,sentTo2, sentDate,sentDate2 ,email, email2;
 
-                                    sentTo = dataList[i]['Report_sent_to'].isNotEmpty ? dataList[i]['Report_sent_to'][0]["Sent_to"] ?? "" : "";
-                                    sentTo2 = dataList[i]['Report_sent_to'].length > 1 ? dataList[i]['Report_sent_to'][1]["Sent_to"] ?? "" : "";
+                                    sentTo = dataList[i]['Report_sent_to'].isNotEmpty ? dataList[i]['Report_sent_to'][0]["name"] ?? "" : "";
+                                    sentTo2 = dataList[i]['Report_sent_to'].length > 1 ? dataList[i]['Report_sent_to'][1]["name"] ?? "" : "";
                                     email = dataList[i]['Report_sent_to'].isNotEmpty ? dataList[i]['Report_sent_to'][0]["email"] ?? "" : "";
                                     email2 = dataList[i]['Report_sent_to'].length > 1 ? dataList[i]['Report_sent_to'][1]["email"] ?? "" : "";
-                                    sentDate = dataList[i]['Report_sent_to'].isNotEmpty ? dataList[i]['Report_sent_to'][0]["Date_sent"] ?? "" : "";
-                                    sentDate2 = dataList[i]['Report_sent_to'].length > 1 ? dataList[i]['Report_sent_to'][1]["Date_sent"] ?? "" : "";
+                                    sentDate = dataList[i]['Report_sent_to'].isNotEmpty ? dataList[i]['Report_sent_to'][0]["datetime"] ?? "" : "";
+                                    sentDate2 = dataList[i]['Report_sent_to'].length > 1 ? dataList[i]['Report_sent_to'][1]["datetime"] ?? "" : "";
 
 
                                     return Column(
@@ -1283,9 +1282,24 @@ Date
                                                                width: MediaQuery.of(context).size.width * 0.178,
                                                                child: Center(child: Text( sentTo == "" && email == "" ? "_" : "$sentTo: $email",style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
 
-                                                           Container(
-                                                               width: MediaQuery.of(context).size.width * 0.175,
-                                                               child: Center(child: Text(sentTo2 == "" && email2 == ""? "" : "$sentTo2: $email2",style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
+                                                           Column(
+                                                             children: dataList[i]['Report_sent_to_cc'].map<Widget>((recipient) {
+                                                               final name = recipient['name'];
+                                                               final email = recipient['email'];
+                                                               final sentTo = name.isNotEmpty ? name : email;
+
+                                                               return Container(
+                                                                 width: MediaQuery.of(context).size.width * 0.175,
+                                                                 child: Center(
+                                                                   child: Text(sentTo.isNotEmpty ? "$sentTo: $email" : "",
+                                                                     style: Theme.of(context).textTheme.titleMedium,
+                                                                     overflow: TextOverflow.ellipsis,
+                                                                   ),
+                                                                 ),
+                                                               );
+                                                             }).toList(),
+                                                           ),
+
                                                          ],
                                                        ),
 
@@ -3729,7 +3743,7 @@ Date
                             contentPadding: EdgeInsets.all(10),
                             // labelText: "Name",
                             // hintText: "Anything you want to share about eg\nYour family circumstances\nWhere you live\nYour education and professional qualifications\nYour life stages or life events\nYour ethnicity, faith, identification\nWhat matters most to you in life",
-                            hintText: "- Anything you want to share about eg\n- Your family circumstances\n- Where you live\n- Your education and professional qualifications\n- Your life stages or life events\n- Your ethnicity, faith, identification\n- What matters most to you in life",
+                            hintText: "Anything you want to share about eg\nYour family circumstances\nYour education and professional qualifications\nYour life stages or life events\nYour ethnicity, faith, identification\nWhat matters most to you in life",
                             errorStyle: GoogleFonts.montserrat(
                                 textStyle: Theme
                                     .of(context)
@@ -5434,7 +5448,7 @@ Date
                                     // width: MediaQuery.of(context).size.width,
                                     child:SingleChildScrollView(
                                       child: DataTable(
-                                        dataRowMaxHeight:60 ,
+                                        dataRowMaxHeight:80 ,
                                         headingTextStyle: GoogleFonts.montserrat(
                                             textStyle: Theme.of(context).textTheme.titleMedium,
                                             fontWeight: FontWeight.w500,
@@ -5529,42 +5543,58 @@ Date
                                                   margin: EdgeInsets.all(5),
                                                   // width: 140,
                                                   child: (challenge.isConfirmed==true) ?
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                  Column(
                                                     children: [
-                                                      IconButton(
-                                                        onPressed: () {
-                                                          // (challenge.Keywords.isEmpty || challenge.tags.isEmpty) ? toastification.show(context: context,
-                                                          // title: Text('Cannot View this Challenge'),
-                                                          // autoCloseDuration: Duration(milliseconds: 2500),
-                                                          //   alignment: Alignment.center,
-                                                          //   backgroundColor: Colors.blue,
-                                                          //   foregroundColor: Colors.white,
-                                                          //   animationDuration: Duration(milliseconds: 1000),
-                                                          //   showProgressBar: false
-                                                          // )
-                                                          // :
+                                                      Row(
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          IconButton(
+                                                            onPressed: () {
+                                                              // (challenge.Keywords.isEmpty || challenge.tags.isEmpty) ? toastification.show(context: context,
+                                                              // title: Text('Cannot View this Challenge'),
+                                                              // autoCloseDuration: Duration(milliseconds: 2500),
+                                                              //   alignment: Alignment.center,
+                                                              //   backgroundColor: Colors.blue,
+                                                              //   foregroundColor: Colors.white,
+                                                              //   animationDuration: Duration(milliseconds: 1000),
+                                                              //   showProgressBar: false
+                                                              // )
+                                                              // :
 
-                                                          NewViewDialog(challenge.label,challenge.description,challenge.Impact,challenge.Final_description,
-                                                              challenge.Keywords,challenge.tags,challenge.id, challenge, userAboutMEProvider.isRecommendedChallengeCheckedMap,userAboutMEProvider.isRecommendedAddedChallenge);
-                                                          print("challenge.Keywords: ${challenge.Keywords}");
-                                                          print("challenge.tags: ${challenge.tags}");
-                                                          print("challenge.isConfirmed: ${challenge.isConfirmed}");
-                                                        },
-                                                        icon: Icon(Icons.visibility, color: Colors.blue),
+                                                              NewViewDialog(challenge.label,challenge.description,challenge.Impact,challenge.Final_description,
+                                                                  challenge.Keywords,challenge.tags,challenge.id, challenge, userAboutMEProvider.isRecommendedChallengeCheckedMap,userAboutMEProvider.isRecommendedAddedChallenge);
+                                                              print("challenge.Keywords: ${challenge.Keywords}");
+                                                              print("challenge.tags: ${challenge.tags}");
+                                                              print("challenge.isConfirmed: ${challenge.isConfirmed}");
+                                                            },
+                                                            icon: Icon(Icons.visibility, color: Colors.blue),
+                                                          ),
+
+                                                          IconButton(
+                                                            onPressed: () {
+                                                              showconfirmChallengeDialogBox(challenge.id, challenge.label,challenge.description, challenge.Source, challenge.Status,challenge.tags,challenge.CreatedBy,
+                                                                  challenge.CreatedDate,challenge.ModifiedBy,challenge.ModifiedDate,challenge.OriginalDescription,challenge.Impact,challenge.Final_description,
+                                                                  challenge.Category,challenge.Keywords,challenge.PotentialStrengths,challenge.HiddenStrengths, index,userAboutMEProvider.challengess,challenge.notes);
+                                                              print("challenge.isConfirmed: ${challenge.isConfirmed}");
+                                                            },
+                                                            icon: Icon(Icons.edit, color: Colors.green),
+                                                          ),
+
+                                                          IconButton(
+                                                            onPressed: () {
+                                                              userAboutMEProvider.removeConfirmChallenge(index,challenge.id,challengesList,_previewProvider.PreviewChallengesList);
+                                                            },
+                                                            icon: Icon(Icons.delete, color: Colors.red),
+                                                          ),
+                                                          // SizedBox(width: 5,),
+
+                                                          // SizedBox(width: 5,),
+                                                        ],
                                                       ),
-                                                      IconButton(
-                                                        onPressed: () {
-                                                          userAboutMEProvider.removeConfirmChallenge(index,challenge.id,challengesList,_previewProvider.PreviewChallengesList);
-                                                        },
-                                                        icon: Icon(Icons.close, color: Colors.red),
-                                                      ),
-                                                      SizedBox(width: 5,),
                                                       Text('Confirmed',
                                                         style: TextStyle(color: Colors.green),
                                                       ),
-                                                      // SizedBox(width: 5,),
                                                     ],
                                                   )
                                                       :
@@ -5608,7 +5638,7 @@ Date
                                                         onPressed: () {
                                                           userAboutMEProvider.removeChallenge(index,challenge);
                                                         },
-                                                        icon: Icon(Icons.close, color: Colors.red),
+                                                        icon: Icon(Icons.delete, color: Colors.red),
                                                       )
                                                       //      :
                                                     ],
@@ -11817,6 +11847,7 @@ Date
                                 userAboutMEProvider.previewKeywordssss.clear();
                                 userAboutMEProvider.previewtags.clear();
                                 userAboutMEProvider.preview = null;
+                                userAboutMEProvider.borderColor = false;
                                 Navigator.pop(context);
                               },
                               child: Icon(Icons.close)),
@@ -11835,7 +11866,7 @@ Date
                                   // height: 400,
                                   padding: EdgeInsets.all(20),
                                   decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey),
+                                      border: Border.all(color: userAboutMEProvider.borderColor==false ? Colors.orange : Colors.green, width: 4),
                                       borderRadius: BorderRadius.circular(20)
                                   ),
                                   child: SingleChildScrollView(
@@ -11910,7 +11941,7 @@ Date
                                                   })
                                             ],
                                           ),
-                                          SizedBox(height: 5,),
+                                          // SizedBox(height: 5,),
                                           (FinalDescription==""|| FinalDescription==null) ? Container() :
                                           Row(
                                             mainAxisAlignment: MainAxisAlignment.start,
@@ -12323,7 +12354,7 @@ Date
                                                                     padding: EdgeInsets.all(12),
                                                                     width: 330,
                                                                     decoration: BoxDecoration(
-                                                                      border: Border.all(color: Colors.orange),
+                                                                      border: Border.all(color: Colors.orange,width : 4),
                                                                       borderRadius: BorderRadius.circular(20),
                                                                     ),
                                                                     child: SingleChildScrollView(
@@ -12346,13 +12377,13 @@ Date
                                                                                   userAboutMEProvider.updateChallengePreview(
                                                                                     challengesData['Label'],
                                                                                     challengesData['Description'],
-                                                                                    challengesData['Final_Description'],
+                                                                                    challengesData['Final_description'],
                                                                                     challengesData['Impact'],
                                                                                     challengesData['Keywords'],
                                                                                     challengesData['tags'],
                                                                                     challengesData['id'],
                                                                                     isTrueOrFalse,
-                                                                                    challengesData,
+                                                                                    challengesData,false
                                                                                   );
                                                                                 },
                                                                                 icon: Icon(Icons.visibility, color: Colors.blue),
@@ -12457,7 +12488,7 @@ Date
                                   // height: 400,
                                   padding: EdgeInsets.all(15),
                                   decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey),
+                                      border: Border.all(color: Colors.green, width: 4),
                                       borderRadius: BorderRadius.circular(20)
                                   ),
                                   child: SingleChildScrollView(
@@ -12557,7 +12588,7 @@ Date
                                                             padding: EdgeInsets.all(12),
                                                             width: 330,
                                                             decoration: BoxDecoration(
-                                                              border: Border.all(color: Colors.green),
+                                                              border: Border.all(color: Colors.green,width : 4),
                                                               borderRadius: BorderRadius.circular(20),
                                                             ),
                                                             child: SingleChildScrollView(
@@ -12619,13 +12650,13 @@ Date
                                                                                 userAboutMEProvider.updateSolutionPreview(
                                                                                     solutionData['Label'],
                                                                                     solutionData['Description'],
-                                                                                    solutionData['Final_Description'],
+                                                                                    solutionData['Final_description'],
                                                                                     solutionData['Impact'],
                                                                                     solutionData['Keywords'],
                                                                                     solutionData['tags'],
                                                                                     solutionData['id'],
                                                                                     isTrueOrFalse,
-                                                                                    solutionData
+                                                                                    solutionData,true
                                                                                 );
                                                                               },
 
@@ -12788,6 +12819,7 @@ Date
                                 userAboutMEProvider.previewKeywordssss.clear();
                                 userAboutMEProvider.previewtags.clear();
                                 userAboutMEProvider.preview = null;
+                                userAboutMEProvider.borderColor = false;
                                 Navigator.pop(context);
                               },
                               child: Icon(Icons.close)),
@@ -12806,7 +12838,7 @@ Date
                                   // height: 400,
                                   padding: EdgeInsets.all(20),
                                   decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey),
+                                      border: Border.all(color: userAboutMEProvider.borderColor==false ? Colors.green : Colors.orange, width: 4),
                                       borderRadius: BorderRadius.circular(20)
                                   ),
                                   child: SingleChildScrollView(
@@ -13139,7 +13171,7 @@ Date
                                                                     padding: EdgeInsets.all(12),
                                                                     width: 330,
                                                                     decoration: BoxDecoration(
-                                                                      border: Border.all(color: Colors.green),
+                                                                      border: Border.all(color: Colors.green,width : 4),
                                                                       borderRadius: BorderRadius.circular(20),
                                                                     ),
                                                                     child: SingleChildScrollView(
@@ -13201,13 +13233,13 @@ Date
                                                                                         userAboutMEProvider.updateSolutionPreview(
                                                                                             solutionData['Label'],
                                                                                             solutionData['Description'],
-                                                                                            solutionData['Final_Description'],
+                                                                                            solutionData['Final_description'],
                                                                                             solutionData['Impact'],
                                                                                             solutionData['Keywords'],
                                                                                             solutionData['tags'],
                                                                                             solutionData['id'],
                                                                                             isTrueOrFalse,
-                                                                                            solutionData
+                                                                                            solutionData,false
                                                                                         );
                                                                                       },
 
@@ -13331,7 +13363,7 @@ Date
                                   // height: 400,
                                   padding: EdgeInsets.all(15),
                                   decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey),
+                                      border: Border.all(color: Colors.orange, width: 4),
                                       borderRadius: BorderRadius.circular(20)
                                   ),
                                   child: SingleChildScrollView(
@@ -13432,7 +13464,7 @@ Date
                                                             padding: EdgeInsets.all(12),
                                                             width: 330,
                                                             decoration: BoxDecoration(
-                                                              border: Border.all(color: Colors.orange),
+                                                              border: Border.all(color: Colors.orange,width : 4),
                                                               borderRadius: BorderRadius.circular(20),
                                                             ),
                                                             child: SingleChildScrollView(
@@ -13491,13 +13523,13 @@ Date
                                                                                 userAboutMEProvider.updateChallengePreview(
                                                                                     challengesData['Label'],
                                                                                     challengesData['Description'],
-                                                                                    challengesData['Final_Description'],
+                                                                                    challengesData['Final_description'],
                                                                                     challengesData['Impact'],
                                                                                     challengesData['Keywords'],
                                                                                     challengesData['tags'],
                                                                                     challengesData['id'],
                                                                                     isTrueOrFalse,
-                                                                                    challengesData
+                                                                                    challengesData,true
                                                                                 );
                                                                               },
                                                                               icon: Icon(Icons.visibility, color: Colors.blue,)

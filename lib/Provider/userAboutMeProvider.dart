@@ -138,7 +138,10 @@ class UserAboutMEProvider with ChangeNotifier{
 
   var previewname, previewDescription, previewFinalDescription, previewImpact, previewId, preview;
 
- updateChallengePreview(name, Description, FinalDescription, Impact,Keywordssss,tags,Id,isTrueOrFalse, document){
+  bool borderColor = false;
+
+
+  updateChallengePreview(name, Description, FinalDescription, Impact,Keywordssss,tags,Id,isTrueOrFalse, document,isborderColor){
    previewname = name;
    previewDescription = Description;
    previewFinalDescription = FinalDescription;
@@ -148,11 +151,12 @@ class UserAboutMEProvider with ChangeNotifier{
    previewId = Id;
    preview = document;
    isRecommendedChallengeCheckedMap = isTrueOrFalse;
+   borderColor = isborderColor;
    // isRecommendedAddedChallenge = AddButton;
    notifyListeners();
  }
 
- updateSolutionPreview(name, Description, FinalDescription, Impact,Keywordssss,tags,Id,isTrueOrFalse, document){
+ updateSolutionPreview(name, Description, FinalDescription, Impact,Keywordssss,tags,Id,isTrueOrFalse, document,isborderColor){
    previewname = name;
    previewDescription = Description;
    previewFinalDescription = FinalDescription;
@@ -162,13 +166,16 @@ class UserAboutMEProvider with ChangeNotifier{
    previewId = Id;
    preview = document;
    isRecommendedSolutionsCheckedMap = isTrueOrFalse;
+   borderColor = isborderColor;
    // isRecommendedAddedChallenge = AddButton;
    notifyListeners();
  }
 
   var editpreviewname, editpreviewDescription, editpreviewFinalDescription, editpreviewImpact, editpreviewId, editpreview;
 
-  updateEditChallengePreview(name, Description, FinalDescription, Impact,Keywordssss,tags,Id,isTrueOrFalse, document){
+  bool editborderColor = false;
+
+  updateEditChallengePreview(name, Description, FinalDescription, Impact,Keywordssss,tags,Id,isTrueOrFalse, document,isborderColor){
     editpreviewname = name;
     editpreviewDescription = Description;
     editpreviewFinalDescription = FinalDescription;
@@ -178,11 +185,11 @@ class UserAboutMEProvider with ChangeNotifier{
     editpreviewId = Id;
     editpreview = document;
     isEditChallengeListAdded = isTrueOrFalse;
-    // isRecommendedAddedChallenge = AddButton;
+    editborderColor = isborderColor;
     notifyListeners();
   }
 
-  updateEditSolutionPreview(name, Description, FinalDescription, Impact,Keywordssss,tags,Id,isTrueOrFalse, document){
+  updateEditSolutionPreview(name, Description, FinalDescription, Impact,Keywordssss,tags,Id,isTrueOrFalse, document,isborderColor){
     editpreviewname = name;
     editpreviewDescription = Description;
     editpreviewFinalDescription = FinalDescription;
@@ -192,7 +199,7 @@ class UserAboutMEProvider with ChangeNotifier{
     editpreviewId = Id;
     editpreview = document;
     isEditSolutionListAdded = isTrueOrFalse;
-    // isRecommendedAddedChallenge = AddButton;
+    editborderColor = isborderColor;
     notifyListeners();
   }
 

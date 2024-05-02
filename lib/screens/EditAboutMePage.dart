@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:html' as html;
 
+import 'package:chat_bubbles/bubbles/bubble_special_three.dart';
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -88,7 +89,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
 
   // DateTime date = DateTime.now();
   // final DateFormat formatter = DateFormat('dd MMMM yyyy');
-  var formattedDate = DateFormat('dd MMMM yyyy').format(DateTime.now());
+  var formattedDate = DateFormat('dd MMMM yyyy, HH:mm a').format(DateTime.now());
 
 
   List<SolutionModel> solutions = [];
@@ -367,24 +368,6 @@ Date
 
                         ),),
 
-                        InkWell(
-                          onTap: () async {
-                            await widget.showAddAddAboutMeDialogBox();
-                          },
-                          child: Container(
-                              width: MediaQuery.of(context).size.width * 0.15,
-                              padding: EdgeInsets.all(10),
-                              margin: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Colors.blue,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Text('Create new report',textAlign: TextAlign.center,style: GoogleFonts.montserrat(
-                                  textStyle: Theme.of(context).textTheme.titleSmall,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),)),
-                        ),
-
                       ],
                     ),
                   ),
@@ -632,6 +615,47 @@ Date
                               ),
                             ),
                           ),
+                          Expanded(
+                            child: InkWell(
+                              onTap: () async {
+                                await widget.showAddAddAboutMeDialogBox();
+                              },
+                              child: Container(
+                                margin: EdgeInsets.all(10),
+                                height: 40,
+
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      // Icon(Icons.article,color: Colors.black,size: 30,),
+                                      Icon(Icons.create_new_folder_outlined,color: Colors.black,size: 25,),
+                                      SizedBox(width: 5,),
+
+                                      Expanded(
+                                        child: Text(
+                                          // 'Solutions',
+                                          'Create new report',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.montserrat(
+                                              textStyle:
+                                              Theme.of(context).textTheme.titleMedium,
+                                              color: Colors.black),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+
                         ],
                       ),
                       SizedBox(height : 10),
@@ -1610,7 +1634,8 @@ Date
                     // "Created_Date": createdAt,
                     "Modified_By": widget.AdminName,
                     "Modified_Date": createdAt,
-                    'Report_sent_to' : []
+                    'Report_sent_to' : [],
+                    'Report_sent_to_cc' : [],
 
                     // Add other fields as needed
                   };
@@ -1834,7 +1859,7 @@ Date
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.all(10),
                               // labelText: "Name",
-                              hintText: "- Anything you want to share about eg\n- Your family circumstances\n- Where you live\n- Your education and professional qualifications\n- Your life stages or life events\n- Your ethnicity, faith, identification\n- What matters most to you in life",
+                              hintText: "Anything you want to share about eg\nYour family circumstances\nYour education and professional qualifications\nYour life stages or life events\nYour ethnicity, faith, identification\nWhat matters most to you in life",
                               errorStyle: GoogleFonts.montserrat(
                                   textStyle: Theme
                                       .of(context)
@@ -2587,7 +2612,7 @@ Date
                                     child: SingleChildScrollView(
                                       scrollDirection: Axis.horizontal,
                                       child: DataTable(
-                                        dataRowMaxHeight:60,
+                                        dataRowMaxHeight:80,
                                         headingTextStyle: GoogleFonts.montserrat(
                                             textStyle: Theme.of(context).textTheme.titleMedium,
                                             fontWeight: FontWeight.w500,
@@ -2669,24 +2694,37 @@ Date
                                                   margin: EdgeInsets.all(5),
                                                   // width: 140,
                                                   child: (challenge.isConfirmed==true) ?
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                  Column(
                                                     children: [
-                                                      IconButton(
-                                                        onPressed: () {
-                                                          NewViewDialog(challenge.label,challenge.description,challenge.Impact,challenge.Final_description, challenge.Keywords,challenge.tags,challenge.id,challenge, userAboutMEProvider.isEditChallengeListAdded,userAboutMEProvider.EditRecommendedChallengeAdd);
-                                                          print("challenge.isConfirmed: ${challenge.isConfirmed}");
-                                                        },
-                                                        icon: Icon(Icons.visibility, color: Colors.blue),
+                                                      Row(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          IconButton(
+                                                            onPressed: () {
+                                                              NewViewDialog(challenge.label,challenge.description,challenge.Impact,challenge.Final_description, challenge.Keywords,challenge.tags,challenge.id,challenge, userAboutMEProvider.isEditChallengeListAdded,userAboutMEProvider.EditRecommendedChallengeAdd);
+                                                              print("challenge.isConfirmed: ${challenge.isConfirmed}");
+                                                            },
+                                                            icon: Icon(Icons.visibility, color: Colors.blue),
+                                                          ),
+                                                          IconButton(
+                                                            onPressed: () {
+                                                              showconfirmChallengeDialogBox(challenge.id, challenge.label,challenge.description, challenge.Source, challenge.Status,challenge.tags,challenge.CreatedBy,
+                                                                  challenge.CreatedDate,challenge.ModifiedBy,challenge.ModifiedDate,challenge.OriginalDescription,challenge.Impact,challenge.Final_description,
+                                                                  challenge.Category,challenge.Keywords,challenge.PotentialStrengths,challenge.HiddenStrengths, index,userAboutMEProvider.editchallengess,challenge.notes,challenge.attachment);                                        print("challenge.isConfirmed: ${challenge.isConfirmed}");
+                                                            },
+                                                            icon: Icon(Icons.edit, color: Colors.green),
+                                                          ),
+                                                          IconButton(
+                                                            onPressed: () {
+                                                              userAboutMEProvider.removeEditConfirmChallenge(index,challenge.id,challengesList,_previewProvider.PreviewChallengesList);
+                                                            },
+                                                            icon: Icon(Icons.delete, color: Colors.red),
+                                                          ),
+                                                          // SizedBox(width: 10,),
+
+                                                        ],
                                                       ),
-                                                      IconButton(
-                                                        onPressed: () {
-                                                          userAboutMEProvider.removeEditConfirmChallenge(index,challenge.id,challengesList,_previewProvider.PreviewChallengesList);
-                                                        },
-                                                        icon: Icon(Icons.close, color: Colors.red),
-                                                      ),
-                                                      // SizedBox(width: 10,),
                                                       Text('Confirmed',
                                                         style: TextStyle(color: Colors.green),
                                                       ),
@@ -2704,7 +2742,7 @@ Date
                                                         },
                                                         icon: Icon(Icons.visibility, color: Colors.blue),
                                                       ),
-                                                      SizedBox(width: 3,),
+                                                      // SizedBox(width: 3,),
                                                       IconButton(
                                                         onPressed: () {
                                                           showconfirmChallengeDialogBox(challenge.id, challenge.label,challenge.description, challenge.Source, challenge.Status,challenge.tags,challenge.CreatedBy,
@@ -2713,12 +2751,12 @@ Date
                                                         },
                                                         icon: Icon(Icons.check, color: Colors.green),
                                                       ),
-                                                      SizedBox(width: 3,),
+                                                      // SizedBox(width: 3,),
                                                       IconButton(
                                                         onPressed: () {
                                                           userAboutMEProvider.removeEditChallenge(index,challenge);
                                                         },
-                                                        icon: Icon(Icons.close, color: Colors.red),
+                                                        icon: Icon(Icons.delete, color: Colors.red),
                                                       )
                                                       //      :
 
@@ -3113,7 +3151,7 @@ Date
                                                                     solution.Category,solution.Keywords,"","", index,userAboutMEProvider.editsolutionss,solution.notes,solution.attachment,solution.InPlace,solution.Provider);
                                                                 print("solution.isConfirmed: ${solution.isConfirmed}");
                                                               },
-                                                              icon: Icon(Icons.check, color: Colors.green),
+                                                              icon: Icon(Icons.edit, color: Colors.green),
                                                             ),
                                                             IconButton(
                                                               onPressed: () {
@@ -3136,7 +3174,7 @@ Date
                                                                 // _previewProvider.PreviewSolutionMustHave.clear();
 
                                                               },
-                                                              icon: Icon(Icons.close, color: Colors.red),
+                                                              icon: Icon(Icons.delete, color: Colors.red),
                                                             ),
                                                             // SizedBox(width: 10,),
 
@@ -3174,7 +3212,7 @@ Date
                                                           onPressed: () {
                                                             userAboutMEProvider.removeEditSolution(index,solution);
                                                           },
-                                                          icon: Icon(Icons.close, color: Colors.red),
+                                                          icon: Icon(Icons.delete, color: Colors.red),
                                                         )
                                                       ],
                                                     ),
@@ -4696,7 +4734,12 @@ Date
                               ),
                             ),
 
-                            SizedBox(width:  MediaQuery.of(context).size.width * .05,),
+                            SizedBox(width: 5,),
+
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              margin: EdgeInsets.all(11),
+                              width:  MediaQuery.of(context).size.width * .05,),
 
 
 
@@ -4708,7 +4751,6 @@ Date
                           children: List.generate(
                             previewProvider.ccEmails.length,
                                 (index) {
-
                               return Row(
                             children: [
                               Container(
@@ -4722,13 +4764,19 @@ Date
                                       fontWeight: FontWeight.w700),
                                 ),
                               ),
-                              Text(
-                                  '${index + 1}. ${previewProvider.ccNames[index]}, <${previewProvider.ccEmails[index]}> - $formattedDate'),
-                              SizedBox(width: 50,),
-                              IconButton(
-                                icon: Icon(Icons.remove),
-                                onPressed: () =>
-                                    previewProvider.removeCCRecipient(index),
+                              Expanded(
+                                flex: 3,
+                                child: Text(
+                                    '${index + 1}. ${previewProvider.ccNames[index]}, <${previewProvider.ccEmails[index]}> - $formattedDate'),
+                              ),
+                              // SizedBox(width: 50,),
+                              Flexible(
+                                flex: 2,
+                                child: InkWell(
+                                  child: Text("remove",style: TextStyle(color: Colors.red)),
+                                  onTap: () =>
+                                      previewProvider.removeCCRecipient(index),
+                                ),
                               ),
                             ],
                           );
@@ -4811,6 +4859,7 @@ Date
                                 CopySendNametextController.clear();
                               },
                               child: Container(
+                                width: MediaQuery.of(context).size.width * 0.05,
                                   padding: EdgeInsets.all(10),
                                   margin: EdgeInsets.all(11),
                                 decoration: BoxDecoration(
@@ -5928,13 +5977,23 @@ Date
 
                             Map<String, dynamic> AboutMEDatas = {
                               'About_Me_Label': AboutMeLabeltextController.text,
-                              'AB_Status' : "Complete",
+                              'AB_Status' : "Complete and Sent",
                               'AB_Description' : AboutMeDescriptiontextController.text,
                               'AB_Useful_Info' : AboutMeUseFulInfotextController.text,
                               'AB_Date' : AboutMeDatetextController.text,
                               'AB_Attachment' : "",
                               'Solutions': solutionsList,
                               'Challenges': challengesList,
+                              'Report_sent_to' : [{'name':  SendNametextController.text, 'email': SendEmailtextController.text, 'datetime': formattedDate}],
+                              'Report_sent_to_cc' : List.generate(
+                                previewProvider.ccEmails.length,
+                                    (index) => {
+                                  'name': previewProvider.ccNames[index],
+                                  'email': previewProvider.ccEmails[index],
+                                  'datetime': formattedDate, // Format datetime
+                                },
+                              ),
+
                             };
 
                             String solutionJson = json.encode(AboutMEDatas);
@@ -5943,12 +6002,41 @@ Date
                             ProgressDialog.show(context, "Completing", Icons.save);
                             await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
 
+                            final Uint8List pdfBytes = await makePdf(challengesList,solutionsList);
+                            String base64EncodedData = base64.encode(pdfBytes);
+                            String filename = "${About_Me_Label}.pdf";
+                            print("sendMailPopUp chunks: ${base64EncodedData}");
+                            print("sendMailPopUp filename: ${ filename}");
+                            await ApiRepository().sendEmailWithAttachment(
+                                context,
+                                SendEmailtextController.text,
+                                SendNametextController.text,
+                                CopySendEmailtextController.text,
+                                CopySendNametextController.text,
+                                base64EncodedData,
+                                filename,
+                              ccEmails: previewProvider.ccEmails,
+                              ccNames: previewProvider.ccNames,
+                            );
+
+                            await downloadAboutMePdf(challengesList,solutionsList);
+
+                            print(SendEmailtextController.text);
+                            print(CopySendEmailtextController.text);
+                            print(SendNametextController.text);
+                            print(CopySendNametextController.text);
+
+
+                            setState(() {
+                              Navigator.pop(context);
+                            });
+
                             ProgressDialog.hide();
 
-                            sendMailPopUp(challengesList,solutionsList);
-                            //
-                            // downloadAboutMePdf(challengesList,solutionsList);
+                            // sendMailPopUp(challengesList,solutionsList);
 
+                            // downloadAboutMePdf(challengesList,solutionsList);
+///
                             // selectedEmail = null;
                             // nameController.clear();
                             // searchEmailcontroller.clear();
@@ -5988,6 +6076,7 @@ Date
                             // setState(() {
                             //   page.jumpToPage(1);
                             // });
+
                           },
                           child:Container(
                             padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
@@ -6290,6 +6379,9 @@ Date
 
 
                           ProgressDialog.hide();
+                          setState(() {
+                            Navigator.pop(context);
+                          });
                           // selectedEmail = null;
                           // SendEmailtextController.clear();
                           // SendNametextController.clear();
@@ -6327,9 +6419,7 @@ Date
                           // _previewProvider.PreviewChallengesList.clear();
                           // _previewProvider.PreviewSolutionList.clear();
                           // _navigateToTab(0);
-                          setState(() {
-                            Navigator.pop(context);
-                          });
+
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(horizontal: 15),
@@ -12359,6 +12449,7 @@ Date
                                 userAboutMEProvider.editpreviewKeywordssss.clear();
                                 userAboutMEProvider.editpreviewtags.clear();
                                 userAboutMEProvider.editpreview = null;
+                                userAboutMEProvider.editborderColor = false;
                                 Navigator.pop(context);
                               },
                               child: Icon(Icons.close)),
@@ -12377,7 +12468,7 @@ Date
                                   // height: 400,
                                   padding: EdgeInsets.all(20),
                                   decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey),
+                                      border: Border.all(color: userAboutMEProvider.editborderColor==false ? Colors.orange : Colors.green, width: 4),
                                       borderRadius: BorderRadius.circular(20)
                                   ),
                                   child: SingleChildScrollView(
@@ -12451,7 +12542,7 @@ Date
                                                   })
                                             ],
                                           ),
-                                          SizedBox(height: 5,),
+                                          // SizedBox(height: 5,),
                                           (FinalDescription==""|| FinalDescription==null) ? Container() :  Row(
                                             mainAxisAlignment: MainAxisAlignment.start,
                                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -12471,12 +12562,27 @@ Date
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               // Text("Impact: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
-                                              Flexible(child: Text(Impact,  style: GoogleFonts.montserrat(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontStyle: FontStyle.italic,
-                                                  fontSize: 20,
-                                                  color: Colors.grey),
-                                                maxLines: null,)),
+                                              ///
+                                              // Flexible(child: Text(Impact,  style: GoogleFonts.montserrat(
+                                              //     fontWeight: FontWeight.w500,
+                                              //     fontStyle: FontStyle.italic,
+                                              //     fontSize: 20,
+                                              //     color: Colors.grey),
+                                              //   maxLines: null,)),
+
+                                              Flexible(
+                                                child: BubbleSpecialThree(
+                                                  text: Impact,
+                                                  color: userAboutMEProvider.editborderColor==false ? Colors.orange : Colors.green,
+                                                  tail: true,
+                                                  isSender: false,
+                                                  textStyle: GoogleFonts.montserrat(
+                                                      fontWeight: FontWeight.w500,
+                                                      fontStyle: FontStyle.italic,
+                                                      fontSize: 20,
+                                                      color: Colors.black),
+                                                ),
+                                              ),
                                             ],
                                           ),
 
@@ -12702,7 +12808,7 @@ Date
                                                                     padding: EdgeInsets.all(12),
                                                                     width: 330,
                                                                     decoration: BoxDecoration(
-                                                                      border: Border.all(color: Colors.orange),
+                                                                      border: Border.all(color: Colors.orange, width : 4),
                                                                       borderRadius: BorderRadius.circular(20),
                                                                     ),
                                                                     child: SingleChildScrollView(
@@ -12762,13 +12868,14 @@ Date
                                                                                         userAboutMEProvider.updateEditChallengePreview(
                                                                                             challengesData['Label'],
                                                                                             challengesData['Description'],
-                                                                                            challengesData['Final_Description'],
+                                                                                            challengesData['Final_description'],
                                                                                             challengesData['Impact'],
                                                                                             challengesData['Keywords'],
                                                                                             challengesData['tags'],
                                                                                             challengesData['id'],
                                                                                             isTrueOrFalse,
-                                                                                            challengesData
+                                                                                            challengesData,
+                                                                                          false
                                                                                         );
                                                                                       },
                                                                                       icon: Icon(Icons.visibility, color: Colors.blue,)
@@ -12888,7 +12995,7 @@ Date
                                   // height: 400,
                                   padding: EdgeInsets.all(15),
                                   decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey),
+                                      border: Border.all(color: Colors.green, width: 4),
                                       borderRadius: BorderRadius.circular(20)
                                   ),
                                   child: SingleChildScrollView(
@@ -12989,7 +13096,7 @@ Date
                                                             padding: EdgeInsets.all(12),
                                                             width: 330,
                                                             decoration: BoxDecoration(
-                                                              border: Border.all(color: Colors.green),
+                                                              border: Border.all(color: Colors.green,width : 4),
                                                               borderRadius: BorderRadius.circular(20),
                                                             ),
                                                             child: SingleChildScrollView(
@@ -13050,13 +13157,14 @@ Date
                                                                                 userAboutMEProvider.updateEditSolutionPreview(
                                                                                     solutionData['Label'],
                                                                                     solutionData['Description'],
-                                                                                    solutionData['Final_Description'],
+                                                                                    solutionData['Final_description'],
                                                                                     solutionData['Impact'],
                                                                                     solutionData['Keywords'],
                                                                                     solutionData['tags'],
                                                                                     solutionData['id'],
                                                                                     isTrueOrFalse,
-                                                                                    solutionData
+                                                                                    solutionData,
+                                                                                  true
                                                                                 );
                                                                               },
 
@@ -13427,6 +13535,7 @@ Date
                                 userAboutMEProvider.editpreviewKeywordssss.clear();
                                 userAboutMEProvider.editpreviewtags.clear();
                                 userAboutMEProvider.editpreview = null;
+                                userAboutMEProvider.editborderColor = false;
                                 Navigator.pop(context);
                               },
                               child: Icon(Icons.close)),
@@ -13445,7 +13554,7 @@ Date
                                   // height: 400,
                                   padding: EdgeInsets.all(20),
                                   decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey),
+                                      border: Border.all(color: userAboutMEProvider.editborderColor==false ? Colors.green : Colors.orange, width: 4),
                                       borderRadius: BorderRadius.circular(20)
                                   ),
                                   child: SingleChildScrollView(
@@ -13519,7 +13628,7 @@ Date
                                                   })
                                             ],
                                           ),
-                                          SizedBox(height: 5,),
+                                          // SizedBox(height: 5,),
                                           (FinalDescription==""|| FinalDescription==null) ? Container() :  Row(
                                             mainAxisAlignment: MainAxisAlignment.start,
                                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -13539,13 +13648,27 @@ Date
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               // Text("Impact: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
-                                              Flexible(child: Text(Impact,  style: GoogleFonts.montserrat(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontStyle: FontStyle.italic,
-                                                  fontSize: 20,
-                                                  color: Colors.grey),
-                                                maxLines: null,)),
-                                            ],
+                                              ///
+                                              // Flexible(child: Text(Impact,  style: GoogleFonts.montserrat(
+                                              //     fontWeight: FontWeight.w500,
+                                              //     fontStyle: FontStyle.italic,
+                                              //     fontSize: 20,
+                                              //     color: Colors.grey),
+                                              //   maxLines: null,)),
+                                              Flexible(
+                                                child: BubbleSpecialThree(
+                                                  text: Impact,
+                                                  color: userAboutMEProvider.editborderColor==false ? Colors.green : Colors.orange,
+                                                  tail: true,
+                                                  isSender: false,
+                                                  textStyle: GoogleFonts.montserrat(
+                                                      fontWeight: FontWeight.w500,
+                                                      fontStyle: FontStyle.italic,
+                                                      fontSize: 20,
+                                                      color: Colors.black),
+                                                ),
+                                              )
+                                            ]
                                           ),
 
                                           SizedBox(height: 10,),
@@ -13775,7 +13898,7 @@ Date
                                                                     padding: EdgeInsets.all(12),
                                                                     width: 330,
                                                                     decoration: BoxDecoration(
-                                                                      border: Border.all(color: Colors.green),
+                                                                      border: Border.all(color: Colors.green,width : 4),
                                                                       borderRadius: BorderRadius.circular(20),
                                                                     ),
                                                                     child: SingleChildScrollView(
@@ -13836,13 +13959,14 @@ Date
                                                                                         userAboutMEProvider.updateEditSolutionPreview(
                                                                                             solutionData['Label'],
                                                                                             solutionData['Description'],
-                                                                                            solutionData['Final_Description'],
+                                                                                            solutionData['Final_description'],
                                                                                             solutionData['Impact'],
                                                                                             solutionData['Keywords'],
                                                                                             solutionData['tags'],
                                                                                             solutionData['id'],
                                                                                             isTrueOrFalse,
-                                                                                            solutionData
+                                                                                            solutionData,
+                                                                                          false
                                                                                         );
                                                                                       },
 
@@ -13959,7 +14083,7 @@ Date
                                   // height: 400,
                                   padding: EdgeInsets.all(15),
                                   decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey),
+                                      border: Border.all(color: Colors.orange, width: 4),
                                       borderRadius: BorderRadius.circular(20)
                                   ),
                                   child: SingleChildScrollView(
@@ -14266,7 +14390,7 @@ Date
                                                             padding: EdgeInsets.all(12),
                                                             width: 330,
                                                             decoration: BoxDecoration(
-                                                              border: Border.all(color: Colors.orange),
+                                                              border: Border.all(color: Colors.orange,width : 4),
                                                               borderRadius: BorderRadius.circular(20),
                                                             ),
                                                             child: SingleChildScrollView(
@@ -14326,13 +14450,14 @@ Date
                                                                                 userAboutMEProvider.updateEditChallengePreview(
                                                                                     challengesData['Label'],
                                                                                     challengesData['Description'],
-                                                                                    challengesData['Final_Description'],
+                                                                                    challengesData['Final_description'],
                                                                                     challengesData['Impact'],
                                                                                     challengesData['Keywords'],
                                                                                     challengesData['tags'],
                                                                                     challengesData['id'],
                                                                                     isTrueOrFalse,
-                                                                                    challengesData
+                                                                                    challengesData,
+                                                                                  true
                                                                                 );
                                                                               },
                                                                               icon: Icon(Icons.visibility, color: Colors.blue,)
@@ -16101,7 +16226,7 @@ Date
       _messages.insert(0, defaulttext);
       // _typingUsers.add(_gptChatUser);
     });
-    ProgressDialog.show(context, "Refine", Icons.search);
+    ProgressDialog.show(context, "Searching Challenges", Icons.search);
 
     List<Messages> _messagesHistory = _messages.reversed.map((m) {
       return Messages(role: Role.user, content: defaulttext);
@@ -16152,7 +16277,7 @@ Date
       _messages.insert(0, defaulttext);
       // _typingUsers.add(_gptChatUser);
     });
-    ProgressDialog.show(context, "Search", Icons.search);
+    ProgressDialog.show(context, "Searching Challenges", Icons.search);
 
     List<Messages> _messagesHistory = _messages.reversed.map((m) {
       return Messages(role: Role.user, content: defaulttext);
