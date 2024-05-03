@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:js_interop';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -110,6 +112,26 @@ class UserAboutMEProvider with ChangeNotifier{
     // print("listname: $listname");
     // print("indexToUpdate: $indexToUpdate");
     // print("updatedData: $updatedData");
+    notifyListeners();
+  }
+
+   updateNotesByIdChallenges(listname,Id,newNotes) {
+     listname.forEach((challenge) {
+      if (challenge.id == Id) {
+        challenge.notes = newNotes;
+      }
+    });
+    notifyListeners();
+  }
+
+   updateNotesByIdSolutions(listname,Id,newNotes,InPlace,Provider) {
+     listname.forEach((solution) {
+      if (solution.id == Id) {
+        solution.notes = newNotes;
+        solution.InPlace = InPlace;
+        solution.Provider = Provider;
+      }
+    });
     notifyListeners();
   }
 
@@ -561,7 +583,7 @@ class UserAboutMEProvider with ChangeNotifier{
         id: ChallengesDetails['id'],
         label: ChallengesDetails['Label'],
         description: ChallengesDetails['Description'],
-        notes: "",
+        notes: ChallengesDetails['Notes'],
         Source: ChallengesDetails['Source'],
         Status: ChallengesDetails['Challenge Status'],
         tags: ChallengesDetails['tags'],
@@ -596,7 +618,7 @@ class UserAboutMEProvider with ChangeNotifier{
         id: thriversDetails['id'],
         label: thriversDetails['Label'],
         description: thriversDetails['Description'],
-        notes: "",
+        notes: thriversDetails['Notes'],
         Source: thriversDetails['Source'],
         Status: thriversDetails['Thirver Status'],
         tags: thriversDetails['tags'],
@@ -625,7 +647,6 @@ class UserAboutMEProvider with ChangeNotifier{
   void EditChallengeList(challengesList) {
 
     for(var ChallengesDetails in challengesList) {
-
       editchallengess.add(ChallengesModel(
           id: ChallengesDetails['id'],
           label: ChallengesDetails['Label'],
@@ -774,7 +795,7 @@ class UserAboutMEProvider with ChangeNotifier{
         'Label':solution.label,
         'Description':solution.description,
         'Source':solution.Source,
-        'Challenge Status':solution.Source,
+        'Challenge Status':solution.Status,
         'tags':solution.tags,
         'Created By':solution.CreatedBy,
         'Created Date':solution.CreatedDate,
@@ -853,7 +874,7 @@ class UserAboutMEProvider with ChangeNotifier{
         id: ChallengesDetails['id'],
         label: ChallengesDetails['Label'],
         description: ChallengesDetails['Description'],
-        notes: "",
+        notes: ChallengesDetails['Notes'],
         Source: ChallengesDetails['Source'],
         Status: ChallengesDetails['Challenge Status'],
         tags: ChallengesDetails['tags'],
@@ -871,7 +892,7 @@ class UserAboutMEProvider with ChangeNotifier{
       ));
       isEditChallengeListAdded[ChallengesDetails['id']] = value;
 
-      print("selectedrecommendedChallenges: $editchallengess");
+      print("selectedrecommendedChallenges: ${editchallengess}");
 
       print("EditRecommendedChallengeAdd: $isEditChallengeListAdded");
     }
@@ -888,7 +909,7 @@ class UserAboutMEProvider with ChangeNotifier{
         id: SolutionDetails['id'],
         label: SolutionDetails['Label'],
         description: SolutionDetails['Description'],
-        notes: "",
+        notes: SolutionDetails['Notes'],
         Source: SolutionDetails['Source'],
         Status: SolutionDetails['Thirver Status'],
         tags: SolutionDetails['tags'],
@@ -904,7 +925,7 @@ class UserAboutMEProvider with ChangeNotifier{
       ));
       isEditSolutionListAdded[SolutionDetails['id']] = value;
 
-      print("selectedrecommendedChallenges: $editsolutionss");
+      print("selectedrecommendedChallenges: ${editsolutionss.first.id}");
 
       print("EditRecommendedChallengeAdd: $isEditSolutionListAdded");
     }

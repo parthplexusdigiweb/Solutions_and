@@ -418,9 +418,11 @@ Date
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
-                            child: InkWell(
-                              onTap: () async {
-                                // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+                            child:Consumer<PreviewProvider>(
+                                builder: (c,previewProvider, _){
+                                  return InkWell(
+                                    onTap: () async {
+                                      // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
                                 //
                                 //
                                 // print("querySnapshot :${querySnapshot}");
@@ -430,58 +432,65 @@ Date
                                 //   // Get the last document
                                 //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
                                 //   print("lastDocument :$lastDocument");
-                                  ///
-                                  // showEditAboutMeDialogBox(lastDocument,4);
+                                      ///
+
+                                      // showEditAboutMeDialogBox(lastDocument,4);
                                   // showReportViewPageDialogBox(lastDocument);
-              
-                                  About_Me_Label = aboutMeData['About_Me_Label']==null ? "" : aboutMeData['About_Me_Label'];
-                                  AboutMeLabeltextController.text = aboutMeData['About_Me_Label']==null ? "" : aboutMeData['About_Me_Label'];
-                                  AboutMeDescriptiontextController.text = aboutMeData['AB_Description']==null ? "" : aboutMeData['AB_Description'];
-                                  AboutMeUseFulInfotextController.text = aboutMeData['AB_Useful_Info']==null ? "" : aboutMeData['AB_Useful_Info'];
-                                  AboutMeDatetextController.text = aboutMeData['AB_Date']==null ? "" : aboutMeData['AB_Date'];
-                                  selectedEmail = aboutMeData['Email']==null ? "" : aboutMeData['Email'];
-                                  _previewProvider.email = selectedEmail;
-                                  searchEmailcontroller.text = aboutMeData['Email']==null ? "" : aboutMeData['Email'];
+                                      ///
+
+                                      // About_Me_Label = aboutMeData['About_Me_Label']==null ? "" : aboutMeData['About_Me_Label'];
+                                  // AboutMeLabeltextController.text = aboutMeData['About_Me_Label']==null ? "" : aboutMeData['About_Me_Label'];
+                                  // AboutMeDescriptiontextController.text = aboutMeData['AB_Description']==null ? "" : aboutMeData['AB_Description'];
+                                  // AboutMeUseFulInfotextController.text = aboutMeData['AB_Useful_Info']==null ? "" : aboutMeData['AB_Useful_Info'];
+                                  // AboutMeDatetextController.text = aboutMeData['AB_Date']==null ? "" : aboutMeData['AB_Date'];
+                                  // selectedEmail = aboutMeData['Email']==null ? "" : aboutMeData['Email'];
                                   // _previewProvider.email = selectedEmail;
-                                  nameController.text = aboutMeData['User_Name']==null ? "" : aboutMeData['User_Name'];
-                                  _previewProvider.name = nameController.text;
-                                  employerController.text = aboutMeData['Employer']==null ? "" : aboutMeData['Employer'];
-                                  _previewProvider.employer = employerController.text;
-                                  divisionOrSectionController.text = aboutMeData['Division_or_Section']==null ? "" : aboutMeData['Division_or_Section'];
-                                  _previewProvider.division = divisionOrSectionController.text;
-                                  RoleController.text = aboutMeData['Role']==null ? "" : aboutMeData['Role'];
-                                  _previewProvider.role = RoleController.text;
-                                  LocationController.text = aboutMeData['Location']==null ? "" : aboutMeData['Location'];
-                                  _previewProvider.location = LocationController.text;
-                                  EmployeeNumberController.text = aboutMeData['Employee_Number']==null ? "" : aboutMeData['Employee_Number'];
-                                  _previewProvider.employeeNumber = EmployeeNumberController.text;
-                                  LineManagerController.text = aboutMeData['Line_Manager']==null ? "" : aboutMeData['Line_Manager'];
-                                  _previewProvider.linemanager = LineManagerController.text;
+                                  // searchEmailcontroller.text = aboutMeData['Email']==null ? "" : aboutMeData['Email'];
+                                  // // _previewProvider.email = selectedEmail;
+                                  // nameController.text = aboutMeData['User_Name']==null ? "" : aboutMeData['User_Name'];
+                                  // _previewProvider.name = nameController.text;
+                                  // employerController.text = aboutMeData['Employer']==null ? "" : aboutMeData['Employer'];
+                                  // _previewProvider.employer = employerController.text;
+                                  // divisionOrSectionController.text = aboutMeData['Division_or_Section']==null ? "" : aboutMeData['Division_or_Section'];
+                                  // _previewProvider.division = divisionOrSectionController.text;
+                                  // RoleController.text = aboutMeData['Role']==null ? "" : aboutMeData['Role'];
+                                  // _previewProvider.role = RoleController.text;
+                                  // LocationController.text = aboutMeData['Location']==null ? "" : aboutMeData['Location'];
+                                  // _previewProvider.location = LocationController.text;
+                                  // EmployeeNumberController.text = aboutMeData['Employee_Number']==null ? "" : aboutMeData['Employee_Number'];
+                                  // _previewProvider.employeeNumber = EmployeeNumberController.text;
+                                  // LineManagerController.text = aboutMeData['Line_Manager']==null ? "" : aboutMeData['Line_Manager'];
+                                  // _previewProvider.linemanager = LineManagerController.text;
+                                  //
+                                  // mycircumstancesController.text = aboutMeData['My_Circumstance']==null ? "" : aboutMeData['My_Circumstance'];
+                                  // _previewProvider.mycircumstance = mycircumstancesController.text;
+                                  // MystrengthsController.text = aboutMeData['My_Strength']==null ? "" : aboutMeData['My_Strength'];
+                                  // _previewProvider.mystrength = MystrengthsController.text;
+                                  // myOrganisationController.text = aboutMeData['My_Organisation']==null ? "" : aboutMeData['My_Organisation'];
+                                  // _previewProvider.myorganization = myOrganisationController.text;
+                                  // myOrganisation2Controller.text = aboutMeData['My_Challenges_Organisation']==null ? "" : aboutMeData['My_Challenges_Organisation'];
+                                  // _previewProvider.mychallenge = myOrganisation2Controller.text;
+
+                                      ///
+
+                                      About_Me_Label = previewProvider.title;
+
+
+                                  // List<dynamic> challengesList = aboutMeData['Challenges'] ?? [];
+                                  // List<dynamic> solutionsList = aboutMeData['Solutions'] ?? [];
+                                  //
+                                  // Iterable<Map<String, dynamic>> challengesIterable = challengesList.map((item) => item as Map<String, dynamic>);
+                                  // Iterable<Map<String, dynamic>> solutionsIterable = solutionsList.map((item) => item as Map<String, dynamic>);
+                                  //
+                                  // List<Map<String, dynamic>> abc = [];
+                                  // List<Map<String, dynamic>> xyz = [];
+                                  //
+                                  // abc.addAll(challengesIterable);
+                                  // xyz.addAll(solutionsIterable);
               
-                                  mycircumstancesController.text = aboutMeData['My_Circumstance']==null ? "" : aboutMeData['My_Circumstance'];
-                                  _previewProvider.mycircumstance = mycircumstancesController.text;
-                                  MystrengthsController.text = aboutMeData['My_Strength']==null ? "" : aboutMeData['My_Strength'];
-                                  _previewProvider.mystrength = MystrengthsController.text;
-                                  myOrganisationController.text = aboutMeData['My_Organisation']==null ? "" : aboutMeData['My_Organisation'];
-                                  _previewProvider.myorganization = myOrganisationController.text;
-                                  myOrganisation2Controller.text = aboutMeData['My_Challenges_Organisation']==null ? "" : aboutMeData['My_Challenges_Organisation'];
-                                  _previewProvider.mychallenge = myOrganisation2Controller.text;
-              
-                                  List<dynamic> challengesList = aboutMeData['Challenges'] ?? [];
-                                  List<dynamic> solutionsList = aboutMeData['Solutions'] ?? [];
-              
-                                  Iterable<Map<String, dynamic>> challengesIterable = challengesList.map((item) => item as Map<String, dynamic>);
-                                  Iterable<Map<String, dynamic>> solutionsIterable = solutionsList.map((item) => item as Map<String, dynamic>);
-              
-                                  List<Map<String, dynamic>> abc = [];
-                                  List<Map<String, dynamic>> xyz = [];
-              
-                                  abc.addAll(challengesIterable);
-                                  xyz.addAll(solutionsIterable);
               
               
-              
-                                  Uint8List pdfBytes = await makePdf(abc, xyz);
+                                  Uint8List pdfBytes = await makePdf(challengesList, solutionsList );
               
                                   showDialog(
                                       context: context,
@@ -555,7 +564,8 @@ Date
                                 ),
                               ),
               
-                            ),
+                            );
+                          })
                           ),
                           Expanded(
                             child: InkWell(
@@ -571,7 +581,7 @@ Date
                                 //   // Get the last document
                                 //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
                                 //   print("lastDocument :$lastDocument");
-                                  showEditAboutMeDialogBox(aboutMeData,5);
+                                  showEditAboutMeDialogBox(5);
                                 // }
                                 ///
                                 // else{
@@ -873,7 +883,7 @@ Date
     );
   }
 
-  void showEditAboutMeDialogBox(aboutMeData, int tabindex){
+  void showEditAboutMeDialogBox( tabindex){
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -895,15 +905,15 @@ Date
                         // userAboutMEProvider.editpreviewKeywordssss.clear();
                         // userAboutMEProvider.editpreviewtags.clear();
                         // userAboutMEProvider.editpreview = null;
-                        widget.refreshPage;
+                        widget.refreshPage();
                         Navigator.pop(context);
                       },
                       child: Icon(Icons.close)),
                 ],
               ),
               content: SizedBox(
-          width: double.maxFinite,
-            child: PreviewPage(widget.aboutMeData),
+                width: double.maxFinite,
+                child: PreviewPage(),
           )
           );
           }));
@@ -2577,15 +2587,11 @@ Date
                             SizedBox(height: 6,),
                             Consumer<UserAboutMEProvider>(
                               builder: (context, userAboutMEProvider, _) {
-                                // print("challengesssss : ${userAboutMEProvider.challengess}");
-
-                                // userAboutMEProvider.EditChallengeList(true,aboutMeData["Challenges"]);
 
                                 return (userAboutMEProvider.editchallengess.isEmpty) ?
                                 Container(
                                   // height: 350,
                                   height: MediaQuery.of(context).size.height * .48,
-                                  // width: MediaQuery.of(context).size.width * .46,
 
                                   child: Center(
                                     child: Text("No Challenges Added Yet",
@@ -2610,7 +2616,7 @@ Date
                                   child:SingleChildScrollView(
                                     scrollDirection: Axis.vertical,
                                     child: SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
+                                      // scrollDirection: Axis.horizontal,
                                       child: DataTable(
                                         dataRowMaxHeight:80,
                                         headingTextStyle: GoogleFonts.montserrat(
@@ -2661,17 +2667,22 @@ Date
                                             cells: [
 
                                               DataCell(
-                                                  Text(challenge.label,
-                                                      overflow: TextOverflow.ellipsis,maxLines: 1,
-                                                      style: GoogleFonts.montserrat(
-                                                          textStyle: Theme.of(context).textTheme.bodySmall,
-                                                          fontWeight: FontWeight.w600,
-                                                          color: Colors.black)
+                                                  Container(
+                                                    // width: MediaQuery.of(context).size.width * .05,
+                                                    child: Text(challenge.label,
+                                                        overflow: TextOverflow.ellipsis,maxLines: 2,
+                                                        style: GoogleFonts.montserrat(
+                                                            textStyle: Theme.of(context).textTheme.bodySmall,
+                                                            fontWeight: FontWeight.w600,
+                                                            color: Colors.black)
+                                                    ),
                                                   )),
+
                                               DataCell(
                                                   Container(
-                                                    width: MediaQuery.of(context).size.width * .15,
-                                                      child: Text(challenge.Impact,
+                                                    // width: MediaQuery.of(context).size.width * .15,
+                                                      child: Text(challenge.notes.toString().isEmpty || challenge.notes.toString() == "" ? challenge.Impact : challenge.notes,
+                                                      // child: Text(NotesController.text.isEmpty || NotesController.text.toString() == "" ? challenge.Impact : NotesController.text,
                                                           overflow: TextOverflow.ellipsis,maxLines: 2,
                                                           style: GoogleFonts.montserrat(
                                                               textStyle: Theme.of(context).textTheme.bodySmall,
@@ -2680,7 +2691,7 @@ Date
                                                       ))),
                                               DataCell(
                                                   Container(
-                                                      width: MediaQuery.of(context).size.width * .15,
+                                                      // width: MediaQuery.of(context).size.width * .15,
                                                       child: Text(challenge.Final_description,
                                                           overflow: TextOverflow.ellipsis,maxLines: 2,
                                                           style: GoogleFonts.montserrat(
@@ -2709,9 +2720,10 @@ Date
                                                           ),
                                                           IconButton(
                                                             onPressed: () {
-                                                              showconfirmChallengeDialogBox(challenge.id, challenge.label,challenge.description, challenge.Source, challenge.Status,challenge.tags,challenge.CreatedBy,
+                                                              showEditconfirmChallengeDialogBox(challenge.id, challenge.label,challenge.description, challenge.Source, challenge.Status,challenge.tags,challenge.CreatedBy,
                                                                   challenge.CreatedDate,challenge.ModifiedBy,challenge.ModifiedDate,challenge.OriginalDescription,challenge.Impact,challenge.Final_description,
-                                                                  challenge.Category,challenge.Keywords,challenge.PotentialStrengths,challenge.HiddenStrengths, index,userAboutMEProvider.editchallengess,challenge.notes,challenge.attachment);                                        print("challenge.isConfirmed: ${challenge.isConfirmed}");
+                                                                  challenge.Category,challenge.Keywords,challenge.PotentialStrengths,challenge.HiddenStrengths, index,userAboutMEProvider.editchallengess,challenge.notes,);
+                                                              print("challenge.isConfirmed: ${challenge.isConfirmed}");
                                                             },
                                                             icon: Icon(Icons.edit, color: Colors.green),
                                                           ),
@@ -2747,7 +2759,9 @@ Date
                                                         onPressed: () {
                                                           showconfirmChallengeDialogBox(challenge.id, challenge.label,challenge.description, challenge.Source, challenge.Status,challenge.tags,challenge.CreatedBy,
                                                               challenge.CreatedDate,challenge.ModifiedBy,challenge.ModifiedDate,challenge.OriginalDescription,challenge.Impact,challenge.Final_description,
-                                                              challenge.Category,challenge.Keywords,challenge.PotentialStrengths,challenge.HiddenStrengths, index,userAboutMEProvider.editchallengess,challenge.notes,challenge.attachment);                                        print("challenge.isConfirmed: ${challenge.isConfirmed}");
+                                                              challenge.Category,challenge.Keywords,challenge.PotentialStrengths,challenge.HiddenStrengths,
+                                                              index,userAboutMEProvider.editchallengess,challenge.notes,challenge.attachment);
+                                                          print("challenge.isConfirmed: ${challenge.isConfirmed}");
                                                         },
                                                         icon: Icon(Icons.check, color: Colors.green),
                                                       ),
@@ -2847,8 +2861,8 @@ Date
                           await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
                           ProgressDialog.hide();
 
-                          challengesList.clear();
-                          _userAboutMEProvider.editchallengess.clear();
+                          // challengesList.clear();
+                          // _userAboutMEProvider.editchallengess.clear();
                           await _navigateToTab(4);
                           widget.refreshPage();
                            // Navigator.pop(context);
@@ -3039,11 +3053,11 @@ Date
                                     ),
                                     // width: MediaQuery.of(context).size.width,
                                     child:SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
+                                      // scrollDirection: Axis.horizontal,
                                       child: SingleChildScrollView(
                                         scrollDirection: Axis.vertical,
                                         child: DataTable(
-                                          dataRowMaxHeight:85 ,
+                                          dataRowMaxHeight:90 ,
                                           headingTextStyle: GoogleFonts.montserrat(
                                               textStyle: Theme.of(context).textTheme.titleMedium,
                                               fontWeight: FontWeight.w500,
@@ -3108,7 +3122,11 @@ Date
                                                 DataCell(
                                                     Container(
                                                       width: MediaQuery.of(context).size.width * .15,
-                                                      child: Text(solution.Impact,
+                                                      // child: Text(solution.Impact,
+                                                      // child: Text(solution.notes.toString().isEmpty || solution.notes.toString() == "" ? solution.Impact : solution.notes,
+                                                      child: Text(solution.notes.toString() == "gpt4"
+                                                          || solution.notes.toString() == "gpt3.5"
+                                                          || solution.notes.toString() == "modified impact to be future based" ? solution.Impact : solution.notes,
                                                           overflow: TextOverflow.ellipsis,maxLines: 2,
                                                           style: GoogleFonts.montserrat(
                                                               textStyle: Theme.of(context).textTheme.bodySmall,
@@ -3118,7 +3136,7 @@ Date
                                                     )),
                                                 DataCell(
                                                     Container(
-                                                        width: MediaQuery.of(context).size.width * .15,
+                                                        // width: MediaQuery.of(context).size.width * .15,
                                                         child: Text(solution.Final_description,
                                                             overflow: TextOverflow.ellipsis,maxLines: 2,
                                                             style: GoogleFonts.montserrat(
@@ -3146,10 +3164,11 @@ Date
                                                             ),
                                                             IconButton(
                                                               onPressed: () {
-                                                                showconfirmSolutionsDialogBox(solution.id, solution.label,solution.description, solution.Source, solution.Status,solution.tags,solution.CreatedBy,
+                                                                showEditconfirmSolutionsDialogBox(solution.id, solution.label,solution.description, solution.Source, solution.Status,solution.tags,solution.CreatedBy,
                                                                     solution.CreatedDate,solution.ModifiedBy,solution.ModifiedDate,solution.OriginalDescription,solution.Impact,solution.Final_description,
-                                                                    solution.Category,solution.Keywords,"","", index,userAboutMEProvider.editsolutionss,solution.notes,solution.attachment,solution.InPlace,solution.Provider);
-                                                                print("solution.isConfirmed: ${solution.isConfirmed}");
+                                                                    solution.Category,solution.Keywords,"","",userAboutMEProvider.editsolutionss,solution.notes,solution.Provider,solution.InPlace);
+                                                                print("solution.InPlace: ${solution.InPlace}");
+                                                                print("solution.Provider: ${solution.Provider}");
                                                               },
                                                               icon: Icon(Icons.edit, color: Colors.green),
                                                             ),
@@ -4500,7 +4519,7 @@ Date
 
   /// backup previwpage
 
-  Widget PreviewPage(aboutMeData){
+  Widget PreviewPage(){
     return Consumer<PreviewProvider>(
         builder: (c,previewProvider, _){
 
@@ -4582,7 +4601,7 @@ Date
                         ),
                       ),
 
-                      // SizedBox(width: 10,),
+                       // SizedBox(width: 10,),
                       //
                       // InkWell(
                       //   onTap: () async {
@@ -5347,7 +5366,8 @@ Date
                                                         solution['Created Date'], solution['Modified By'], solution['Modified Date'],
                                                         solution['Original Description'], solution['Impact'], solution['Final_description'],
                                                         solution['Category'], solution['Keywords'], solution['Potential Strengths'],
-                                                        solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']);
+                                                        solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],
+                                                        solution['InPlace']);
                                                   },
                                                 ),
                                                 IconButton(
@@ -5896,6 +5916,8 @@ Date
                             await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
 
                             // downloadAboutMePdf(challengesList,solutionsList);
+
+                            widget.refreshPage();
 
                             ProgressDialog.hide();
 
@@ -10457,8 +10479,11 @@ Date
 
                                 _previewProvider.PreviewChallengesList.add(solutionData);
 
-                                ProgressDialog.hide();
+                                userAboutMEProvider.updateNotesByIdChallenges(userAboutMEProvider.editchallengess,Id,NotesController.text);
 
+                                widget.refreshPage();
+
+                                ProgressDialog.hide();
 
                                 // await userAboutMEProvider.uploadFile(userAboutMEProvider.fileBytes, userAboutMEProvider.aadhar);
 
@@ -10474,10 +10499,8 @@ Date
 
                                 // print("solutionData['confirmed']: $isConfirmed");
 
-
-
-                                print("solutionsList.length: ${solutionsList.length}");
-                                print("solutionsList: ${solutionsList}");
+                                print("challengesList.length: ${challengesList.length}");
+                                print("challengesList: ${challengesList}");
                                 NotesController.clear();
                                 // userAboutMEProvider.selectedPriority = null;
                                 // userAboutMEProvider.selectedProvider = null;
@@ -10512,11 +10535,9 @@ Date
                                 ),
                               ),
                             ),
-
                           ),
                         ],
                       ),
-
                     ],
                     title: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -10700,6 +10721,14 @@ Date
 
     NotesController.text = Notes;
 
+    String createdDate = "";
+
+    if (CreatedDate is Timestamp) {
+      createdDate = formatTimestamp(CreatedDate);
+    } else if (CreatedDate != null) {
+      createdDate = CreatedDate.toString();
+    }
+
     print("Inside showconfirmrDialogBox");
     print("Id: CH0$Id");
     print("label: $label");
@@ -10708,7 +10737,7 @@ Date
     print("Status: $ChallengeStatus");
     print("tags: ${tags}");
     print("CreatedBy: $CreatedBy");
-    print("CreatedDate: $CreatedDate");
+    print("CreatedDate: $createdDate");
     print("ModifiedBy: $ModifiedBy");
     print("ModifiedDate: $ModifiedDate");
     print("OriginalDescription: $OriginalDescription");
@@ -10819,7 +10848,7 @@ Date
                                     'Challenge Status': ChallengeStatus,
                                     'tags': tags,
                                     'Created By': CreatedBy,
-                                    'Created Date': CreatedDate,
+                                    'Created Date': createdDate,
                                     'Modified By': ModifiedBy,
                                     'Modified Date': ModifiedDate,
                                     'Original Description': OriginalDescription,
@@ -10841,7 +10870,9 @@ Date
                                   print("Id not found in challengesList.");
                                 }
 
+                                userAboutMEProvider.updateNotesByIdChallenges(userAboutMEProvider.editchallengess,Id,NotesController.text);
 
+                                widget.refreshPage();
 
                                 ProgressDialog.hide();
 
@@ -11086,7 +11117,8 @@ Date
       createdDate = CreatedDate.toString();
     }
 
-    NotesController.text = Notes.toString()== "" || Notes.toString().isEmpty ? Impact.toString() : Notes;
+    // NotesController.text = Notes.toString()== "" || Notes.toString().isEmpty ? Impact.toString() : Notes;
+    NotesController.text = Notes.toString() == "gpt4" || Notes.toString() == "gpt3.5" || Notes.toString() == "modified impact to be future based" ? Impact.toString() : Notes;
     _userAboutMEProvider.selectedProvider = Provider;
     _userAboutMEProvider.selectedInPlace = InPlace;
 
@@ -11346,6 +11378,10 @@ Date
                                     _previewProvider.PreviewSolutionNiceToHave.add(solutionData);}
                                   if(_userAboutMEProvider.selectedInPlace == "No (Must Have)"){
                                     _previewProvider.PreviewSolutionMustHave.add(solutionData);}
+
+                                  userAboutMEProvider.updateNotesByIdSolutions(userAboutMEProvider.editsolutionss,Id,NotesController.text,userAboutMEProvider.selectedInPlace,userAboutMEProvider.selectedProvider);
+
+                                  widget.refreshPage();
 
                                   ProgressDialog.hide();
 
@@ -11709,6 +11745,14 @@ Date
     _userAboutMEProvider.selectedProvider = Provider;
     _userAboutMEProvider.selectedInPlace = InPlace;
 
+    String createdDate = "";
+
+    if (CreatedDate is Timestamp) {
+      createdDate = formatTimestamp(CreatedDate);
+    } else if (CreatedDate != null) {
+      createdDate = CreatedDate.toString();
+    }
+
     print("Inside showconfirmrDialogBox");
     print("pop up Id: $Id");
     print("label: $label");
@@ -11843,7 +11887,7 @@ Date
                                     'Challenge Status': ChallengeStatus,
                                     'tags': tags,
                                     'Created By': CreatedBy,
-                                    'Created Date': CreatedDate,
+                                    'Created Date': createdDate,
                                     'Modified By': ModifiedBy,
                                     'Modified Date': ModifiedDate,
                                     'Original Description': OriginalDescription,
@@ -11995,8 +12039,9 @@ Date
                                   print("Id not found in solutionData.");
                                 }
 
+                                userAboutMEProvider.updateNotesByIdSolutions(userAboutMEProvider.editsolutionss,Id,NotesController.text,userAboutMEProvider.selectedInPlace,userAboutMEProvider.selectedProvider);
 
-
+                                widget.refreshPage();
 
                                 ProgressDialog.hide();
 

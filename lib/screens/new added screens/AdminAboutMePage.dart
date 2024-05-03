@@ -1173,7 +1173,7 @@ Date
                     SizedBox(height: 5,),
 
                     FutureBuilder<QuerySnapshot>(
-                        future: FirebaseFirestore.instance.collection('AboutMe').orderBy("AB_id").get(),
+                        future: FirebaseFirestore.instance.collection('AboutMe').orderBy("AB_id", descending: true).get(),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
                             return Center(child: CircularProgressIndicator());
@@ -1204,6 +1204,7 @@ Date
                            return Expanded(
                              child: ListView.builder(
                                   itemCount:dataList.length ,
+                                  // reverse: true,
                                   // shrinkWrap: true,
                                   // physics: AlwaysScrollableScrollPhysics(),
                                   itemBuilder: (c,i){
@@ -1818,7 +1819,7 @@ Date
                                       Tab(icon: Icon(Icons.edit_attributes),text: "My attributes"),
                                       Tab(icon: Icon(Icons.sync_problem),text: "My challenges"),
                                       Tab(icon: Icon(Icons.checklist_rtl),text: "My solutions"),
-                                      Tab(icon: Icon(Icons.insert_drive_file),text: "Generate reports"),
+                                      Tab(icon: Icon(Icons.insert_drive_file),text: "Generate report"),
                                     ],
                                   ),
                                   Expanded(
@@ -5510,7 +5511,7 @@ Date
                                               DataCell(
                                                   Container(
                                                     child: Text(challenge.label,
-                                                        overflow: TextOverflow.ellipsis,maxLines: 1,
+                                                        overflow: TextOverflow.ellipsis,maxLines: 2,
                                                         style: GoogleFonts.montserrat(
                                                             textStyle: Theme.of(context).textTheme.bodySmall,
                                                             fontWeight: FontWeight.w600,
@@ -5519,8 +5520,9 @@ Date
                                                   )),
                                               DataCell(
                                                   Container(
-                                                    // width: 250,
-                                                      child: Text(challenge.Impact,
+                                                    width: MediaQuery.of(context).size.width * .15,
+                                                    //   child: Text(challenge.Impact,
+                                                      child: Text(challenge.notes.toString().isEmpty || challenge.notes.toString() == "" ? challenge.Impact : challenge.notes,
                                                           overflow: TextOverflow.ellipsis,maxLines: 2,
                                                           style: GoogleFonts.montserrat(
                                                               textStyle: Theme.of(context).textTheme.bodySmall,
@@ -5911,7 +5913,7 @@ Date
                             children: [
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-                                child: Text("Basket of solutions (${userAboutMEProvider.editsolutionss.length}): ",
+                                child: Text("Basket of solutions (${userAboutMEProvider.solutionss.length}): ",
                                   style: GoogleFonts.montserrat(
                                       textStyle: Theme.of(context).textTheme.titleLarge,
                                       fontWeight: FontWeight.bold,
@@ -6011,7 +6013,7 @@ Date
                                                   Container(
                                                     // width: 180,
                                                       child: Text(solution.label,
-                                                          overflow: TextOverflow.ellipsis,maxLines: 1,
+                                                          overflow: TextOverflow.ellipsis,maxLines: 2,
                                                           style: GoogleFonts.montserrat(
                                                               textStyle: Theme.of(context).textTheme.bodySmall,
                                                               fontWeight: FontWeight.w600,
@@ -6019,9 +6021,11 @@ Date
                                                       ))),
                                               DataCell(
                                                   Container(
-                                                    // width: 400,
-                                                      child: Text(solution.Impact,
-                                                          overflow: TextOverflow.ellipsis,maxLines: 2,
+                                                    width: MediaQuery.of(context).size.width * .15,
+                                                    //   child: Text(solution.Impact,
+                                                      child: Text(solution.notes.toString() == "gpt4"
+                                                          || solution.notes.toString() == "gpt3.5"
+                                                          || solution.notes.toString() == "modified impact to be future based" ? solution.Impact : solution.notes,                                                          overflow: TextOverflow.ellipsis,maxLines: 2,
                                                           style: GoogleFonts.montserrat(
                                                               textStyle: Theme.of(context).textTheme.bodySmall,
                                                               fontWeight: FontWeight.w600,
@@ -16104,6 +16108,8 @@ Date
 
                                 _previewProvider.PreviewChallengesList.add(solutionData);
 
+                                userAboutMEProvider.updateNotesByIdChallenges(userAboutMEProvider.challengess,Id,NotesController.text);
+
                                 ProgressDialog.hide();
 
 
@@ -16491,7 +16497,7 @@ Date
                                   print("Id not found in challengesList.");
                                 }
 
-
+                                userAboutMEProvider.updateNotesByIdChallenges(userAboutMEProvider.challengess,Id,NotesController.text);
 
                                 ProgressDialog.hide();
 
@@ -17006,6 +17012,8 @@ Date
                                 _previewProvider.PreviewSolutionNiceToHave.add(solutionData);}
                               if(_userAboutMEProvider.selectedInPlace == "No (Must Have)"){
                                 _previewProvider.PreviewSolutionMustHave.add(solutionData);}
+
+                                userAboutMEProvider.updateNotesByIdSolutions(userAboutMEProvider.solutionss,Id,NotesController.text,userAboutMEProvider.selectedInPlace,userAboutMEProvider.selectedProvider);
 
                                 ProgressDialog.hide();
 
@@ -17625,6 +17633,7 @@ Date
                                   print("Id not found in solutionData.");
                                 }
 
+                                userAboutMEProvider.updateNotesByIdSolutions(userAboutMEProvider.solutionss,Id,NotesController.text,userAboutMEProvider.selectedInPlace,userAboutMEProvider.selectedProvider);
 
 
 

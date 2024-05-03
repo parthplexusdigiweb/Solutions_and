@@ -55,4 +55,31 @@ class ChallengesModel {
     // required this.inPlace,
     // required this.priority,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'label': label,
+      'description': description,
+      'notes': notes,
+      'Source': Source,
+      'Status': Status,
+      'tags': tags,
+      'CreatedBy': CreatedBy,
+      'CreatedDate': CreatedDate,
+      'ModifiedBy': ModifiedBy,
+      'ModifiedDate': ModifiedDate,
+      'OriginalDescription': OriginalDescription,
+      'Final_description': Final_description,
+      'Impact': Impact,
+      'Category': Category,
+      'Keywords': Keywords,
+      'PotentialStrengths': PotentialStrengths,
+      'HiddenStrengths': HiddenStrengths,
+      'attachment_link': attachment_link,
+      'attachment': attachment,
+      'isConfirmed': isConfirmed,
+      'isChecked': isChecked,
+    };
+  }
 }
