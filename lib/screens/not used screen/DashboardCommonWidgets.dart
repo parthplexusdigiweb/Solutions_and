@@ -92,32 +92,34 @@ class DashboardCommonWidgets{
 
                       isLoggedIn?Container(
                         //margin: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-                        child: Row(
-                          children: [
-                            // showSettings??true?Padding(
-                            //   padding: const EdgeInsets.only(right:25.0,bottom: 10),
-                            //   child: IconButton(onPressed: (){Get.to(SettingsScreen(emailId: emailID??""));},icon: Icon(Icons.settings,color: Colors.white,size: 40,)),
-                            // ):Container(),
-                            showLogout??true?Padding(
-                              padding: const EdgeInsets.only(right:20.0,bottom: 0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  IconButton(onPressed: (){
-                                    print("logout to /");
-                                    context.go("/");
-                                  //   Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(builder: (context) => ThriverLandingScreen()),
-                                  // );
-                                    },icon: Icon(Icons.logout,color: Colors.white,size: 45,)),
-                                  SizedBox(height: 10,),
-                                  Text("Logout",style: TextStyle(color: Colors.white),textAlign: TextAlign.center,)
-                                ],
-                              ),
-                            ):Container(),
-                          ],
+                        child: Flexible(
+                          child: Row(
+                            children: [
+                              // showSettings??true?Padding(
+                              //   padding: const EdgeInsets.only(right:25.0,bottom: 10),
+                              //   child: IconButton(onPressed: (){Get.to(SettingsScreen(emailId: emailID??""));},icon: Icon(Icons.settings,color: Colors.white,size: 40,)),
+                              // ):Container(),
+                              showLogout??true?Padding(
+                                padding: const EdgeInsets.only(right:20.0,bottom: 0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    IconButton(onPressed: (){
+                                      print("logout to /");
+                                      context.go("/");
+                                    //   Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(builder: (context) => ThriverLandingScreen()),
+                                    // );
+                                      },icon: Icon(Icons.logout,color: Colors.white,size: 45,)),
+                                    SizedBox(height: 10,),
+                                    Text("Logout",style: TextStyle(color: Colors.white),textAlign: TextAlign.center,)
+                                  ],
+                                ),
+                              ):Container(),
+                            ],
+                          ),
                         ),
                       ):Container(
                         margin: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
@@ -231,27 +233,21 @@ class DashboardCommonWidgets{
                       ),visible: isLoggedIn,),
                       isLoggedIn?Container(
                         //margin: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-                        child: showSettings??true?Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right:10.0,bottom: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  IconButton(onPressed: (){
-                                    print("logout to /");
-                                    context.go("/");
-                                    },icon: Icon(Icons.logout,color: Colors.white,size: 20,)),
-                                  SizedBox(height: 10,),
-                                  Text("Logout",style: TextStyle(color: Colors.white),textAlign: TextAlign.center,)
-                                ],
-                              ),
+                        child: showSettings??true?Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.only(right:10.0,bottom: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                IconButton(onPressed: (){
+                                  print("logout to /");
+                                  context.go("/");
+                                  },icon: Icon(Icons.logout,color: Colors.white,size: 20,)),
+                                SizedBox(height: 10,),
+                                Text("Logout",style: TextStyle(color: Colors.white),textAlign: TextAlign.center,)
+                              ],
                             ),
-                            // Padding(
-                            //   padding: const EdgeInsets.only(right:10.0,bottom: 10),
-                            //   child: IconButton(onPressed: (){Get.to(SettingsScreen(emailId: emailID??""));},icon: Icon(Icons.settings,color: Colors.white,size: 40,)),
-                            // ),
-                          ],
+                          ),
                         ):Container(),
                       ):Container(
                         margin: EdgeInsets.symmetric(horizontal: 20,vertical: 10),

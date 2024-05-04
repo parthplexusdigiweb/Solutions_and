@@ -231,6 +231,38 @@ class ApiRepository{
      }
    }
 
+   Future<void> duplicateDocument(context,documentId, int AB_id) async {
+     try {
+       CollectionReference collectionReference = FirebaseFirestore.instance.collection('AboutMe');
+
+       DocumentSnapshot documentSnapshot = await collectionReference.doc(documentId).get();
+       Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+
+       // Generate a new ID for the duplicated document
+       String newDocumentId = collectionReference.doc().id;
+
+       data['AB_id'] = AB_id; // Update with the new value you want
+       data['AB_Status'] = "Draft"; // Update with the new value you want
+       data['Report_sent_to'] = []; // Update with the new value you want
+       data['Report_sent_to_cc'] = []; // Update with the new value you want
+
+       // Save the duplicated data with the new ID
+       await collectionReference.doc(newDocumentId).set(data);
+
+       // Notify the user that the duplication was successful
+       ScaffoldMessenger.of(context).showSnackBar(
+         SnackBar(content: Text('Document duplicated successfully!'), backgroundColor: Colors.green),
+       );
+     } catch (error) {
+       // Handle any errors that occur
+       print('Error duplicating document: $error');
+       ScaffoldMessenger.of(context).showSnackBar(
+         SnackBar(content: Text('Error duplicating document. Please try again later.'), backgroundColor: Colors.red),
+       );
+     }
+   }
+
+
    Future<void> updateAdminSettings(Map<String, dynamic> AdminDetails,Id) async {
      try {
        // Replace 'your_collection' with your actual collection name
@@ -554,6 +586,47 @@ class ApiRepository{
     print("BREVO_API_KEY_FROM_BACKEND : $BREVO_API_KEY_FROM_BACKEND");
 
     try {
+      var body1 = jsonEncode({
+        "sender": {
+          "name": "Solutions Inclutions",
+          "email": "admin@solutioninclution.com"
+        },
+        'to' :[{ "email": email1, "name": name1 },
+          // { "email": email2 == "" ? email1 : email2, "name": name2 == "" ? name1 : name2 }
+        ],
+        'cc': List.generate(
+            ccEmails.length,
+                (index) => {
+              "email": ccEmails[index],
+              "name": ccNames.length > index ? ccNames[index] : "",
+            }),
+        'attachment': [{
+          "content": filebytes,
+          "name": filename
+        }],
+        "htmlContent": "<!DOCTYPE html> <html> <body> <h1>Solutions Inclutions</h1> <p>Solutions Inclutions has sended you $filename</p> </body> </html>",
+        "textContent": "Solutions Inclutions has sended you $filename",
+        "subject": "Solutions Inclutions",
+        // Add other necessary fields according to Brevo API documentation
+      });
+      var body2 = jsonEncode({
+        "sender": {
+          "name": "Solutions Inclutions",
+          "email": "admin@solutioninclution.com"
+        },
+        'to' :[{ "email": email1, "name": name1 },
+          // { "email": email2 == "" ? email1 : email2, "name": name2 == "" ? name1 : name2 }
+        ],
+        'attachment': [{
+          "content": filebytes,
+          "name": filename
+        }],
+        "htmlContent": "<!DOCTYPE html> <html> <body> <h1>Solutions Inclutions</h1> <p>Solutions Inclutions has sended you $filename</p> </body> </html>",
+        "textContent": "Solutions Inclutions has sended you $filename",
+        "subject": "Solutions Inclutions",
+        // Add other necessary fields according to Brevo API documentation
+      });
+
       var response = await http.post(
         Uri.parse("$BREVO_BASE_URL/smtp/email"),
         headers : {
@@ -562,29 +635,8 @@ class ApiRepository{
           'api-key': BREVO_API_KEY_FROM_BACKEND /// this is the main api key for mail clear before push
 
         },
-        body: jsonEncode({
-          "sender": {
-            "name": "Solutions Inclutions",
-            "email": "admin@solutioninclution.com"
-          },
-          'to' :[{ "email": email1, "name": name1 },
-            // { "email": email2 == "" ? email1 : email2, "name": name2 == "" ? name1 : name2 }
-          ],
-          'cc': List.generate(
-              ccEmails.length,
-                  (index) => {
-                "email": ccEmails[index],
-                "name": ccNames.length > index ? ccNames[index] : "",
-              }),
-          'attachment': [{
-            "content": filebytes,
-            "name": filename
-          }],
-          "htmlContent": "<!DOCTYPE html> <html> <body> <h1>Solutions Inclutions</h1> <p>Solutions Inclutions has sended you $filename</p> </body> </html>",
-          "textContent": "Solutions Inclutions has sended you $filename",
-          "subject": "Solutions Inclutions",
-          // Add other necessary fields according to Brevo API documentation
-        }),
+
+        body: (ccEmails.isEmpty || ccNames.isEmpty) ? body2 : body1,
 
       );
 

@@ -69,6 +69,8 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
   TextEditingController searchbyCatcontroller = TextEditingController();
   TextEditingController searchEmailcontroller = TextEditingController();
   TextEditingController searchChallengescontroller = TextEditingController();
+  var formattedDate = DateFormat('dd MMMM yyyy, HH:mm a').format(DateTime.now());
+
 
   Timer? _debounce;
   String query = "";
@@ -1313,6 +1315,41 @@ Date
                                                            child: Center(child: Row(
                                                              mainAxisAlignment: MainAxisAlignment.end,
                                                              children: [
+
+                                                               IconButton(
+                                                                   iconSize: 25,
+                                                                   color: primaryColorOfApp,
+                                                                   onPressed: () async {
+                                                                     // showReportViewPageDialogBox(dataList[i]);
+                                                                     QuerySnapshot querySnapshots = await FirebaseFirestore.instance
+                                                                         .collection('AboutMe')
+                                                                         .orderBy('Created_Date', descending: true)
+                                                                         .limit(1)
+                                                                         .get();
+                                                                     final abc =   querySnapshots.docs.first;
+                                                                     print("abccccc; ${abc['AB_id']}");
+                                                                     print("abccccc; ${abc['AB_id'].runtimeType}");
+                                                                     var AB_id = abc['AB_id'] + 1;
+
+                                                                     setState(() {
+                                                                      duplicateDocument(context,dataList[i].id,AB_id);
+                                                                     });
+
+                                                                     // QuerySnapshot querySnapshott = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+                                                                     //
+                                                                     // // Check if there are any documents
+                                                                     //
+                                                                     // print("querySnapshot :${querySnapshott}");
+                                                                     // print("querySnapshot :${querySnapshott.docs.length}");
+                                                                     //
+                                                                     // if (querySnapshott.docs.isNotEmpty) {
+                                                                     //   // Get the last document
+                                                                     //   DocumentSnapshot lastDocument = querySnapshott.docs.first;
+                                                                     //   print("Duplicate Opened :${lastDocument.id}");
+                                                                     //   await showEditAboutMeDialogBox(lastDocument,6);
+                                                                     // }
+                                                                   },
+                                                                   icon: Icon(Icons.cached,)),
 
                                                                (dataList[i]['AB_Status'].toString()=="Complete" || dataList[i]['AB_Status'].toString()=="Complete and Sent") ?
                                                                IconButton(
@@ -3532,7 +3569,8 @@ Date
                     "Created_Date": createdAt,
                     "Modified_By": "",
                     "Modified_Date": "",
-                    "Report_sent_to": []
+                    "Report_sent_to": [],
+                    "Report_sent_to_cc": [],
                     // Add other fields as needed
                   };
 
@@ -5469,8 +5507,8 @@ Date
 
                                           DataColumn(
                                             label: Container(
-                                              // width: 180,
-                                              child: Text('Title',),
+                                              width: MediaQuery.of(context).size.width * .07,
+                                              child: Text('Label',),
                                             ),
                                           ),
                                           DataColumn(
@@ -5510,6 +5548,7 @@ Date
                                               // ),
                                               DataCell(
                                                   Container(
+                                                    width: MediaQuery.of(context).size.width * .07,
                                                     child: Text(challenge.label,
                                                         overflow: TextOverflow.ellipsis,maxLines: 2,
                                                         style: GoogleFonts.montserrat(
@@ -5575,7 +5614,7 @@ Date
 
                                                           IconButton(
                                                             onPressed: () {
-                                                              showconfirmChallengeDialogBox(challenge.id, challenge.label,challenge.description, challenge.Source, challenge.Status,challenge.tags,challenge.CreatedBy,
+                                                              showEditconfirmChallengeDialogBox(challenge.id, challenge.label,challenge.description, challenge.Source, challenge.Status,challenge.tags,challenge.CreatedBy,
                                                                   challenge.CreatedDate,challenge.ModifiedBy,challenge.ModifiedDate,challenge.OriginalDescription,challenge.Impact,challenge.Final_description,
                                                                   challenge.Category,challenge.Keywords,challenge.PotentialStrengths,challenge.HiddenStrengths, index,userAboutMEProvider.challengess,challenge.notes);
                                                               print("challenge.isConfirmed: ${challenge.isConfirmed}");
@@ -5970,7 +6009,7 @@ Date
                                           // ),
                                           DataColumn(
                                             label: Container(
-                                              // width: 180,
+                                              width: MediaQuery.of(context).size.width * .08,
                                               child: Text('Label',),
                                             ),
                                           ),
@@ -6011,7 +6050,7 @@ Date
                                               //             color: Colors.black),))),
                                               DataCell(
                                                   Container(
-                                                    // width: 180,
+                                                    width: MediaQuery.of(context).size.width * .08,
                                                       child: Text(solution.label,
                                                           overflow: TextOverflow.ellipsis,maxLines: 2,
                                                           style: GoogleFonts.montserrat(
@@ -6059,12 +6098,12 @@ Date
                                                           ),
                                                           IconButton(
                                                             onPressed: () {
-                                                              showconfirmSolutionsDialogBox(solution.id, solution.label,solution.description, solution.Source, solution.Status,solution.tags,solution.CreatedBy,
+                                                              showEditconfirmSolutionsDialogBox(solution.id, solution.label,solution.description, solution.Source, solution.Status,solution.tags,solution.CreatedBy,
                                                                   solution.CreatedDate,solution.ModifiedBy,solution.ModifiedDate,solution.OriginalDescription,solution.Impact,solution.Final_description,
-                                                                  solution.Category,solution.Keywords,"","", index,userAboutMEProvider.solutionss,solution.notes);
+                                                                  solution.Category,solution.Keywords,"","", index,userAboutMEProvider.solutionss,solution.notes,solution.Provider,solution.InPlace);
                                                               print("solution.isConfirmed: ${solution.isConfirmed}");
                                                             },
-                                                            icon: Icon(Icons.check, color: Colors.green),
+                                                            icon: Icon(Icons.edit, color: Colors.green),
                                                           ),
                                                           IconButton(
                                                             onPressed: () {
@@ -6750,7 +6789,6 @@ Date
                   Container(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -6789,6 +6827,213 @@ Date
                             ),
                           ],
                         ),
+                        SizedBox(height: 5,),
+
+                        Row(
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width * .1,
+                              child: Text("To: ",style: GoogleFonts.lato(
+                                  textStyle:
+                                  Theme
+                                      .of(context)
+                                      .textTheme
+                                      .titleMedium,
+                                  fontWeight: FontWeight.w700
+                              ),),
+                            ),
+                            Expanded(
+                              child:Container(
+                                height: 40,
+                                width: MediaQuery.of(context).size.width * .19,
+                                child: TextField(
+                                  controller: SendNametextController,
+
+                                  style: GoogleFonts.lato(
+                                      textStyle: Theme.of(context).textTheme.bodySmall,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black),
+                                  decoration: InputDecoration(
+                                    hintText: "Name",
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(10)),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black12),
+                                        borderRadius: BorderRadius.circular(10)),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 5,),
+
+                            Expanded(
+                              child: Container(
+                                height: 40,
+                                width: MediaQuery.of(context).size.width * .19,
+                                child: TextField(
+                                  controller: SendEmailtextController,
+                                  style: GoogleFonts.lato(
+                                      textStyle: Theme.of(context).textTheme.bodySmall,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black),
+                                  decoration: InputDecoration(
+                                    hintText: "Email",
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(10)),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black12),
+                                        borderRadius: BorderRadius.circular(10)),
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(width: 5,),
+
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              margin: EdgeInsets.all(11),
+                              width:  MediaQuery.of(context).size.width * .05,),
+
+
+
+                          ],
+                        ),
+                        SizedBox(height: 5,),
+
+                        Column(
+                          children: List.generate(
+                            previewProvider.ccEmails.length,
+                                (index) {
+                              return Row(
+                                children: [
+                                  Container(
+                                    width: MediaQuery.of(context).size.width * .1,
+                                    child: Text(
+                                      "Cc: ",
+                                      style: GoogleFonts.lato(
+                                          textStyle: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                        '${index + 1}. ${previewProvider.ccNames[index]}, <${previewProvider.ccEmails[index]}> - $formattedDate'),
+                                  ),
+                                  // SizedBox(width: 50,),
+                                  Flexible(
+                                    flex: 2,
+                                    child: InkWell(
+                                      child: Text("remove",style: TextStyle(color: Colors.red)),
+                                      onTap: () =>
+                                          previewProvider.removeCCRecipient(index),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+
+                        Row(
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.1,
+                              child: Text("Cc: ",style: GoogleFonts.lato(
+                                  textStyle:
+                                  Theme
+                                      .of(context)
+                                      .textTheme
+                                      .titleMedium,
+                                  fontWeight: FontWeight.w700
+                              ),),
+                            ),
+
+
+                            Expanded(
+                              child: Container(
+                                height: 40,
+                                width: MediaQuery.of(context).size.width * .19,
+                                child: TextField(
+                                  controller: CopySendNametextController,
+
+                                  style: GoogleFonts.lato(
+                                      textStyle: Theme.of(context).textTheme.bodySmall,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black),
+                                  decoration: InputDecoration(
+                                    hintText: "Name",
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(10)),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black12),
+                                        borderRadius: BorderRadius.circular(10)),
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(width: 5,),
+
+                            Expanded(
+                              child: Container(
+                                height: 40,
+                                width: MediaQuery.of(context).size.width * .19,
+                                child: TextField(
+                                  controller: CopySendEmailtextController,
+                                  style: GoogleFonts.lato(
+                                      textStyle: Theme.of(context).textTheme.bodySmall,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black),
+                                  decoration: InputDecoration(
+                                    hintText: "Email",
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(10)),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black12),
+                                        borderRadius: BorderRadius.circular(10)),
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(width: 5,),
+
+                            InkWell(
+                              onTap: () {
+                                previewProvider.addCCRecipient(
+                                    CopySendEmailtextController.text,
+                                    CopySendNametextController.text);
+                                CopySendEmailtextController.clear();
+                                CopySendNametextController.clear();
+                              },
+                              child: Container(
+                                  width: MediaQuery.of(context).size.width * 0.05,
+                                  padding: EdgeInsets.all(10),
+                                  margin: EdgeInsets.all(11),
+                                  decoration: BoxDecoration(
+                                      color: Colors.blue,
+                                      borderRadius: BorderRadius.circular(10)
+                                  ),
+                                  child: Text('Add',
+                                    textAlign: TextAlign.center,style: GoogleFonts.montserrat(
+                                        textStyle: Theme.of(context).textTheme.titleSmall,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  )
+                              ),
+                            ),
+
+                          ],
+                        ),
+
                         SizedBox(height: 10,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -7870,6 +8115,15 @@ Date
                               'AB_Attachment' : "",
                               'Solutions': solutionsList,
                               'Challenges': challengesList,
+                              'Report_sent_to' : [{'name':  SendNametextController.text, 'email': SendEmailtextController.text, 'datetime': formattedDate}],
+                              'Report_sent_to_cc' : List.generate(
+                                previewProvider.ccEmails.length,
+                                    (index) => {
+                                  'name': previewProvider.ccNames[index],
+                                  'email': previewProvider.ccEmails[index],
+                                  'datetime': formattedDate, // Format datetime
+                                },
+                              ),
                             };
 
                             String solutionJson = json.encode(AboutMEDatas);
@@ -7878,9 +8132,38 @@ Date
                             ProgressDialog.show(context, "Completing", Icons.save);
                             await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
 
+                            final Uint8List pdfBytes = await makePdf(challengesList,solutionsList);
+                            String base64EncodedData = base64.encode(pdfBytes);
+                            String filename = "${About_Me_Label}.pdf";
+                            print("sendMailPopUp chunks: ${base64EncodedData}");
+                            print("sendMailPopUp filename: ${ filename}");
+                            await ApiRepository().sendEmailWithAttachment(
+                              context,
+                              SendEmailtextController.text,
+                              SendNametextController.text,
+                              CopySendEmailtextController.text,
+                              CopySendNametextController.text,
+                              base64EncodedData,
+                              filename,
+                              ccEmails: previewProvider.ccEmails,
+                              ccNames: previewProvider.ccNames,
+                            );
+
+                            await downloadAboutMePdf(challengesList,solutionsList);
+
+                            print(SendEmailtextController.text);
+                            print(CopySendEmailtextController.text);
+                            print(SendNametextController.text);
+                            print(CopySendNametextController.text);
+
+
+                            setState(() {
+                              Navigator.pop(context);
+                            });
+
                             ProgressDialog.hide();
 
-                            sendMailPopUp(challengesList,solutionsList);
+                            // sendMailPopUp(challengesList,solutionsList);
 
                             // selectedEmail = null;
                             // nameController.clear();
@@ -9023,7 +9306,7 @@ Date
         });
   }
 
-  void showEditAboutMeDialogBox(aboutMeData, int tabindex){
+   showEditAboutMeDialogBox(aboutMeData, int tabindex){
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -9032,6 +9315,7 @@ Date
               showAddAddAboutMeDialogBox: showAddAddAboutMeDialogBox,
               AdminName: widget.AdminName,
               tabindex: tabindex,
+              duplicateDocument: duplicateDocument,
               page: page);
           // return Theme(
           //     data: Theme.of(context).copyWith(dialogBackgroundColor: Colors.white),
@@ -9110,6 +9394,53 @@ Date
         }
     );
   }
+
+
+  Future<void> duplicateDocument(context,documentId, int AB_id) async {
+    try {
+      CollectionReference collectionReference = FirebaseFirestore.instance.collection('AboutMe');
+
+      DocumentSnapshot documentSnapshot = await collectionReference.doc(documentId).get();
+      Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+
+      // Generate a new ID for the duplicated document
+      var newDocumentId = collectionReference.doc().id;
+
+      data['AB_id'] = AB_id; // Update with the new value you want
+      data['AB_Status'] = "Draft"; // Update with the new value you want
+      data['Report_sent_to'] = []; // Update with the new value you want
+      data['Report_sent_to_cc'] = []; // Update with the new value you want
+
+      // Save the duplicated data with the new ID
+      await collectionReference.doc(newDocumentId).set(data);
+
+      print(' after collectionReference.doc(newDocumentId).set(data)');
+      print('newDocumentId: ${newDocumentId}');
+
+      DocumentSnapshot duplicatedDocumentSnapshot = await collectionReference.doc(newDocumentId).get();
+      Map<String, dynamic> duplicatedData = duplicatedDocumentSnapshot.data() as Map<String, dynamic>;
+
+      print('duplicatedDocumentSnapshot: ${duplicatedDocumentSnapshot.id}');
+      print('duplicatedData: ${duplicatedData}');
+
+
+      await showEditAboutMeDialogBox(duplicatedDocumentSnapshot, 0);
+
+      _previewProvider.isDuplicate = true;
+
+      // Notify the user that the duplication was successful
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Document duplicated successfully!'), backgroundColor: Colors.green),
+      );
+    } catch (error) {
+      // Handle any errors that occur
+      print('Error duplicating document: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error duplicating document. Please try again later.'), backgroundColor: Colors.red),
+      );
+    }
+  }
+
 
   sendMailPopUp(dataList,dataList2){
 
@@ -12651,17 +12982,29 @@ Date
                                                                         children: [
                                                                           IconButton(
                                                                               onPressed: (){
-                                                                                userAboutMEProvider.updateSolutionPreview(
-                                                                                    solutionData['Label'],
+                                                                                Navigator.pop(context);
+                                                                                NewSolViewDialog(solutionData['Label'],
                                                                                     solutionData['Description'],
-                                                                                    solutionData['Final_description'],
                                                                                     solutionData['Impact'],
+                                                                                    solutionData['Final_description'],
                                                                                     solutionData['Keywords'],
                                                                                     solutionData['tags'],
                                                                                     solutionData['id'],
-                                                                                    isTrueOrFalse,
-                                                                                    solutionData,true
-                                                                                );
+                                                                                    solutionData,
+                                                                                    userAboutMEProvider.isEditSolutionListAdded,
+                                                                                    userAboutMEProvider.EditRecommendedSolutionAdd);
+
+                                                                                // userAboutMEProvider.updateSolutionPreview(
+                                                                                //     solutionData['Label'],
+                                                                                //     solutionData['Description'],
+                                                                                //     solutionData['Final_description'],
+                                                                                //     solutionData['Impact'],
+                                                                                //     solutionData['Keywords'],
+                                                                                //     solutionData['tags'],
+                                                                                //     solutionData['id'],
+                                                                                //     isTrueOrFalse,
+                                                                                //     solutionData,true
+                                                                                // );
                                                                               },
 
                                                                               icon: Icon(Icons.visibility, color: Colors.blue,)
@@ -13524,17 +13867,30 @@ Date
                                                                         children: [
                                                                           IconButton(
                                                                               onPressed: (){
-                                                                                userAboutMEProvider.updateChallengePreview(
-                                                                                    challengesData['Label'],
+
+                                                                                Navigator.pop(context);
+                                                                                NewViewDialog(challengesData['Label'],
                                                                                     challengesData['Description'],
-                                                                                    challengesData['Final_description'],
                                                                                     challengesData['Impact'],
+                                                                                    challengesData['Final_description'],
                                                                                     challengesData['Keywords'],
                                                                                     challengesData['tags'],
                                                                                     challengesData['id'],
-                                                                                    isTrueOrFalse,
-                                                                                    challengesData,true
-                                                                                );
+                                                                                    challengesData,
+                                                                                    userAboutMEProvider.isEditChallengeListAdded,
+                                                                                    userAboutMEProvider.EditRecommendedChallengeAdd);
+
+                                                                                // userAboutMEProvider.updateChallengePreview(
+                                                                                //     challengesData['Label'],
+                                                                                //     challengesData['Description'],
+                                                                                //     challengesData['Final_description'],
+                                                                                //     challengesData['Impact'],
+                                                                                //     challengesData['Keywords'],
+                                                                                //     challengesData['tags'],
+                                                                                //     challengesData['id'],
+                                                                                //     isTrueOrFalse,
+                                                                                //     challengesData,true
+                                                                                // );
                                                                               },
                                                                               icon: Icon(Icons.visibility, color: Colors.blue,)
                                                                           ),

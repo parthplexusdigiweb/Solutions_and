@@ -27,9 +27,9 @@ import 'package:toastification/toastification.dart';
 import '../model/challenges_table_model.dart';
 
 class EditAboutMEScreen extends StatefulWidget {
-  var aboutMeData, refreshPage, AdminName, tabindex, page,showAddAddAboutMeDialogBox;
+  var aboutMeData, refreshPage, AdminName, tabindex, page,showAddAddAboutMeDialogBox,duplicateDocument;
 
-  EditAboutMEScreen({this.aboutMeData, this.refreshPage, this.AdminName, this.tabindex, this.page, this.showAddAddAboutMeDialogBox});
+  EditAboutMEScreen({this.aboutMeData, this.refreshPage, this.AdminName, this.tabindex, this.page, this.showAddAddAboutMeDialogBox, this.duplicateDocument});
 
   @override
   State<EditAboutMEScreen> createState() => _EditAboutMEScreenState();
@@ -168,6 +168,7 @@ Date
     _addKeywordProvider.lengthOfdocument = null;
     _challengesProvider.lengthOfdocument = null;
     documentId = widget.aboutMeData.id;
+    print("widget.aboutMeData.id : $documentId");
     fetchEmailList();
     getQuestions();
     newSelectCategories();
@@ -315,8 +316,11 @@ Date
                             _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
                             _previewProvider.PreviewSolutionNiceToHave.clear();
                             _previewProvider.PreviewSolutionMustHave.clear();
+                            _previewProvider.isDuplicatefalse(false);
+                            print("_previewProvider.isDuplicate: ${_previewProvider.isDuplicate}");
                             widget.refreshPage();
-                              Navigator.pop(context);
+
+                            Navigator.pop(context);
                           },
                           // child: Icon(Icons.close)
                           child:  Column(
@@ -331,9 +335,9 @@ Date
                           )
                       ),
                       SizedBox(width: 20),
-                      // Text("${About_Me_Label}",
-                      //   style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-                      // )
+                      (_previewProvider.isDuplicate==true) ? Text("Duplicate : ${About_Me_Label}",
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                      ) : SizedBox(),
                     ],
                   ),
                   iconPadding: EdgeInsets.only(left: 15,top: 15),
@@ -625,10 +629,20 @@ Date
                               ),
                             ),
                           ),
-                          Expanded(
+                          (_previewProvider.isDuplicate==true) ? SizedBox() : Expanded(
                             child: InkWell(
                               onTap: () async {
-                                await widget.showAddAddAboutMeDialogBox();
+                                QuerySnapshot querySnapshots = await FirebaseFirestore.instance
+                                    .collection('AboutMe')
+                                    .orderBy('Created_Date', descending: true)
+                                    .limit(1)
+                                    .get();
+                                final abc =   querySnapshots.docs.first;
+                                print("abccccc; ${abc['AB_id']}");
+                                print("abccccc; ${abc['AB_id'].runtimeType}");
+                                var AB_id = abc['AB_id'] + 1;
+
+                                await widget.duplicateDocument(context,documentId,AB_id);
                               },
                               child: Container(
                                 margin: EdgeInsets.all(10),
@@ -645,13 +659,13 @@ Date
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
                                       // Icon(Icons.article,color: Colors.black,size: 30,),
-                                      Icon(Icons.create_new_folder_outlined,color: Colors.black,size: 25,),
+                                      Icon(Icons.cached,color: Colors.black,size: 25,),
                                       SizedBox(width: 5,),
 
                                       Expanded(
                                         child: Text(
                                           // 'Solutions',
-                                          'Create new report',
+                                          'Duplicate report',
                                           overflow: TextOverflow.ellipsis,
                                           style: GoogleFonts.montserrat(
                                               textStyle:
@@ -13199,18 +13213,31 @@ Date
                                                                         children: [
                                                                           IconButton(
                                                                               onPressed: (){
-                                                                                userAboutMEProvider.updateEditSolutionPreview(
-                                                                                    solutionData['Label'],
+                                                                                Navigator.pop(context);
+                                                                                NewSolViewDialog(solutionData['Label'],
                                                                                     solutionData['Description'],
-                                                                                    solutionData['Final_description'],
                                                                                     solutionData['Impact'],
+                                                                                    solutionData['Final_description'],
                                                                                     solutionData['Keywords'],
                                                                                     solutionData['tags'],
                                                                                     solutionData['id'],
-                                                                                    isTrueOrFalse,
                                                                                     solutionData,
-                                                                                  true
-                                                                                );
+                                                                                    userAboutMEProvider.isEditSolutionListAdded,
+                                                                                    userAboutMEProvider.EditRecommendedSolutionAdd);
+
+
+                                                                                // userAboutMEProvider.updateEditSolutionPreview(
+                                                                                //     solutionData['Label'],
+                                                                                //     solutionData['Description'],
+                                                                                //     solutionData['Final_description'],
+                                                                                //     solutionData['Impact'],
+                                                                                //     solutionData['Keywords'],
+                                                                                //     solutionData['tags'],
+                                                                                //     solutionData['id'],
+                                                                                //     isTrueOrFalse,
+                                                                                //     solutionData,
+                                                                                //   true
+                                                                                // );
                                                                               },
 
                                                                               icon: Icon(Icons.visibility, color: Colors.blue,)
@@ -14492,18 +14519,31 @@ Date
                                                                         children: [
                                                                           IconButton(
                                                                               onPressed: (){
-                                                                                userAboutMEProvider.updateEditChallengePreview(
-                                                                                    challengesData['Label'],
+                                                                                Navigator.pop(context);
+                                                                                NewViewDialog(challengesData['Label'],
                                                                                     challengesData['Description'],
-                                                                                    challengesData['Final_description'],
                                                                                     challengesData['Impact'],
+                                                                                    challengesData['Final_description'],
                                                                                     challengesData['Keywords'],
                                                                                     challengesData['tags'],
                                                                                     challengesData['id'],
-                                                                                    isTrueOrFalse,
                                                                                     challengesData,
-                                                                                  true
-                                                                                );
+                                                                                    userAboutMEProvider.isEditChallengeListAdded,
+                                                                                    userAboutMEProvider.EditRecommendedChallengeAdd);
+
+
+                                                                                // userAboutMEProvider.updateEditChallengePreview(
+                                                                                //     challengesData['Label'],
+                                                                                //     challengesData['Description'],
+                                                                                //     challengesData['Final_description'],
+                                                                                //     challengesData['Impact'],
+                                                                                //     challengesData['Keywords'],
+                                                                                //     challengesData['tags'],
+                                                                                //     challengesData['id'],
+                                                                                //     isTrueOrFalse,
+                                                                                //     challengesData,
+                                                                                //   true
+                                                                                // );
                                                                               },
                                                                               icon: Icon(Icons.visibility, color: Colors.blue,)
                                                                           ),

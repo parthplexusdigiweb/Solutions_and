@@ -20,6 +20,13 @@ class PreviewProvider with ChangeNotifier{
       notifyListeners();
   }
 
+  bool isDuplicate = false;
+
+  void isDuplicatefalse(falsee) {
+    isDuplicate = falsee;
+      notifyListeners();
+  }
+
   void removeCCRecipient(int index) {
       ccEmails.removeAt(index);
       ccNames.removeAt(index);
