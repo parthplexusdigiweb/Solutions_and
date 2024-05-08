@@ -60,7 +60,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
               // );
             },
             child: Container(
-                width: MediaQuery.of(context).size.width * 0.07,
+                width: MediaQuery.of(context).size.width * 0.1,
                 padding: EdgeInsets.all(15),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
@@ -383,13 +383,13 @@ class _UserLoginPageState extends State<UserLoginPage> {
                                     );
                                   });
                             } else {
-                              showEmptyAlert(context, "Something went \nwrong",
+                              showEmptyAlert(context, "Something went wrong",
                                   '', Icons.error, Colors.red);
                             }
                           } else {
                             showEmptyAlert(
                                 context,
-                                "Email does not \nexist",
+                                "Email does not exist",
                                 'First, Register your email to login',
                                 Icons.error,
                                 Colors.red);
@@ -428,53 +428,57 @@ class _UserLoginPageState extends State<UserLoginPage> {
         context: context,
         barrierColor: Colors.black87,
         builder: (BuildContext context) {
-          return Dialog(
+          return AlertDialog(
+            insetPadding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.2,
+                vertical: MediaQuery.of(context).size.height * 0.04
+            ),
             shape: RoundedRectangleBorder(
                 borderRadius:
-                BorderRadius.circular(0.0)), //this right here
-            child: Container(
-              height: MediaQuery.of(context).size.height *0.2,
-              width: MediaQuery.of(context).size.width *0.2,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
+                BorderRadius.circular(0.0)),
+            title: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(icon,color: color,size: 60,),
-                        SizedBox(width: 20,),
-                        Text(message,style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),),
-                      ],
+                    Icon(icon,color: color,size: 60,),
+                    SizedBox(width: 20,),
+                    Flexible(
+                      child: Text(message,style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),),
                     ),
-                    Text(message2,style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),),
-                    SizedBox(height: 20,),
-                    SizedBox(
-                      width: 320.0,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.black,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text(
-                          "Okay",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    )
                   ],
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(message2,style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),),
+                ),
+              ],
             ),
+/// ere@gmail.com
+            actions: [
+              SizedBox(
+              width: 320.0,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.black,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  "Okay",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            )
+            ],
           );
         });
   }

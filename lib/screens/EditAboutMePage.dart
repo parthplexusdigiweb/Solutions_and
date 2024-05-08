@@ -210,6 +210,46 @@ Date
     }
   }
 
+  Future<void> fetchUserData(email) async {
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Users').where('email', isEqualTo: email).limit(1).get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        var userData = querySnapshot.docs.first;
+        print("userData: $userData");
+        nameController.text = userData['UserName'] ?? '';
+        _previewProvider.updateName(userData['UserName'] ?? '');
+
+        employerController.text = userData['Employer'] ?? '';
+        _previewProvider.updateemployer(userData['Employer'] ?? '');
+
+        divisionOrSectionController.text = userData['Division_or_Section'] ?? '';
+        _previewProvider.updatedivision(userData['Division_or_Section'] ?? '');
+
+        RoleController.text = userData['Role'] ?? '';
+        _previewProvider.updaterole(userData['Role'] ?? '');
+
+        LocationController.text = userData['Location'] ?? '';
+        _previewProvider.updatelocation(userData['Location'] ?? '');
+
+        EmployeeNumberController.text = userData['Employee_Number'] ?? '';
+        _previewProvider.updateemployeeNumber(userData['Employee_Number'] ?? '');
+
+        LineManagerController.text = userData['Line_Manager'] ?? '';
+        _previewProvider.updatelinemanager(userData['Line_Manager'] ?? '');
+
+        AboutMeLabeltextController.text = userData['UserName'] + " - draft communication to " + userData['Employer'] ;
+        About_Me_Label = userData['UserName']  + " - draft communication to " + userData['Employer'] ;
+
+      } else {
+        // User not found
+      }
+    } catch (e) {
+      print("Error fetching user data: $e");
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     print("widget.tabindex: ${widget.tabindex}");
@@ -634,7 +674,7 @@ Date
                               onTap: () async {
                                 QuerySnapshot querySnapshots = await FirebaseFirestore.instance
                                     .collection('AboutMe')
-                                    .orderBy('Created_Date', descending: true)
+                                    .orderBy('AB_id', descending: true)
                                     .limit(1)
                                     .get();
                                 final abc =   querySnapshots.docs.first;
@@ -647,7 +687,6 @@ Date
                               child: Container(
                                 margin: EdgeInsets.all(10),
                                 height: 40,
-
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   border: Border.all(color:primaryColorOfApp, width: 1.0),
@@ -1131,6 +1170,8 @@ Date
                             searchEmailcontroller.text = suggestion;
                             selectedEmail = suggestion;
                             _previewProvider.updateEmail(selectedEmail);
+
+                            await fetchUserData(selectedEmail);
                           },
                           textFieldConfiguration: TextFieldConfiguration(
                             controller: searchEmailcontroller,

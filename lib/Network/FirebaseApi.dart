@@ -709,7 +709,40 @@ class ApiRepository{
     await documentReference.delete();
   }
 
-   Future<String> getBrevoApiKey() async {
+  Future<void> deleteUserData(DocumentReference<Object?> documentReference, uid) async {
+    try {
+
+      // Step 1: Delete the user's data from Firestore
+
+      // Step 2: Delete the user from Firebase Authentication
+      // await FirebaseAuth.instance.currentUser!.delete();
+
+      // print("FirebaseAuth.instance.currentUser?: ${FirebaseAuth.instance.currentUser?.delete()}");
+      // print("FirebaseAuth.instance.currentUser.uid?: ${FirebaseAuth.instance.currentUser!}");
+
+      // var user = await FirebaseAuth.instance.deleteUser(uid);
+
+      // Delete the user
+      // print("user?: ${user}");
+      // await user?.delete();
+
+      // Delete the user
+      // await user.delete();
+
+
+
+      // await uid!.delete();
+
+      await documentReference.delete();
+      // After deleting user data from both Firestore and Authentication, you can perform any additional tasks or show a success message.
+    } catch (error) {
+      // Handle errors
+      print('Error deleting user data: $error');
+    }
+  }
+
+
+  Future<String> getBrevoApiKey() async {
      String apiKey = "";
      await FirebaseFirestore.instance.collection('Brevo').doc("4u6D48cqxOelszc3vg5i").get().then((value) {
 

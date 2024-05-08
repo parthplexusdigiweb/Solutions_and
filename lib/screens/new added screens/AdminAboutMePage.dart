@@ -127,6 +127,46 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
     }
   }
 
+  Future<void> fetchUserData(email) async {
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Users').where('email', isEqualTo: email).limit(1).get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        var userData = querySnapshot.docs.first;
+        print("userData: $userData");
+        nameController.text = userData['UserName'] ?? '';
+        _previewProvider.updateName(userData['UserName'] ?? '');
+
+        employerController.text = userData['Employer'] ?? '';
+        _previewProvider.updateemployer(userData['Employer'] ?? '');
+
+        divisionOrSectionController.text = userData['Division_or_Section'] ?? '';
+        _previewProvider.updatedivision(userData['Division_or_Section'] ?? '');
+
+        RoleController.text = userData['Role'] ?? '';
+        _previewProvider.updaterole(userData['Role'] ?? '');
+
+        LocationController.text = userData['Location'] ?? '';
+        _previewProvider.updatelocation(userData['Location'] ?? '');
+
+        EmployeeNumberController.text = userData['Employee_Number'] ?? '';
+        _previewProvider.updateemployeeNumber(userData['Employee_Number'] ?? '');
+
+        LineManagerController.text = userData['Line_Manager'] ?? '';
+        _previewProvider.updatelinemanager(userData['Line_Manager'] ?? '');
+
+        AboutMeLabeltextController.text = userData['UserName'] + " - draft communication to " + userData['Employer'] ;
+        About_Me_Label = userData['UserName'] + " - draft communication to " + userData['Employer'] ;
+
+      } else {
+        // User not found
+      }
+    } catch (e) {
+      print("Error fetching user data: $e");
+    }
+  }
+
+
   late TabController _tabController;
 
   int _previousTabIndex = 0;
@@ -1323,7 +1363,7 @@ Date
                                                                      // showReportViewPageDialogBox(dataList[i]);
                                                                      QuerySnapshot querySnapshots = await FirebaseFirestore.instance
                                                                          .collection('AboutMe')
-                                                                         .orderBy('Created_Date', descending: true)
+                                                                         .orderBy('AB_id', descending: true)
                                                                          .limit(1)
                                                                          .get();
                                                                      final abc =   querySnapshots.docs.first;
@@ -2948,6 +2988,7 @@ Date
                                        showProgressBar: false
                                    );
                                  }
+                                 await fetchUserData(selectedEmail);
                                 },
                                 textFieldConfiguration: TextFieldConfiguration(
                                   controller: searchEmailcontroller,
@@ -3531,7 +3572,7 @@ Date
                   x = x + 1;
                   var createdAt = DateFormat('yyyy-MM-dd, HH:mm:ss').format(DateTime.now());
 
-                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').orderBy('Created_Date', descending: true).limit(1).get();
+                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').orderBy('AB_id', descending: true).limit(1).get();
 
                   int ids;
                   if (querySnapshot.size == 0) {
@@ -9406,10 +9447,13 @@ Date
       // Generate a new ID for the duplicated document
       var newDocumentId = collectionReference.doc().id;
 
+      var createdAt = DateFormat('yyyy-MM-dd, HH:mm:ss').format(DateTime.now());
+
       data['AB_id'] = AB_id; // Update with the new value you want
       data['AB_Status'] = "Draft"; // Update with the new value you want
       data['Report_sent_to'] = []; // Update with the new value you want
       data['Report_sent_to_cc'] = []; // Update with the new value you want
+      data['Created_Date'] = createdAt; // Update with the new value you want
 
       // Save the duplicated data with the new ID
       await collectionReference.doc(newDocumentId).set(data);

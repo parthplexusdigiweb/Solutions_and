@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:thrivers/Network/FirebaseApi.dart';
 import 'package:thrivers/core/constants.dart';
 import 'package:thrivers/core/progress_dialog.dart';
 class UserListScreenForAdmin extends StatefulWidget {
@@ -12,6 +14,15 @@ class UserListScreenForAdmin extends StatefulWidget {
 class _UserListScreenForAdminState extends State<UserListScreenForAdmin> {
 
   final CollectionReference usersCollection = FirebaseFirestore.instance.collection('Users');
+
+  User? user;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -193,6 +204,7 @@ class _UserListScreenForAdminState extends State<UserListScreenForAdmin> {
                                   } else {
                                     List<QueryDocumentSnapshot> users = snapshot.data!.docs;
 
+                                    print("users: ${users}");
                                     // return ListView.builder(
                                     //   itemCount: users.length,
                                     //   itemBuilder: (context, index) {
@@ -223,6 +235,9 @@ class _UserListScreenForAdminState extends State<UserListScreenForAdmin> {
                                         // Access user data fields (adjust field names based on your schema)
                                         String userName = userData['UserName'];
                                         String userEmail = userData['email'];
+
+                                        // print("users[index] : ${users[index].id}");
+
 
                                         return Container(
                                           child: Row(
@@ -266,8 +281,12 @@ class _UserListScreenForAdminState extends State<UserListScreenForAdmin> {
                                                           iconSize: 25,
                                                           color: primaryColorOfApp,
                                                           onPressed: () async {
+                                                            print("users[index]: ${users[index].id}");
                                                             ProgressDialog.show(context, "Deleting Users",Icons.person);
-                                                            // await ApiRepository().DeleteSectionPreset(thriversDetails.reference);
+                                                            // await ApiRepository().deleteUserData(users[index].reference, users[index].id);
+                                                            setState(() {
+                                                               ApiRepository().DeleteSectionPreset(users[index].reference);
+                                                            });
                                                             ProgressDialog.hide();
                                                           },
                                                           icon: Icon(Icons.delete,)),

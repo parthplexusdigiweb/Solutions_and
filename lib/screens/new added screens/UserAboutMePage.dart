@@ -38,8 +38,8 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
   TextEditingController searchbyCatcontroller = TextEditingController();
   TextEditingController searchbyTagcontroller = TextEditingController();
 
-  late final AddKeywordProvider _addKeywordProvider;
-  late final UserAboutMEProvider _userAboutMEProvider;
+  late  AddKeywordProvider _addKeywordProvider;
+  late  UserAboutMEProvider _userAboutMEProvider;
 
   List<SolutionModel> solutions = [];
 
@@ -229,7 +229,6 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
               ],
             ),
           ),
-
         ],
       ),
 
