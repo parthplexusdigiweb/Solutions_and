@@ -1,16 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:thrivers/Network/FirebaseApi.dart';
 import 'package:thrivers/Provider/AddKeywordsProvider.dart';
 import 'package:thrivers/Provider/userAboutMeProvider.dart';
 import 'package:thrivers/core/constants.dart';
 import 'package:thrivers/model/soluton_table_model.dart';
 import 'package:thrivers/screens/addthriverscreen.dart';
 import 'package:thrivers/screens/not%20used%20screen/DashboardCommonWidgets.dart';
+import 'package:thrivers/screens/userLoginAboutME/UserLogedInAboutMePage.dart';
 
 class UserAboutMePage extends StatefulWidget {
 
@@ -41,18 +46,26 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
   late  AddKeywordProvider _addKeywordProvider;
   late  UserAboutMEProvider _userAboutMEProvider;
 
-  List<SolutionModel> solutions = [];
+  var UserName;
 
-  var selectedProvider;
-  var selectedInPlace;
-  var selectedPriority ;
+  Future<void> _initSharedPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs = await SharedPreferences.getInstance();
+    var isLoggedIn = await prefs.getBool('isLoggedIn');    // After clearing, navigate to the login screen or any other appropriate screen
+    var userEmail = await prefs.getString('userEmail');
+    print("isLoggedIn: $isLoggedIn");
+    print("userEmail: $userEmail");
+  }
 
-  List<String> provider = ['Me', 'Employer'];
-  List<String> InPlace = ['Yes', 'No'];
-  List<String> Priority = ['Must have', 'Nice to have', 'No Longer needed'];
 
 
-
+  Future<void> _logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', false);    // After clearing, navigate to the login screen or any other appropriate screen
+    await prefs.setString('userEmail', "");    // After clearing, navigate to the login screen or any other appropriate screen
+    // context.go("/userLogin"); // Replace '/login' with your actual login screen route
+    context.pushReplacement("/userLogin"); // Replace '/login' with your actual login screen route
+  }
 
   @override
   void initState() {
@@ -65,173 +78,91 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
     _userAboutMEProvider = Provider.of<UserAboutMEProvider>(context, listen: false);
     _loadDataForPage(_currentPage);
     super.initState();
+    _fetchUserData();
+    _initSharedPreferences();
   }
+
+  _fetchUserData() async {
+    QuerySnapshot userData = await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: widget.emailId).get();
+    print("userData; ${userData.docs.first['UserName']}");
+
+    UserName = await userData.docs.first['UserName'];
+    nameController.text = await userData.docs.first['UserName'];
+    employerController.text = await userData.docs.first['Employer'];
+    divisionOrSectionController.text = await userData.docs.first['Division_or_Section'];
+    RoleController.text = await userData.docs.first['Role'];
+    LocationController.text = await userData.docs.first['Location'];
+    EmployeeNumberController.text = await userData.docs.first['Employee_Number'];
+    LineManagerController.text = await userData.docs.first['Line_Manager'];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: DashboardCommonWidgets().CommonAppBar(context,true,false,false,emailID: widget.emailId,showSettings: widget.isClientLogeddin,showLogout: true),
-      appBar: DashboardCommonWidgets().CommonAppBar(context,true,false,false,emailID: "fenilpatel120501@gmail.com",showSettings: true,showLogout: true),
+      // appBar: DashboardCommonWidgets().CommonAppBar(context,true,true,true,emailID: "fenilpatel120501@gmail.com",showSettings: true,showLogout: true),
+      onDrawerChanged: (isOpened) {
 
+      },
+      // key: _scaffoldKey,
+      drawerEnableOpenDragGesture: true ,
+      drawerDragStartBehavior: DragStartBehavior.start,
+      // appBar:AppHelper().CustomAppBar(context),
+      drawerScrimColor: Colors.black26,
+      drawer: Drawer(
+        elevation: 50,
+        child: ListView(
+          children: [
+            SideMenuScreen(),
+          ],
+        ),
+      ),
+      appBar: AppBar(
+        leadingWidth: 100,
+        backgroundColor: Colors.blue,
+        centerTitle: true,
+        title: Text("Solution Inclusion", style: GoogleFonts.montserrat(
+            textStyle: Theme.of(context).textTheme.headlineLarge,
+            fontWeight: FontWeight.bold,
+            color: Colors.white),),
+        actions: [
+          Row(
+            children: [
+              CircleAvatar(
+                backgroundImage: NetworkImage("https://st3.depositphotos.com/19428878/36416/v/450/depositphotos_364169666-stock-illustration-default-avatar-profile-icon-vector.jpg"),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: UserName==null || widget.emailId==null ? CircularProgressIndicator(color: Colors.white,) : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("${UserName},",style: TextStyle(color: Colors.white),),
+                    Text("${widget.emailId}",style: TextStyle(color: Colors.white),),
+                  ],
+                ),
+              ),
+              SizedBox(width: 15,)
+            ],
+          ),
+
+        ],
+      ),
       body: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SideMenu(
-            controller: sideMenu,
-            style: SideMenuStyle(
-              displayMode: SideMenuDisplayMode.open,
-              hoverColor: Colors.blue.withAlpha(50),
-              selectedColor: Colors.blue,
-              itemBorderRadius: BorderRadius.circular(0),
-              selectedTitleTextStyle: const TextStyle(color: Colors.white),
-              selectedIconColor: Colors.white,
-              unselectedIconColor: Colors.blue,
-              unselectedTitleTextStyle: TextStyle(color: Colors.blue),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(0)),
-              ),
-              // backgroundColor: Colors.blueGrey[700]
-            ),
-            title: Column(
-              children: [
-                SizedBox(height: 20,),
-                ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxHeight: 150,
-                    maxWidth: 150,
-                  ),
-                  child: Container(
-                    child: Text("SOLUTIONS",
-                        style: GoogleFonts.montserrat(
-                        textStyle: Theme.of(context).textTheme.headlineSmall,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue)),
-                  ),
-                ),
-                SizedBox(height: 20,),
-                Divider(
-                  indent: 8.0,
-                  endIndent: 8.0,
-                ),
-              ],
-            ),
-            footer: const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                ' My Wings Ltd',
-                style: TextStyle(fontSize: 15),
-              ),
-            ),
-            items:
-            // widget.isClientLogeddin?
-            [
-
-              SideMenuItem(
-                priority: 0,
-                title: 'Dashboard',
-                //badgeColor: Colors.amber,
-                // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
-                tooltipContent: "Dashboard",
-                onTap: (page, _) {
-                  sideMenu.changePage(page);
-                },
-                icon: const Icon(Icons.dashboard),
-              ),
-              SideMenuItem(
-                priority: 1,
-                title: 'ABOUT ME',
-                //badgeColor: Colors.amber,
-                // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
-                tooltipContent: "About ME",
-                onTap: (page, _) {
-                  sideMenu.changePage(page);
-                },
-                icon: const Icon(Icons.description),
-              ),
-              SideMenuItem(
-                priority: 2,
-                title: 'DETAILS',
-                //badgeColor: Colors.amber,
-                // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
-                tooltipContent: "DETAILS",
-                onTap: (page, _) {
-                  sideMenu.changePage(page);
-                },
-                icon: const Icon(Icons.details),
-              ),
-
-              // SideMenuItem(
-              //   priority: 5,
-              //   onTap:(page){
-              //     sideMenu.changePage(5);
-              //   },
-              //   icon: const Icon(Icons.image_rounded),
-              // ),
-              // SideMenuItem(
-              //   priority: 6,
-              //   title: 'Only Title',
-              //   onTap:(page){
-              //     sideMenu.changePage(6);
-              //   },
-              // ),
-            ]
-
-            //     : [
-            //   SideMenuItem(
-            //     priority: 0,
-            //     title: 'Dashboard',
-            //     onTap: (page, _) {
-            //       sideMenu.changePage(page);
-            //     },
-            //     icon: const Icon(Icons.dashboard),
-            //     //badgeColor: Colors.amber,
-            //     //badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
-            //     //tooltipContent: "Dashboard Is Under Construction!",
-            //   ),
-            //
-            //   SideMenuItem(
-            //     priority: 1,
-            //     title: 'Tests',
-            //     onTap: (page, _) {
-            //       sideMenu.changePage(page);
-            //     },
-            //     icon: const Icon(Icons.note_alt_sharp),
-            //     /*trailing: Container(
-            //         decoration: const BoxDecoration(
-            //             color: Colors.amber,
-            //             borderRadius: BorderRadius.all(Radius.circular(6))),
-            //         child: Padding(
-            //           padding: const EdgeInsets.symmetric(
-            //               vertical: 6.0, vertical: 3),
-            //           child: Text(
-            //             'New',
-            //             style: TextStyle(fontSize: 11, color: Colors.grey[800]),
-            //           ),
-            //         )),*/
-            //   ),
-            //   SideMenuItem(
-            //     priority: 2,
-            //     title: 'Clients',
-            //     onTap: (page, _) {
-            //       sideMenu.changePage(page);
-            //     },
-            //     icon: const Icon(Icons.people),
-            //   ),
-            //
-            //
-            // ],
-          ),
           Expanded(
             child: PageView(
+              physics: NeverScrollableScrollPhysics(),
               controller: page,
               children: [
                 DashBoardScreen(),
                 AboutMEScreen(),
+                UserLogedInAboutMePage(AdminName: widget.emailId,),
               ],
             ),
           ),
         ],
       ),
-
     );
   }
 
@@ -241,10 +172,10 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
       backgroundColor: Colors.grey.withOpacity(0.2),
       //appBar:AppHelper().CustomAppBarForRetailHub(context),
       body:Container(
-        margin: EdgeInsets.all(20),
+        // margin: EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.7),
-          borderRadius: BorderRadius.circular(20),
+          // borderRadius: BorderRadius.circular(20),
 
           // image: DecorationImage(
           //   image: NetworkImage("https://e0.pxfuel.com/wallpapers/1/408/desktop-wallpaper-expo-2020-dubai-live-from-the-opening-ceremony.jpg"),
@@ -253,8 +184,8 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
         ),
         child: Center(
           child: Container(
-            width: 470,
-            height: 300,
+            width: MediaQuery.of(context).size.width * 0.5,
+            height: MediaQuery.of(context).size.width * 0.3,
             child: Card(
               elevation: 20,
               color: Colors.blue.shade100,
@@ -340,11 +271,11 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        Icon(Icons.details,color: Colors.blue,size: 30,),
+                                        Icon(Icons.person,color: Colors.blue,size: 30,),
                                         SizedBox(width: 5,),
                                         Expanded(
                                           child: Text(
-                                            'Details',
+                                            'Employee',
                                             overflow: TextOverflow.ellipsis,
                                             style: GoogleFonts.montserrat(
                                                 textStyle:
@@ -361,6 +292,66 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
                             ),
                           ],
                         ),
+                        // InkWell(
+                        //   onTap: () async{ // Make onTap callback async
+                        //     print("Logout button tapped"); // Debugging: Check if the logout button is tapped
+                        //     showDialog(
+                        //       context: context,
+                        //       builder: (context) => AlertDialog(
+                        //         title: Text('Logout Confirmation'),
+                        //         content: Text('Are you sure you want to log out?'),
+                        //         actions: [
+                        //           TextButton(
+                        //             onPressed: () {
+                        //               Navigator.of(context).pop(); // Close the dialog
+                        //             },
+                        //             child: Text('Cancel'),
+                        //           ),
+                        //           TextButton(
+                        //             onPressed: () async {
+                        //               Navigator.pop(context);
+                        //               print("Dialog closed");
+                        //               context.go('/userLogin');
+                        //               print("Navigated to login screen"); // Debugging: Check if navigation is triggered
+                        //             },
+                        //             child: Text('Logout'),
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     );
+                        //   },
+                        //   child: Container(
+                        //     margin: EdgeInsets.all(10),
+                        //     height: 60,
+                        //     decoration: BoxDecoration(
+                        //       color: Colors.white,
+                        //       border: Border.all(color:Colors.blue, width: 1.0),
+                        //       borderRadius: BorderRadius.circular(10.0),
+                        //     ),
+                        //     child: Padding(
+                        //       padding: const EdgeInsets.all(8.0),
+                        //       child: Row(
+                        //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        //         children: [
+                        //           Icon(Icons.logout,color: Colors.blue,size: 30,),
+                        //           SizedBox(width: 5,),
+                        //           Expanded(
+                        //             child: Text(
+                        //               // 'Thrivers',
+                        //               'Log out',
+                        //               overflow: TextOverflow.ellipsis,
+                        //               style: GoogleFonts.montserrat(
+                        //                   textStyle:
+                        //                   Theme.of(context).textTheme.titleLarge,
+                        //                   color: Colors.blue),
+                        //             ),
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   ),
+                        //
+                        // ),
                       ],
                     )
                   ],
@@ -370,6 +361,138 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget SideMenuScreen(){
+    return SideMenu(
+        controller: sideMenu,
+        style: SideMenuStyle(
+          displayMode: SideMenuDisplayMode.open,
+          hoverColor: Colors.blue.withAlpha(50),
+          selectedColor: Colors.blue,
+          itemBorderRadius: BorderRadius.circular(0),
+          selectedTitleTextStyle: const TextStyle(color: Colors.white),
+          selectedIconColor: Colors.white,
+          unselectedIconColor: Colors.blue,
+          unselectedTitleTextStyle: TextStyle(color: Colors.blue),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(0)),
+          ),
+          // backgroundColor: Colors.blueGrey[700]
+        ),
+        title: Column(
+          children: [
+            SizedBox(height: 20,),
+            ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxHeight: 150,
+                maxWidth: 150,
+              ),
+              child: Container(
+                child: Text("SOLUTIONS",
+                    style: GoogleFonts.montserrat(
+                        textStyle: Theme.of(context).textTheme.headlineSmall,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue)),
+              ),
+            ),
+            SizedBox(height: 20,),
+            Divider(
+              indent: 8.0,
+              endIndent: 8.0,
+            ),
+          ],
+        ),
+        footer: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Text(
+            ' My Wings Ltd',
+            style: TextStyle(fontSize: 15),
+          ),
+        ),
+        items:
+        // widget.isClientLogeddin?
+        [
+
+          SideMenuItem(
+            priority: 0,
+            title: 'Dashboard',
+            //badgeColor: Colors.amber,
+            // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
+            tooltipContent: "Dashboard",
+            onTap: (page, _) {
+              sideMenu.changePage(page);
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.dashboard),
+          ),
+          SideMenuItem(
+            priority: 1,
+            title: 'ABOUT ME',
+            //badgeColor: Colors.amber,
+            // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
+            tooltipContent: "About ME",
+            onTap: (page, _) {
+              sideMenu.changePage(page);
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.description),
+          ),
+          SideMenuItem(
+            priority: 2,
+            title: 'Employee',
+            //badgeColor: Colors.amber,
+            // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
+            tooltipContent: "Employee",
+            onTap: (page, _) {
+              sideMenu.changePage(page);
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.person),
+          ),
+          SideMenuItem(
+            priority: 3,
+            title: 'Log Out',
+            //badgeColor: Colors.amber,
+            // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
+            tooltipContent: "DETAILS",
+            onTap: (page, _) {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('Logout Confirmation'),
+                  content: Text('Are you sure you want to log out?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Close the dialog
+                      },
+                      child: Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        Navigator.pop(context);
+                        // print("Dialog closed");
+                        setState(() {
+                          _logout();
+                        });
+                        // context.go('/userLogin');
+                        print("Navigated to login screen"); // Debugging: Check if navigation is triggered
+                      },
+                      child: Text('Logout'),
+                    ),
+                  ],
+                ),
+              );
+              },
+            icon: const Icon(Icons.logout),
+          ),
+
+
+        ]
+
+
     );
   }
 
@@ -396,7 +519,7 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Add User Details:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.headlineMedium,)),
+              Text("My Details:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.headlineMedium,)),
               SizedBox(height: 10,),
               Divider(),
               SingleChildScrollView(
@@ -404,7 +527,6 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Text("Add User Details:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.headlineSmall,)),
 
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
@@ -720,8 +842,34 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
                             color: Colors.black),
                       ),
                     ),
-                    // SizedBox(height: 10,),
-          
+                    SizedBox(height: 20,),
+                    InkWell(
+                      onTap: () async {
+                        // sideMenu.changePage(2);
+                      },
+                      child: Container(
+                        // margin: EdgeInsets.all(10),
+                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          border: Border.all(color:Colors.blue, width: 1.0),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Update',
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.montserrat(
+                                textStyle:
+                                Theme.of(context).textTheme.titleMedium,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+
                   ],
                 ),
               )
@@ -959,7 +1107,6 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
                             // userAboutMEProvider.clearSelectedSolutions();
 
                             Navigator.pop(context);
-                            print("solutions: $solutions");
 
                           },
                           child: Container(

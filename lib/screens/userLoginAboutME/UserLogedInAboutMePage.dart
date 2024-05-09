@@ -26,21 +26,20 @@ import 'package:thrivers/core/progress_dialog.dart';
 import 'package:thrivers/model/challenges_table_model.dart';
 import 'package:thrivers/model/soluton_table_model.dart';
 import 'package:thrivers/screens/EditAboutMePage.dart';
+import 'package:thrivers/screens/userLoginAboutME/UserLogedInEditAboutMePage.dart';
 import 'package:toastification/toastification.dart';
 
 
-
-
-class AdminAboutMePage extends StatefulWidget {
+class UserLogedInAboutMePage extends StatefulWidget {
   var AdminName,Pagejump;
 
-  AdminAboutMePage({this.AdminName,this.Pagejump});
+  UserLogedInAboutMePage({this.AdminName,this.Pagejump});
 
   @override
-  State<AdminAboutMePage> createState() => _AdminAboutMePageState();
+  State<UserLogedInAboutMePage> createState() => _UserLogedInAboutMePageState();
 }
 
-class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProviderStateMixin {
+class _UserLogedInAboutMePageState extends State<UserLogedInAboutMePage> with TickerProviderStateMixin {
 
   PageController page = PageController();
   SideMenuController sideMenu = SideMenuController();
@@ -77,7 +76,6 @@ class _AdminAboutMePageState extends State<AdminAboutMePage> with TickerProvider
   String query = "";
   int _debouncetime = 1000;
   var selectAllAny = "All";
-
 
 
   late final AddKeywordProvider _addKeywordProvider;
@@ -544,7 +542,7 @@ Date
                                                                    iconSize: 25,
                                                                    color: primaryColorOfApp,
                                                                    onPressed: () async {
-                                                                     showEditAboutMeDialogBox(dataList[i],0);
+                                                                     showUserLogedInEditAboutMeDialogBox(dataList[i],0);
                                                                    },
                                                                    icon: Icon(Icons.edit,)),
                              
@@ -641,7 +639,7 @@ Date
                 onTap: () async {
                   // _navigateToTab(3);
                   // await showAddAddAboutMeDialogBox();
-                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
 
                   // Check if there are any documents
 
@@ -652,7 +650,7 @@ Date
                     // Get the last document
                     DocumentSnapshot lastDocument = querySnapshot.docs.first;
                     print("lastDocument :$lastDocument");
-                    showEditAboutMeDialogBox(lastDocument,0);
+                    showUserLogedInEditAboutMeDialogBox(lastDocument,0);
                   }
                   else{
                     _navigateToTab(0);
@@ -695,7 +693,7 @@ Date
               child: InkWell(
                 onTap: () async {
                   // sideMenu.changePage(3);
-                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
 
                   // Check if there are any documents
 
@@ -706,7 +704,7 @@ Date
                     // Get the last document
                     DocumentSnapshot lastDocument = querySnapshot.docs.first;
                     print("lastDocument :$lastDocument");
-                    showEditAboutMeDialogBox(lastDocument,1);
+                    showUserLogedInEditAboutMeDialogBox(lastDocument,1);
                   }
                   else{
                     _navigateToTab(1);
@@ -748,7 +746,7 @@ Date
               child: InkWell(
                 onTap: () async {
                   // sideMenu.changePage(5);
-                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
 
                   // Check if there are any documents
 
@@ -759,7 +757,7 @@ Date
                     // Get the last document
                     DocumentSnapshot lastDocument = querySnapshot.docs.first;
                     print("lastDocument :$lastDocument");
-                    showEditAboutMeDialogBox(lastDocument,2);
+                    showUserLogedInEditAboutMeDialogBox(lastDocument,2);
                   }
                   else{
                     _navigateToTab(2);
@@ -801,7 +799,7 @@ Date
             Expanded(
               child: InkWell(
                 onTap: () async {
-                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
 
                   // Check if there are any documents
 
@@ -812,7 +810,7 @@ Date
                     // Get the last document
                     DocumentSnapshot lastDocument = querySnapshot.docs.first;
                     print("lastDocument :$lastDocument");
-                    showEditAboutMeDialogBox(lastDocument,3);
+                    showUserLogedInEditAboutMeDialogBox(lastDocument,3);
                   }
                   else{
                     _navigateToTab(3);
@@ -856,7 +854,7 @@ Date
               child: InkWell(
                 onTap: () async {
                   // sideMenu.changePage(6);
-                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
 
                   // Check if there are any documents
 
@@ -867,7 +865,7 @@ Date
                     // Get the last document
                     DocumentSnapshot lastDocument = querySnapshot.docs.first;
                     print("lastDocument :$lastDocument");
-                    showEditAboutMeDialogBox(lastDocument,4);
+                    showUserLogedInEditAboutMeDialogBox(lastDocument,4);
                   } else{
                     _navigateToTab(4);
                     await showAddAddAboutMeDialogBox();
@@ -910,7 +908,7 @@ Date
               child: InkWell(
                 onTap: () async {
                   // sideMenu.changePage(6);
-                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
 
                   // Check if there are any documents
 
@@ -921,7 +919,7 @@ Date
                     // Get the last document
                     DocumentSnapshot lastDocument = querySnapshot.docs.first;
                     print("lastDocument :$lastDocument");
-                    showEditAboutMeDialogBox(lastDocument,5);
+                    showUserLogedInEditAboutMeDialogBox(lastDocument,5);
                   } else{
                     _navigateToTab(4);
                     await showAddAddAboutMeDialogBox();
@@ -963,7 +961,7 @@ Date
               child: InkWell(
                 onTap: () async {
                   // sideMenu.changePage(6);
-                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
 
                   // Check if there are any documents
 
@@ -974,7 +972,7 @@ Date
                     // Get the last document
                     DocumentSnapshot lastDocument = querySnapshot.docs.first;
                     print("lastDocument :$lastDocument");
-                    showEditAboutMeDialogBox(lastDocument,6);
+                    showUserLogedInEditAboutMeDialogBox(lastDocument,6);
                   } else{
                     _navigateToTab(4);
                     await showAddAddAboutMeDialogBox();
@@ -1042,6 +1040,7 @@ Date
                         Text("My reports", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.headlineMedium,)),
                         Row(
                           children: [
+                            
                             // IconButton(
                             //     onPressed: (){
                             //       sendMailPopUp(challengesList,solutionsList);
@@ -1216,7 +1215,7 @@ Date
                     SizedBox(height: 5,),
 
                     FutureBuilder<QuerySnapshot>(
-                        future: FirebaseFirestore.instance.collection('AboutMe').orderBy("AB_id", descending: true).get(),
+                        future: FirebaseFirestore.instance.collection('AboutMe').where("Email", isEqualTo: widget.AdminName).orderBy("AB_id", descending: true).get(),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
                             return Center(child: CircularProgressIndicator());
@@ -1405,7 +1404,7 @@ Date
                                                                    iconSize: 25,
                                                                    color: primaryColorOfApp,
                                                                    onPressed: () async {
-                                                                     showEditAboutMeDialogBox(dataList[i],0);
+                                                                     showUserLogedInEditAboutMeDialogBox(dataList[i],0);
                                                                    },
                                                                    icon: Icon(Icons.edit,)),
 
@@ -2069,7 +2068,7 @@ Date
                                   onTap: () async {
                                     // _navigateToTab(3);
                                    // await showAddAddAboutMeDialogBox();
-                                    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+                                    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
 
                                     // Check if there are any documents
 
@@ -2080,7 +2079,7 @@ Date
                                       // Get the last document
                                       DocumentSnapshot lastDocument = querySnapshot.docs.first;
                                       print("lastDocument :$lastDocument");
-                                      showEditAboutMeDialogBox(lastDocument,0);
+                                      showUserLogedInEditAboutMeDialogBox(lastDocument,0);
                                     }
                                     else{
                                       _navigateToTab(0);
@@ -2124,7 +2123,7 @@ Date
                                 child: InkWell(
                                   onTap: () async {
                                     // sideMenu.changePage(3);
-                                    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+                                    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
 
                                     // Check if there are any documents
 
@@ -2135,7 +2134,7 @@ Date
                                       // Get the last document
                                       DocumentSnapshot lastDocument = querySnapshot.docs.first;
                                       print("lastDocument :$lastDocument");
-                                      showEditAboutMeDialogBox(lastDocument,1);
+                                      showUserLogedInEditAboutMeDialogBox(lastDocument,1);
                                     }
                                     else{
                                       _navigateToTab(1);
@@ -2182,7 +2181,7 @@ Date
                                 child: InkWell(
                                   onTap: () async {
                                     // sideMenu.changePage(5);
-                                    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+                                    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
 
                                     // Check if there are any documents
 
@@ -2193,7 +2192,7 @@ Date
                                       // Get the last document
                                       DocumentSnapshot lastDocument = querySnapshot.docs.first;
                                       print("lastDocument :$lastDocument");
-                                      showEditAboutMeDialogBox(lastDocument,2);
+                                      showUserLogedInEditAboutMeDialogBox(lastDocument,2);
                                     }
                                     else{
                                       _navigateToTab(2);
@@ -2239,7 +2238,7 @@ Date
                               Expanded(
                                 child: InkWell(
                                   onTap: () async {
-                                    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+                                    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
 
                                     // Check if there are any documents
 
@@ -2250,7 +2249,7 @@ Date
                                       // Get the last document
                                       DocumentSnapshot lastDocument = querySnapshot.docs.first;
                                       print("lastDocument :$lastDocument");
-                                      showEditAboutMeDialogBox(lastDocument,3);
+                                      showUserLogedInEditAboutMeDialogBox(lastDocument,3);
                                     }
                                     else{
                                       _navigateToTab(3);
@@ -2300,7 +2299,7 @@ Date
                                 child: InkWell(
                                   onTap: () async {
                                     // sideMenu.changePage(6);
-                                    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+                                    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
 
                                     // Check if there are any documents
 
@@ -2311,7 +2310,7 @@ Date
                                       // Get the last document
                                       DocumentSnapshot lastDocument = querySnapshot.docs.first;
                                       print("lastDocument :$lastDocument");
-                                      showEditAboutMeDialogBox(lastDocument,4);
+                                      showUserLogedInEditAboutMeDialogBox(lastDocument,4);
                                     } else{
                                       _navigateToTab(4);
                                       await showAddAddAboutMeDialogBox();
@@ -2357,7 +2356,7 @@ Date
                                 child: InkWell(
                                   onTap: () async {
                                     // page.jumpToPage(2);
-                                    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+                                    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
 
                                     // Check if there are any documents
 
@@ -2368,7 +2367,7 @@ Date
                                       // Get the last document
                                       DocumentSnapshot lastDocument = querySnapshot.docs.first;
                                       print("lastDocument :$lastDocument");
-                                      showEditAboutMeDialogBox(lastDocument,5);
+                                      showUserLogedInEditAboutMeDialogBox(lastDocument,5);
                                     }
                                     else{
                                       _navigateToTab(5);
@@ -2416,7 +2415,7 @@ Date
                           InkWell(
                             onTap: () async {
                               // page.jumpToPage(1);
-                              QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+                              QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
 
                               // Check if there are any documents
 
@@ -2427,7 +2426,7 @@ Date
                                 // Get the last document
                                 DocumentSnapshot lastDocument = querySnapshot.docs.first;
                                 print("lastDocument :$lastDocument");
-                                showEditAboutMeDialogBox(lastDocument,6);
+                                showUserLogedInEditAboutMeDialogBox(lastDocument,6);
                               }
                               else{
                                 _navigateToTab(5);
@@ -2741,7 +2740,7 @@ Date
                           child: InkWell(
                             onTap: () async {
                               // sideMenu.changePage(6);
-                              QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+                              QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
 
                               // Check if there are any documents
 
@@ -2752,7 +2751,7 @@ Date
                                 // Get the last document
                                 DocumentSnapshot lastDocument = querySnapshot.docs.first;
                                 print("lastDocument :$lastDocument");
-                                showEditAboutMeDialogBox(lastDocument,5);
+                                showUserLogedInEditAboutMeDialogBox(lastDocument,5);
                               }
                               else{
                                 _navigateToTab(5);
@@ -9348,11 +9347,11 @@ Date
         });
   }
 
-   showEditAboutMeDialogBox(aboutMeData, int tabindex){
+   showUserLogedInEditAboutMeDialogBox(aboutMeData, int tabindex){
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return EditAboutMEScreen(aboutMeData:  aboutMeData,
+          return UserLogedInEditAboutMEScreen(aboutMeData:  aboutMeData,
               refreshPage: refreshPage,
               showAddAddAboutMeDialogBox: showAddAddAboutMeDialogBox,
               AdminName: widget.AdminName,
@@ -9469,7 +9468,7 @@ Date
       print('duplicatedData: ${duplicatedData}');
 
 
-      await showEditAboutMeDialogBox(duplicatedDocumentSnapshot, 0);
+      await showUserLogedInEditAboutMeDialogBox(duplicatedDocumentSnapshot, 0);
 
       _previewProvider.isDuplicate = true;
 

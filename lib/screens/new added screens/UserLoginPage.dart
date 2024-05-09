@@ -43,7 +43,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
             // );
 
           },
-          child: Text("SOLUTIONS", style: GoogleFonts.montserrat(
+          child: Text("SOLUTION INCLUSION", style: GoogleFonts.montserrat(
               textStyle: Theme.of(context).textTheme.headlineLarge,
               fontWeight: FontWeight.bold,
               color: Colors.white),
@@ -119,7 +119,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                   SizedBox(height: 20,),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text('Thrivers Login', style:TextStyle(
+                    child: Text('Solution Login', style:TextStyle(
                       fontSize: 30,
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
@@ -262,20 +262,14 @@ class _UserLoginPageState extends State<UserLoginPage> {
                           //     });
                         }
                         else {
-                          QuerySnapshot querySnapshot = await FirebaseFirestore
-                              .instance
-                              .collection('Users')
-                              .where('email',
-                                  isEqualTo:
-                                      loginTextEditingcontroller.text.trim())
-                              .get();
+                          QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Users').
+                          where('email', isEqualTo: loginTextEditingcontroller.text.trim()).get();
                           if (querySnapshot.docs.isNotEmpty) {
                             ProgressDialog.show(
                                 context,
                                 "Logining in\n${loginTextEditingcontroller.text}",
                                 Icons.ice_skating);
-                            bool isLoginSuccessful = await ApiRepository()
-                                .sendLoginMail(loginTextEditingcontroller.text);
+                            bool isLoginSuccessful = await ApiRepository().sendLoginMail(loginTextEditingcontroller.text);
                             ProgressDialog.hide();
                             if (isLoginSuccessful) {
                               // showEmptyAlert(context,"Email Sent\nSuccessfully\nYou Will Receive a link to login\nto your dashboard in your email",Icons.mark_email_read_outlined, Colors.green);
@@ -347,12 +341,8 @@ class _UserLoginPageState extends State<UserLoginPage> {
                                                     width: 20,
                                                   ),
                                                   Text(
-                                                    loginTextEditingcontroller
-                                                        .text,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .labelMedium
-                                                        ?.copyWith(),
+                                                    loginTextEditingcontroller.text,
+                                                    style: Theme.of(context).textTheme.labelMedium?.copyWith(),
                                                   ),
                                                 ],
                                               ),

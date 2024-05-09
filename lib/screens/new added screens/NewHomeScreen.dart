@@ -889,7 +889,9 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
                         await ApiRepository().logout(); // Await logout operation
                         print("Logout completed"); // Debugging: Check if logout operation is completed
                         // Navigate to the login screen after successful logout
-                        Navigator.pop(context); // Close the dialog
+                        setState(() {
+                          Navigator.pop(context);
+                        });
                         print("Dialog closed"); // Debugging: Check if dialog is closed
                         context.go('/'); // Navigate to login screen
                         print("Navigated to login screen"); // Debugging: Check if navigation is triggered

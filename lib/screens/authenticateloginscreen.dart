@@ -70,7 +70,6 @@ class _AuthenticateLoginState extends State<AuthenticateLogin> {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 sharedPreferences?.setBool("isLoggedIn",true);
                 sharedPreferences?.setString("userEmail",data);
-
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (BuildContext context) {
