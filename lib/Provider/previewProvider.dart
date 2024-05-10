@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PreviewProvider with ChangeNotifier{
   var name, email, employer, division, role, location, employeeNumber, linemanager, title, mycircumstance, mystrength, myorganization, mychallenge;
@@ -26,6 +27,15 @@ class PreviewProvider with ChangeNotifier{
     isDuplicate = falsee;
       notifyListeners();
   }
+
+  logout(String adminusername) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    print("Logout prefs before: ${prefs.getString(adminusername)}");
+    await prefs.remove(adminusername);
+    print("Logout prefs: ${prefs.getString(adminusername)}");// Navigate back to login screen
+    notifyListeners();
+  }
+
 
   void removeCCRecipient(int index) {
       ccEmails.removeAt(index);

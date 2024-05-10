@@ -12,8 +12,10 @@ import 'package:thrivers/Network/FirebaseApi.dart';
 import 'package:thrivers/Provider/AddKeywordsProvider.dart';
 import 'package:thrivers/Provider/userAboutMeProvider.dart';
 import 'package:thrivers/core/constants.dart';
+import 'package:thrivers/main.dart';
 import 'package:thrivers/model/soluton_table_model.dart';
 import 'package:thrivers/screens/addthriverscreen.dart';
+import 'package:thrivers/screens/new%20added%20screens/UserLoginPage.dart';
 import 'package:thrivers/screens/not%20used%20screen/DashboardCommonWidgets.dart';
 import 'package:thrivers/screens/userLoginAboutME/UserLogedInAboutMePage.dart';
 
@@ -48,6 +50,8 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
 
   var UserName;
 
+
+
   Future<void> _initSharedPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs = await SharedPreferences.getInstance();
@@ -60,12 +64,25 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
 
 
   Future<void> _logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isLoggedIn', false);    // After clearing, navigate to the login screen or any other appropriate screen
-    await prefs.setString('userEmail', "");    // After clearing, navigate to the login screen or any other appropriate screen
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // await prefs.setBool('isLoggedIn', false);    // After clearing, navigate to the login screen or any other appropriate screen
+    // await prefs.setString('userEmail', "");    // After clearing, navigate to the login screen or any other appropriate screen
     // context.go("/userLogin"); // Replace '/login' with your actual login screen route
+    sharedPreferences?.remove("isLoggedIn");
+    sharedPreferences?.remove("userEmail");
     context.pushReplacement("/userLogin"); // Replace '/login' with your actual login screen route
   }
+
+  void logout() {
+    sharedPreferences?.remove("isLoggedIn");
+    sharedPreferences?.remove("userEmail");
+
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (BuildContext context) => UserLoginPage()),
+          (Route<dynamic> route) => false,
+    );
+  }
+
 
   @override
   void initState() {

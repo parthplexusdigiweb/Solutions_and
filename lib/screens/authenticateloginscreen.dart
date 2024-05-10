@@ -78,7 +78,6 @@ class _AuthenticateLoginState extends State<AuthenticateLogin> {
                     },
                   ),
                 );
-
               }
 
               );

@@ -2396,7 +2396,7 @@ Date
                                           Expanded(
                                             child: Text(
                                               // 'Solutions',
-                                              'Generate reports',
+                                              'Create reports',
                                               overflow: TextOverflow.ellipsis,
                                               style: GoogleFonts.montserrat(
                                                   textStyle:
@@ -3753,7 +3753,7 @@ Date
                               IconButton(
                                   icon: Icon(Icons.info_outline,),
                                 onPressed: (){},
-                                tooltip: "Anything you want to share about eg\nYour family circumstances\nYour education and professional qualifications\nYour life stages or life events\nYour ethnicity, faith, identification\nWhat matters most to you in life",
+                                tooltip: "Anything you want to share about eg\n• Your family circumstances\n• Your education and professional qualifications\n• Your life stages or life events\n• Your ethnicity, faith, identification\n• What matters most to you in life",
                               )
                             ],
                           ),
@@ -3824,7 +3824,7 @@ Date
                             contentPadding: EdgeInsets.all(10),
                             // labelText: "Name",
                             // hintText: "Anything you want to share about eg\nYour family circumstances\nWhere you live\nYour education and professional qualifications\nYour life stages or life events\nYour ethnicity, faith, identification\nWhat matters most to you in life",
-                            hintText: "Anything you want to share about eg\nYour family circumstances\nYour education and professional qualifications\nYour life stages or life events\nYour ethnicity, faith, identification\nWhat matters most to you in life",
+                            hintText: "Anything you want to share about eg\n• Your family circumstances\n• Your education and professional qualifications\n• Your life stages or life events\n• Your ethnicity, faith, identification\n• What matters most to you in life",
                             errorStyle: GoogleFonts.montserrat(
                                 textStyle: Theme
                                     .of(context)
@@ -3943,7 +3943,7 @@ Date
                           padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
                           child: Row(
                             children: [
-                              Text("3. What I value about ${employerController.text} and workplace environment that helps me perform to my best:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
+                              Text("3. What I value about ${employerController.text.isEmpty ? "[my organisation]" : employerController.text} and workplace environment that helps me perform to my best:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
                               IconButton(
                                 icon: Icon(Icons.info_outline,),
                                 onPressed: (){},
@@ -4022,7 +4022,7 @@ Date
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(10),
                             // labelText: "Name",
-                            hintText: "What do you like about your organisation and the work environment that helps you be your best? These could be e.g. a policy or process, something about the culture or environment - create a list.",
+                            hintText: "What do you like about your organisation and the work environment that helps you be your best?\nThese could be e.g. a policy or process, something about the culture or environment - create a list.",
                             errorStyle: GoogleFonts.montserrat(
                                 textStyle: Theme
                                     .of(context)
@@ -4051,7 +4051,7 @@ Date
                           padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
                           child: Row(
                             children: [
-                              Flexible(child: Text("4. What I find challenging about ${employerController.text} and workplace environment that gets in the way of me performing to my best:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,))),
+                              Flexible(child: Text("4. What I find challenging about ${employerController.text.isEmpty ? "[my organisation]" : employerController.text} and workplace environment that gets in the way of me performing to my best:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,))),
                               IconButton(
                                 icon: Icon(Icons.info_outline,),
                                 onPressed: (){},
@@ -4130,7 +4130,7 @@ Date
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(10),
                             // labelText: "Name",
-                            hintText: "What is it about your organisation and the work environment that gets in the way of you being your best? These could be a policy or process, something about the culture or environment - create a list.",
+                            hintText: "What is it about your organisation and the work environment that gets in the way of you being your best?\nThese could be a policy or process, something about the culture or environment - create a list.",
                             errorStyle: GoogleFonts.montserrat(
                                 textStyle: Theme
                                     .of(context)
@@ -4689,7 +4689,7 @@ Date
                   Text("${solutionsData['Final_description']}",
                       maxLines: 3,
                       style: GoogleFonts.montserrat(
-                          fontWeight: FontWeight.w600,
+                          // fontWeight: FontWeight.w600,
                           fontSize: 15,
                           color: Colors.black)
                   ),
@@ -4711,7 +4711,7 @@ Date
                         // child: Text("hasduhsuiehdfuijhrediogotryou9ot6uy9it9puy9pt6y9phiopjfgiohguirhgv78tirinbtg8irty8iyivh5rthuiht89uyioveugrfuynvubotniugrufygtiburiufgnvrtguihirh",
                             maxLines: 3,
                             style: GoogleFonts.montserrat(
-                                fontWeight: FontWeight.w600,
+                                // fontWeight: FontWeight.w600,
                                 fontSize: 15,
                                 color: Colors.black)),
                       ),
@@ -11345,7 +11345,7 @@ Date
                 padding: const pw.EdgeInsets.symmetric(
                     vertical: 10.0, horizontal: 8),
                 child:
-                pw.Text("3. What I value about [my organisation] and workplace environment that helps me perform to my best: ",),),
+                pw.Text("3. What I value about ${employerController.text.isEmpty ? "[my organisation]" : employerController.text} and workplace environment that helps me perform to my best: ",),),
 
               pw.Text(
                 "${myOrganisationController.text}",),
@@ -11354,7 +11354,7 @@ Date
                 padding: const pw.EdgeInsets.symmetric(
                     vertical: 10.0, horizontal: 8),
                 child:
-                pw.Text("4: What I find challenging about [My Organisatio] and the workplace environment that makes it harder for me to perform my best: ",),),
+                pw.Text("4: What I find challenging about ${employerController.text.isEmpty ? "[my organisation]" : employerController.text} and the workplace environment that makes it harder for me to perform my best: ",),),
 
               pw.Text(
                 "${myOrganisation2Controller.text}",),
@@ -17684,73 +17684,87 @@ Date
                               //   }).toList(),
                               // ),
 
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: userAboutMEProvider.provider.map((String value) {
-                                  return Container(
-                                    width: MediaQuery.of(context).size.width * .18,
-                                    child: Row(
-                                      children: [
-                                        Radio<String>(
-                                          value: value,
-                                          groupValue: userAboutMEProvider.selectedProvider,
-                                          activeColor: Colors.blue,
-                                          onChanged: (newValue) {
-                                            // setState(() {
-                                            //   selectedProvider = newValue;
-                                            // });
-                                            userAboutMEProvider.updateProvider(newValue);
-                                          },
-                                        ),
-                                        Text(
-                                          value,
-                                          style: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
-                                        ),
-                                      ],
+                              Container(
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.black),
+                                    borderRadius: BorderRadius.circular(15)
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: userAboutMEProvider.provider.map((String value) {
+                                        return Container(
+                                          width: MediaQuery.of(context).size.width * .18,
+                                          child: Row(
+                                            children: [
+                                              Radio<String>(
+                                                value: value,
+                                                groupValue: userAboutMEProvider.selectedProvider,
+                                                activeColor: Colors.blue,
+                                                onChanged: (newValue) {
+                                                  // setState(() {
+                                                  //   selectedProvider = newValue;
+                                                  // });
+                                                  userAboutMEProvider.updateProvider(newValue);
+                                                },
+                                              ),
+                                              Text(
+                                                value,
+                                                style: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }).toList(),
                                     ),
-                                  );
-                                }).toList(),
+
+                                    (userAboutMEProvider.selectedProvider=="Request of my employer") ? SizedBox(height: 10,) : Container(),
+
+                                    (userAboutMEProvider.selectedProvider=="Request of my employer") ? Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                                      child: Text("In Place :",
+                                          style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                              fontWeight: FontWeight.w600)),
+                                    ) : Container(),
+
+                                    (userAboutMEProvider.selectedProvider=="Request of my employer") ?   Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: userAboutMEProvider.InPlace.map((String value) {
+                                        return Container(
+                                          width: MediaQuery.of(context).size.width * .3,
+                                          child: Row(
+                                            children: [
+                                              Radio<String>(
+                                                value: value,
+                                                groupValue: userAboutMEProvider.selectedInPlace,
+                                                activeColor: Colors.blue,
+                                                onChanged: (newValue) {
+                                                  // setState(() {
+                                                  //   selectedProvider = newValue;
+                                                  // });
+                                                  userAboutMEProvider.updateInPlace(newValue);
+                                                },
+                                              ),
+                                              Text(
+                                                value,
+                                                style: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ) : Container(),
+                                  ],
+                                ),
                               ),
 
-                              SizedBox(height: 10,),
-
-                              (userAboutMEProvider.selectedProvider=="Request of my employer") ? Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                                child: Text("In Place :",
-                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
-                                        fontWeight: FontWeight.w600)),
-                              ) : Container(),
-
-                              (userAboutMEProvider.selectedProvider=="Request of my employer") ?   Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: userAboutMEProvider.InPlace.map((String value) {
-                                  return Container(
-                                    width: MediaQuery.of(context).size.width * .3,
-                                    child: Row(
-                                      children: [
-                                        Radio<String>(
-                                          value: value,
-                                          groupValue: userAboutMEProvider.selectedInPlace,
-                                          activeColor: Colors.blue,
-                                          onChanged: (newValue) {
-                                            // setState(() {
-                                            //   selectedProvider = newValue;
-                                            // });
-                                            userAboutMEProvider.updateInPlace(newValue);
-                                          },
-                                        ),
-                                        Text(
-                                          value,
-                                          style: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }).toList(),
-                              ) : Container(),
 
 
-                              SizedBox(height: 10,),
+
 
                               // Padding(
                               //   padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
@@ -18310,73 +18324,86 @@ Date
                               //   }).toList(),
                               // ),
 
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: userAboutMEProvider.provider.map((String value) {
-                                  return Container(
-                                    width: MediaQuery.of(context).size.width * .18,
-                                    child: Row(
-                                      children: [
-                                        Radio<String>(
-                                          value: value,
-                                          groupValue: userAboutMEProvider.selectedProvider,
-                                          activeColor: Colors.blue,
-                                          onChanged: (newValue) {
-                                            // setState(() {
-                                            //   selectedProvider = newValue;
-                                            // });
-                                            userAboutMEProvider.updateProvider(newValue);
-                                          },
-                                        ),
-                                        Text(
-                                          value,
-                                          style: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
-                                        ),
-                                      ],
+                              Container(
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.black),
+                                    borderRadius: BorderRadius.circular(15)
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: userAboutMEProvider.provider.map((String value) {
+                                        return Container(
+                                          width: MediaQuery.of(context).size.width * .18,
+                                          child: Row(
+                                            children: [
+                                              Radio<String>(
+                                                value: value,
+                                                groupValue: userAboutMEProvider.selectedProvider,
+                                                activeColor: Colors.blue,
+                                                onChanged: (newValue) {
+                                                  // setState(() {
+                                                  //   selectedProvider = newValue;
+                                                  // });
+                                                  userAboutMEProvider.updateProvider(newValue);
+                                                },
+                                              ),
+                                              Text(
+                                                value,
+                                                style: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }).toList(),
                                     ),
-                                  );
-                                }).toList(),
+
+                                    (userAboutMEProvider.selectedProvider=="Request of my employer") ?  SizedBox(height: 10,) : Container(),
+
+                                    (userAboutMEProvider.selectedProvider=="Request of my employer") ? Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                                      child: Text("In Place :",
+                                          style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                              fontWeight: FontWeight.w600)),
+                                    ) : Container(),
+
+                                    (userAboutMEProvider.selectedProvider=="Request of my employer") ?   Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: userAboutMEProvider.InPlace.map((String value) {
+                                        return Container(
+                                          width: MediaQuery.of(context).size.width * .3,
+                                          child: Row(
+                                            children: [
+                                              Radio<String>(
+                                                value: value,
+                                                groupValue: userAboutMEProvider.selectedInPlace,
+                                                activeColor: Colors.blue,
+                                                onChanged: (newValue) {
+                                                  // setState(() {
+                                                  //   selectedProvider = newValue;
+                                                  // });
+                                                  userAboutMEProvider.updateInPlace(newValue);
+                                                },
+                                              ),
+                                              Text(
+                                                value,
+                                                style: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ) : Container(),
+                                  ],
+                                ),
                               ),
 
-                              SizedBox(height: 10,),
-
-                              (userAboutMEProvider.selectedProvider=="Request of my employer") ? Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                                child: Text("In Place :",
-                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
-                                        fontWeight: FontWeight.w600)),
-                              ) : Container(),
-
-                              (userAboutMEProvider.selectedProvider=="Request of my employer") ?   Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: userAboutMEProvider.InPlace.map((String value) {
-                                  return Container(
-                                    width: MediaQuery.of(context).size.width * .3,
-                                    child: Row(
-                                      children: [
-                                        Radio<String>(
-                                          value: value,
-                                          groupValue: userAboutMEProvider.selectedInPlace,
-                                          activeColor: Colors.blue,
-                                          onChanged: (newValue) {
-                                            // setState(() {
-                                            //   selectedProvider = newValue;
-                                            // });
-                                            userAboutMEProvider.updateInPlace(newValue);
-                                          },
-                                        ),
-                                        Text(
-                                          value,
-                                          style: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }).toList(),
-                              ) : Container(),
 
 
-                              SizedBox(height: 10,),
 
                               // Padding(
                               //   padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),

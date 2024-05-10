@@ -275,8 +275,8 @@ Date
                                 Tab(icon: Icon(Icons.edit_attributes),text: "My attributes"),
                                 Tab(icon: Icon(Icons.sync_problem),text: "My challenges"),
                                 Tab(icon: Icon(Icons.checklist_rtl),text: "My solutions"),
-                                Tab(icon: Icon(Icons.insert_drive_file),text: "Generate reports"),
-                                Tab(icon: Icon(Icons.library_books),text: "My Library"),
+                                Tab(icon: Icon(Icons.insert_drive_file),text: "Create reports"),
+                                Tab(icon: Icon(Icons.library_books),text: "My library"),
                               ],
                             ),
                             Expanded(
@@ -436,7 +436,8 @@ Date
                           Expanded(
                             child: Padding(
                               padding: EdgeInsets.only(left: 10.0,bottom: 10),
-                              child: Text("Here is your master report summarising your findings as a result of your most recent input.",style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              // child: Text("Here is your master report summarising your findings as a result of your most recent input.",style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              child: Text("Here is your private report:",style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                   color: Colors.black87,
                                   fontWeight: FontWeight.w300
               
@@ -462,214 +463,222 @@ Date
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
-                            child:Consumer<PreviewProvider>(
-                                builder: (c,previewProvider, _){
-                                  return InkWell(
-                                    onTap: () async {
-                                      // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
-                                //
-                                //
-                                // print("querySnapshot :${querySnapshot}");
-                                // print("querySnapshot :${querySnapshot.docs.length}");
-                                //
-                                // if (querySnapshot.docs.isNotEmpty) {
-                                //   // Get the last document
-                                //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
-                                //   print("lastDocument :$lastDocument");
-                                      ///
-
-                                      // showEditAboutMeDialogBox(lastDocument,4);
-                                  // showReportViewPageDialogBox(lastDocument);
-                                      ///
-
-                                      // About_Me_Label = aboutMeData['About_Me_Label']==null ? "" : aboutMeData['About_Me_Label'];
-                                  // AboutMeLabeltextController.text = aboutMeData['About_Me_Label']==null ? "" : aboutMeData['About_Me_Label'];
-                                  // AboutMeDescriptiontextController.text = aboutMeData['AB_Description']==null ? "" : aboutMeData['AB_Description'];
-                                  // AboutMeUseFulInfotextController.text = aboutMeData['AB_Useful_Info']==null ? "" : aboutMeData['AB_Useful_Info'];
-                                  // AboutMeDatetextController.text = aboutMeData['AB_Date']==null ? "" : aboutMeData['AB_Date'];
-                                  // selectedEmail = aboutMeData['Email']==null ? "" : aboutMeData['Email'];
-                                  // _previewProvider.email = selectedEmail;
-                                  // searchEmailcontroller.text = aboutMeData['Email']==null ? "" : aboutMeData['Email'];
-                                  // // _previewProvider.email = selectedEmail;
-                                  // nameController.text = aboutMeData['User_Name']==null ? "" : aboutMeData['User_Name'];
-                                  // _previewProvider.name = nameController.text;
-                                  // employerController.text = aboutMeData['Employer']==null ? "" : aboutMeData['Employer'];
-                                  // _previewProvider.employer = employerController.text;
-                                  // divisionOrSectionController.text = aboutMeData['Division_or_Section']==null ? "" : aboutMeData['Division_or_Section'];
-                                  // _previewProvider.division = divisionOrSectionController.text;
-                                  // RoleController.text = aboutMeData['Role']==null ? "" : aboutMeData['Role'];
-                                  // _previewProvider.role = RoleController.text;
-                                  // LocationController.text = aboutMeData['Location']==null ? "" : aboutMeData['Location'];
-                                  // _previewProvider.location = LocationController.text;
-                                  // EmployeeNumberController.text = aboutMeData['Employee_Number']==null ? "" : aboutMeData['Employee_Number'];
-                                  // _previewProvider.employeeNumber = EmployeeNumberController.text;
-                                  // LineManagerController.text = aboutMeData['Line_Manager']==null ? "" : aboutMeData['Line_Manager'];
-                                  // _previewProvider.linemanager = LineManagerController.text;
-                                  //
-                                  // mycircumstancesController.text = aboutMeData['My_Circumstance']==null ? "" : aboutMeData['My_Circumstance'];
-                                  // _previewProvider.mycircumstance = mycircumstancesController.text;
-                                  // MystrengthsController.text = aboutMeData['My_Strength']==null ? "" : aboutMeData['My_Strength'];
-                                  // _previewProvider.mystrength = MystrengthsController.text;
-                                  // myOrganisationController.text = aboutMeData['My_Organisation']==null ? "" : aboutMeData['My_Organisation'];
-                                  // _previewProvider.myorganization = myOrganisationController.text;
-                                  // myOrganisation2Controller.text = aboutMeData['My_Challenges_Organisation']==null ? "" : aboutMeData['My_Challenges_Organisation'];
-                                  // _previewProvider.mychallenge = myOrganisation2Controller.text;
-
-                                      ///
-
-                                      About_Me_Label = previewProvider.title;
-
-
-                                  // List<dynamic> challengesList = aboutMeData['Challenges'] ?? [];
-                                  // List<dynamic> solutionsList = aboutMeData['Solutions'] ?? [];
-                                  //
-                                  // Iterable<Map<String, dynamic>> challengesIterable = challengesList.map((item) => item as Map<String, dynamic>);
-                                  // Iterable<Map<String, dynamic>> solutionsIterable = solutionsList.map((item) => item as Map<String, dynamic>);
-                                  //
-                                  // List<Map<String, dynamic>> abc = [];
-                                  // List<Map<String, dynamic>> xyz = [];
-                                  //
-                                  // abc.addAll(challengesIterable);
-                                  // xyz.addAll(solutionsIterable);
-              
-              
-              
-                                  Uint8List pdfBytes = await makePdf(challengesList, solutionsList );
-              
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return  AlertDialog(
-                                            icon: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Text("${About_Me_Label}",
-                                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Consumer<PreviewProvider>(
+                                    builder: (c,previewProvider, _){
+                                      return InkWell(
+                                        onTap: () async {
+                                          // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+                                    //
+                                    //
+                                    // print("querySnapshot :${querySnapshot}");
+                                    // print("querySnapshot :${querySnapshot.docs.length}");
+                                    //
+                                    // if (querySnapshot.docs.isNotEmpty) {
+                                    //   // Get the last document
+                                    //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                                    //   print("lastDocument :$lastDocument");
+                                          ///
+                                
+                                          // showEditAboutMeDialogBox(lastDocument,4);
+                                      // showReportViewPageDialogBox(lastDocument);
+                                          ///
+                                
+                                          // About_Me_Label = aboutMeData['About_Me_Label']==null ? "" : aboutMeData['About_Me_Label'];
+                                      // AboutMeLabeltextController.text = aboutMeData['About_Me_Label']==null ? "" : aboutMeData['About_Me_Label'];
+                                      // AboutMeDescriptiontextController.text = aboutMeData['AB_Description']==null ? "" : aboutMeData['AB_Description'];
+                                      // AboutMeUseFulInfotextController.text = aboutMeData['AB_Useful_Info']==null ? "" : aboutMeData['AB_Useful_Info'];
+                                      // AboutMeDatetextController.text = aboutMeData['AB_Date']==null ? "" : aboutMeData['AB_Date'];
+                                      // selectedEmail = aboutMeData['Email']==null ? "" : aboutMeData['Email'];
+                                      // _previewProvider.email = selectedEmail;
+                                      // searchEmailcontroller.text = aboutMeData['Email']==null ? "" : aboutMeData['Email'];
+                                      // // _previewProvider.email = selectedEmail;
+                                      // nameController.text = aboutMeData['User_Name']==null ? "" : aboutMeData['User_Name'];
+                                      // _previewProvider.name = nameController.text;
+                                      // employerController.text = aboutMeData['Employer']==null ? "" : aboutMeData['Employer'];
+                                      // _previewProvider.employer = employerController.text;
+                                      // divisionOrSectionController.text = aboutMeData['Division_or_Section']==null ? "" : aboutMeData['Division_or_Section'];
+                                      // _previewProvider.division = divisionOrSectionController.text;
+                                      // RoleController.text = aboutMeData['Role']==null ? "" : aboutMeData['Role'];
+                                      // _previewProvider.role = RoleController.text;
+                                      // LocationController.text = aboutMeData['Location']==null ? "" : aboutMeData['Location'];
+                                      // _previewProvider.location = LocationController.text;
+                                      // EmployeeNumberController.text = aboutMeData['Employee_Number']==null ? "" : aboutMeData['Employee_Number'];
+                                      // _previewProvider.employeeNumber = EmployeeNumberController.text;
+                                      // LineManagerController.text = aboutMeData['Line_Manager']==null ? "" : aboutMeData['Line_Manager'];
+                                      // _previewProvider.linemanager = LineManagerController.text;
+                                      //
+                                      // mycircumstancesController.text = aboutMeData['My_Circumstance']==null ? "" : aboutMeData['My_Circumstance'];
+                                      // _previewProvider.mycircumstance = mycircumstancesController.text;
+                                      // MystrengthsController.text = aboutMeData['My_Strength']==null ? "" : aboutMeData['My_Strength'];
+                                      // _previewProvider.mystrength = MystrengthsController.text;
+                                      // myOrganisationController.text = aboutMeData['My_Organisation']==null ? "" : aboutMeData['My_Organisation'];
+                                      // _previewProvider.myorganization = myOrganisationController.text;
+                                      // myOrganisation2Controller.text = aboutMeData['My_Challenges_Organisation']==null ? "" : aboutMeData['My_Challenges_Organisation'];
+                                      // _previewProvider.mychallenge = myOrganisation2Controller.text;
+                                
+                                          ///
+                                
+                                          About_Me_Label = previewProvider.title;
+                                
+                                
+                                      // List<dynamic> challengesList = aboutMeData['Challenges'] ?? [];
+                                      // List<dynamic> solutionsList = aboutMeData['Solutions'] ?? [];
+                                      //
+                                      // Iterable<Map<String, dynamic>> challengesIterable = challengesList.map((item) => item as Map<String, dynamic>);
+                                      // Iterable<Map<String, dynamic>> solutionsIterable = solutionsList.map((item) => item as Map<String, dynamic>);
+                                      //
+                                      // List<Map<String, dynamic>> abc = [];
+                                      // List<Map<String, dynamic>> xyz = [];
+                                      //
+                                      // abc.addAll(challengesIterable);
+                                      // xyz.addAll(solutionsIterable);
+                                
+                                
+                                
+                                      Uint8List pdfBytes = await makePdf(challengesList, solutionsList );
+                                
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return  AlertDialog(
+                                                icon: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Text("${About_Me_Label}",
+                                                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                                                    ),
+                                                    IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.close)),
+                                                  ],
                                                 ),
-                                                IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.close)),
+                                                backgroundColor: Colors.white,
+                                                content: SizedBox(
+                                                  width: double.maxFinite,
+                                                  child: PdfPreview(
+                                                    maxPageWidth: MediaQuery.of(context).size.width * .6,
+                                                    allowSharing: false,
+                                                    canChangeOrientation: false,
+                                                    canChangePageFormat: false,
+                                                    canDebug: false,
+                                                    allowPrinting: false,
+                                                    pdfFileName: About_Me_Label,
+                                                    previewPageMargin: EdgeInsets.all(10),
+                                                    useActions: true,
+                                                    pdfPreviewPageDecoration: BoxDecoration(color: Colors.white),
+                                                    build: (format) => pdfBytes,
+                                                  ),
+                                                ));
+                                          });
+                                
+                                    // }
+                                    // else{
+                                    //   _navigateToTab(4);
+                                    //   await showAddAddAboutMeDialogBox();
+                                    // }
+                                  },
+                                        child: Container(
+                                          margin: EdgeInsets.all(10),
+                                          height: 40,
+
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                            borderRadius: BorderRadius.circular(10.0),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                // Icon(Icons.article,color: Colors.black,size: 30,),
+                                                Icon(Icons.picture_as_pdf_outlined,color: Colors.black,size: 25,),
+                                                SizedBox(width: 5,),
+
+                                                Expanded(
+                                                  child: Text(
+                                                    // 'Solutions',
+                                                    'Preview',
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: GoogleFonts.montserrat(
+                                                        textStyle:
+                                                        Theme.of(context).textTheme.titleMedium,
+                                                        color: Colors.black),
+                                                  ),
+                                                ),
                                               ],
                                             ),
-                                            backgroundColor: Colors.white,
-                                            content: SizedBox(
-                                              width: double.maxFinite,
-                                              child: PdfPreview(
-                                                maxPageWidth: MediaQuery.of(context).size.width * .6,
-                                                allowSharing: false,
-                                                canChangeOrientation: false,
-                                                canChangePageFormat: false,
-                                                canDebug: false,
-                                                allowPrinting: false,
-                                                pdfFileName: About_Me_Label,
-                                                previewPageMargin: EdgeInsets.all(10),
-                                                useActions: true,
-                                                pdfPreviewPageDecoration: BoxDecoration(color: Colors.white),
-                                                build: (format) => pdfBytes,
-                                              ),
-                                            ));
-                                      });
-              
-                                // }
-                                // else{
-                                //   _navigateToTab(4);
-                                //   await showAddAddAboutMeDialogBox();
-                                // }
-                              },
-                              child: Container(
-                                margin: EdgeInsets.all(10),
-                                height: 40,
-              
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(color:primaryColorOfApp, width: 1.0),
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      // Icon(Icons.article,color: Colors.black,size: 30,),
-                                      Icon(Icons.picture_as_pdf_outlined,color: Colors.black,size: 25,),
-                                      SizedBox(width: 5,),
-              
-                                      Expanded(
-                                        child: Text(
-                                          // 'Solutions',
-                                          'Current master report',
-                                          overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.montserrat(
-                                              textStyle:
-                                              Theme.of(context).textTheme.titleMedium,
-                                              color: Colors.black),
+                                          ),
                                         ),
+
+                                );
+
+                                    }),
+                            
+                                InkWell(
+                                  onTap: () async {
+                                    // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+                                    //
+                                    // // Check if there are any documents
+                                    //
+                                    // print("querySnapshot :${querySnapshot}");
+                                    // print("querySnapshot :${querySnapshot.docs.length}");
+                                    //
+                                    // if (querySnapshot.docs.isNotEmpty) {
+                                    //   // Get the last document
+                                    //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                                    //   print("lastDocument :$lastDocument");
+                                    showEditAboutMeDialogBox(5);
+                                    // }
+                                    ///
+                                    // else{
+                                    //   _navigateToTab(5);
+                                    //   await showAddAddAboutMeDialogBox();
+                                    //
+                                    // }
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.all(10),
+                                    height: 40,
+                                
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          // Icon(Icons.article,color: Colors.black,size: 30,),
+                                          Icon(Icons.edit_document,color: Colors.black,size: 25,),
+                                          SizedBox(width: 5,),
+                                
+                                          Expanded(
+                                            child: Text(
+                                              // 'Solutions',
+                                              'Edit',
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.montserrat(
+                                                  textStyle:
+                                                  Theme.of(context).textTheme.titleMedium,
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ],
+                                    ),
                                   ),
                                 ),
-                              ),
-              
-                            );
-                          })
-                          ),
-                          Expanded(
-                            child: InkWell(
-                              onTap: () async {
-                                // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
-                                //
-                                // // Check if there are any documents
-                                //
-                                // print("querySnapshot :${querySnapshot}");
-                                // print("querySnapshot :${querySnapshot.docs.length}");
-                                //
-                                // if (querySnapshot.docs.isNotEmpty) {
-                                //   // Get the last document
-                                //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
-                                //   print("lastDocument :$lastDocument");
-                                  showEditAboutMeDialogBox(5);
-                                // }
-                                ///
-                                // else{
-                                //   _navigateToTab(5);
-                                //   await showAddAddAboutMeDialogBox();
-                                //
-                                // }
-                              },
-                              child: Container(
-                                margin: EdgeInsets.all(10),
-                                height: 40,
-              
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(color:primaryColorOfApp, width: 1.0),
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      // Icon(Icons.article,color: Colors.black,size: 30,),
-                                      Icon(Icons.edit_document,color: Colors.black,size: 25,),
-                                      SizedBox(width: 5,),
-              
-                                      Expanded(
-                                        child: Text(
-                                          // 'Solutions',
-                                          'Edit Master report',
-                                          overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.montserrat(
-                                              textStyle:
-                                              Theme.of(context).textTheme.titleMedium,
-                                              color: Colors.black),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
+                            
+                              ],
                             ),
                           ),
-                          (_previewProvider.isDuplicate==true) ? SizedBox() : Expanded(
+                          // (_previewProvider.isDuplicate==true) ? SizedBox() :
+                          Expanded(
                             child: InkWell(
                               onTap: () async {
                                 QuerySnapshot querySnapshots = await FirebaseFirestore.instance
@@ -698,13 +707,13 @@ Date
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
                                       // Icon(Icons.article,color: Colors.black,size: 30,),
-                                      Icon(Icons.cached,color: Colors.black,size: 25,),
+                                      Icon(Icons.file_copy,color: Colors.black,size: 25,),
                                       SizedBox(width: 5,),
 
                                       Expanded(
                                         child: Text(
                                           // 'Solutions',
-                                          'Duplicate report',
+                                          'Create reports to share',
                                           overflow: TextOverflow.ellipsis,
                                           style: GoogleFonts.montserrat(
                                               textStyle:
@@ -722,6 +731,7 @@ Date
                         ],
                       ),
                       SizedBox(height : 10),
+
                     ],
                   ),
 
@@ -1854,7 +1864,7 @@ Date
                                 IconButton(
                                   icon: Icon(Icons.info_outline,),
                                   onPressed: (){},
-                                  tooltip: "Anything you want to share about eg\nYour family circumstances\nYour education and professional qualifications\nYour life stages or life events\nYour ethnicity, faith, identification\nWhat matters most to you in life",
+                                  tooltip: "Anything you want to share about eg\n• Your family circumstances\n• Your education and professional qualifications\n• Your life stages or life events\n• Your ethnicity, faith, identification\n• What matters most to you in life",
                                 )
                               ],
                             ),
@@ -1924,7 +1934,7 @@ Date
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.all(10),
                               // labelText: "Name",
-                              hintText: "Anything you want to share about eg\nYour family circumstances\nYour education and professional qualifications\nYour life stages or life events\nYour ethnicity, faith, identification\nWhat matters most to you in life",
+                              hintText: "Anything you want to share about eg\n• Your family circumstances\n• Your education and professional qualifications\n• Your life stages or life events\n• Your ethnicity, faith, identification\n• What matters most to you in life",
                               errorStyle: GoogleFonts.montserrat(
                                   textStyle: Theme
                                       .of(context)
@@ -2058,7 +2068,7 @@ Date
                             padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
                             child: Row(
                               children: [
-                                Flexible(child: Text("3. What I value about [my organisation] and workplace environment that helps me perform to my best:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,))),
+                                Flexible(child: Text("3. What I value about ${employerController.text.isEmpty ? "[my organisation]" : employerController.text} and workplace environment that helps me perform to my best:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,))),
                                 IconButton(
                                   icon: Icon(Icons.info_outline,),
                                   onPressed: (){},
@@ -2137,7 +2147,7 @@ Date
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.all(10),
                               // labelText: "Name",
-                              hintText: "What do you like about your organisation and the work environment that helps you be your best? These could be e.g. a policy or process, something about the culture or environment - create a list.",
+                              hintText: "What do you like about your organisation and the work environment that helps you be your best?\nThese could be e.g. a policy or process, something about the culture or environment - create a list.",
                               errorStyle: GoogleFonts.montserrat(
                                   textStyle: Theme
                                       .of(context)
@@ -2170,7 +2180,7 @@ Date
                               children: [
                                 Flexible(
                                   child: Text(
-                                    "4. What I find challenging about [My Organisation] and workplace environment that gets in the way of me performing to my best: ",
+                                    "4. What I find challenging about ${employerController.text.isEmpty ? "[my organisation]" : employerController.text} and workplace environment that gets in the way of me performing to my best: ",
                                     style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,),
                                   ),
                                 ),
@@ -2229,7 +2239,7 @@ Date
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.all(10),
                               // labelText: "Name",
-                              hintText: "What is it about your organisation and the work environment that gets in the way of you being your best? These could be a policy or process, something about the culture or environment - create a list.",
+                              hintText: "What is it about your organisation and the work environment that gets in the way of you being your best?\nThese could be a policy or process, something about the culture or environment - create a list.",
                               errorStyle: GoogleFonts.montserrat(
                                   textStyle: Theme
                                       .of(context)
@@ -7729,7 +7739,7 @@ Date
                   Text("${solutionsData['Final_description']}",
                       maxLines: 3,
                       style: GoogleFonts.montserrat(
-                          fontWeight: FontWeight.w600,
+                          // fontWeight: FontWeight.w600,
                           fontSize: 15,
                           color: Colors.black)
                   ),
@@ -7751,7 +7761,7 @@ Date
                             // child: Text("hasduhsuiehdfuijhrediogotryou9ot6uy9it9puy9pt6y9phiopjfgiohguirhgv78tirinbtg8irty8iyivh5rthuiht89uyioveugrfuynvubotniugrufygtiburiufgnvrtguihirh",
                             maxLines: 3,
                             style: GoogleFonts.montserrat(
-                                fontWeight: FontWeight.w600,
+                                // fontWeight: FontWeight.w600,
                                 fontSize: 15,
                                 color: Colors.black)),
                       ),
@@ -11680,73 +11690,86 @@ Date
                               //   }).toList(),
                               // ),
 
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: userAboutMEProvider.provider.map((String value) {
-                                  return Container(
-                                    width: MediaQuery.of(context).size.width * .18,
-                                    child: Row(
-                                      children: [
-                                        Radio<String>(
-                                          value: value,
-                                          groupValue: userAboutMEProvider.selectedProvider,
-                                          activeColor: Colors.blue,
-                                          onChanged: (newValue) {
-                                            // setState(() {
-                                            //   selectedProvider = newValue;
-                                            // });
-                                            userAboutMEProvider.updateProvider(newValue);
-                                          },
-                                        ),
-                                        Text(
-                                          value,
-                                          style: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
-                                        ),
-                                      ],
+                              Container(
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(15)
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: userAboutMEProvider.provider.map((String value) {
+                                        return Container(
+                                          width: MediaQuery.of(context).size.width * .18,
+                                          child: Row(
+                                            children: [
+                                              Radio<String>(
+                                                value: value,
+                                                groupValue: userAboutMEProvider.selectedProvider,
+                                                activeColor: Colors.blue,
+                                                onChanged: (newValue) {
+                                                  // setState(() {
+                                                  //   selectedProvider = newValue;
+                                                  // });
+                                                  userAboutMEProvider.updateProvider(newValue);
+                                                },
+                                              ),
+                                              Text(
+                                                value,
+                                                style: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }).toList(),
                                     ),
-                                  );
-                                }).toList(),
+
+                                    (userAboutMEProvider.selectedProvider=="Request of my employer") ? SizedBox(height: 10,) : Container(),
+
+                                    (userAboutMEProvider.selectedProvider=="Request of my employer") ?   Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                                      child: Text("In Place :",
+                                          style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                              fontWeight: FontWeight.w600)),
+                                    ) : Container(),
+
+                                    (userAboutMEProvider.selectedProvider=="Request of my employer") ?   Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: userAboutMEProvider.InPlace.map((String value) {
+                                        return Container(
+                                          width: MediaQuery.of(context).size.width * .3,
+                                          child: Row(
+                                            children: [
+                                              Radio<String>(
+                                                value: value,
+                                                groupValue: userAboutMEProvider.selectedInPlace,
+                                                activeColor: Colors.blue,
+                                                onChanged: (newValue) {
+                                                  // setState(() {
+                                                  //   selectedProvider = newValue;
+                                                  // });
+                                                  userAboutMEProvider.updateInPlace(newValue);
+                                                },
+                                              ),
+                                              Text(
+                                                value,
+                                                style: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ) : Container(),
+
+                                  ],
+                                ),
                               ),
 
-                              SizedBox(height: 10,),
 
-                              (userAboutMEProvider.selectedProvider=="Request of my employer") ?   Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                                child: Text("In Place :",
-                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
-                                        fontWeight: FontWeight.w600)),
-                              ) : Container(),
-
-                              (userAboutMEProvider.selectedProvider=="Request of my employer") ?   Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: userAboutMEProvider.InPlace.map((String value) {
-                                  return Container(
-                                    width: MediaQuery.of(context).size.width * .3,
-                                    child: Row(
-                                      children: [
-                                        Radio<String>(
-                                          value: value,
-                                          groupValue: userAboutMEProvider.selectedInPlace,
-                                          activeColor: Colors.blue,
-                                          onChanged: (newValue) {
-                                            // setState(() {
-                                            //   selectedProvider = newValue;
-                                            // });
-                                            userAboutMEProvider.updateInPlace(newValue);
-                                          },
-                                        ),
-                                        Text(
-                                          value,
-                                          style: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }).toList(),
-                              ) : Container(),
-
-
-                              SizedBox(height: 10,),
 
 
                               SizedBox(height: 10,),
@@ -12338,73 +12361,87 @@ Date
                               //   }).toList(),
                               // ),
 
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: userAboutMEProvider.provider.map((String value) {
-                                  return Container(
-                                    width: MediaQuery.of(context).size.width * .24,
-                                    child: Row(
-                                      children: [
-                                        Radio<String>(
-                                          value: value,
-                                          groupValue: userAboutMEProvider.selectedProvider,
-                                          activeColor: Colors.blue,
-                                          onChanged: (newValue) {
-                                            // setState(() {
-                                            //   selectedProvider = newValue;
-                                            // });
-                                            userAboutMEProvider.updateProvider(newValue);
-                                          },
-                                        ),
-                                        Text(
-                                          value,
-                                          style: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
-                                        ),
-                                      ],
+                              Container(
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.black),
+                                    borderRadius: BorderRadius.circular(15)
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: userAboutMEProvider.provider.map((String value) {
+                                        return Container(
+                                          width: MediaQuery.of(context).size.width * .24,
+                                          child: Row(
+                                            children: [
+                                              Radio<String>(
+                                                value: value,
+                                                groupValue: userAboutMEProvider.selectedProvider,
+                                                activeColor: Colors.blue,
+                                                onChanged: (newValue) {
+                                                  // setState(() {
+                                                  //   selectedProvider = newValue;
+                                                  // });
+                                                  userAboutMEProvider.updateProvider(newValue);
+                                                },
+                                              ),
+                                              Text(
+                                                value,
+                                                style: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }).toList(),
                                     ),
-                                  );
-                                }).toList(),
+
+                                    (userAboutMEProvider.selectedProvider=="Request of my employer") ? SizedBox(height: 10,) : Container(),
+
+                                    (userAboutMEProvider.selectedProvider=="Request of my employer") ? Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                                      child: Text("In Place :",
+                                          style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                              fontWeight: FontWeight.w600)),
+                                    ) : Container(),
+
+                                    (userAboutMEProvider.selectedProvider=="Request of my employer") ?   Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: userAboutMEProvider.InPlace.map((String value) {
+                                        return Container(
+                                          width: MediaQuery.of(context).size.width * .3,
+                                          child: Row(
+                                            children: [
+                                              Radio<String>(
+                                                value: value,
+                                                groupValue: userAboutMEProvider.selectedInPlace,
+                                                activeColor: Colors.blue,
+                                                onChanged: (newValue) {
+                                                  // setState(() {
+                                                  //   selectedProvider = newValue;
+                                                  // });
+                                                  userAboutMEProvider.updateInPlace(newValue);
+                                                },
+                                              ),
+                                              Text(
+                                                value,
+                                                style: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ) : Container(),
+
+
+                                  ],
+                                ),
                               ),
 
-                              SizedBox(height: 10,),
-
-                              (userAboutMEProvider.selectedProvider=="Request of my employer") ? Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                                child: Text("In Place :",
-                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
-                                        fontWeight: FontWeight.w600)),
-                              ) : Container(),
-
-                              (userAboutMEProvider.selectedProvider=="Request of my employer") ?   Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: userAboutMEProvider.InPlace.map((String value) {
-                                  return Container(
-                                    width: MediaQuery.of(context).size.width * .3,
-                                    child: Row(
-                                      children: [
-                                        Radio<String>(
-                                          value: value,
-                                          groupValue: userAboutMEProvider.selectedInPlace,
-                                          activeColor: Colors.blue,
-                                          onChanged: (newValue) {
-                                            // setState(() {
-                                            //   selectedProvider = newValue;
-                                            // });
-                                            userAboutMEProvider.updateInPlace(newValue);
-                                          },
-                                        ),
-                                        Text(
-                                          value,
-                                          style: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }).toList(),
-                              ) : Container(),
-
-
-                              SizedBox(height: 10,),
 
                               // Padding(
                               //   padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),

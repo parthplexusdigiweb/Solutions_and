@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:thrivers/Network/FirebaseApi.dart';
+import 'package:thrivers/Provider/previewProvider.dart';
 import 'package:thrivers/core/constants.dart';
 import 'package:thrivers/screens/BrevoScreen.dart';
 import 'package:thrivers/screens/CategoryView.dart';
@@ -49,14 +51,25 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
 
   late DrawerController drawerController;
 
+  late final PreviewProvider _previewProvider;
+
 
   @override
-  void initState() {
-    sideMenu.addListener((p0) {
-      page.jumpToPage(p0);
-    });
-    super.initState();
+  void dispose() {
+    sideMenu.removeListener(_listener);
+    super.dispose();
   }
+
+  void _listener(p0) {
+    page.jumpToPage(p0);
+  }
+
+  void initState() {
+    super.initState();
+    sideMenu.addListener(_listener);
+    _previewProvider = Provider.of<PreviewProvider>(context, listen: false);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -361,8 +374,8 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
         ),
         child: Center(
           child: Container(
-            width: 530,
-            height: 300,
+            width: MediaQuery.of(context).size.width * .6,
+            height: MediaQuery.of(context).size.height * .3,
             child: Card(
               color: Colors.white,
               child: Container(
@@ -467,12 +480,6 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
 
                               ),
                             ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
                             Expanded(
                               flex: 1,
                               child: InkWell(
@@ -514,51 +521,8 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
 
                               ),
                             ),
-
-                            // Expanded(
-                            //   child: InkWell(
-                            //     onTap: () async {
-                            //       // sideMenu.changePage(6);
-                            //     },
-                            //     child: Container(
-                            //       margin: EdgeInsets.all(10),
-                            //       height: 60,
-                            //
-                            //       decoration: BoxDecoration(
-                            //         color: Colors.white,
-                            //         border: Border.all(color:primaryColorOfApp, width: 1.0),
-                            //         borderRadius: BorderRadius.circular(20.0),
-                            //       ),
-                            //       child: Padding(
-                            //         padding: const EdgeInsets.all(8.0),
-                            //         child: Row(
-                            //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            //           children: [
-                            //             // Icon(Icons.article,color: Colors.black,size: 30,),
-                            //             Icon(Icons.admin_panel_settings,color: Colors.black,size: 30,),
-                            //             SizedBox(width: 5,),
-                            //
-                            //             Expanded(
-                            //               child: Text(
-                            //                 // 'Solutions',
-                            //                 'Super admin',
-                            //                 overflow: TextOverflow.ellipsis,
-                            //                 style: GoogleFonts.montserrat(
-                            //                     textStyle:
-                            //                     Theme.of(context).textTheme.titleLarge,
-                            //                     color: Colors.black),
-                            //               ),
-                            //             ),
-                            //           ],
-                            //         ),
-                            //       ),
-                            //     ),
-                            //
-                            //   ),
-                            // ),
-
                           ],
-                        )
+                        ),
                       ],
                     )
                   ],
@@ -596,15 +560,6 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
         title: Column(
           children: [
             SizedBox(height: 20,),
-            /*ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxHeight: 150,
-                    maxWidth: 150,
-                  ),
-                  child: Image.asset(
-                    'assets/logo.png',
-                  ),
-                ),*/
 
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
@@ -637,9 +592,7 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
               Navigator.pop(context);
             },
             icon: const Icon(Icons.home),
-            //badgeColor: Colors.amber,
-            //badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
-            //tooltipContent: "Dashboard Is Under Construction!",
+
           ),
           SideMenuItem(
             priority: 1,
@@ -677,17 +630,7 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
             icon: const Icon(Icons.book_online_sharp),
           ),
 
-          // SideMenuItem(
-          //   priority: 3,
-          //   title: 'Solution',
-          //   //badgeColor: Colors.amber,
-          //   // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
-          //   tooltipContent: "Solution",
-          //   onTap: (page, _) {
-          //     sideMenu.changePage(page);
-          //   },
-          //   icon: const Icon(Icons.article),
-          // ),
+
 
           SideMenuItem(
             priority: 4,
@@ -705,8 +648,7 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
           SideMenuItem(
             priority: 5,
             title: 'Users',
-            //badgeColor: Colors.amber,
-            // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
+
             tooltipContent: "Users",
             onTap: (page, _) {
               sideMenu.changePage(page);
@@ -718,10 +660,7 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
           SideMenuItem(
             priority: 6,
             title: 'Admin Users',
-            // isNotAMenu: true,
 
-            //badgeColor: Colors.amber,
-            // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
             tooltipContent: "Admin Users",
             onTap: (page, _) {
               sideMenu.changePage(page);
@@ -732,17 +671,7 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
 
           ),
 
-          // SideMenuItem(
-          //   priority: 5,
-          //   title: 'Category',
-          //   //badgeColor: Colors.amber,
-          //   // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
-          //   tooltipContent: "Category",
-          //   onTap: (page, _) {
-          //     sideMenu.changePage(page);
-          //   },
-          //   icon: const Icon(Icons.list_alt),
-          // ),
+
           SideMenuItem(
 
             priority: 7,
@@ -787,8 +716,7 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
           SideMenuItem(
             priority: 10,
             title: 'Solutions Chat-Gpt Settings',
-            //badgeColor: Colors.amber,
-            // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
+
             tooltipContent: "Solutions Chat-Gpt Settings",
             onTap: (page, _) {
               sideMenu.changePage(page);
@@ -823,50 +751,9 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
             // icon: const Icon(Icons.email_outlined),
             icon: const Icon(Icons.import_export),
           ),
-          ///
-          // SideMenuItem(
-          //   priority: 12,
-          //   title: 'Log Out',
-          //   //badgeColor: Colors.amber,
-          //   // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
-          //   tooltipContent: "Log Out",
-          //   onTap: (page, _) async { // Make onTap callback async
-          //     showDialog(
-          //       context: context,
-          //       builder: (context) => AlertDialog(
-          //         title: Text('Logout Confirmation'),
-          //         content: Text('Are you sure you want to log out?'),
-          //         actions: [
-          //           TextButton(
-          //             onPressed: () {
-          //               Navigator.of(context).pop(); // Close the dialog
-          //             },
-          //             child: Text('Cancel'),
-          //           ),
-          //           TextButton(
-          //             onPressed: () async { // Make logout button callback async
-          //               // Perform logout logic here
-          //               await ApiRepository().logout(); // Await logout operation
-          //               // Navigate to the login screen after successful logout
-          //               Navigator.pop(context); // Close the dialog
-          //               context.go('/'); // Navigate to login screen
-          //               // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SuperAdminLoginScreen()));
-          //             },
-          //             child: Text('Logout'),
-          //           ),
-          //         ],
-          //       ),
-          //     );
-          //   },
-          //   // icon: const Icon(Icons.email_outlined),
-          //   icon: const Icon(Icons.logout),
-          // ),
-          ///
           SideMenuItem(
             priority: 13,
             title: 'Log Out',
-            //badgeColor: Colors.amber,
-            // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
             tooltipContent: "Log Out",
             onTap: (page, _) async { // Make onTap callback async
               print("Logout button tapped"); // Debugging: Check if the logout button is tapped
@@ -883,18 +770,19 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
                       child: Text('Cancel'),
                     ),
                     TextButton(
-                      onPressed: () async { // Make logout button callback async
-                        print("Logout confirmed"); // Debugging: Check if logout button is confirmed
-                        // Perform logout logic here
-                        await ApiRepository().logout(); // Await logout operation
-                        print("Logout completed"); // Debugging: Check if logout operation is completed
-                        // Navigate to the login screen after successful logout
-                        setState(() {
+                      onPressed: () async {
+                        print("Logout confirmed");
+
+                        context.pushReplacement('/');
+
+                        await _previewProvider.logout("adminusername");
+                        print("Logout completed");
+
                           Navigator.pop(context);
-                        });
-                        print("Dialog closed"); // Debugging: Check if dialog is closed
-                        context.go('/'); // Navigate to login screen
-                        print("Navigated to login screen"); // Debugging: Check if navigation is triggered
+
+                        print("Dialog closed");
+
+                        print("Navigated to login screen");
                       },
                       child: Text('Logout'),
                     ),
@@ -906,20 +794,6 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
             icon: const Icon(Icons.logout),
           ),
 
-          // SideMenuItem(
-          //   priority: 5,
-          //   onTap:(page){
-          //     sideMenu.changePage(5);
-          //   },
-          //   icon: const Icon(Icons.image_rounded),
-          // ),
-          // SideMenuItem(
-          //   priority: 6,
-          //   title: 'Only Title',
-          //   onTap:(page){
-          //     sideMenu.changePage(6);
-          //   },
-          // ),
         ],
       );
   }
