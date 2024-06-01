@@ -69,6 +69,7 @@ class _UserLogedInAboutMePageState extends State<UserLogedInAboutMePage> with Ti
   TextEditingController searchbyCatcontroller = TextEditingController();
   TextEditingController searchEmailcontroller = TextEditingController();
   TextEditingController searchChallengescontroller = TextEditingController();
+  TextEditingController DuplicatePurposetextController = TextEditingController();
   var formattedDate = DateFormat('dd MMMM yyyy, HH:mm a').format(DateTime.now());
 
 
@@ -115,7 +116,9 @@ class _UserLogedInAboutMePageState extends State<UserLogedInAboutMePage> with Ti
 
   Future<void> fetchEmailList() async {
     try {
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Users').get();
+      // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Users').where(field).get();
+
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Users').where('email', isEqualTo: widget.AdminName).limit(1).get();
 
       // Extract emails from documents
       emailList = querySnapshot.docs.map((doc) => doc['email'] as String).toList();
@@ -921,7 +924,7 @@ Date
                     print("lastDocument :$lastDocument");
                     showUserLogedInEditAboutMeDialogBox(lastDocument,5);
                   } else{
-                    _navigateToTab(4);
+                    _navigateToTab(5);
                     await showAddAddAboutMeDialogBox();
                   }
                 },
@@ -974,8 +977,11 @@ Date
                     print("lastDocument :$lastDocument");
                     showUserLogedInEditAboutMeDialogBox(lastDocument,6);
                   } else{
-                    _navigateToTab(4);
-                    await showAddAddAboutMeDialogBox();
+                    // _navigateToTab(4);
+                    // await showAddAddAboutMeDialogBox();
+                    page.jumpToPage(1);
+                    print("page.jumpToPage(1)");
+
                   }
                 },
                 child: Container(
@@ -1011,7 +1017,6 @@ Date
 
               ),
             ),
-
           ],
         ),
 
@@ -1040,7 +1045,7 @@ Date
                         Text("My reports", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.headlineMedium,)),
                         Row(
                           children: [
-                            
+
                             // IconButton(
                             //     onPressed: (){
                             //       sendMailPopUp(challengesList,solutionsList);
@@ -1078,7 +1083,7 @@ Date
                     SizedBox(height: 5,),
 
                     Container(
-                      padding: EdgeInsets.all(8),
+                      padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.black),
                         borderRadius: BorderRadius.circular(15),
@@ -1133,37 +1138,64 @@ Date
                           // ),
                           //
                           Container(
+                            // color: Colors.red,
                             width: MediaQuery.of(context).size.width * 0.14,
                             child: Center(
                                 child: Text('Title',style: Theme.of(context).textTheme.titleMedium)
                             ),
                           ),
+                          SizedBox(width: 4,),
 
                           Container(
+                            // color: Colors.green,
+
                             width: MediaQuery.of(context).size.width * 0.15,
                             child: Center(
                                 child: Text('Date last modified',style: Theme.of(context).textTheme.titleMedium)
                             ),
                           ),
+                          SizedBox(width: 4,),
 
                           Container(
-                            width: MediaQuery.of(context).size.width * 0.14,
+                            // color: Colors.red,
+
+                            width: MediaQuery.of(context).size.width * 0.13,
                             child: Center(
                                 child: Text('Status',style: Theme.of(context).textTheme.titleMedium)
                             ),
                           ),
+                          SizedBox(width: 4,),
+
                           Container(
-                            width: MediaQuery.of(context).size.width * 0.175,
+                            // color: Colors.green,
+
+                            width: MediaQuery.of(context).size.width * 0.08,
+                            child: Center(
+                                child: Text('Purpose',style: Theme.of(context).textTheme.titleMedium)
+                            ),
+                          ),
+                          SizedBox(width: 4,),
+
+                          Container(
+                            // color: Colors.red,
+
+                            width: MediaQuery.of(context).size.width * 0.178,
                             child: Center(
                                 child: Text('Sent to',style: Theme.of(context).textTheme.titleMedium)
                             ),
                           ),
+                          SizedBox(width: 4,),
+
                           Container(
+                            // color: Colors.green,
+
                             width: MediaQuery.of(context).size.width * 0.12,
                             child: Center(
                                 child: Text('Date sent',style: Theme.of(context).textTheme.titleMedium)
                             ),
                           ),
+                          SizedBox(width: 4,),
+
 
                           //
                           // Container(
@@ -1203,7 +1235,9 @@ Date
                           // ),
 
                           Container(
-                              width: MediaQuery.of(context).size.width * 0.12,
+                            // color: Colors.red,
+
+                              width: MediaQuery.of(context).size.width * 0.1,
                               child: Center(child: Text('',style: Theme.of(context).textTheme.titleMedium)
                               )
                           ),
@@ -1308,31 +1342,49 @@ Date
                                                        //     child: Center(child: Text(dataList[i]['Solutions'][index]['Label'].toString(),style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
 
                                                        Container(
+                                                         // color: Colors.cyan,
+
                                                            width: MediaQuery.of(context).size.width * 0.14,
-                                                           child: Center(child: Text(dataList[i]['About_Me_Label'].toString(),style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
+                                                           child: Text(dataList[i]['About_Me_Label'].toString(),style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis)),
 
 
                                                        Container(
+                                                         // color: Colors.lime,
+
                                                            width: MediaQuery.of(context).size.width * 0.15,
                                                            child: Center(child: Text(dataList[i]['Created_Date'].toString(),style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
                                                        Container(
-                                                           width: MediaQuery.of(context).size.width * 0.14,
+                                                         // color: Colors.cyan,
+
+                                                           width: MediaQuery.of(context).size.width * 0.13,
                                                            child: Center(child: Text(dataList[i]['AB_Status'].toString(),style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
+
+                                                       Container(
+                                                         // color: Colors.lime,
+
+                                                           width: MediaQuery.of(context).size.width * 0.08,
+                                                           child: Center(child: Text(dataList[i]['Purpose'].toString(),style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
 
                                                        Column(
                                                          children: [
                                                            Container(
+                                                             // color: Colors.cyan,
+
                                                                width: MediaQuery.of(context).size.width * 0.178,
                                                                child: Center(child: Text( sentTo == "" && email == "" ? "_" : "$sentTo: $email",style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
 
                                                            Column(
+                                                             mainAxisAlignment: MainAxisAlignment.start,
+                                                             crossAxisAlignment: CrossAxisAlignment.start,
                                                              children: dataList[i]['Report_sent_to_cc'].map<Widget>((recipient) {
                                                                final name = recipient['name'];
                                                                final email = recipient['email'];
                                                                final sentTo = name.isNotEmpty ? name : email;
 
                                                                return Container(
-                                                                 width: MediaQuery.of(context).size.width * 0.175,
+                                                                 // color: Colors.lime,
+
+                                                                 width: MediaQuery.of(context).size.width * 0.178,
                                                                  child: Center(
                                                                    child: Text(sentTo.isNotEmpty ? "$sentTo: $email" : "",
                                                                      style: Theme.of(context).textTheme.titleMedium,
@@ -1346,12 +1398,15 @@ Date
                                                          ],
                                                        ),
 
+
                                                        Container(
+                                                         // color: Colors.cyan,
+
                                                            width: MediaQuery.of(context).size.width * 0.12,
                                                            child: Center(child: Text(sentDate == "" ? "_" : "$sentDate",style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
 
                                                        Container(
-                                                               width: MediaQuery.of(context).size.width * 0.12,
+                                                               width: MediaQuery.of(context).size.width * 0.1,
                                                            child: Center(child: Row(
                                                              mainAxisAlignment: MainAxisAlignment.end,
                                                              children: [
@@ -1360,20 +1415,7 @@ Date
                                                                    iconSize: 25,
                                                                    color: primaryColorOfApp,
                                                                    onPressed: () async {
-                                                                     // showReportViewPageDialogBox(dataList[i]);
-                                                                     QuerySnapshot querySnapshots = await FirebaseFirestore.instance
-                                                                         .collection('AboutMe')
-                                                                         .orderBy('AB_id', descending: true)
-                                                                         .limit(1)
-                                                                         .get();
-                                                                     final abc =   querySnapshots.docs.first;
-                                                                     print("abccccc; ${abc['AB_id']}");
-                                                                     print("abccccc; ${abc['AB_id'].runtimeType}");
-                                                                     var AB_id = abc['AB_id'] + 1;
-
-                                                                     setState(() {
-                                                                      duplicateDocument(context,dataList[i].id,AB_id);
-                                                                     });
+                                                                     showDuplicateDialogBox(dataList[i]);
 
                                                                      // QuerySnapshot querySnapshott = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
                                                                      //
@@ -2429,8 +2471,10 @@ Date
                                 showUserLogedInEditAboutMeDialogBox(lastDocument,6);
                               }
                               else{
-                                _navigateToTab(5);
-                                await showAddAddAboutMeDialogBox();
+                                // _navigateToTab(5);
+                                // await showAddAddAboutMeDialogBox();
+                                page.jumpToPage(1);
+                                print("page.jumpToPage(1)");
                               }
                             },
                             child: Container(
@@ -2610,6 +2654,7 @@ Date
                                 // Get the last document
                                 DocumentSnapshot lastDocument = querySnapshot.docs.first;
                                 print("lastDocument :$lastDocument");
+
                                 // showEditAboutMeDialogBox(lastDocument,4);
                                 // showReportViewPageDialogBox(lastDocument);
 
@@ -2828,653 +2873,651 @@ Date
           // ),
           // SizedBox(height: 10,),
           Container(
-            height: MediaQuery.of(context).size.height * .68,
+            // height: MediaQuery.of(context).size.height ,
             decoration: BoxDecoration(
               color: Colors.white24,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: Colors.black)
             ),
             padding: EdgeInsets.all(15),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-      
-      
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                          child: Text("1. Email:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
-                        ),
+            child: Column(
+              // mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+
+
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                        child: Text("1. Email:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
                       ),
-                      
-                      // DropdownSearch<String>(
-                      //   popupProps: PopupProps.menu(
-                      //     showSelectedItems: true,
-                      //     isFilterOnline: true,
-                      //     searchDelay: Duration(milliseconds: 100),
-                      //     searchFieldProps: TextFieldProps(
-                      //         enableSuggestions: true,
-                      //         decoration: InputDecoration(
-                      //           contentPadding: EdgeInsets.all(10),
-                      //           hintText: "Search Email",
-                      //           labelText: "Search Email",
-                      //           errorStyle: GoogleFonts.montserrat(
-                      //               textStyle: Theme
-                      //                   .of(context)
-                      //                   .textTheme
-                      //                   .bodyLarge,
-                      //               fontWeight: FontWeight.w400,
-                      //               color: Colors.redAccent),
-                      //           focusedBorder: OutlineInputBorder(
-                      //               borderSide: BorderSide(color: Colors.black),
-                      //               borderRadius: BorderRadius.circular(15)),
-                      //           border: OutlineInputBorder(
-                      //               borderSide: BorderSide(color: Colors.black12),
-                      //               borderRadius: BorderRadius.circular(15)),
-                      //           labelStyle: GoogleFonts.montserrat(
-                      //               textStyle: Theme
-                      //                   .of(context)
-                      //                   .textTheme
-                      //                   .bodyLarge,
-                      //               fontWeight: FontWeight.w400,
-                      //               color: Colors.black),
-                      //         ),
-                      //         controller: searchEmailcontroller
-                      //     ),
-                      //     showSearchBox: true,
-                      //   ),
-                      //   // items: ["Brazil", "Italia (Disabled)", "Tunisia", 'Canada'],
-                      //   items: emailList,
-                      //   dropdownDecoratorProps: DropDownDecoratorProps(
-                      //     dropdownSearchDecoration: InputDecoration(
-                      //       contentPadding: EdgeInsets.all(10),
-                      //       errorStyle: GoogleFonts.montserrat(
-                      //           textStyle: Theme
-                      //               .of(context)
-                      //               .textTheme
-                      //               .bodyLarge,
-                      //           fontWeight: FontWeight.w400,
-                      //           color: Colors.redAccent),
-                      //       focusedBorder: OutlineInputBorder(
-                      //           borderSide: BorderSide(color: Colors.black),
-                      //           borderRadius: BorderRadius.circular(15)),
-                      //       border: OutlineInputBorder(
-                      //           borderSide: BorderSide(color: Colors.black12),
-                      //           borderRadius: BorderRadius.circular(15)),
-                      //       labelStyle: GoogleFonts.montserrat(
-                      //           textStyle: Theme
-                      //               .of(context)
-                      //               .textTheme
-                      //               .bodyLarge,
-                      //           fontWeight: FontWeight.w400,
-                      //           color: Colors.black),
-                      //     ),
-                      //   ),
-                      //   onChanged: (val){
-                      //     setState(() {
-                      //       selectedEmail = val!;
-                      //     });
-                      //     print("selectedEmail:${selectedEmail}");
-                      //
-                      //   },
-                      //   selectedItem: selectedEmail,
-                      //
-                      //
-                      // ),
-                      
-                      Expanded(
-                        flex: 4,
-                        child: Consumer<AddKeywordProvider>(
-                            builder: (c,addKeywordProvider, _){
-                              return TypeAheadField(
-                                noItemsFoundBuilder: (ctx){
-                                  print("ccccc: $ctx");
-                                  return Container(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(15.0),
-                                        child: Text(
-                                          "Hit Enter to add: ${searchEmailcontroller.text}",
-                                          // (ApiRepository().isValidEmail(searchEmailcontroller.text)) ? "Hit Enter to add: ${searchEmailcontroller.text}@gmail.com" : "Invalid email format. Please enter a valid email address.",
-                                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),
-                                        ),
-                                      )
-                                  );
-                                },
-                                suggestionsBoxDecoration: SuggestionsBoxDecoration(
-                                    scrollbarTrackAlwaysVisible: true,
-                                    scrollbarThumbAlwaysVisible: true,
-                                    hasScrollbar: true,
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: Colors.white,
-                                    constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.3, )
-                                ),
-                                suggestionsCallback: (pattern) async {
-                                  if (pattern.isEmpty) {
-                                    // Return the full email list if the pattern is empty
-                                    return emailList;
-                                  } else {
-                                    // Return filtered suggestions based on the input pattern
-                                    return emailList.where((email) => email.contains(pattern)).toList();
-                                  }
-                                },
-                                itemBuilder: (context, String suggestion) {
-                                  return Container(
-                                    // color: Colors.black,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(15.0),
-                                      child: Text(suggestion,style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),),
-                                    ),
-                                  );
-                                },
-                                onSuggestionSelected: (String suggestion) async {
-                                 searchEmailcontroller.text = suggestion;
-                                 selectedEmail = suggestion;
-                                 _previewProvider.updateEmail(selectedEmail);
-                                 if(selectedEmail != null){
-                                   toastification.show(context: context,
-                                       title: Text('Email Selected ${selectedEmail}'),
-                                       autoCloseDuration: Duration(milliseconds: 2500),
-                                       alignment: Alignment.center,
-                                       backgroundColor: Colors.green,
-                                       foregroundColor: Colors.white,
-                                       icon: Icon(Icons.check_circle, color: Colors.white,),
-                                       animationDuration: Duration(milliseconds: 1000),
-                                       showProgressBar: false
-                                   );
-                                 }
-                                 await fetchUserData(selectedEmail);
-                                },
-                                textFieldConfiguration: TextFieldConfiguration(
-                                  controller: searchEmailcontroller,
-                                  style: GoogleFonts.poppins(
-                                    textStyle: Theme.of(context).textTheme.bodyLarge,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400,fontStyle: FontStyle.normal,
+                    ),
+
+                    // DropdownSearch<String>(
+                    //   popupProps: PopupProps.menu(
+                    //     showSelectedItems: true,
+                    //     isFilterOnline: true,
+                    //     searchDelay: Duration(milliseconds: 100),
+                    //     searchFieldProps: TextFieldProps(
+                    //         enableSuggestions: true,
+                    //         decoration: InputDecoration(
+                    //           contentPadding: EdgeInsets.all(10),
+                    //           hintText: "Search Email",
+                    //           labelText: "Search Email",
+                    //           errorStyle: GoogleFonts.montserrat(
+                    //               textStyle: Theme
+                    //                   .of(context)
+                    //                   .textTheme
+                    //                   .bodyLarge,
+                    //               fontWeight: FontWeight.w400,
+                    //               color: Colors.redAccent),
+                    //           focusedBorder: OutlineInputBorder(
+                    //               borderSide: BorderSide(color: Colors.black),
+                    //               borderRadius: BorderRadius.circular(15)),
+                    //           border: OutlineInputBorder(
+                    //               borderSide: BorderSide(color: Colors.black12),
+                    //               borderRadius: BorderRadius.circular(15)),
+                    //           labelStyle: GoogleFonts.montserrat(
+                    //               textStyle: Theme
+                    //                   .of(context)
+                    //                   .textTheme
+                    //                   .bodyLarge,
+                    //               fontWeight: FontWeight.w400,
+                    //               color: Colors.black),
+                    //         ),
+                    //         controller: searchEmailcontroller
+                    //     ),
+                    //     showSearchBox: true,
+                    //   ),
+                    //   // items: ["Brazil", "Italia (Disabled)", "Tunisia", 'Canada'],
+                    //   items: emailList,
+                    //   dropdownDecoratorProps: DropDownDecoratorProps(
+                    //     dropdownSearchDecoration: InputDecoration(
+                    //       contentPadding: EdgeInsets.all(10),
+                    //       errorStyle: GoogleFonts.montserrat(
+                    //           textStyle: Theme
+                    //               .of(context)
+                    //               .textTheme
+                    //               .bodyLarge,
+                    //           fontWeight: FontWeight.w400,
+                    //           color: Colors.redAccent),
+                    //       focusedBorder: OutlineInputBorder(
+                    //           borderSide: BorderSide(color: Colors.black),
+                    //           borderRadius: BorderRadius.circular(15)),
+                    //       border: OutlineInputBorder(
+                    //           borderSide: BorderSide(color: Colors.black12),
+                    //           borderRadius: BorderRadius.circular(15)),
+                    //       labelStyle: GoogleFonts.montserrat(
+                    //           textStyle: Theme
+                    //               .of(context)
+                    //               .textTheme
+                    //               .bodyLarge,
+                    //           fontWeight: FontWeight.w400,
+                    //           color: Colors.black),
+                    //     ),
+                    //   ),
+                    //   onChanged: (val){
+                    //     setState(() {
+                    //       selectedEmail = val!;
+                    //     });
+                    //     print("selectedEmail:${selectedEmail}");
+                    //
+                    //   },
+                    //   selectedItem: selectedEmail,
+                    //
+                    //
+                    // ),
+
+                    Expanded(
+                      flex: 4,
+                      child: Consumer<AddKeywordProvider>(
+                          builder: (c,addKeywordProvider, _){
+                            return TypeAheadField(
+                              // noItemsFoundBuilder: (ctx){
+                              //   print("ccccc: $ctx");
+                              //   return Container(
+                              //       child: Padding(
+                              //         padding: const EdgeInsets.all(15.0),
+                              //         child: Text(
+                              //           "Hit Enter to add: ${searchEmailcontroller.text}",
+                              //           // (ApiRepository().isValidEmail(searchEmailcontroller.text)) ? "Hit Enter to add: ${searchEmailcontroller.text}@gmail.com" : "Invalid email format. Please enter a valid email address.",
+                              //           style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),
+                              //         ),
+                              //       )
+                              //   );
+                              // },
+                              suggestionsBoxDecoration: SuggestionsBoxDecoration(
+                                  scrollbarTrackAlwaysVisible: true,
+                                  scrollbarThumbAlwaysVisible: true,
+                                  hasScrollbar: true,
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Colors.white,
+                                  constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.3, )
+                              ),
+                              suggestionsCallback: (pattern) async {
+                                if (pattern.isEmpty) {
+                                  // Return the full email list if the pattern is empty
+                                  return emailList;
+                                } else {
+                                  // Return filtered suggestions based on the input pattern
+                                  return emailList.where((email) => email.contains(pattern)).toList();
+                                }
+                              },
+                              itemBuilder: (context, String suggestion) {
+                                return Container(
+                                  // color: Colors.black,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(15.0),
+                                    child: Text(suggestion,style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),),
                                   ),
-                                  onSubmitted: (value) {
-                                    if (ApiRepository().isValidEmail(value)) {
-                                      searchEmailcontroller.text = value;
-                                      selectedEmail = value;
-                                      if(selectedEmail != null){
-                                        toastification.show(context: context,
-                                            title: Text('Email Selected'),
-                                            autoCloseDuration: Duration(milliseconds: 2500),
-                                            alignment: Alignment.center,
-                                            backgroundColor: Colors.green,
-                                            foregroundColor: Colors.white,
-                                            icon: Icon(Icons.check_circle, color: Colors.white,),
-                                            animationDuration: Duration(milliseconds: 1000),
-                                            showProgressBar: false
-                                        );
-                                      }
-                        
-                                    } else {
+                                );
+                              },
+                              onSuggestionSelected: (String suggestion) async {
+                               searchEmailcontroller.text = suggestion;
+                               selectedEmail = suggestion;
+                               _previewProvider.updateEmail(selectedEmail);
+                               if(selectedEmail != null){
+                                 toastification.show(context: context,
+                                     title: Text('Email Selected ${selectedEmail}'),
+                                     autoCloseDuration: Duration(milliseconds: 2500),
+                                     alignment: Alignment.center,
+                                     backgroundColor: Colors.green,
+                                     foregroundColor: Colors.white,
+                                     icon: Icon(Icons.check_circle, color: Colors.white,),
+                                     animationDuration: Duration(milliseconds: 1000),
+                                     showProgressBar: false
+                                 );
+                               }
+                               await fetchUserData(selectedEmail);
+                              },
+                              textFieldConfiguration: TextFieldConfiguration(
+                                controller: searchEmailcontroller,
+                                style: GoogleFonts.poppins(
+                                  textStyle: Theme.of(context).textTheme.bodyLarge,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w400,fontStyle: FontStyle.normal,
+                                ),
+                                onSubmitted: (value) {
+                                  if (ApiRepository().isValidEmail(value) && searchEmailcontroller.text == widget.AdminName) {
+                                    searchEmailcontroller.text = value;
+                                    selectedEmail = value;
+                                    if(selectedEmail != null){
                                       toastification.show(context: context,
-                                          title: Text('Invalid email format. Please enter a valid email address.'),
+                                          title: Text('Email Selected ${selectedEmail}'),
                                           autoCloseDuration: Duration(milliseconds: 2500),
                                           alignment: Alignment.center,
-                                          backgroundColor: Colors.red,
+                                          backgroundColor: Colors.green,
                                           foregroundColor: Colors.white,
-                                          icon: Icon(Icons.error, color: Colors.white,),
+                                          icon: Icon(Icons.check_circle, color: Colors.white,),
                                           animationDuration: Duration(milliseconds: 1000),
                                           showProgressBar: false
                                       );
                                     }
-                                  },                            decoration:InputDecoration(
-                                    contentPadding: EdgeInsets.all(10),
-                                    errorStyle: GoogleFonts.montserrat(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.redAccent),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(15)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black12),
-                                        borderRadius: BorderRadius.circular(15)),
-                                    labelStyle: GoogleFonts.montserrat(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black),
-                                  ),
+
+                                  } else {
+                                    toastification.show(context: context,
+                                        title: Text('Invalid email format. Please enter a valid email address.'),
+                                        autoCloseDuration: Duration(milliseconds: 2500),
+                                        alignment: Alignment.center,
+                                        backgroundColor: Colors.red,
+                                        foregroundColor: Colors.white,
+                                        icon: Icon(Icons.error, color: Colors.white,),
+                                        animationDuration: Duration(milliseconds: 1000),
+                                        showProgressBar: false
+                                    );
+                                  }
+                                },                            decoration:InputDecoration(
+                                  contentPadding: EdgeInsets.all(10),
+                                  errorStyle: GoogleFonts.montserrat(
+                                      textStyle: Theme
+                                          .of(context)
+                                          .textTheme
+                                          .bodyLarge,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.redAccent),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.black),
+                                      borderRadius: BorderRadius.circular(15)),
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.black12),
+                                      borderRadius: BorderRadius.circular(15)),
+                                  labelStyle: GoogleFonts.montserrat(
+                                      textStyle: Theme
+                                          .of(context)
+                                          .textTheme
+                                          .bodyLarge,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black),
                                 ),
-                              );
-                            }
-                        ),
+                              ),
+                            );
+                          }
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
 
-                  SizedBox(height: 10,),
+                SizedBox(height: 10,),
 
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                          child: Text("2. Name:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
-                        ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                        child: Text("2. Name:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
                       ),
-                      Flexible(
-                        flex: 4,
-                        child: TextField(
-                          controller: nameController,
-                          onChanged: (value) {
-                            var createdAt = DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now());
-                            _previewProvider.updateName(value);
-                            AboutMeLabeltextController.text = value + " - draft communication to " + employerController.text;
-                            About_Me_Label = value + " - draft communication to " + employerController.text;
-                          },
-                          style: GoogleFonts.montserrat(
+                    ),
+                    Flexible(
+                      flex: 4,
+                      child: TextField(
+                        controller: nameController,
+                        onChanged: (value) {
+                          var createdAt = DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now());
+                          _previewProvider.updateName(value);
+                          AboutMeLabeltextController.text = value + " - draft communication to " + employerController.text;
+                          About_Me_Label = value + " - draft communication to " + employerController.text;
+                        },
+                        style: GoogleFonts.montserrat(
+                            textStyle: Theme
+                                .of(context)
+                                .textTheme
+                                .bodyLarge,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(10),
+                          // labelText: "Name",
+                          hintText: "Name",
+                          errorStyle: GoogleFonts.montserrat(
+                              textStyle: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyLarge,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.redAccent),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(15)),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(15)),
+                          labelStyle: GoogleFonts.montserrat(
                               textStyle: Theme
                                   .of(context)
                                   .textTheme
                                   .bodyLarge,
                               fontWeight: FontWeight.w400,
                               color: Colors.black),
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(10),
-                            // labelText: "Name",
-                            hintText: "Name",
-                            errorStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.redAccent),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black),
-                                borderRadius: BorderRadius.circular(15)),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(15)),
-                            labelStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black),
-                          ),
                         ),
                       ),
-                    ],
-                  ),
-                  
-                  SizedBox(height: 10,),
-                  
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                          child: Text("3. Employer:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 4,
+                    ),
+                  ],
+                ),
 
-                        child: TextField(
-                          controller: employerController,
-                              
-                          // cursorColor: primaryColorOfApp,
-                          onChanged: (value) {
-                            _previewProvider.updateemployer(value);
-                            AboutMeLabeltextController.text = nameController.text + " - draft communication to " + value;
-                            About_Me_Label = nameController.text + " - draft communication to " + value;
-                          },
-                          style: GoogleFonts.montserrat(
+                SizedBox(height: 10,),
+
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                        child: Text("3. Employer:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 4,
+
+                      child: TextField(
+                        controller: employerController,
+
+                        // cursorColor: primaryColorOfApp,
+                        onChanged: (value) {
+                          _previewProvider.updateemployer(value);
+                          AboutMeLabeltextController.text = nameController.text + " - draft communication to " + value;
+                          About_Me_Label = nameController.text + " - draft communication to " + value;
+                        },
+                        style: GoogleFonts.montserrat(
+                            textStyle: Theme
+                                .of(context)
+                                .textTheme
+                                .bodyLarge,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(10),
+                          // labelText: "Employer",
+                          hintText: "Employer",
+                          errorStyle: GoogleFonts.montserrat(
+                              textStyle: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyLarge,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.redAccent),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(15)),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(15)),
+                          labelStyle: GoogleFonts.montserrat(
                               textStyle: Theme
                                   .of(context)
                                   .textTheme
                                   .bodyLarge,
                               fontWeight: FontWeight.w400,
                               color: Colors.black),
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(10),
-                            // labelText: "Employer",
-                            hintText: "Employer",
-                            errorStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.redAccent),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black),
-                                borderRadius: BorderRadius.circular(15)),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(15)),
-                            labelStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black),
-                          ),
                         ),
                       ),
-                    ],
-                  ),
-                  
-                  SizedBox(height: 10,),
-                  
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                          child: Text("4. Division or section:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
-                        ),
+                    ),
+                  ],
+                ),
+
+                SizedBox(height: 10,),
+
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                        child: Text("4. Division or section:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
                       ),
-                      Expanded(
-                        flex: 4,
+                    ),
+                    Expanded(
+                      flex: 4,
 
-                        child: TextField(
-                          controller: divisionOrSectionController,
+                      child: TextField(
+                        controller: divisionOrSectionController,
 
-                          // cursorColor: primaryColorOfApp,
-                          onChanged: (value) {
-                            _previewProvider.updatedivision(value);
+                        // cursorColor: primaryColorOfApp,
+                        onChanged: (value) {
+                          _previewProvider.updatedivision(value);
 
-                          },
-                          style: GoogleFonts.montserrat(
+                        },
+                        style: GoogleFonts.montserrat(
+                            textStyle: Theme
+                                .of(context)
+                                .textTheme
+                                .bodyLarge,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(10),
+                          // labelText: "Division or section:",
+                          hintText: "Division or section:",
+                          errorStyle: GoogleFonts.montserrat(
+                              textStyle: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyLarge,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.redAccent),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(15)),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(15)),
+                          labelStyle: GoogleFonts.montserrat(
                               textStyle: Theme
                                   .of(context)
                                   .textTheme
                                   .bodyLarge,
                               fontWeight: FontWeight.w400,
                               color: Colors.black),
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(10),
-                            // labelText: "Division or section:",
-                            hintText: "Division or section:",
-                            errorStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.redAccent),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black),
-                                borderRadius: BorderRadius.circular(15)),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(15)),
-                            labelStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black),
-                          ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
 
-                  SizedBox(height: 10,),
+                SizedBox(height: 10,),
 
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                          child: Text("5. Role:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
-                        ),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                        child: Text("5. Role:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
                       ),
-                      Expanded(
-                        flex: 4,
+                    ),
+                    Expanded(
+                      flex: 4,
 
-                        child: TextField(
-                          controller: RoleController,
+                      child: TextField(
+                        controller: RoleController,
 
-                          // cursorColor: primaryColorOfApp,
-                          onChanged: (value) {
-                            _previewProvider.updaterole(value);
+                        // cursorColor: primaryColorOfApp,
+                        onChanged: (value) {
+                          _previewProvider.updaterole(value);
 
-                          },
-                          style: GoogleFonts.montserrat(
+                        },
+                        style: GoogleFonts.montserrat(
+                            textStyle: Theme
+                                .of(context)
+                                .textTheme
+                                .bodyLarge,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(10),
+                          // labelText: "Division or section:",
+                          hintText: "Role",
+                          errorStyle: GoogleFonts.montserrat(
+                              textStyle: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyLarge,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.redAccent),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(15)),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(15)),
+                          labelStyle: GoogleFonts.montserrat(
                               textStyle: Theme
                                   .of(context)
                                   .textTheme
                                   .bodyLarge,
                               fontWeight: FontWeight.w400,
                               color: Colors.black),
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(10),
-                            // labelText: "Division or section:",
-                            hintText: "Role",
-                            errorStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.redAccent),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black),
-                                borderRadius: BorderRadius.circular(15)),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(15)),
-                            labelStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black),
-                          ),
                         ),
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 10,),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10,),
 
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                          child: Text("6. Location:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
-                        ),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                        child: Text("6. Location:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
                       ),
-                      Expanded(
-                        flex: 4,
+                    ),
+                    Expanded(
+                      flex: 4,
 
-                        child: TextField(
-                          controller: LocationController,
+                      child: TextField(
+                        controller: LocationController,
 
-                          // cursorColor: primaryColorOfApp,
-                          onChanged: (value) {
-                            _previewProvider.updatelocation(value);
+                        // cursorColor: primaryColorOfApp,
+                        onChanged: (value) {
+                          _previewProvider.updatelocation(value);
 
-                          },
-                          style: GoogleFonts.montserrat(
+                        },
+                        style: GoogleFonts.montserrat(
+                            textStyle: Theme
+                                .of(context)
+                                .textTheme
+                                .bodyLarge,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(10),
+                          // labelText: "Division or section:",
+                          hintText: "Location",
+                          errorStyle: GoogleFonts.montserrat(
+                              textStyle: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyLarge,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.redAccent),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(15)),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(15)),
+                          labelStyle: GoogleFonts.montserrat(
                               textStyle: Theme
                                   .of(context)
                                   .textTheme
                                   .bodyLarge,
                               fontWeight: FontWeight.w400,
                               color: Colors.black),
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(10),
-                            // labelText: "Division or section:",
-                            hintText: "Location",
-                            errorStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.redAccent),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black),
-                                borderRadius: BorderRadius.circular(15)),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(15)),
-                            labelStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black),
-                          ),
                         ),
                       ),
+                    ),
 
-                    ],
-                  ),
-                  SizedBox(height: 10,),
+                  ],
+                ),
+                SizedBox(height: 10,),
 
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                          child: Text("7. Employee number:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
-                        ),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                        child: Text("7. Employee number:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
                       ),
-                      Expanded(
-                        flex: 4,
+                    ),
+                    Expanded(
+                      flex: 4,
 
-                        child: TextField(
-                          controller: EmployeeNumberController,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      child: TextField(
+                        controller: EmployeeNumberController,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
 
-                          // cursorColor: primaryColorOfApp,
-                          onChanged: (value) {
-                            _previewProvider.updateemployeeNumber(value);
+                        // cursorColor: primaryColorOfApp,
+                        onChanged: (value) {
+                          _previewProvider.updateemployeeNumber(value);
 
-                          },
-                          style: GoogleFonts.montserrat(
+                        },
+                        style: GoogleFonts.montserrat(
+                            textStyle: Theme
+                                .of(context)
+                                .textTheme
+                                .bodyLarge,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(10),
+                          // labelText: "Division or section:",
+                          hintText: "Employee number",
+                          errorStyle: GoogleFonts.montserrat(
+                              textStyle: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyLarge,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.redAccent),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(15)),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(15)),
+                          labelStyle: GoogleFonts.montserrat(
                               textStyle: Theme
                                   .of(context)
                                   .textTheme
                                   .bodyLarge,
                               fontWeight: FontWeight.w400,
                               color: Colors.black),
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(10),
-                            // labelText: "Division or section:",
-                            hintText: "Employee number",
-                            errorStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.redAccent),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black),
-                                borderRadius: BorderRadius.circular(15)),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(15)),
-                            labelStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black),
-                          ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
 
-                  SizedBox(height: 10,),
+                SizedBox(height: 10,),
 
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                          child: Text("8. Line manager:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
-                        ),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                        child: Text("8. Line manager:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
                       ),
-                      Expanded(
-                        flex: 4,
+                    ),
+                    Expanded(
+                      flex: 4,
 
-                        child: TextField(
-                          controller: LineManagerController,
+                      child: TextField(
+                        controller: LineManagerController,
 
-                          // cursorColor: primaryColorOfApp,
-                          onChanged: (value) {
-                            _previewProvider.updatelinemanager(value);
-                          },
-                          style: GoogleFonts.montserrat(
+                        // cursorColor: primaryColorOfApp,
+                        onChanged: (value) {
+                          _previewProvider.updatelinemanager(value);
+                        },
+                        style: GoogleFonts.montserrat(
+                            textStyle: Theme
+                                .of(context)
+                                .textTheme
+                                .bodyLarge,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(10),
+                          // labelText: "Division or section:",
+                          hintText: "Line manager ",
+                          errorStyle: GoogleFonts.montserrat(
+                              textStyle: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyLarge,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.redAccent),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(15)),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(15)),
+                          labelStyle: GoogleFonts.montserrat(
                               textStyle: Theme
                                   .of(context)
                                   .textTheme
                                   .bodyLarge,
                               fontWeight: FontWeight.w400,
                               color: Colors.black),
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(10),
-                            // labelText: "Division or section:",
-                            hintText: "Line manager ",
-                            errorStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.redAccent),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black),
-                                borderRadius: BorderRadius.circular(15)),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(15)),
-                            labelStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black),
-                          ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
 
-                  SizedBox(height: 10,),
-      
-                ],
-              ),
+                SizedBox(height: 10,),
+
+              ],
             ),
           ),
 
@@ -3595,6 +3638,8 @@ Date
                     'Employee_Number': EmployeeNumberController.text,
                     'Line_Manager': LineManagerController.text,
                     'About_Me_Label': AboutMeLabeltextController.text,
+                    'Purpose_of_report': _previewProvider.PurposeOfReporttextController.text,
+                    'Purpose': _previewProvider.isOfficial==null ? "Others" : _previewProvider.isOfficial,
                     'AB_Description' : AboutMeDescriptiontextController.text,
                     'AB_Date' : AboutMeDatetextController.text,
                     'AB_Useful_Info' : AboutMeUseFulInfotextController.text,
@@ -3688,7 +3733,7 @@ Date
                 SizedBox(height: 10,),
 
                 Container(
-                  height: MediaQuery.of(context).size.height * .68,
+                  // height: MediaQuery.of(context).size.height * .68,
                   decoration: BoxDecoration(
                       color: Colors.white24,
                       borderRadius: BorderRadius.circular(20),
@@ -3697,466 +3742,464 @@ Date
                   // height: MediaQuery.of(context).size.height * .7,
                   width: MediaQuery.of(context).size.width,
                   padding: EdgeInsets.all(15),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
 
-                        // Padding(
-                        //   padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                        //   child: Text("Title: ", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,fontWeight: FontWeight.w600)),
-                        // ),
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                      //   child: Text("Title: ", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,fontWeight: FontWeight.w600)),
+                      // ),
+                      //
+                      // TextField(
+                      //   controller: AboutMeLabeltextController,
+                      //   onChanged: (value) {
+                      //     _previewProvider.updatetitle(value);
+                      //   },
+                      //   style: GoogleFonts.montserrat(
+                      //       textStyle: Theme
+                      //           .of(context)
+                      //           .textTheme
+                      //           .bodyLarge,
+                      //       fontWeight: FontWeight.w400,
+                      //       color: Colors.black),
+                      //   decoration: InputDecoration(
+                      //     contentPadding: EdgeInsets.all(10),
+                      //     // labelText: "Name",
+                      //     hintText: "About Me Title",
+                      //     errorStyle: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.bodyLarge,
+                      //         fontWeight: FontWeight.w400,
+                      //         color: Colors.redAccent),
+                      //     focusedBorder: OutlineInputBorder(
+                      //         borderSide: BorderSide(color: Colors.black),
+                      //         borderRadius: BorderRadius.circular(15)),
+                      //     border: OutlineInputBorder(
+                      //         borderSide: BorderSide(color: Colors.black12),
+                      //         borderRadius: BorderRadius.circular(15)),
+                      //     labelStyle: GoogleFonts.montserrat(
+                      //         textStyle: Theme
+                      //             .of(context)
+                      //             .textTheme
+                      //             .bodyLarge,
+                      //         fontWeight: FontWeight.w400,
+                      //         color: Colors.black),
+                      //   ),
+                      // ),
+                      /// AB title
+
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                        child: Row(
+                          children: [
+                            Text("1. About me and my circumstances: ", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
+                            IconButton(
+                                icon: Icon(Icons.info_outline,),
+                              onPressed: (){},
+                              tooltip: "Anything you want to share about eg\nYour family circumstances\nYour education and professional qualifications\nYour life stages or life events\nYour ethnicity, faith, identification\nWhat matters most to you in life",
+                            )
+                          ],
+                        ),
+                      ),
+                      TextField(
+                        controller: mycircumstancesController,
+                        maxLines: 6,
+                        // cursorColor: primaryColorOfApp,
+                        // onChanged: (value) {
+                        //   if (value.isNotEmpty) {
+                        //     final lines = value.split('\n');
                         //
-                        // TextField(
-                        //   controller: AboutMeLabeltextController,
-                        //   onChanged: (value) {
-                        //     _previewProvider.updatetitle(value);
-                        //   },
-                        //   style: GoogleFonts.montserrat(
-                        //       textStyle: Theme
-                        //           .of(context)
-                        //           .textTheme
-                        //           .bodyLarge,
-                        //       fontWeight: FontWeight.w400,
-                        //       color: Colors.black),
-                        //   decoration: InputDecoration(
-                        //     contentPadding: EdgeInsets.all(10),
-                        //     // labelText: "Name",
-                        //     hintText: "About Me Title",
-                        //     errorStyle: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.bodyLarge,
-                        //         fontWeight: FontWeight.w400,
-                        //         color: Colors.redAccent),
-                        //     focusedBorder: OutlineInputBorder(
-                        //         borderSide: BorderSide(color: Colors.black),
-                        //         borderRadius: BorderRadius.circular(15)),
-                        //     border: OutlineInputBorder(
-                        //         borderSide: BorderSide(color: Colors.black12),
-                        //         borderRadius: BorderRadius.circular(15)),
-                        //     labelStyle: GoogleFonts.montserrat(
-                        //         textStyle: Theme
-                        //             .of(context)
-                        //             .textTheme
-                        //             .bodyLarge,
-                        //         fontWeight: FontWeight.w400,
-                        //         color: Colors.black),
-                        //   ),
-                        // ),
-                        /// AB title
+                        //     for (int i = 0; i < lines.length; i++) {
+                        //       if (lines[i].trim().isNotEmpty && !lines[i].startsWith('-')) {
+                        //         lines[i] = '- ' + lines[i];
+                        //       }
+                        //     }
+                        //
+                        //     mycircumstancesController.text = lines.join('\n');
+                        //     mycircumstancesController.selection = TextSelection.fromPosition(
+                        //       TextPosition(offset: mycircumstancesController.text.length),
+                        //     );
+                        //     _previewProvider.updatemystrength(value);
+                        //
+                        //   } else {
+                        //     isInitialTyping = true; // Reset when the text field becomes empty
+                        //   }
+                        // },
+                        onChanged: (value) {
+                          if (value.isNotEmpty) {
+                            final lines = value.split('\n');
 
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                          child: Row(
-                            children: [
-                              Text("1. About me and my circumstances: ", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
-                              IconButton(
-                                  icon: Icon(Icons.info_outline,),
-                                onPressed: (){},
-                                tooltip: "Anything you want to share about eg\nYour family circumstances\nYour education and professional qualifications\nYour life stages or life events\nYour ethnicity, faith, identification\nWhat matters most to you in life",
-                              )
-                            ],
-                          ),
-                        ),
-                        TextField(
-                          controller: mycircumstancesController,
-                          maxLines: 6,
-                          // cursorColor: primaryColorOfApp,
-                          // onChanged: (value) {
-                          //   if (value.isNotEmpty) {
-                          //     final lines = value.split('\n');
-                          //
-                          //     for (int i = 0; i < lines.length; i++) {
-                          //       if (lines[i].trim().isNotEmpty && !lines[i].startsWith('-')) {
-                          //         lines[i] = '- ' + lines[i];
-                          //       }
-                          //     }
-                          //
-                          //     mycircumstancesController.text = lines.join('\n');
-                          //     mycircumstancesController.selection = TextSelection.fromPosition(
-                          //       TextPosition(offset: mycircumstancesController.text.length),
-                          //     );
-                          //     _previewProvider.updatemystrength(value);
-                          //
-                          //   } else {
-                          //     isInitialTyping = true; // Reset when the text field becomes empty
-                          //   }
-                          // },
-                          onChanged: (value) {
-                            if (value.isNotEmpty) {
-                              final lines = value.split('\n');
-
-                              for (int i = 0; i < lines.length; i++) {
-                                if (lines[i].trim().isNotEmpty && !lines[i].startsWith('•')) {
-                                  lines[i] = '• ' + lines[i];
-                                }
+                            for (int i = 0; i < lines.length; i++) {
+                              if (lines[i].trim().isNotEmpty && !lines[i].startsWith('•')) {
+                                lines[i] = '• ' + lines[i];
                               }
-
-                              // Combine lines with '\n'
-                              final modifiedText = lines.join('\n');
-
-                              // Calculate new cursor position based on changes in text
-                              final newTextLength = modifiedText.length;
-                              final cursorPosition = mycircumstancesController.selection.baseOffset +
-                                  (newTextLength - value.length);
-
-                              // Update text and cursor position
-                              mycircumstancesController.value = mycircumstancesController.value.copyWith(
-                                text: modifiedText,
-                                selection: TextSelection.fromPosition(
-                                  TextPosition(offset: cursorPosition),
-                                ),
-                              );
-
-                              _previewProvider.updatemycircumstance(value);
-                            } else {
-                              isInitialTyping = true; // Reset when the text field becomes empty
                             }
-                          },
-                          style: GoogleFonts.montserrat(
+
+                            // Combine lines with '\n'
+                            final modifiedText = lines.join('\n');
+
+                            // Calculate new cursor position based on changes in text
+                            final newTextLength = modifiedText.length;
+                            final cursorPosition = mycircumstancesController.selection.baseOffset +
+                                (newTextLength - value.length);
+
+                            // Update text and cursor position
+                            mycircumstancesController.value = mycircumstancesController.value.copyWith(
+                              text: modifiedText,
+                              selection: TextSelection.fromPosition(
+                                TextPosition(offset: cursorPosition),
+                              ),
+                            );
+
+                            _previewProvider.updatemycircumstance(value);
+                          } else {
+                            isInitialTyping = true; // Reset when the text field becomes empty
+                          }
+                        },
+                        style: GoogleFonts.montserrat(
+                            textStyle: Theme
+                                .of(context)
+                                .textTheme
+                                .bodyLarge,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(10),
+                          // labelText: "Name",
+                          // hintText: "Anything you want to share about eg\nYour family circumstances\nWhere you live\nYour education and professional qualifications\nYour life stages or life events\nYour ethnicity, faith, identification\nWhat matters most to you in life",
+                          hintText: "Anything you want to share about eg\nYour family circumstances\nYour education and professional qualifications\nYour life stages or life events\nYour ethnicity, faith, identification\nWhat matters most to you in life",
+                          errorStyle: GoogleFonts.montserrat(
+                              textStyle: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyLarge,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.redAccent),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(15)),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(15)),
+                          labelStyle: GoogleFonts.montserrat(
                               textStyle: Theme
                                   .of(context)
                                   .textTheme
                                   .bodyLarge,
                               fontWeight: FontWeight.w400,
                               color: Colors.black),
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(10),
-                            // labelText: "Name",
-                            // hintText: "Anything you want to share about eg\nYour family circumstances\nWhere you live\nYour education and professional qualifications\nYour life stages or life events\nYour ethnicity, faith, identification\nWhat matters most to you in life",
-                            hintText: "Anything you want to share about eg\nYour family circumstances\nYour education and professional qualifications\nYour life stages or life events\nYour ethnicity, faith, identification\nWhat matters most to you in life",
-                            errorStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.redAccent),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black),
-                                borderRadius: BorderRadius.circular(15)),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(15)),
-                            labelStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black),
-                          ),
                         ),
-                        // SizedBox(width: 10,),
-                        // VerticalDivider(),
-                        // SizedBox(width: 10,),
-                        SizedBox(height: 10,),
+                      ),
+                      // SizedBox(width: 10,),
+                      // VerticalDivider(),
+                      // SizedBox(width: 10,),
+                      SizedBox(height: 10,),
 
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                          child: Row(
-                            children: [
-                              Text("2. My strengths that I want to have the opportunity to use in my role:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
-                              IconButton(
-                                icon: Icon(Icons.info_outline,),
-                                onPressed: (){},
-                                tooltip: "What do you view as your strengths, passions and values that you hope and want to be able to deploy in your role at work - create a list",
-                              )
-                            ],
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                        child: Row(
+                          children: [
+                            Text("2. My strengths that I want to have the opportunity to use in my role:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
+                            IconButton(
+                              icon: Icon(Icons.info_outline,),
+                              onPressed: (){},
+                              tooltip: "What do you view as your strengths, passions and values that you hope and want to be able to deploy in your role at work - create a list",
+                            )
+                          ],
                         ),
-                        TextField(
-                          controller: MystrengthsController,
+                      ),
+                      TextField(
+                        controller: MystrengthsController,
 
-                          maxLines: 3,
+                        maxLines: 3,
 
-                          // cursorColor: primaryColorOfApp,
-                          onChanged: (value) {
-                            if (value.isNotEmpty) {
-                              final lines = value.split('\n');
+                        // cursorColor: primaryColorOfApp,
+                        onChanged: (value) {
+                          if (value.isNotEmpty) {
+                            final lines = value.split('\n');
 
-                              for (int i = 0; i < lines.length; i++) {
-                                if (lines[i].trim().isNotEmpty && !lines[i].startsWith('•')) {
-                                  lines[i] = '• ' + lines[i];
-                                }
+                            for (int i = 0; i < lines.length; i++) {
+                              if (lines[i].trim().isNotEmpty && !lines[i].startsWith('•')) {
+                                lines[i] = '• ' + lines[i];
                               }
-
-                              // Combine lines with '\n'
-                              final modifiedText = lines.join('\n');
-
-                              // Calculate new cursor position based on changes in text
-                              final newTextLength = modifiedText.length;
-                              final cursorPosition = MystrengthsController.selection.baseOffset +
-                                  (newTextLength - value.length);
-
-                              // Update text and cursor position
-                              MystrengthsController.value = MystrengthsController.value.copyWith(
-                                text: modifiedText,
-                                selection: TextSelection.fromPosition(
-                                  TextPosition(offset: cursorPosition),
-                                ),
-                              );
-
-                              _previewProvider.updatemystrength(value);
-                            } else {
-                              isInitialTyping = true; // Reset when the text field becomes empty
                             }
-                          },
-                          style: GoogleFonts.montserrat(
+
+                            // Combine lines with '\n'
+                            final modifiedText = lines.join('\n');
+
+                            // Calculate new cursor position based on changes in text
+                            final newTextLength = modifiedText.length;
+                            final cursorPosition = MystrengthsController.selection.baseOffset +
+                                (newTextLength - value.length);
+
+                            // Update text and cursor position
+                            MystrengthsController.value = MystrengthsController.value.copyWith(
+                              text: modifiedText,
+                              selection: TextSelection.fromPosition(
+                                TextPosition(offset: cursorPosition),
+                              ),
+                            );
+
+                            _previewProvider.updatemystrength(value);
+                          } else {
+                            isInitialTyping = true; // Reset when the text field becomes empty
+                          }
+                        },
+                        style: GoogleFonts.montserrat(
+                            textStyle: Theme
+                                .of(context)
+                                .textTheme
+                                .bodyLarge,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(10),
+                          // labelText: "Name",
+                          hintText: "What do you view as your strengths, passions and values that you hope and want to be able to deploy in your role at work - create a list",
+                          errorStyle: GoogleFonts.montserrat(
+                              textStyle: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyLarge,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.redAccent),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(15)),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(15)),
+                          labelStyle: GoogleFonts.montserrat(
                               textStyle: Theme
                                   .of(context)
                                   .textTheme
                                   .bodyLarge,
                               fontWeight: FontWeight.w400,
                               color: Colors.black),
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(10),
-                            // labelText: "Name",
-                            hintText: "What do you view as your strengths, passions and values that you hope and want to be able to deploy in your role at work - create a list",
-                            errorStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.redAccent),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black),
-                                borderRadius: BorderRadius.circular(15)),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(15)),
-                            labelStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black),
-                          ),
                         ),
+                      ),
 
 
-                        SizedBox(height: 10,),
+                      SizedBox(height: 10,),
 
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                          child: Row(
-                            children: [
-                              Text("3. What I value about ${employerController.text} and workplace environment that helps me perform to my best:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
-                              IconButton(
-                                icon: Icon(Icons.info_outline,),
-                                onPressed: (){},
-                                tooltip: "What do you like about your organisation and the work environment that helps you be your best?\nThese could be e.g. a policy or process, something about the culture or environment - create a list.",
-                              )
-                            ],
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                        child: Row(
+                          children: [
+                            Text("3. What I value about ${employerController.text} and workplace environment that helps me perform to my best:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
+                            IconButton(
+                              icon: Icon(Icons.info_outline,),
+                              onPressed: (){},
+                              tooltip: "What do you like about your organisation and the work environment that helps you be your best?\nThese could be e.g. a policy or process, something about the culture or environment - create a list.",
+                            )
+                          ],
                         ),
-                        TextField(
-                          controller: myOrganisationController,
+                      ),
+                      TextField(
+                        controller: myOrganisationController,
 
-                          maxLines: 3,
+                        maxLines: 3,
 
 
-                          // onChanged: (value) {
-                          //   if (value.isNotEmpty) {
-                          //     final lines = value.split('\n');
-                          //     final lastLine = lines.last;
-                          //
-                          //     if (isInitialTyping || (lastLine.trimLeft().startsWith('• ') && !lastLine.contains('• '))) {
-                          //       isInitialTyping = false;
-                          //       myOrganisationController.text = value.replaceAll('\n', '\n• ');
-                          //       myOrganisationController.selection = TextSelection.fromPosition(
-                          //         TextPosition(offset: myOrganisationController.text.length),
-                          //       );
-                          //     } else if (value.endsWith('\n')) {
-                          //       // If the last character entered is a newline, append a bullet point
-                          //       myOrganisationController.text += '• ';
-                          //       myOrganisationController.selection = TextSelection.fromPosition(
-                          //         TextPosition(offset: myOrganisationController.text.length),
-                          //       );
-                          //     }
-                          //   } else {
-                          //     isInitialTyping = true; // Reset when the text field becomes empty
-                          //   }
-                          // },
+                        // onChanged: (value) {
+                        //   if (value.isNotEmpty) {
+                        //     final lines = value.split('\n');
+                        //     final lastLine = lines.last;
+                        //
+                        //     if (isInitialTyping || (lastLine.trimLeft().startsWith('• ') && !lastLine.contains('• '))) {
+                        //       isInitialTyping = false;
+                        //       myOrganisationController.text = value.replaceAll('\n', '\n• ');
+                        //       myOrganisationController.selection = TextSelection.fromPosition(
+                        //         TextPosition(offset: myOrganisationController.text.length),
+                        //       );
+                        //     } else if (value.endsWith('\n')) {
+                        //       // If the last character entered is a newline, append a bullet point
+                        //       myOrganisationController.text += '• ';
+                        //       myOrganisationController.selection = TextSelection.fromPosition(
+                        //         TextPosition(offset: myOrganisationController.text.length),
+                        //       );
+                        //     }
+                        //   } else {
+                        //     isInitialTyping = true; // Reset when the text field becomes empty
+                        //   }
+                        // },
 
-                          onChanged: (value) {
-                            if (value.isNotEmpty) {
-                              final lines = value.split('\n');
+                        onChanged: (value) {
+                          if (value.isNotEmpty) {
+                            final lines = value.split('\n');
 
-                              for (int i = 0; i < lines.length; i++) {
-                                if (lines[i].trim().isNotEmpty && !lines[i].startsWith('•')) {
-                                  lines[i] = '• ' + lines[i];
-                                }
+                            for (int i = 0; i < lines.length; i++) {
+                              if (lines[i].trim().isNotEmpty && !lines[i].startsWith('•')) {
+                                lines[i] = '• ' + lines[i];
                               }
-
-                              // Combine lines with '\n'
-                              final modifiedText = lines.join('\n');
-
-                              // Calculate new cursor position based on changes in text
-                              final newTextLength = modifiedText.length;
-                              final cursorPosition = myOrganisationController.selection.baseOffset +
-                                  (newTextLength - value.length);
-
-                              // Update text and cursor position
-                              myOrganisationController.value = myOrganisationController.value.copyWith(
-                                text: modifiedText,
-                                selection: TextSelection.fromPosition(
-                                  TextPosition(offset: cursorPosition),
-                                ),
-                              );
-
-                              _previewProvider.updatemyorganization(value);
-                            } else {
-                              isInitialTyping = true; // Reset when the text field becomes empty
                             }
-                          },
-                          style: GoogleFonts.montserrat(
+
+                            // Combine lines with '\n'
+                            final modifiedText = lines.join('\n');
+
+                            // Calculate new cursor position based on changes in text
+                            final newTextLength = modifiedText.length;
+                            final cursorPosition = myOrganisationController.selection.baseOffset +
+                                (newTextLength - value.length);
+
+                            // Update text and cursor position
+                            myOrganisationController.value = myOrganisationController.value.copyWith(
+                              text: modifiedText,
+                              selection: TextSelection.fromPosition(
+                                TextPosition(offset: cursorPosition),
+                              ),
+                            );
+
+                            _previewProvider.updatemyorganization(value);
+                          } else {
+                            isInitialTyping = true; // Reset when the text field becomes empty
+                          }
+                        },
+                        style: GoogleFonts.montserrat(
+                            textStyle: Theme
+                                .of(context)
+                                .textTheme
+                                .bodyLarge,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(10),
+                          // labelText: "Name",
+                          hintText: "What do you like about your organisation and the work environment that helps you be your best? These could be e.g. a policy or process, something about the culture or environment - create a list.",
+                          errorStyle: GoogleFonts.montserrat(
+                              textStyle: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyLarge,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.redAccent),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(15)),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(15)),
+                          labelStyle: GoogleFonts.montserrat(
                               textStyle: Theme
                                   .of(context)
                                   .textTheme
                                   .bodyLarge,
                               fontWeight: FontWeight.w400,
                               color: Colors.black),
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(10),
-                            // labelText: "Name",
-                            hintText: "What do you like about your organisation and the work environment that helps you be your best? These could be e.g. a policy or process, something about the culture or environment - create a list.",
-                            errorStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.redAccent),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black),
-                                borderRadius: BorderRadius.circular(15)),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(15)),
-                            labelStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black),
-                          ),
                         ),
+                      ),
 
-                        SizedBox(height: 10,),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                          child: Row(
-                            children: [
-                              Flexible(child: Text("4. What I find challenging about ${employerController.text} and workplace environment that gets in the way of me performing to my best:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,))),
-                              IconButton(
-                                icon: Icon(Icons.info_outline,),
-                                onPressed: (){},
-                                tooltip: "What is it about your organisation and the work environment that gets in the way of you being your best?\nThese could be a policy or process, something about the culture or environment - create a list.",
-                              )
-                            ],
-                          ),
+                      SizedBox(height: 10,),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                        child: Row(
+                          children: [
+                            Flexible(child: Text("4. What I find challenging about ${employerController.text} and workplace environment that gets in the way of me performing to my best:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,))),
+                            IconButton(
+                              icon: Icon(Icons.info_outline,),
+                              onPressed: (){},
+                              tooltip: "What is it about your organisation and the work environment that gets in the way of you being your best?\nThese could be a policy or process, something about the culture or environment - create a list.",
+                            )
+                          ],
                         ),
-                        TextField(
-                          controller: myOrganisation2Controller,
-                          keyboardType: TextInputType.multiline,
-                          // onSubmitted: (_) => userAboutMEProvider.handleEnter(myOrganisation2Controller),
+                      ),
+                      TextField(
+                        controller: myOrganisation2Controller,
+                        keyboardType: TextInputType.multiline,
+                        // onSubmitted: (_) => userAboutMEProvider.handleEnter(myOrganisation2Controller),
 
-                          maxLines: 3,
+                        maxLines: 3,
 
-                          // cursorColor: primaryColorOfApp,
-                          // onChanged: (value) {
-                          //   if (value.isNotEmpty) {
-                          //     final lines = value.split('\n');
-                          //
-                          //     for (int i = 0; i < lines.length; i++) {
-                          //       if (lines[i].trim().isNotEmpty && !lines[i].startsWith('-')) {
-                          //         lines[i] = '- ' + lines[i];
-                          //       }
-                          //     }
-                          //
-                          //     myOrganisation2Controller.text = lines.join('\n');
-                          //     myOrganisation2Controller.selection = TextSelection.fromPosition(
-                          //       TextPosition(offset: myOrganisation2Controller.text.length),
-                          //     );
-                          //     _previewProvider.updatemychallenge(value);
-                          //
-                          //   } else {
-                          //     isInitialTyping = true; // Reset when the text field becomes empty
-                          //   }
-                          // },
-                          onChanged: (value) {
-                            if (value.isNotEmpty) {
-                              final lines = value.split('\n');
+                        // cursorColor: primaryColorOfApp,
+                        // onChanged: (value) {
+                        //   if (value.isNotEmpty) {
+                        //     final lines = value.split('\n');
+                        //
+                        //     for (int i = 0; i < lines.length; i++) {
+                        //       if (lines[i].trim().isNotEmpty && !lines[i].startsWith('-')) {
+                        //         lines[i] = '- ' + lines[i];
+                        //       }
+                        //     }
+                        //
+                        //     myOrganisation2Controller.text = lines.join('\n');
+                        //     myOrganisation2Controller.selection = TextSelection.fromPosition(
+                        //       TextPosition(offset: myOrganisation2Controller.text.length),
+                        //     );
+                        //     _previewProvider.updatemychallenge(value);
+                        //
+                        //   } else {
+                        //     isInitialTyping = true; // Reset when the text field becomes empty
+                        //   }
+                        // },
+                        onChanged: (value) {
+                          if (value.isNotEmpty) {
+                            final lines = value.split('\n');
 
-                              for (int i = 0; i < lines.length; i++) {
-                                if (lines[i].trim().isNotEmpty && !lines[i].startsWith('•')) {
-                                  lines[i] = '• ' + lines[i];
-                                }
+                            for (int i = 0; i < lines.length; i++) {
+                              if (lines[i].trim().isNotEmpty && !lines[i].startsWith('•')) {
+                                lines[i] = '• ' + lines[i];
                               }
-
-                              // Combine lines with '\n'
-                              final modifiedText = lines.join('\n');
-
-                              // Calculate new cursor position based on changes in text
-                              final newTextLength = modifiedText.length;
-                              final cursorPosition = myOrganisation2Controller.selection.baseOffset +
-                                  (newTextLength - value.length);
-
-                              // Update text and cursor position
-                              myOrganisation2Controller.value = myOrganisation2Controller.value.copyWith(
-                                text: modifiedText,
-                                selection: TextSelection.fromPosition(
-                                  TextPosition(offset: cursorPosition),
-                                ),
-                              );
-
-                              _previewProvider.updatemychallenge(value);
-                            } else {
-                              isInitialTyping = true; // Reset when the text field becomes empty
                             }
-                          },
 
-                          style: GoogleFonts.montserrat(
+                            // Combine lines with '\n'
+                            final modifiedText = lines.join('\n');
+
+                            // Calculate new cursor position based on changes in text
+                            final newTextLength = modifiedText.length;
+                            final cursorPosition = myOrganisation2Controller.selection.baseOffset +
+                                (newTextLength - value.length);
+
+                            // Update text and cursor position
+                            myOrganisation2Controller.value = myOrganisation2Controller.value.copyWith(
+                              text: modifiedText,
+                              selection: TextSelection.fromPosition(
+                                TextPosition(offset: cursorPosition),
+                              ),
+                            );
+
+                            _previewProvider.updatemychallenge(value);
+                          } else {
+                            isInitialTyping = true; // Reset when the text field becomes empty
+                          }
+                        },
+
+                        style: GoogleFonts.montserrat(
+                            textStyle: Theme
+                                .of(context)
+                                .textTheme
+                                .bodyLarge,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(10),
+                          // labelText: "Name",
+                          hintText: "What is it about your organisation and the work environment that gets in the way of you being your best? These could be a policy or process, something about the culture or environment - create a list.",
+                          errorStyle: GoogleFonts.montserrat(
+                              textStyle: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyLarge,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.redAccent),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(15)),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(15)),
+                          labelStyle: GoogleFonts.montserrat(
                               textStyle: Theme
                                   .of(context)
                                   .textTheme
                                   .bodyLarge,
                               fontWeight: FontWeight.w400,
                               color: Colors.black),
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(10),
-                            // labelText: "Name",
-                            hintText: "What is it about your organisation and the work environment that gets in the way of you being your best? These could be a policy or process, something about the culture or environment - create a list.",
-                            errorStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.redAccent),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black),
-                                borderRadius: BorderRadius.circular(15)),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(15)),
-                            labelStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black),
-                          ),
                         ),
+                      ),
 
-                        SizedBox(height: 10,),
+                      SizedBox(height: 10,),
 
-                      ],
-                    ),
+                    ],
                   ),
                 ),
                 SizedBox(height: 10,),
@@ -6740,41 +6783,122 @@ Date
                 children: [
                   SizedBox(height: 5,),
                   // SizedBox(height: 20,),
+
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.start,
                     // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
 
-                      Text("Report file name :   ", style: GoogleFonts.lato(
-                          textStyle: Theme.of(context).textTheme.titleMedium,
-                          fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.bold
-                      )),
+                      Container(
+                        width: MediaQuery.of(context).size.width * .12,
+                        child: Text("Purpose of report:   ", style: GoogleFonts.lato(
+                            textStyle: Theme.of(context).textTheme.titleMedium,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.bold
+                        )),
+                      ),
 
                       Flexible(
                         child: Container(
                           height: 40,
                           width: MediaQuery.of(context).size.width * .25,
                           child: TextField(
-                            controller: AboutMeLabeltextController,
+                            controller: previewProvider.PurposeOfReporttextController,
                             onChanged: (value) {
-                              _previewProvider.updatetitle(value);
+                              // _previewProvider.updatetitle(value);
+                              AboutMeLabeltextController.text = previewProvider.PurposeOfReporttextController.text.length > 50
+                                  ? previewProvider.PurposeOfReporttextController.text.substring(0, 50)
+                                  : previewProvider.PurposeOfReporttextController.text;
                             },
                             style: GoogleFonts.lato(
-                                textStyle: Theme.of(context).textTheme.bodyMedium,
+                                textStyle: Theme.of(context).textTheme.bodySmall,
                                 fontStyle: FontStyle.italic,
                                 fontWeight: FontWeight.w400,
                                 color: Colors.black),
                             decoration: InputDecoration(
-                              hintText: " - draft communication to " ,
-                              contentPadding: EdgeInsets.all(15),
+                              hintText: "My discussion with ...." ,
                               focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.black),
                                   borderRadius: BorderRadius.circular(10)),
                               border: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.black12),
                                   borderRadius: BorderRadius.circular(10)),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(width: 20,),
+
+                      InkWell(
+                        onTap: (){
+                          previewProvider.updatePurposeofReport(LineManagerController.text);
+                          AboutMeLabeltextController.text = previewProvider.PurposeOfReporttextController.text.length > 50
+                              ? previewProvider.PurposeOfReporttextController.text.substring(0, 50)
+                              : previewProvider.PurposeOfReporttextController.text;
+                          previewProvider.purpose("Official");
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                          // width: MediaQuery.of(context).size.width * .15,
+                          decoration: BoxDecoration(
+                            color:Colors.blue ,
+                            border: Border.all(
+                                color:Colors.blue ,
+                                width: 1.0),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Center(
+                            child:Text(
+                              'Official communication to my employer',
+                              style: GoogleFonts.montserrat(
+                                textStyle:
+                                Theme
+                                    .of(context)
+                                    .textTheme
+                                    .titleSmall,
+                                fontWeight: FontWeight.bold,
+                                color:Colors.white ,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(width: 10,),
+
+                      InkWell(
+                        onTap: (){
+                          previewProvider.updateOtherCommuniation(nameController.text,LineManagerController.text);
+                          AboutMeLabeltextController.text = previewProvider.PurposeOfReporttextController.text.length > 50
+                              ? previewProvider.PurposeOfReporttextController.text.substring(0, 50)
+                              : previewProvider.PurposeOfReporttextController.text;
+                          previewProvider.purpose("Others");
+
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                          // width: MediaQuery.of(context).size.width * .15,
+                          decoration: BoxDecoration(
+                            color:Colors.blue ,
+                            border: Border.all(
+                                color:Colors.blue ,
+                                width: 1.0),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Center(
+                            child:Text(
+                              'Other communication',
+                              style: GoogleFonts.montserrat(
+                                textStyle:
+                                Theme
+                                    .of(context)
+                                    .textTheme
+                                    .titleSmall,
+                                fontWeight: FontWeight.bold,
+                                color:Colors.white ,
+                              ),
                             ),
                           ),
                         ),
@@ -6823,6 +6947,7 @@ Date
                     ],
                   ),
 
+
                   // Divider(color: Colors.black26,),
 
                   SizedBox(height: 5,),
@@ -6835,7 +6960,7 @@ Date
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
-                              width: MediaQuery.of(context).size.width * .1,
+                              width: MediaQuery.of(context).size.width * .12,
                               child: Text("Date:   ",
                                   style: GoogleFonts.lato(textStyle: Theme
                                       .of(context)
@@ -6868,12 +6993,17 @@ Date
                             ),
                           ],
                         ),
-                        SizedBox(height: 5,),
+
+                        SizedBox(height: 15,),
+
+                        Text("Input email addresses of any colleagues to whom you want to send this report: ",style: GoogleFonts.lato(
+                            textStyle: Theme.of(context).textTheme.titleMedium, color: Colors.red,fontWeight: FontWeight.w500
+                        ),),
 
                         Row(
                           children: [
                             Container(
-                              width: MediaQuery.of(context).size.width * .1,
+                              width: MediaQuery.of(context).size.width * .12,
                               child: Text("To: ",style: GoogleFonts.lato(
                                   textStyle:
                                   Theme
@@ -6951,7 +7081,7 @@ Date
                               return Row(
                                 children: [
                                   Container(
-                                    width: MediaQuery.of(context).size.width * .1,
+                                    width: MediaQuery.of(context).size.width * .12,
                                     child: Text(
                                       "Cc: ",
                                       style: GoogleFonts.lato(
@@ -6964,7 +7094,7 @@ Date
                                   Expanded(
                                     flex: 3,
                                     child: Text(
-                                        '${index + 1}. ${previewProvider.ccNames[index]}, <${previewProvider.ccEmails[index]}> - $formattedDate'),
+                                        '${index + 1}. ${previewProvider.ccNames[index]}, <${previewProvider.ccEmails[index]}>'),
                                   ),
                                   // SizedBox(width: 50,),
                                   Flexible(
@@ -6984,7 +7114,7 @@ Date
                         Row(
                           children: [
                             Container(
-                              width: MediaQuery.of(context).size.width * 0.1,
+                              width: MediaQuery.of(context).size.width * 0.12,
                               child: Text("Cc: ",style: GoogleFonts.lato(
                                   textStyle:
                                   Theme
@@ -7080,7 +7210,7 @@ Date
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
-                              width: MediaQuery.of(context).size.width * .1,
+                              width: MediaQuery.of(context).size.width * .12,
                               child: Text("Name: ",
                                   style: GoogleFonts.lato(textStyle: Theme
                                       .of(context)
@@ -7103,7 +7233,7 @@ Date
 
                           children: [
                             Container(
-                              width: MediaQuery.of(context).size.width * .1,
+                              width: MediaQuery.of(context).size.width * .12,
                               child: Text("Role: ",
                                   style: GoogleFonts.lato(textStyle: Theme
                                       .of(context)
@@ -7125,7 +7255,7 @@ Date
 
                           children: [
                             Container(
-                              width: MediaQuery.of(context).size.width * .1,
+                              width: MediaQuery.of(context).size.width * .12,
                               child: Text("Location: ",
                                   style: GoogleFonts.lato(textStyle: Theme
                                       .of(context)
@@ -7146,7 +7276,7 @@ Date
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
-                              width: MediaQuery.of(context).size.width * .1,
+                              width: MediaQuery.of(context).size.width * .12,
                               child: Text("Employee number: ",
                                   style: GoogleFonts.lato(textStyle: Theme
                                       .of(context)
@@ -7167,7 +7297,7 @@ Date
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
-                              width: MediaQuery.of(context).size.width * .1,
+                              width: MediaQuery.of(context).size.width * .12,
                               child: Text("Team Leader:",
                                   style: GoogleFonts.lato(textStyle: Theme
                                       .of(context)
@@ -7248,13 +7378,26 @@ Date
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 5),
-                          child: Text("Me and My circumstances: ",
-                              style: GoogleFonts.lato(textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .titleMedium,
-                                  decoration: TextDecoration.underline
-                              )),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text("Me and my circumstances: ",
+                                  style: GoogleFonts.lato(textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .titleMedium,
+                                      decoration: TextDecoration.underline
+                                  )),
+                              SizedBox(width: 50,),
+                              IconButton(
+                                  onPressed: (){
+                                    editmeandmycircumstances();
+                                  },
+                                  icon: Icon(
+                                      Icons.edit
+                                  ))
+                            ],
+                          ),
                         ),
                         SizedBox(height: 5,),
                         Padding(
@@ -7270,13 +7413,25 @@ Date
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 5),
-                          child: Text("My strengths that I want to have the opportunity to use in my role: ",
-                              style: GoogleFonts.lato(textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .titleMedium,
-                                  decoration: TextDecoration.underline
-                              )),
+                          child: Row(
+                            children: [
+                              Text("My strengths that I want to have the opportunity to use in my role: ",
+                                  style: GoogleFonts.lato(textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .titleMedium,
+                                      decoration: TextDecoration.underline
+                                  )),
+                              SizedBox(width: 50,),
+                              IconButton(
+                                  onPressed: (){
+                                    editmystrength();
+                                  },
+                                  icon: Icon(
+                                      Icons.edit
+                                  ))
+                            ],
+                          ),
                         ),
                         SizedBox(height: 5,),
                         Padding(
@@ -7325,7 +7480,7 @@ Date
                                               text: TextSpan(
                                                 children: [
                                                   TextSpan(
-                                                    text: ' •  ',
+                                                      text: ' •  ',
                                                       style:TextStyle(fontSize: 20)
                                                   ),
                                                   TextSpan(
@@ -7389,13 +7544,23 @@ Date
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 5),
-                          child: Text("What I value about ${employerController.text} and workplace environment that helps me perform to my best: ",
-                              style: GoogleFonts.lato(textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .titleMedium,
-                                  decoration: TextDecoration.underline
-                              )),
+                          child: Row(
+                            children: [
+                              Text("What I value about ${employerController.text} and workplace environment that helps me perform to my best: ",
+                                  style: GoogleFonts.lato(textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .titleMedium,
+                                      decoration: TextDecoration.underline
+                                  )),
+                              SizedBox(width: 50,),
+                              IconButton(
+                                  onPressed: (){editmyorganization();},
+                                  icon: Icon(
+                                      Icons.edit
+                                  ))
+                            ],
+                          ),
                         ),
                         SizedBox(height: 5,),
 
@@ -7413,13 +7578,23 @@ Date
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 5),
-                          child: Text("What I find challenging about ${employerController.text} and the workplace environment that makes it harder for me to perform my best: ",
-                              style: GoogleFonts.lato(textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .titleMedium,
-                                  decoration: TextDecoration.underline
-                              )),
+                          child: Row(
+                            children: [
+                              Text("What I find challenging about ${employerController.text} and the workplace environment that makes it harder for me to perform my best: ",
+                                  style: GoogleFonts.lato(textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .titleMedium,
+                                      decoration: TextDecoration.underline
+                                  )),
+                              SizedBox(width: 50,),
+                              IconButton(
+                                  onPressed: (){editmychallenges();},
+                                  icon: Icon(
+                                      Icons.edit
+                                  ))
+                            ],
+                          ),
                         ),
                         SizedBox(height: 5,),
 
@@ -7464,12 +7639,12 @@ Date
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 10.0, horizontal: 5),
                                 child: Text("Personal Responsibility",
-                                    style: GoogleFonts.lato(
-                                        fontWeight: FontWeight.bold,
-                                        // fontSize: 20,
-                                        color: Colors.black,
-                                        decoration: TextDecoration.underline
-                                    ),
+                                  style: GoogleFonts.lato(
+                                      fontWeight: FontWeight.bold,
+                                      // fontSize: 20,
+                                      color: Colors.black,
+                                      decoration: TextDecoration.underline
+                                  ),
                                 ),
                               ),
                               Padding(
@@ -7498,7 +7673,7 @@ Date
                                                 children: [
                                                   TextSpan(
                                                       text: ' •  ',
-                                                    style: TextStyle(fontSize: 20)
+                                                      style: TextStyle(fontSize: 20)
                                                   ),
                                                   TextSpan(
                                                       text: '${solution['Label']}',
@@ -7549,7 +7724,7 @@ Date
                                                       _previewProvider.PreviewSolutionNiceToHave,
                                                       _previewProvider.PreviewSolutionMustHave,
                                                     );
-                                                    },
+                                                  },
                                                 )
                                               ],
                                             )
@@ -7610,7 +7785,7 @@ Date
                                                 children: [
                                                   TextSpan(
                                                       text: ' •  ',
-                                                    style: TextStyle(fontSize: 20)
+                                                      style: TextStyle(fontSize: 20)
                                                   ),
                                                   TextSpan(
                                                       text: '${solution['Label']}',
@@ -7642,15 +7817,15 @@ Date
                                               children: [
                                                 IconButton(
                                                   icon: Icon(Icons.edit),
-                                                    onPressed: (){
-                                                      showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
-                                                          solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
-                                                          solution['Created Date'], solution['Modified By'], solution['Modified Date'],
-                                                          solution['Original Description'], solution['Impact'], solution['Final_description'],
-                                                          solution['Category'], solution['Keywords'], solution['Potential Strengths'],
-                                                          solution['Hidden Strengths'], index, solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']);
-                                                    },
-                                                    ),
+                                                  onPressed: (){
+                                                    showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
+                                                        solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
+                                                        solution['Created Date'], solution['Modified By'], solution['Modified Date'],
+                                                        solution['Original Description'], solution['Impact'], solution['Final_description'],
+                                                        solution['Category'], solution['Keywords'], solution['Potential Strengths'],
+                                                        solution['Hidden Strengths'], index, solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']);
+                                                  },
+                                                ),
                                                 IconButton(
                                                   icon: Icon(Icons.delete),
                                                   onPressed: (){
@@ -8031,11 +8206,96 @@ Date
                       ),
                     ],
                   ),
+
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text("${_userAboutMEProvider.aadhar==null ? "" : _userAboutMEProvider.aadhar}", style: GoogleFonts.lato(textStyle: Theme.of(context).textTheme.titleSmall,)),
                     // child: Text("document.pdf", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
                   ),
+
+                  // Row(
+                  //   mainAxisSize: MainAxisSize.min,
+                  //   mainAxisAlignment: MainAxisAlignment.start,
+                  //   // crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children: [
+                  //
+                  //     Text("Report file name :   ", style: GoogleFonts.lato(
+                  //         textStyle: Theme.of(context).textTheme.titleMedium,
+                  //         fontStyle: FontStyle.italic,
+                  //         fontWeight: FontWeight.bold
+                  //     )),
+                  //
+                  //     Flexible(
+                  //       child: Container(
+                  //         height: 40,
+                  //         width: MediaQuery.of(context).size.width * .25,
+                  //         child: TextField(
+                  //           controller: AboutMeLabeltextController,
+                  //           onChanged: (value) {
+                  //             _previewProvider.updatetitle(value);
+                  //           },
+                  //           style: GoogleFonts.lato(
+                  //               textStyle: Theme.of(context).textTheme.bodyMedium,
+                  //               fontStyle: FontStyle.italic,
+                  //               fontWeight: FontWeight.w400,
+                  //               color: Colors.black),
+                  //           decoration: InputDecoration(
+                  //             hintText: " - draft communication to " ,
+                  //             contentPadding: EdgeInsets.all(15),
+                  //             focusedBorder: OutlineInputBorder(
+                  //                 borderSide: BorderSide(color: Colors.black),
+                  //                 borderRadius: BorderRadius.circular(10)),
+                  //             border: OutlineInputBorder(
+                  //                 borderSide: BorderSide(color: Colors.black12),
+                  //                 borderRadius: BorderRadius.circular(10)),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //
+                  //     // SizedBox(width: 10,),
+                  //     //
+                  //     // InkWell(
+                  //     //   onTap: () async {
+                  //     //     // sideMenu.changePage(2);
+                  //     //     // page.jumpToPage(1);
+                  //     //   },
+                  //     //   child: Container(
+                  //     //     // margin: EdgeInsets.all(10),
+                  //     //     padding: EdgeInsets.all(5),
+                  //     //     height: 40,
+                  //     //     width: MediaQuery.of(context).size.width * 0.15,
+                  //     //     decoration: BoxDecoration(
+                  //     //       // color: Colors.white,
+                  //     //       border: Border.all(color:primaryColorOfApp, width: 1.0),
+                  //     //       borderRadius: BorderRadius.circular(10.0),
+                  //     //     ),
+                  //     //     child: Row(
+                  //     //       mainAxisAlignment: MainAxisAlignment.center,
+                  //     //       crossAxisAlignment: CrossAxisAlignment.center,
+                  //     //       children: [
+                  //     //         Icon(Icons.insert_drive_file,color: Colors.black,size: 20,),
+                  //     //         SizedBox(width: 5,),
+                  //     //         Expanded(
+                  //     //           child: Text(
+                  //     //             // 'Thrivers',
+                  //     //             'For Someone Else',
+                  //     //             overflow: TextOverflow.ellipsis,
+                  //     //             style: GoogleFonts.montserrat(
+                  //     //                 textStyle:
+                  //     //                 Theme.of(context).textTheme.bodySmall,
+                  //     //                 color: Colors.black),
+                  //     //           ),
+                  //     //         ),
+                  //     //       ],
+                  //     //     ),
+                  //     //   ),
+                  //     //
+                  //     // ),
+                  //
+                  //   ],
+                  // ),
+
                   SizedBox(height: 10,),
 
                   Padding(
@@ -8054,25 +8314,97 @@ Date
 
                             var createdAt = DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now());
 
-                            Map<String, dynamic> AboutMEDatas = {
-                              'About_Me_Label': AboutMeLabeltextController.text,
-                              'AB_Description' : AboutMeDescriptiontextController.text,
-                              'AB_Date' : AboutMeDatetextController.text,
-                              'AB_Useful_Info' : AboutMeUseFulInfotextController.text,
-                              'AB_Attachment' : "",
-                              'Solutions': solutionsList,
-                              'Challenges': challengesList,
-                            };
+                            if(documentId==null){
+                              int x = 0;
+                              x = x + 1;
+                              var createdAt = DateFormat('yyyy-MM-dd, HH:mm:ss').format(DateTime.now());
 
-                            String solutionJson = json.encode(AboutMEDatas);
-                            print(solutionJson);
+                              QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').orderBy('AB_id', descending: true).limit(1).get();
 
-                            ProgressDialog.show(context, "Completing", Icons.save);
-                            await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
+                              int ids;
+                              if (querySnapshot.size == 0) {
+                                // Collection doesn't exist, set 'AB_id' to 1 by default
+                                ids = 1;
+                              } else {
+                                final abc = querySnapshot.docs.first;
+                                print("AB_id; ${abc['AB_id']}");
+                                print("AB_id; ${abc['AB_id'].runtimeType}");
+                                ids = abc['AB_id'] + 1;
+                              }
+                              Map<String, dynamic> AboutMEDatas = {
+                                'AB_id': ids,
+                                'Email': selectedEmail,
+                                'User_Name': nameController.text,
+                                'Employer': employerController.text,
+                                'Division_or_Section': divisionOrSectionController.text,
+                                'Role': RoleController.text,
+                                'Location': LocationController.text,
+                                'Employee_Number': EmployeeNumberController.text,
+                                'Line_Manager': LineManagerController.text,
+                                'About_Me_Label': AboutMeLabeltextController.text,
+                                'Purpose_of_report': _previewProvider.PurposeOfReporttextController.text,
+                                'Purpose': _previewProvider.isOfficial==null ? "Others" : _previewProvider.isOfficial,
+                                'AB_Description' : AboutMeDescriptiontextController.text,
+                                'AB_Date' : AboutMeDatetextController.text,
+                                'AB_Useful_Info' : AboutMeUseFulInfotextController.text,
+                                'AB_Attachment' : "",
+                                'AB_Status' : "Draft",
+                                'My_Circumstance': mycircumstancesController.text,
+                                'My_Strength': MystrengthsController.text,
+                                'My_Organisation': myOrganisationController.text,
+                                'My_Challenges_Organisation': myOrganisation2Controller.text,
+                                'Solutions': solutionsList,
+                                'Challenges': challengesList,
+                                "Created_By": widget.AdminName,
+                                "Created_Date": createdAt,
+                                "Modified_By": "",
+                                "Modified_Date": "",
+                                "Report_sent_to": [],
+                                "Report_sent_to_cc": [],
+                                // Add other fields as needed
+                              };
 
-                            ProgressDialog.hide();
+                              String solutionJson = json.encode(AboutMEDatas);
+                              print(solutionJson);
 
-                            // sendMailPopUp(challengesList,solutionsList);
+                              print("runtimeType :${AboutMEDatas.runtimeType}");
+
+
+                              // ProgressDialog.show(context, "Creating About Me", Icons.chair);
+                              documentId = await ApiRepository().createAboutMe(AboutMEDatas);
+                              // ProgressDialog.hide();
+                              if (documentId != null) {
+                                _navigateToTab(1);
+                                print("Document ID: $documentId");
+                              } else {
+                                // Handle error if document creation failed
+                              }
+                            }
+
+                            else {
+                          Map<String, dynamic> AboutMEDatas = {
+                            'About_Me_Label': AboutMeLabeltextController.text,
+                            'AB_Description': AboutMeDescriptiontextController.text,
+                            'AB_Date': AboutMeDatetextController.text,
+                            'Purpose_of_report': _previewProvider.PurposeOfReporttextController.text,
+                            'Purpose': _previewProvider.isOfficial == null ? "Others" : _previewProvider.isOfficial,
+                            'AB_Useful_Info': AboutMeUseFulInfotextController.text,
+                            'AB_Attachment': "",
+                            'Solutions': solutionsList,
+                            'Challenges': challengesList,
+                          };
+
+                          String solutionJson = json.encode(AboutMEDatas);
+                          print(solutionJson);
+
+                          ProgressDialog.show(
+                              context, "Completing", Icons.save);
+                          await ApiRepository().updateAboutMe(AboutMEDatas, documentId);
+
+                          ProgressDialog.hide();
+                        }
+
+                        // sendMailPopUp(challengesList,solutionsList);
 
                             // selectedEmail = null;
                             // nameController.clear();
@@ -8281,6 +8613,851 @@ Date
               ),
             ),
           );
+        });
+  }
+
+  editmeandmycircumstances(){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Theme(
+              data: Theme.of(context).copyWith(dialogBackgroundColor: Colors.white),
+              child: AlertDialog(
+                insetPadding: EdgeInsets.symmetric(horizontal: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.08, vertical: MediaQuery
+                    .of(context)
+                    .size.height * 0.1),
+                content: SizedBox(
+                  // width: MediaQuery.of(context).size.height * .3,
+                  height: MediaQuery.of(context).size.height * .55,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                        child: Row(
+                          children: [
+                            Text("Me and my cirumstances:",
+                                style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                    fontWeight: FontWeight.w600)),
+                            Text(" edit as appropriate",
+                                style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                    fontSize: 14,
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w400)),
+                          ],
+                        ),
+                      ),
+                      TextField(
+                        maxLines: 6,
+                        controller: mycircumstancesController,
+                        cursorColor: primaryColorOfApp,
+                        onChanged: (value) {
+                          if (value.isNotEmpty) {
+                            final lines = value.split('\n');
+
+                            for (int i = 0; i < lines.length; i++) {
+                              if (lines[i].trim().isNotEmpty && !lines[i].startsWith('•')) {
+                                lines[i] = '• ' + lines[i];
+                              }
+                            }
+
+                            // Combine lines with '\n'
+                            final modifiedText = lines.join('\n');
+
+                            // Calculate new cursor position based on changes in text
+                            final newTextLength = modifiedText.length;
+                            final cursorPosition = mycircumstancesController.selection.baseOffset +
+                                (newTextLength - value.length);
+
+                            // Update text and cursor position
+                            mycircumstancesController.value = mycircumstancesController.value.copyWith(
+                              text: modifiedText,
+                              selection: TextSelection.fromPosition(
+                                TextPosition(offset: cursorPosition),
+                              ),
+                            );
+
+                          } else {
+                            isInitialTyping = true; // Reset when the text field becomes empty
+                          }
+                        },
+                        // readOnly: readonly,
+                        // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        style: GoogleFonts.montserrat(
+                            textStyle: Theme
+                                .of(context)
+                                .textTheme
+                                .bodyLarge,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black),
+                        decoration: InputDecoration(
+                          //errorText: userAccountSearchErrorText,
+                          contentPadding: EdgeInsets.all(25),
+                          // labelText: "Notes",
+                          hintText: "Anything you want to share about eg\n• Your family circumstances\n• Your education and professional qualifications\n• Your life stages or life events\n• Your ethnicity, faith, identification\n• What matters most to you in life",
+
+                          /*prefixIcon: Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Icon(Icons.question_mark_outlined,
+                                                       // color: primaryColorOfApp
+                                                          ),
+                                                    ),*/
+
+                          errorStyle: GoogleFonts.montserrat(
+                              textStyle: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyLarge,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.redAccent),
+
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(15)),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(15)),
+                          //hintText: "e.g Abouzied",
+                          labelStyle: GoogleFonts.montserrat(
+                              textStyle: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyLarge,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black),
+                        ),
+                      ),
+                      SizedBox(height: 20,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: (){
+                              Navigator.pop(context);
+                              mycircumstancesController.clear();
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              width: MediaQuery.of(context).size.width * .2,
+
+                              height: 60,
+                              decoration: BoxDecoration(
+                                //color: Colors.white,
+                                border: Border.all(
+                                  //color:primaryColorOfApp ,
+                                    width: 1.0),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Cancel',
+                                  style: GoogleFonts.montserrat(
+                                    textStyle:
+                                    Theme
+                                        .of(context)
+                                        .textTheme
+                                        .titleSmall,
+                                    fontWeight: FontWeight.bold,
+                                    //color: primaryColorOfApp
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                          ),
+                          SizedBox(width: 5, height: 5,),
+                          InkWell(
+                            onTap: () async {
+                              Map<String, dynamic> AboutMEDatas = {
+                                // 'About_Me_Label': AboutMeLabeltextController.text,
+                                'My_Circumstance': mycircumstancesController.text,
+                                // 'My_Strength': MystrengthsController.text,
+                                // 'My_Organisation': myOrganisationController.text,
+                                // 'My_Challenges_Organisation': myOrganisation2Controller.text,
+                                // Add other fields as needed
+                              };
+
+                              String solutionJson = json.encode(AboutMEDatas);
+                              print(solutionJson);
+
+                              ProgressDialog.show(context, "Saving", Icons.save);
+                              await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
+                              _previewProvider.updatemycircumstance( mycircumstancesController.text);
+                              ProgressDialog.hide();
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * .2,
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              height: 60,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                border: Border.all(
+                                    color: Colors.blue,
+                                    width: 2.0),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Save',
+                                  style: GoogleFonts.montserrat(
+                                      textStyle:
+                                      Theme
+                                          .of(context)
+                                          .textTheme
+                                          .titleSmall,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                    ],
+                  ),
+                ),
+              ));
+        });
+  }
+
+  editmystrength(){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Theme(
+              data: Theme.of(context).copyWith(dialogBackgroundColor: Colors.white),
+              child: AlertDialog(
+                insetPadding: EdgeInsets.symmetric(horizontal: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.08, vertical: MediaQuery
+                    .of(context)
+                    .size.height * 0.1),
+                content: SizedBox(
+                  // width: MediaQuery.of(context).size.height * .3,
+                  height: MediaQuery.of(context).size.height * .55,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                        child: Row(
+                          children: [
+                            Text("My strengths that I want to have the opportunity to use in my role:",
+                                style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                    fontWeight: FontWeight.w600)),
+                            Text(" edit as appropriate",
+                                style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                    fontSize: 14,
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w400)),
+                          ],
+                        ),
+                      ),
+                      TextField(
+                        controller: MystrengthsController,
+                        maxLines: 6,
+                        // cursorColor: primaryColorOfApp,
+                        // onChanged: (value) {
+                        //   if (value.isNotEmpty) {
+                        //     final lines = value.split('\n');
+                        //
+                        //     for (int i = 0; i < lines.length; i++) {
+                        //       if (lines[i].trim().isNotEmpty && !lines[i].startsWith('•')) {
+                        //         lines[i] = '• ' + lines[i];
+                        //       }
+                        //     }
+                        //
+                        //     MystrengthsController.text = lines.join('\n');
+                        //     MystrengthsController.selection = TextSelection.fromPosition(
+                        //       TextPosition(offset: MystrengthsController.text.length),
+                        //     );
+                        //   } else {
+                        //     isInitialTyping = true; // Reset when the text field becomes empty
+                        //   }
+                        // },
+                        onChanged: (value) {
+                          if (value.isNotEmpty) {
+                            final lines = value.split('\n');
+
+                            for (int i = 0; i < lines.length; i++) {
+                              if (lines[i].trim().isNotEmpty && !lines[i].startsWith('•')) {
+                                lines[i] = '• ' + lines[i];
+                              }
+                            }
+
+                            // Combine lines with '\n'
+                            final modifiedText = lines.join('\n');
+
+                            // Calculate new cursor position based on changes in text
+                            final newTextLength = modifiedText.length;
+                            final cursorPosition = MystrengthsController.selection.baseOffset +
+                                (newTextLength - value.length);
+
+                            // Update text and cursor position
+                            MystrengthsController.value = MystrengthsController.value.copyWith(
+                              text: modifiedText,
+                              selection: TextSelection.fromPosition(
+                                TextPosition(offset: cursorPosition),
+                              ),
+                            );
+
+                          } else {
+                            isInitialTyping = true; // Reset when the text field becomes empty
+                          }
+                        },
+                        style: GoogleFonts.montserrat(
+                            textStyle: Theme
+                                .of(context)
+                                .textTheme
+                                .bodyLarge,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(10),
+                          // labelText: "Name",
+                          hintText: "What do you view as your strengths, passions and values that you hope and want to be able to deploy in your role at work - create a list",
+                          errorStyle: GoogleFonts.montserrat(
+                              textStyle: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyLarge,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.redAccent),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(15)),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(15)),
+                          labelStyle: GoogleFonts.montserrat(
+                              textStyle: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyLarge,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black),
+                        ),
+                      ),
+                      SizedBox(height: 20,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: (){
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              width: MediaQuery.of(context).size.width * .2,
+
+                              height: 60,
+                              decoration: BoxDecoration(
+                                //color: Colors.white,
+                                border: Border.all(
+                                  //color:primaryColorOfApp ,
+                                    width: 1.0),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Cancel',
+                                  style: GoogleFonts.montserrat(
+                                    textStyle:
+                                    Theme
+                                        .of(context)
+                                        .textTheme
+                                        .titleSmall,
+                                    fontWeight: FontWeight.bold,
+                                    //color: primaryColorOfApp
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                          ),
+                          SizedBox(width: 5, height: 5,),
+                          InkWell(
+                            onTap: () async {
+                              Map<String, dynamic> AboutMEDatas = {
+                                // 'About_Me_Label': AboutMeLabeltextController.text,
+                                // 'My_Circumstance': mycircumstancesController.text,
+                                'My_Strength': MystrengthsController.text,
+                                // 'My_Organisation': myOrganisationController.text,
+                                // 'My_Challenges_Organisation': myOrganisation2Controller.text,
+                                // Add other fields as needed
+                              };
+
+                              String solutionJson = json.encode(AboutMEDatas);
+                              print(solutionJson);
+
+                              ProgressDialog.show(context, "Saving", Icons.save);
+                              await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
+                              _previewProvider.updatemystrength(MystrengthsController.text);
+                              ProgressDialog.hide();
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * .2,
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              height: 60,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                border: Border.all(
+                                    color: Colors.blue,
+                                    width: 2.0),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Save',
+                                  style: GoogleFonts.montserrat(
+                                      textStyle:
+                                      Theme
+                                          .of(context)
+                                          .textTheme
+                                          .titleSmall,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                    ],
+                  ),
+                ),
+              ));
+        });
+  }
+
+  editmyorganization(){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Theme(
+              data: Theme.of(context).copyWith(dialogBackgroundColor: Colors.white),
+              child: AlertDialog(
+                insetPadding: EdgeInsets.symmetric(horizontal: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.08, vertical: MediaQuery
+                    .of(context)
+                    .size.height * 0.1),
+                content: SizedBox(
+                  // width: MediaQuery.of(context).size.height * .3,
+                  height: MediaQuery.of(context).size.height * .55,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                        child: Row(
+                          children: [
+                            Text("What I value about ${employerController.text.isEmpty ? "[my organisation]" : employerController.text} and workplace environment that helps me perform to my best: ",
+                                style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                    fontWeight: FontWeight.w600)),
+                            Text(" edit as appropriate",
+                                style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                    fontSize: 14,
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w400)),
+                          ],
+                        ),
+                      ),
+                      TextField(
+                        controller: myOrganisationController,
+
+                        maxLines: 6,
+
+
+                        // onChanged: (value) {
+                        //   if (value.isNotEmpty) {
+                        //     final lines = value.split('\n');
+                        //     final lastLine = lines.last;
+                        //
+                        //     if (isInitialTyping || (lastLine.trimLeft().startsWith('• ') && !lastLine.contains('• '))) {
+                        //       isInitialTyping = false;
+                        //       myOrganisationController.text = value.replaceAll('\n', '\n• ');
+                        //       myOrganisationController.selection = TextSelection.fromPosition(
+                        //         TextPosition(offset: myOrganisationController.text.length),
+                        //       );
+                        //     } else if (value.endsWith('\n')) {
+                        //       // If the last character entered is a newline, append a bullet point
+                        //       myOrganisationController.text += '• ';
+                        //       myOrganisationController.selection = TextSelection.fromPosition(
+                        //         TextPosition(offset: myOrganisationController.text.length),
+                        //       );
+                        //     }
+                        //   } else {
+                        //     isInitialTyping = true; // Reset when the text field becomes empty
+                        //   }
+                        // },
+
+                        onChanged: (value) {
+                          if (value.isNotEmpty) {
+                            final lines = value.split('\n');
+
+                            for (int i = 0; i < lines.length; i++) {
+                              if (lines[i].trim().isNotEmpty && !lines[i].startsWith('•')) {
+                                lines[i] = '• ' + lines[i];
+                              }
+                            }
+
+                            // Combine lines with '\n'
+                            final modifiedText = lines.join('\n');
+
+                            // Calculate new cursor position based on changes in text
+                            final newTextLength = modifiedText.length;
+                            final cursorPosition = myOrganisationController.selection.baseOffset +
+                                (newTextLength - value.length);
+
+                            // Update text and cursor position
+                            myOrganisationController.value = myOrganisationController.value.copyWith(
+                              text: modifiedText,
+                              selection: TextSelection.fromPosition(
+                                TextPosition(offset: cursorPosition),
+                              ),
+                            );
+
+                          } else {
+                            isInitialTyping = true; // Reset when the text field becomes empty
+                          }
+                        },
+                        style: GoogleFonts.montserrat(
+                            textStyle: Theme
+                                .of(context)
+                                .textTheme
+                                .bodyLarge,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(10),
+                          // labelText: "Name",
+                          hintText: "What do you like about your organisation and the work environment that helps you be your best?\nThese could be e.g. a policy or process, something about the culture or environment - create a list.",
+                          errorStyle: GoogleFonts.montserrat(
+                              textStyle: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyLarge,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.redAccent),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(15)),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(15)),
+                          labelStyle: GoogleFonts.montserrat(
+                              textStyle: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyLarge,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black),
+                        ),
+                      ),
+                      SizedBox(height: 20,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: (){
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              width: MediaQuery.of(context).size.width * .2,
+
+                              height: 60,
+                              decoration: BoxDecoration(
+                                //color: Colors.white,
+                                border: Border.all(
+                                  //color:primaryColorOfApp ,
+                                    width: 1.0),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Cancel',
+                                  style: GoogleFonts.montserrat(
+                                    textStyle:
+                                    Theme
+                                        .of(context)
+                                        .textTheme
+                                        .titleSmall,
+                                    fontWeight: FontWeight.bold,
+                                    //color: primaryColorOfApp
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                          ),
+                          SizedBox(width: 5, height: 5,),
+                          InkWell(
+                            onTap: () async {
+                              Map<String, dynamic> AboutMEDatas = {
+                                // 'About_Me_Label': AboutMeLabeltextController.text,
+                                // 'My_Circumstance': mycircumstancesController.text,
+                                // 'My_Strength': MystrengthsController.text,
+                                'My_Organisation': myOrganisationController.text,
+                                // 'My_Challenges_Organisation': myOrganisation2Controller.text,
+                                // Add other fields as needed
+                              };
+
+                              String solutionJson = json.encode(AboutMEDatas);
+                              print(solutionJson);
+
+                              ProgressDialog.show(context, "Saving", Icons.save);
+                              await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
+                              _previewProvider.updatemyorganization(myOrganisationController.text);
+                              ProgressDialog.hide();
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * .2,
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              height: 60,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                border: Border.all(
+                                    color: Colors.blue,
+                                    width: 2.0),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Save',
+                                  style: GoogleFonts.montserrat(
+                                      textStyle:
+                                      Theme
+                                          .of(context)
+                                          .textTheme
+                                          .titleSmall,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                    ],
+                  ),
+                ),
+              ));
+        });
+  }
+
+  editmychallenges(){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Theme(
+              data: Theme.of(context).copyWith(dialogBackgroundColor: Colors.white),
+              child: AlertDialog(
+                insetPadding: EdgeInsets.symmetric(horizontal: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.08, vertical: MediaQuery
+                    .of(context)
+                    .size.height * 0.1),
+                content: SizedBox(
+                  // width: MediaQuery.of(context).size.height * .3,
+                  height: MediaQuery.of(context).size.height * .55,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                        child: RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: "What I find challenging about ${employerController.text.isEmpty ? "[my organisation]" : employerController.text} and workplace environment that gets in the way of me performing to my best: ",
+                                style: GoogleFonts.montserrat(
+                                  textStyle: Theme.of(context).textTheme.titleSmall,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              TextSpan(
+                                text: " edit as appropriate",
+                                style: GoogleFonts.montserrat(
+                                  textStyle: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    fontSize: 14,
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        controller: myOrganisation2Controller,
+                        keyboardType: TextInputType.multiline,
+                        // onSubmitted: (_) => userAboutMEProvider.handleEnter(myOrganisation2Controller),
+                        maxLines: 6,
+                        onChanged: (value) {
+                          if (value.isNotEmpty) {
+                            final lines = value.split('\n');
+
+                            for (int i = 0; i < lines.length; i++) {
+                              if (lines[i].trim().isNotEmpty && !lines[i].startsWith('•')) {
+                                lines[i] = '• ' + lines[i];
+                              }
+                            }
+
+                            // Combine lines with '\n'
+                            final modifiedText = lines.join('\n');
+
+                            // Calculate new cursor position based on changes in text
+                            final newTextLength = modifiedText.length;
+                            final cursorPosition = myOrganisation2Controller.selection.baseOffset +
+                                (newTextLength - value.length);
+
+                            // Update text and cursor position
+                            myOrganisation2Controller.value = myOrganisation2Controller.value.copyWith(
+                              text: modifiedText,
+                              selection: TextSelection.fromPosition(
+                                TextPosition(offset: cursorPosition),
+                              ),
+                            );
+
+                          } else {
+                            isInitialTyping = true; // Reset when the text field becomes empty
+                          }
+                        },
+                        style: GoogleFonts.montserrat(
+                            textStyle: Theme
+                                .of(context)
+                                .textTheme
+                                .bodyLarge,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(10),
+                          // labelText: "Name",
+                          hintText: "What is it about your organisation and the work environment that gets in the way of you being your best?\nThese could be a policy or process, something about the culture or environment - create a list.",
+                          errorStyle: GoogleFonts.montserrat(
+                              textStyle: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyLarge,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.redAccent),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(15)),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(15)),
+                          labelStyle: GoogleFonts.montserrat(
+                              textStyle: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyLarge,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black),
+                        ),
+                      ),
+                      SizedBox(height: 20,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: (){
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              width: MediaQuery.of(context).size.width * .2,
+
+                              height: 60,
+                              decoration: BoxDecoration(
+                                //color: Colors.white,
+                                border: Border.all(
+                                  //color:primaryColorOfApp ,
+                                    width: 1.0),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Cancel',
+                                  style: GoogleFonts.montserrat(
+                                    textStyle:
+                                    Theme
+                                        .of(context)
+                                        .textTheme
+                                        .titleSmall,
+                                    fontWeight: FontWeight.bold,
+                                    //color: primaryColorOfApp
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                          ),
+                          SizedBox(width: 5, height: 5,),
+                          InkWell(
+                            onTap: () async {
+                              Map<String, dynamic> AboutMEDatas = {
+                                // 'About_Me_Label': AboutMeLabeltextController.text,
+                                // 'My_Circumstance': mycircumstancesController.text,
+                                // 'My_Strength': MystrengthsController.text,
+                                // 'My_Organisation': myOrganisationController.text,
+                                'My_Challenges_Organisation': myOrganisation2Controller.text,
+                                // Add other fields as needed
+                              };
+
+                              String solutionJson = json.encode(AboutMEDatas);
+                              print(solutionJson);
+
+                              ProgressDialog.show(context, "Saving", Icons.save);
+                              await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
+                              _previewProvider.updatemychallenge(myOrganisation2Controller.text);
+                              ProgressDialog.hide();
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * .2,
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              height: 60,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                border: Border.all(
+                                    color: Colors.blue,
+                                    width: 2.0),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Save',
+                                  style: GoogleFonts.montserrat(
+                                      textStyle:
+                                      Theme
+                                          .of(context)
+                                          .textTheme
+                                          .titleSmall,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                    ],
+                  ),
+                ),
+              ));
         });
   }
 
@@ -9436,8 +10613,148 @@ Date
     );
   }
 
+  void showDuplicateDialogBox(aboutMeData){
+    showDialog(
+        context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+            // title: Text("Want to duplicate report?", style: GoogleFonts.lato(
+            //     textStyle: Theme.of(context).textTheme.titleMedium,
+            //     fontStyle: FontStyle.italic,
+            //     fontWeight: FontWeight.bold
+            // )),
+            content:  Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text("Purpose of report: ", style: GoogleFonts.lato(
+                    textStyle: Theme.of(context).textTheme.titleSmall,
+                    // fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.bold
+                )),
+                Flexible(
+                  child: TextField(
+                    controller: DuplicatePurposetextController,
+                    onChanged: (value) {
+                      // _previewProvider.updatetitle(value);
+                    },
+                    style: GoogleFonts.lato(
+                        textStyle: Theme.of(context).textTheme.bodyMedium,
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black),
+                    decoration: InputDecoration(
+                      hintText: "My discussion with..." ,
+                      contentPadding: EdgeInsets.all(15),
+                      // focusedBorder: OutlineInputBorder(
+                      //     borderSide: BorderSide(color: Colors.black),
+                      //     borderRadius: BorderRadius.circular(10)),
+                      // border: OutlineInputBorder(
+                      //     borderSide: BorderSide(color: Colors.black12),
+                      //     borderRadius: BorderRadius.circular(10)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              InkWell(
+                onTap: (){
+                  Navigator.pop(context);
+                  DuplicatePurposetextController.clear();
+                },
+                child:Container(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  width: MediaQuery.of(context).size.width * .15,
+                  decoration: BoxDecoration(
+                    // color:Colors.blue ,
+                    border: Border.all(
+                        color:Colors.blue ,
+                        width: 1.0),
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: Center(
+                    child:Text(
+                      'Cancel',
+                      style: GoogleFonts.montserrat(
+                        textStyle:
+                        Theme
+                            .of(context)
+                            .textTheme
+                            .titleSmall,
+                        fontWeight: FontWeight.bold,
+                        color:Colors.blue ,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () async {
+                  if(DuplicatePurposetextController.text.isEmpty){
+                    toastification.show(context: context,
+                        title: Text('Add purpose of report to proceed.'),
+                        autoCloseDuration: Duration(milliseconds: 2500),
+                        alignment: Alignment.bottomCenter,
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                        icon: Icon(Icons.error, color: Colors.white,),
+                        animationDuration: Duration(milliseconds: 1000),
+                        showProgressBar: false
+                    );
+                  }
+                  else {
+                    QuerySnapshot querySnapshots = await FirebaseFirestore
+                        .instance
+                        .collection('AboutMe')
+                        .orderBy('AB_id', descending: true)
+                        .limit(1)
+                        .get();
+                    final abc = querySnapshots.docs.first;
+                    print("abccccc; ${abc['AB_id']}");
+                    print("abccccc; ${abc['AB_id'].runtimeType}");
+                    var AB_id = abc['AB_id'] + 1;
+                    setState(() {
+                      duplicateDocument(context, aboutMeData.id, AB_id,
+                          DuplicatePurposetextController.text);
+                    });
+                    Navigator.pop(context);
+                    DuplicatePurposetextController.clear();
+                  }
+                },
+                child:Container(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  width: MediaQuery.of(context).size.width * .15,
+                  decoration: BoxDecoration(
+                    color:Colors.blue ,
+                    border: Border.all(
+                        color:Colors.blue ,
+                        width: 1.0),
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: Center(
+                    child:Text(
+                      'Proceed',
+                      style: GoogleFonts.montserrat(
+                        textStyle:
+                        Theme
+                            .of(context)
+                            .textTheme
+                            .titleSmall,
+                        fontWeight: FontWeight.bold,
+                        color:Colors.white ,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          );
+        }
+    );}
 
-  Future<void> duplicateDocument(context,documentId, int AB_id) async {
+
+  Future<void> duplicateDocument(context,documentId, int AB_id,Purpose_of_report) async {
     try {
       CollectionReference collectionReference = FirebaseFirestore.instance.collection('AboutMe');
 
@@ -9451,6 +10768,8 @@ Date
 
       data['AB_id'] = AB_id; // Update with the new value you want
       data['AB_Status'] = "Draft"; // Update with the new value you want
+      data['Purpose_of_report'] = Purpose_of_report; // Update with the new value you want
+      data['About_Me_Label'] = Purpose_of_report;
       data['Report_sent_to'] = []; // Update with the new value you want
       data['Report_sent_to_cc'] = []; // Update with the new value you want
       data['Created_Date'] = createdAt; // Update with the new value you want

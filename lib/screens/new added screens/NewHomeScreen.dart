@@ -73,285 +73,291 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      onDrawerChanged: (isOpened) {
-
+    return WillPopScope(
+      onWillPop: () async {
+        // Handle back button press
+        return false; // Prevent default back button action
       },
-      // key: _scaffoldKey,
-      drawerEnableOpenDragGesture: true ,
-      drawerDragStartBehavior: DragStartBehavior.start,
-      // appBar:AppHelper().CustomAppBar(context),
-      drawer: Drawer(
-        child: ListView(
+      child: Scaffold(
+        onDrawerChanged: (isOpened) {
+
+        },
+        // key: _scaffoldKey,
+        drawerEnableOpenDragGesture: true ,
+        drawerDragStartBehavior: DragStartBehavior.start,
+        // appBar:AppHelper().CustomAppBar(context),
+        drawer: Drawer(
+          child: ListView(
+            children: [
+              SideMenuScreen(),
+            ],
+          ),
+        ),
+        // drawer: newwDrawer(),
+        appBar: AppBar(
+          // leading: Icon(Icons.menu, size: 40,),
+          leadingWidth: 100,
+          backgroundColor: Colors.grey.withOpacity(0.2),
+          centerTitle: true,
+          // title: Text("THRIVERS", style: GoogleFonts.montserrat(
+          title: Text("Solution Inclusion", style: GoogleFonts.montserrat(
+              textStyle: Theme.of(context).textTheme.headlineLarge,
+              fontWeight: FontWeight.bold,
+              color: Colors.black),),
+        ),
+        body: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SideMenuScreen(),
+            // SideMenu(
+            //   controller: sideMenu,
+            //   style: SideMenuStyle(
+            //     itemBorderRadius: BorderRadius.circular(100),
+            //     itemOuterPadding: EdgeInsets.symmetric(horizontal: 30),
+            //     // showTooltip: false,
+            //     displayMode: SideMenuDisplayMode.auto,
+            //     hoverColor: Colors.grey,
+            //     iconSize: 20,
+            //     selectedColor: Colors.blue.withOpacity(0.5),
+            //     selectedTitleTextStyle: const TextStyle(color: Colors.black,fontSize: 14),
+            //     selectedIconColor: Colors.black,
+            //     backgroundColor: Colors.grey.withOpacity(0.2),
+            //     unselectedIconColor: Colors.black,
+            //     unselectedTitleTextStyle: TextStyle(color: Colors.black,fontSize: 14),
+            //     decoration: BoxDecoration(
+            //       borderRadius: BorderRadius.all(Radius.circular(0)),
+            //     ),
+            //     // backgroundColor: Colors.blueGrey[700]
+            //   ),
+            //   title: Column(
+            //     children: [
+            //       SizedBox(height: 20,),
+            //       /*ConstrainedBox(
+            //         constraints: const BoxConstraints(
+            //           maxHeight: 150,
+            //           maxWidth: 150,
+            //         ),
+            //         child: Image.asset(
+            //           'assets/logo.png',
+            //         ),
+            //       ),*/
+            //
+            //       Text("Welcome , Admin" , style: GoogleFonts.montserrat(
+            //           textStyle: Theme.of(context).textTheme.headlineMedium,
+            //           color: Colors.black
+            //       )),
+            //       SizedBox(height: 20,),
+            //       Divider(
+            //         indent: 8.0,
+            //         endIndent: 8.0,
+            //       ),
+            //       SizedBox(height: 20,)
+            //     ],
+            //   ),
+            //   footer: const Padding(
+            //     padding: EdgeInsets.all(8.0),
+            //     child: Text(
+            //       'AKCess Pvt Ltd',
+            //       style: TextStyle(fontSize: 15),
+            //     ),
+            //   ),
+            //   items: [
+            //     SideMenuItem(
+            //       priority: 0,
+            //       title: 'Dashboard',
+            //       onTap: (page, _) {
+            //         sideMenu.changePage(page);
+            //       },
+            //       icon: const Icon(Icons.home),
+            //       //badgeColor: Colors.amber,
+            //       //badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
+            //       //tooltipContent: "Dashboard Is Under Construction!",
+            //     ),
+            //     SideMenuItem(
+            //       priority: 1,
+            //       title: 'Thriver',
+            //       onTap: (page, _) {
+            //         sideMenu.changePage(page);
+            //       },
+            //       icon: const Icon(Icons.event_note),
+            //     ),
+            //     /*SideMenuItem(
+            //       priority: 2,
+            //       title: 'Profiles',
+            //       onTap: (page, _) {
+            //         sideMenu.changePage(page);
+            //       },
+            //       icon: const Icon(Icons.supervisor_account),
+            //       *//*trailing: Container(
+            //           decoration: const BoxDecoration(
+            //               color: Colors.amber,
+            //               borderRadius: BorderRadius.all(Radius.circular(6))),
+            //           child: Padding(
+            //             padding: const EdgeInsets.symmetric(
+            //                 horizontal: 6.0, vertical: 3),
+            //             child: Text(
+            //               'New',
+            //               style: TextStyle(fontSize: 11, color: Colors.grey[800]),
+            //             ),
+            //           )),*//*
+            //     ),*/
+            //
+            //     SideMenuItem(
+            //       priority: 2,
+            //       title: 'Challenge',
+            //       //badgeColor: Colors.amber,
+            //       // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
+            //       tooltipContent: "Challenge",
+            //       onTap: (page, _) {
+            //         sideMenu.changePage(page);
+            //       },
+            //       icon: const Icon(Icons.book_online_sharp),
+            //     ),
+            //
+            //     // SideMenuItem(
+            //     //   priority: 3,
+            //     //   title: 'Solution',
+            //     //   //badgeColor: Colors.amber,
+            //     //   // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
+            //     //   tooltipContent: "Solution",
+            //     //   onTap: (page, _) {
+            //     //     sideMenu.changePage(page);
+            //     //   },
+            //     //   icon: const Icon(Icons.article),
+            //     // ),
+            //     SideMenuItem(
+            //       priority: 3,
+            //       title: 'Users',
+            //       //badgeColor: Colors.amber,
+            //       // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
+            //       tooltipContent: "Users",
+            //       onTap: (page, _) {
+            //         sideMenu.changePage(page);
+            //       },
+            //       icon: const Icon(Icons.people_alt_outlined),
+            //     ),
+            //     SideMenuItem(
+            //       priority: 4,
+            //       title: 'Settings',
+            //       // isNotAMenu: true,
+            //
+            //       //badgeColor: Colors.amber,
+            //       // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
+            //       tooltipContent: "Settings",
+            //       onTap: (page, _) {
+            //         sideMenu.changePage(page);
+            //       },
+            //       icon: const Icon(Icons.settings),
+            //
+            //     ),
+            //
+            //     // SideMenuItem(
+            //     //   priority: 5,
+            //     //   title: 'Category',
+            //     //   //badgeColor: Colors.amber,
+            //     //   // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
+            //     //   tooltipContent: "Category",
+            //     //   onTap: (page, _) {
+            //     //     sideMenu.changePage(page);
+            //     //   },
+            //     //   icon: const Icon(Icons.list_alt),
+            //     // ),
+            //     SideMenuItem(
+            //
+            //       priority: 5,
+            //       title: 'Keywords',
+            //       //badgeColor: Colors.amber,
+            //       // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
+            //       tooltipContent: "Keywords",
+            //       onTap: (page, _) {
+            //         sideMenu.changePage(page);
+            //       },
+            //       icon: const Icon(Icons.list_alt),
+            //     ),
+            //     SideMenuItem(
+            //       priority: 6,
+            //       title: 'Brevo',
+            //       //badgeColor: Colors.amber,
+            //       // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
+            //       tooltipContent: "Brevo",
+            //       onTap: (page, _) {
+            //         sideMenu.changePage(page);
+            //       },
+            //       icon: const Icon(Icons.key),
+            //     ),
+            //     SideMenuItem(
+            //       priority: 7,
+            //       title: 'Chat-Gpt ',
+            //       //badgeColor: Colors.amber,
+            //       // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
+            //       tooltipContent: "Chat-Gpt",
+            //       onTap: (page, _) {
+            //         sideMenu.changePage(page);
+            //       },
+            //       // icon: const Icon(Icons.email_outlined),
+            //       icon: const Icon(Icons.search),
+            //     ),
+            //     SideMenuItem(
+            //       priority: 8,
+            //       title: 'Chat-Gpt Settings',
+            //       //badgeColor: Colors.amber,
+            //       // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
+            //       tooltipContent: "Chat-Gpt Settings",
+            //       onTap: (page, _) {
+            //         sideMenu.changePage(page);
+            //       },
+            //       // icon: const Icon(Icons.email_outlined),
+            //       icon: const Icon(Icons.settings),
+            //     ),
+            //     // SideMenuItem(
+            //     //   priority: 5,
+            //     //   onTap:(page){
+            //     //     sideMenu.changePage(5);
+            //     //   },
+            //     //   icon: const Icon(Icons.image_rounded),
+            //     // ),
+            //     // SideMenuItem(
+            //     //   priority: 6,
+            //     //   title: 'Only Title',
+            //     //   onTap:(page){
+            //     //     sideMenu.changePage(6);
+            //     //   },
+            //     // ),
+            //   ],
+            // ),
+            Expanded(
+              child: PageView(
+                controller: page,
+                physics: NeverScrollableScrollPhysics(),
+                children: [
+                  // BrevoScreen(),
+                  DashBoardScreen(),
+                  AdminAboutMePage(AdminName: (widget.AdminName==null) ? "Admin" : widget.AdminName, Pagejump: page),
+                  AddThriversScreen(AdminName: (widget.AdminName==null) ? "Admin" : widget.AdminName),
+                  AddChallengesScreen(AdminName: (widget.AdminName==null) ? "Admin" : widget.AdminName),
+                  ReportScreen(),
+                  // AddThriversScreen(),
+                  // BrevoScreen(),
+                  UserListScreenForAdmin(),
+                  AdminUserSettingScreen(),
+                  // CategoryTreeView(),
+                  AddKeywordsScreen(),
+                  // DSemo(),
+                  BrevoScreen(),
+                  ChatGptScreen(),
+                  ChatGptSettingsScreen(),
+                  // AdminAboutMePage(),
+                  DSemo(),
+                  /*AddChallenges(),
+                  AddSolutionsScreen,
+
+                  UserListingScreen()*/
+
+
+                ],
+              ),
+            ),
           ],
         ),
-      ),
-      // drawer: newwDrawer(),
-      appBar: AppBar(
-        // leading: Icon(Icons.menu, size: 40,),
-        leadingWidth: 100,
-        backgroundColor: Colors.grey.withOpacity(0.2),
-        centerTitle: true,
-        // title: Text("THRIVERS", style: GoogleFonts.montserrat(
-        title: Text("Solution Inclusion", style: GoogleFonts.montserrat(
-            textStyle: Theme.of(context).textTheme.headlineLarge,
-            fontWeight: FontWeight.bold,
-            color: Colors.black),),
-      ),
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          // SideMenu(
-          //   controller: sideMenu,
-          //   style: SideMenuStyle(
-          //     itemBorderRadius: BorderRadius.circular(100),
-          //     itemOuterPadding: EdgeInsets.symmetric(horizontal: 30),
-          //     // showTooltip: false,
-          //     displayMode: SideMenuDisplayMode.auto,
-          //     hoverColor: Colors.grey,
-          //     iconSize: 20,
-          //     selectedColor: Colors.blue.withOpacity(0.5),
-          //     selectedTitleTextStyle: const TextStyle(color: Colors.black,fontSize: 14),
-          //     selectedIconColor: Colors.black,
-          //     backgroundColor: Colors.grey.withOpacity(0.2),
-          //     unselectedIconColor: Colors.black,
-          //     unselectedTitleTextStyle: TextStyle(color: Colors.black,fontSize: 14),
-          //     decoration: BoxDecoration(
-          //       borderRadius: BorderRadius.all(Radius.circular(0)),
-          //     ),
-          //     // backgroundColor: Colors.blueGrey[700]
-          //   ),
-          //   title: Column(
-          //     children: [
-          //       SizedBox(height: 20,),
-          //       /*ConstrainedBox(
-          //         constraints: const BoxConstraints(
-          //           maxHeight: 150,
-          //           maxWidth: 150,
-          //         ),
-          //         child: Image.asset(
-          //           'assets/logo.png',
-          //         ),
-          //       ),*/
-          //
-          //       Text("Welcome , Admin" , style: GoogleFonts.montserrat(
-          //           textStyle: Theme.of(context).textTheme.headlineMedium,
-          //           color: Colors.black
-          //       )),
-          //       SizedBox(height: 20,),
-          //       Divider(
-          //         indent: 8.0,
-          //         endIndent: 8.0,
-          //       ),
-          //       SizedBox(height: 20,)
-          //     ],
-          //   ),
-          //   footer: const Padding(
-          //     padding: EdgeInsets.all(8.0),
-          //     child: Text(
-          //       'AKCess Pvt Ltd',
-          //       style: TextStyle(fontSize: 15),
-          //     ),
-          //   ),
-          //   items: [
-          //     SideMenuItem(
-          //       priority: 0,
-          //       title: 'Dashboard',
-          //       onTap: (page, _) {
-          //         sideMenu.changePage(page);
-          //       },
-          //       icon: const Icon(Icons.home),
-          //       //badgeColor: Colors.amber,
-          //       //badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
-          //       //tooltipContent: "Dashboard Is Under Construction!",
-          //     ),
-          //     SideMenuItem(
-          //       priority: 1,
-          //       title: 'Thriver',
-          //       onTap: (page, _) {
-          //         sideMenu.changePage(page);
-          //       },
-          //       icon: const Icon(Icons.event_note),
-          //     ),
-          //     /*SideMenuItem(
-          //       priority: 2,
-          //       title: 'Profiles',
-          //       onTap: (page, _) {
-          //         sideMenu.changePage(page);
-          //       },
-          //       icon: const Icon(Icons.supervisor_account),
-          //       *//*trailing: Container(
-          //           decoration: const BoxDecoration(
-          //               color: Colors.amber,
-          //               borderRadius: BorderRadius.all(Radius.circular(6))),
-          //           child: Padding(
-          //             padding: const EdgeInsets.symmetric(
-          //                 horizontal: 6.0, vertical: 3),
-          //             child: Text(
-          //               'New',
-          //               style: TextStyle(fontSize: 11, color: Colors.grey[800]),
-          //             ),
-          //           )),*//*
-          //     ),*/
-          //
-          //     SideMenuItem(
-          //       priority: 2,
-          //       title: 'Challenge',
-          //       //badgeColor: Colors.amber,
-          //       // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
-          //       tooltipContent: "Challenge",
-          //       onTap: (page, _) {
-          //         sideMenu.changePage(page);
-          //       },
-          //       icon: const Icon(Icons.book_online_sharp),
-          //     ),
-          //
-          //     // SideMenuItem(
-          //     //   priority: 3,
-          //     //   title: 'Solution',
-          //     //   //badgeColor: Colors.amber,
-          //     //   // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
-          //     //   tooltipContent: "Solution",
-          //     //   onTap: (page, _) {
-          //     //     sideMenu.changePage(page);
-          //     //   },
-          //     //   icon: const Icon(Icons.article),
-          //     // ),
-          //     SideMenuItem(
-          //       priority: 3,
-          //       title: 'Users',
-          //       //badgeColor: Colors.amber,
-          //       // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
-          //       tooltipContent: "Users",
-          //       onTap: (page, _) {
-          //         sideMenu.changePage(page);
-          //       },
-          //       icon: const Icon(Icons.people_alt_outlined),
-          //     ),
-          //     SideMenuItem(
-          //       priority: 4,
-          //       title: 'Settings',
-          //       // isNotAMenu: true,
-          //
-          //       //badgeColor: Colors.amber,
-          //       // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
-          //       tooltipContent: "Settings",
-          //       onTap: (page, _) {
-          //         sideMenu.changePage(page);
-          //       },
-          //       icon: const Icon(Icons.settings),
-          //
-          //     ),
-          //
-          //     // SideMenuItem(
-          //     //   priority: 5,
-          //     //   title: 'Category',
-          //     //   //badgeColor: Colors.amber,
-          //     //   // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
-          //     //   tooltipContent: "Category",
-          //     //   onTap: (page, _) {
-          //     //     sideMenu.changePage(page);
-          //     //   },
-          //     //   icon: const Icon(Icons.list_alt),
-          //     // ),
-          //     SideMenuItem(
-          //
-          //       priority: 5,
-          //       title: 'Keywords',
-          //       //badgeColor: Colors.amber,
-          //       // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
-          //       tooltipContent: "Keywords",
-          //       onTap: (page, _) {
-          //         sideMenu.changePage(page);
-          //       },
-          //       icon: const Icon(Icons.list_alt),
-          //     ),
-          //     SideMenuItem(
-          //       priority: 6,
-          //       title: 'Brevo',
-          //       //badgeColor: Colors.amber,
-          //       // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
-          //       tooltipContent: "Brevo",
-          //       onTap: (page, _) {
-          //         sideMenu.changePage(page);
-          //       },
-          //       icon: const Icon(Icons.key),
-          //     ),
-          //     SideMenuItem(
-          //       priority: 7,
-          //       title: 'Chat-Gpt ',
-          //       //badgeColor: Colors.amber,
-          //       // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
-          //       tooltipContent: "Chat-Gpt",
-          //       onTap: (page, _) {
-          //         sideMenu.changePage(page);
-          //       },
-          //       // icon: const Icon(Icons.email_outlined),
-          //       icon: const Icon(Icons.search),
-          //     ),
-          //     SideMenuItem(
-          //       priority: 8,
-          //       title: 'Chat-Gpt Settings',
-          //       //badgeColor: Colors.amber,
-          //       // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
-          //       tooltipContent: "Chat-Gpt Settings",
-          //       onTap: (page, _) {
-          //         sideMenu.changePage(page);
-          //       },
-          //       // icon: const Icon(Icons.email_outlined),
-          //       icon: const Icon(Icons.settings),
-          //     ),
-          //     // SideMenuItem(
-          //     //   priority: 5,
-          //     //   onTap:(page){
-          //     //     sideMenu.changePage(5);
-          //     //   },
-          //     //   icon: const Icon(Icons.image_rounded),
-          //     // ),
-          //     // SideMenuItem(
-          //     //   priority: 6,
-          //     //   title: 'Only Title',
-          //     //   onTap:(page){
-          //     //     sideMenu.changePage(6);
-          //     //   },
-          //     // ),
-          //   ],
-          // ),
-          Expanded(
-            child: PageView(
-              controller: page,
-              physics: NeverScrollableScrollPhysics(),
-              children: [
-                // BrevoScreen(),
-                DashBoardScreen(),
-                AdminAboutMePage(AdminName: (widget.AdminName==null) ? "Admin" : widget.AdminName, Pagejump: page),
-                AddThriversScreen(AdminName: (widget.AdminName==null) ? "Admin" : widget.AdminName),
-                AddChallengesScreen(AdminName: (widget.AdminName==null) ? "Admin" : widget.AdminName),
-                ReportScreen(),
-                // AddThriversScreen(),
-                // BrevoScreen(),
-                UserListScreenForAdmin(),
-                AdminUserSettingScreen(),
-                // CategoryTreeView(),
-                AddKeywordsScreen(),
-                // DSemo(),
-                BrevoScreen(),
-                ChatGptScreen(),
-                ChatGptSettingsScreen(),
-                // AdminAboutMePage(),
-                DSemo(),
-                /*AddChallenges(),
-                AddSolutionsScreen,
-
-                UserListingScreen()*/
-
-
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -409,6 +415,7 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
                                 onTap: () async {
                                   sideMenu.changePage(1);
                                   page.jumpToPage(1);
+                                  // context.go('/admin/report',);
                                 },
                                 child: Container(
                                   margin: EdgeInsets.all(10),
@@ -773,12 +780,14 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
                       onPressed: () async {
                         print("Logout confirmed");
 
-                        context.pushReplacement('/');
+                        // context.pushReplacement('/admin');
 
                         await _previewProvider.logout("adminusername");
                         print("Logout completed");
 
                           Navigator.pop(context);
+
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => SuperAdminLoginScreen()));
 
                         print("Dialog closed");
 

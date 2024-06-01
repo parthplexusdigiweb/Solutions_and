@@ -10,8 +10,10 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:thrivers/Network/FirebaseApi.dart';
 import 'package:thrivers/Provider/AddKeywordsProvider.dart';
+import 'package:thrivers/Provider/previewProvider.dart';
 import 'package:thrivers/Provider/userAboutMeProvider.dart';
 import 'package:thrivers/core/constants.dart';
+import 'package:thrivers/core/progress_dialog.dart';
 import 'package:thrivers/main.dart';
 import 'package:thrivers/model/soluton_table_model.dart';
 import 'package:thrivers/screens/addthriverscreen.dart';
@@ -19,12 +21,14 @@ import 'package:thrivers/screens/new%20added%20screens/UserLoginPage.dart';
 import 'package:thrivers/screens/not%20used%20screen/DashboardCommonWidgets.dart';
 import 'package:thrivers/screens/userLoginAboutME/UserLogedInAboutMePage.dart';
 
+
 class UserAboutMePage extends StatefulWidget {
 
-   bool isClientLogeddin;
+   var isClientLogeddin;
     var emailId;
+    var loginToken;
 
-   UserAboutMePage({required this.isClientLogeddin, required this.emailId});
+   UserAboutMePage({ this.isClientLogeddin, required this.emailId, this.loginToken});
 
    @override
   State<UserAboutMePage> createState() => _UserAboutMePageState();
@@ -47,8 +51,9 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
 
   late  AddKeywordProvider _addKeywordProvider;
   late  UserAboutMEProvider _userAboutMEProvider;
+  late  PreviewProvider _userPreviewProvider;
 
-  var UserName;
+  var UserName, userdocs;
 
 
 
@@ -57,8 +62,10 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
     prefs = await SharedPreferences.getInstance();
     var isLoggedIn = await prefs.getBool('isLoggedIn');    // After clearing, navigate to the login screen or any other appropriate screen
     var userEmail = await prefs.getString('userEmail');
+    var loginToken = await prefs.getString('loginToken');
     print("isLoggedIn: $isLoggedIn");
     print("userEmail: $userEmail");
+    print("userEmail: $loginToken");
   }
 
 
@@ -68,14 +75,29 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
     // await prefs.setBool('isLoggedIn', false);    // After clearing, navigate to the login screen or any other appropriate screen
     // await prefs.setString('userEmail', "");    // After clearing, navigate to the login screen or any other appropriate screen
     // context.go("/userLogin"); // Replace '/login' with your actual login screen route
-    sharedPreferences?.remove("isLoggedIn");
-    sharedPreferences?.remove("userEmail");
-    context.pushReplacement("/userLogin"); // Replace '/login' with your actual login screen route
+    // sharedPreferences?.remove("isLoggedIn");
+    // sharedPreferences?.remove("userEmail");
+    // await sharedPreferences?.clear();
+    // await widget.loginToken.clear();
+    context.replace("/userLogin"); // Replace '/login' with your actual login screen route
   }
 
-  void logout() {
+
+
+  Future<void> newlogout(BuildContext context) async {
+    // Clear the login token or any other authentication data
+    // For example, clear from shared preferences or secure storage
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+
+    // Navigate to the login page
+    Navigator.pushNamedAndRemoveUntil(context, '/userlogin', (route) => false);
+  }
+
+  void logoutt() {
     sharedPreferences?.remove("isLoggedIn");
     sharedPreferences?.remove("userEmail");
+    sharedPreferences?.remove("loginToken");
 
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (BuildContext context) => UserLoginPage()),
@@ -93,16 +115,19 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
     });
     _addKeywordProvider = Provider.of<AddKeywordProvider>(context, listen: false);
     _userAboutMEProvider = Provider.of<UserAboutMEProvider>(context, listen: false);
+    _userPreviewProvider = Provider.of<PreviewProvider>(context, listen: false);
     _loadDataForPage(_currentPage);
     super.initState();
     _fetchUserData();
-    _initSharedPreferences();
+    // _initSharedPreferences();
   }
 
   _fetchUserData() async {
     QuerySnapshot userData = await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: widget.emailId).get();
     print("userData; ${userData.docs.first['UserName']}");
+    print("userData.docs:  ${userData.docs.first.id}");
 
+    userdocs = await userData.docs.first.id;
     UserName = await userData.docs.first['UserName'];
     nameController.text = await userData.docs.first['UserName'];
     employerController.text = await userData.docs.first['Employer'];
@@ -111,70 +136,71 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
     LocationController.text = await userData.docs.first['Location'];
     EmployeeNumberController.text = await userData.docs.first['Employee_Number'];
     LineManagerController.text = await userData.docs.first['Line_Manager'];
-  }
+    }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      // appBar: DashboardCommonWidgets().CommonAppBar(context,true,false,false,emailID: widget.emailId,showSettings: widget.isClientLogeddin,showLogout: true),
-      // appBar: DashboardCommonWidgets().CommonAppBar(context,true,true,true,emailID: "fenilpatel120501@gmail.com",showSettings: true,showLogout: true),
-      onDrawerChanged: (isOpened) {
+    @override
+    Widget build(BuildContext context) {
+      return Scaffold(
+        // appBar: DashboardCommonWidgets().CommonAppBar(context,true,false,false,emailID: widget.emailId,showSettings: widget.isClientLogeddin,showLogout: true),
+        // appBar: DashboardCommonWidgets().CommonAppBar(context,true,true,true,emailID: "fenilpatel120501@gmail.com",showSettings: true,showLogout: true),
+        onDrawerChanged: (isOpened) {
 
-      },
-      // key: _scaffoldKey,
-      drawerEnableOpenDragGesture: true ,
-      drawerDragStartBehavior: DragStartBehavior.start,
-      // appBar:AppHelper().CustomAppBar(context),
-      drawerScrimColor: Colors.black26,
-      drawer: Drawer(
-        elevation: 50,
-        child: ListView(
-          children: [
-            SideMenuScreen(),
-          ],
-        ),
-      ),
-      appBar: AppBar(
-        leadingWidth: 100,
-        backgroundColor: Colors.blue,
-        centerTitle: true,
-        title: Text("Solution Inclusion", style: GoogleFonts.montserrat(
-            textStyle: Theme.of(context).textTheme.headlineLarge,
-            fontWeight: FontWeight.bold,
-            color: Colors.white),),
-        actions: [
-          Row(
+        },
+        // key: _scaffoldKey,
+        drawerEnableOpenDragGesture: true ,
+        drawerDragStartBehavior: DragStartBehavior.start,
+        // appBar:AppHelper().CustomAppBar(context),
+        drawerScrimColor: Colors.black26,
+        drawer: Drawer(
+          elevation: 50,
+          child: ListView(
             children: [
-              CircleAvatar(
-                backgroundImage: NetworkImage("https://st3.depositphotos.com/19428878/36416/v/450/depositphotos_364169666-stock-illustration-default-avatar-profile-icon-vector.jpg"),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: UserName==null || widget.emailId==null ? CircularProgressIndicator(color: Colors.white,) : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("${UserName},",style: TextStyle(color: Colors.white),),
-                    Text("${widget.emailId}",style: TextStyle(color: Colors.white),),
-                  ],
-                ),
-              ),
-              SizedBox(width: 15,)
+              SideMenuScreen(),
             ],
           ),
-
-        ],
-      ),
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Expanded(
-            child: PageView(
-              physics: NeverScrollableScrollPhysics(),
-              controller: page,
+        ),
+        appBar: AppBar(
+          leadingWidth: 100,
+          backgroundColor: Colors.blue,
+          centerTitle: true,
+          title: Text("Solution Inclusion", style: GoogleFonts.montserrat(
+              textStyle: Theme.of(context).textTheme.headlineLarge,
+              fontWeight: FontWeight.bold,
+              color: Colors.white),),
+          actions: [
+            Row(
               children: [
-                DashBoardScreen(),
-                AboutMEScreen(),
-                UserLogedInAboutMePage(AdminName: widget.emailId,),
+                CircleAvatar(
+                  backgroundImage: NetworkImage("https://st3.depositphotos.com/19428878/36416/v/450/depositphotos_364169666-stock-illustration-default-avatar-profile-icon-vector.jpg"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: UserName==null || widget.emailId==null ? CircularProgressIndicator(color: Colors.white,) : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("${UserName},",style: TextStyle(color: Colors.white),),
+                      Text("${widget.emailId}",style: TextStyle(color: Colors.white),),
+                    ],
+                  ),
+                ),
+                SizedBox(width: 15,)
+              ],
+            ),
+
+          ],
+        ),
+        body: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+              child: PageView(
+                physics: NeverScrollableScrollPhysics(),
+                controller: page,
+                children: [
+                  // DashBoardScreen(),
+                  UserLogedInAboutMePage(AdminName: widget.emailId,),
+                  AboutMEScreen(),
+                  // UserLogedInAboutMePage(AdminName: widget.emailId,),
               ],
             ),
           ),
@@ -456,28 +482,30 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
             },
             icon: const Icon(Icons.description),
           ),
-          SideMenuItem(
-            priority: 2,
-            title: 'Employee',
-            //badgeColor: Colors.amber,
-            // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
-            tooltipContent: "Employee",
-            onTap: (page, _) {
-              sideMenu.changePage(page);
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.person),
-          ),
+          // SideMenuItem(
+          //   priority: 2,
+          //   title: 'Employee',
+          //   //badgeColor: Colors.amber,
+          //   // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
+          //   tooltipContent: "Employee",
+          //   onTap: (page, _) {
+          //     sideMenu.changePage(page);
+          //     Navigator.pop(context);
+          //   },
+          //   icon: const Icon(Icons.person),
+          // ),
           SideMenuItem(
             priority: 3,
             title: 'Log Out',
             //badgeColor: Colors.amber,
             // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
-            tooltipContent: "DETAILS",
+            tooltipContent: "Log Out",
             onTap: (page, _) {
               showDialog(
                 context: context,
-                builder: (context) => AlertDialog(
+                builder: (context) => Consumer<PreviewProvider>(
+                builder: (c,previewProvider, _){
+                 return AlertDialog(
                   title: Text('Logout Confirmation'),
                   content: Text('Are you sure you want to log out?'),
                   actions: [
@@ -489,18 +517,20 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
                     ),
                     TextButton(
                       onPressed: () async {
-                        Navigator.pop(context);
+                        // Navigator.pop(context);
                         // print("Dialog closed");
-                        setState(() {
-                          _logout();
-                        });
+                        // setState(() {
+                        //   logout(context);
+                        // });
                         // context.go('/userLogin');
+                        previewProvider.userlogout(context);
                         print("Navigated to login screen"); // Debugging: Check if navigation is triggered
                       },
                       child: Text('Logout'),
                     ),
                   ],
-                ),
+                );},
+              )
               );
               },
             icon: const Icon(Icons.logout),
@@ -514,11 +544,6 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
   }
 
   Widget AboutMEScreen(){
-    var selectedPriorityValues = [
-      'Must have',
-      'Nice to have',
-      'No longer needed'
-    ];
     return Scaffold(
       // key: _scaffoldKey,
       backgroundColor: Colors.grey.withOpacity(0.2),
@@ -863,6 +888,28 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
                     InkWell(
                       onTap: () async {
                         // sideMenu.changePage(2);
+                        ProgressDialog.show(context, "Updating User Details", Icons.update);
+                        await ApiRepository().updateUserDetail({
+                          "UserName": nameController.text,
+                          "Employer": employerController.text,
+                          "Division_or_Section": divisionOrSectionController.text,
+                          "Role": RoleController.text,
+                          "Location": LocationController.text,
+                          "Employee_Number": EmployeeNumberController.text,
+                          "Line_Manager": LineManagerController.text,
+
+                        // nameController.text = await userData.docs.first['UserName'];
+                        // employerController.text = await userData.docs.first['Employer'];
+                        // divisionOrSectionController.text = await userData.docs.first['Division_or_Section'];
+                        // RoleController.text = await userData.docs.first['Role'];
+                        // LocationController.text = await userData.docs.first['Location'];
+                        // EmployeeNumberController.text = await userData.docs.first['Employee_Number'];
+                        // LineManagerController.text = await userData.docs.first['Line_Manager'];
+                          /// Add more fields as needed
+                        }, userdocs);
+                        // _loadDataForPage(1);
+                        // Navigator.pop(context);
+                        ProgressDialog.hide();
                       },
                       child: Container(
                         // margin: EdgeInsets.all(10),

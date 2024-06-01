@@ -141,6 +141,7 @@ class _RegisterPageState extends State<RegisterPage> {
       appBar: AppBar(
         backgroundColor: Color(0xff0B0B0B),
         leading: Text(""),
+        centerTitle: true,
         title: InkWell(
           onTap: () {
             context.go('/');
@@ -156,53 +157,53 @@ class _RegisterPageState extends State<RegisterPage> {
               color: Colors.white),
           ),
         ),
-        actions: [
-          // InkWell(
-          //   onTap: () {
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(builder: (context) => RegisterPage()),
-          //     );
-          //   },
-          //   child: Container(
-          //       width: MediaQuery.of(context).size.width * 0.07,
-          //       padding: EdgeInsets.all(15),
-          //       decoration: BoxDecoration(
-          //           borderRadius: BorderRadius.circular(10),
-          //           border: Border.all(color: Colors.blue)
-          //       ),
-          //       child: Text('Register',textAlign: TextAlign.center,style: GoogleFonts.montserrat(
-          //           textStyle: Theme.of(context).textTheme.titleSmall,
-          //           fontWeight: FontWeight.bold,
-          //           color: Colors.white),)),
-          // ),
-          SizedBox(width: 10,),
-          InkWell(
-            onTap: () {
-              context.go('/userLogin');
-              // showEmptyAlert(context,'Email Already Exists',Icons.mark_email_read , Colors.red);
-
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => UserLoginPage()),
-              //   // MaterialPageRoute(builder: (context) => AuthenticateLogin(loginToken: loginToken,)),
-              // );
-            },
-            child: Container(
-                width: MediaQuery.of(context).size.width * 0.07,
-                padding: EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Text('Login',textAlign: TextAlign.center,style: GoogleFonts.montserrat(
-                    textStyle: Theme.of(context).textTheme.titleSmall,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),)),
-          ),
-          SizedBox(width: 10,),
-
-        ],
+        // actions: [
+        //   // InkWell(
+        //   //   onTap: () {
+        //   //     Navigator.push(
+        //   //       context,
+        //   //       MaterialPageRoute(builder: (context) => RegisterPage()),
+        //   //     );
+        //   //   },
+        //   //   child: Container(
+        //   //       width: MediaQuery.of(context).size.width * 0.07,
+        //   //       padding: EdgeInsets.all(15),
+        //   //       decoration: BoxDecoration(
+        //   //           borderRadius: BorderRadius.circular(10),
+        //   //           border: Border.all(color: Colors.blue)
+        //   //       ),
+        //   //       child: Text('Register',textAlign: TextAlign.center,style: GoogleFonts.montserrat(
+        //   //           textStyle: Theme.of(context).textTheme.titleSmall,
+        //   //           fontWeight: FontWeight.bold,
+        //   //           color: Colors.white),)),
+        //   // ),
+        //   SizedBox(width: 10,),
+        //   InkWell(
+        //     onTap: () {
+        //       context.go('/userLogin');
+        //       // showEmptyAlert(context,'Email Already Exists',Icons.mark_email_read , Colors.red);
+        //
+        //       // Navigator.push(
+        //       //   context,
+        //       //   MaterialPageRoute(builder: (context) => UserLoginPage()),
+        //       //   // MaterialPageRoute(builder: (context) => AuthenticateLogin(loginToken: loginToken,)),
+        //       // );
+        //     },
+        //     child: Container(
+        //         width: MediaQuery.of(context).size.width * 0.07,
+        //         padding: EdgeInsets.all(15),
+        //         decoration: BoxDecoration(
+        //           color: Colors.blue,
+        //           borderRadius: BorderRadius.circular(10),
+        //         ),
+        //         child: Text('Login',textAlign: TextAlign.center,style: GoogleFonts.montserrat(
+        //             textStyle: Theme.of(context).textTheme.titleSmall,
+        //             fontWeight: FontWeight.bold,
+        //             color: Colors.white),)),
+        //   ),
+        //   SizedBox(width: 10,),
+        //
+        // ],
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -868,6 +869,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   onPressed: () {
                     Navigator.pop(context);
+                    context.go('/userLogin');
                     nameTextEditingController.clear();
                     emailTextEditingController.clear();
                     employerController.clear();

@@ -35,14 +35,14 @@ class Animal {
   });
 }
 
-class AddThriversScreen extends StatefulWidget {
-  const AddThriversScreen({Key? key}) : super(key: key);
+class AddThriversScreencopy extends StatefulWidget {
+  const AddThriversScreencopy({Key? key}) : super(key: key);
 
   @override
-  State<AddThriversScreen> createState() => _AddThriversScreenState();
+  State<AddThriversScreencopy> createState() => _AddThriversScreencopyState();
 }
 
-class _AddThriversScreenState extends State<AddThriversScreen> {
+class _AddThriversScreencopyState extends State<AddThriversScreencopy> {
 
   CollectionReference thriversCollection = FirebaseFirestore.instance.collection('Thrivers');
 

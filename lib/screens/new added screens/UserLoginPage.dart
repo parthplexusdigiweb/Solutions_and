@@ -4,10 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:thrivers/Network/FirebaseApi.dart';
 import 'package:thrivers/core/apphelper.dart';
 import 'package:thrivers/core/constants.dart';
 import 'package:thrivers/core/progress_dialog.dart';
+import 'package:thrivers/main.dart';
 import 'package:thrivers/screens/new%20added%20screens/NewHomeScreen.dart';
 import 'package:thrivers/screens/new%20added%20screens/UserRegisterPage.dart';
 import 'package:thrivers/screens/new%20added%20screens/thriverLandingScreen.dart';
@@ -33,6 +35,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
       appBar: AppBar(
         backgroundColor: Color(0xff0B0B0B),
         leading: Text(""),
+        centerTitle: true,
         title: InkWell(
           onTap: () {
             context.go('/');
@@ -49,53 +52,53 @@ class _UserLoginPageState extends State<UserLoginPage> {
               color: Colors.white),
           ),
         ),
-        actions: [
-          InkWell(
-            onTap: () {
-              context.go('/userRegister');
-
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => RegisterPage()),
-              // );
-            },
-            child: Container(
-                width: MediaQuery.of(context).size.width * 0.1,
-                padding: EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.blue
-                ),
-                child: Text('Register',textAlign: TextAlign.center,style: GoogleFonts.montserrat(
-                    textStyle: Theme.of(context).textTheme.titleSmall,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),)),
-          ),
-          SizedBox(width: 10,),
-          // InkWell(
-          //
-          //   onTap: () {
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(builder: (context) => UserLoginPage()),
-          //       // MaterialPageRoute(builder: (context) => AuthenticateLogin(loginToken: loginToken,)),
-          //     );
-          //   },
-          //   child: Container(
-          //       width: MediaQuery.of(context).size.width * 0.07,
-          //       padding: EdgeInsets.all(15),
-          //       decoration: BoxDecoration(
-          //         color: Colors.blue,
-          //         borderRadius: BorderRadius.circular(10),
-          //       ),
-          //       child: Text('Login',textAlign: TextAlign.center,style: GoogleFonts.montserrat(
-          //           textStyle: Theme.of(context).textTheme.titleSmall,
-          //           fontWeight: FontWeight.bold,
-          //           color: Colors.white),)),
-          // ),
-          // SizedBox(width: 10,),
-
-        ],
+        // actions: [
+        //   InkWell(
+        //     onTap: () {
+        //       context.go('/userRegister');
+        //
+        //       // Navigator.push(
+        //       //   context,
+        //       //   MaterialPageRoute(builder: (context) => RegisterPage()),
+        //       // );
+        //     },
+        //     child: Container(
+        //         width: MediaQuery.of(context).size.width * 0.1,
+        //         padding: EdgeInsets.all(15),
+        //         decoration: BoxDecoration(
+        //             borderRadius: BorderRadius.circular(10),
+        //             color: Colors.blue
+        //         ),
+        //         child: Text('Register',textAlign: TextAlign.center,style: GoogleFonts.montserrat(
+        //             textStyle: Theme.of(context).textTheme.titleSmall,
+        //             fontWeight: FontWeight.bold,
+        //             color: Colors.white),)),
+        //   ),
+        //   SizedBox(width: 10,),
+        //   // InkWell(
+        //   //
+        //   //   onTap: () {
+        //   //     Navigator.push(
+        //   //       context,
+        //   //       MaterialPageRoute(builder: (context) => UserLoginPage()),
+        //   //       // MaterialPageRoute(builder: (context) => AuthenticateLogin(loginToken: loginToken,)),
+        //   //     );
+        //   //   },
+        //   //   child: Container(
+        //   //       width: MediaQuery.of(context).size.width * 0.07,
+        //   //       padding: EdgeInsets.all(15),
+        //   //       decoration: BoxDecoration(
+        //   //         color: Colors.blue,
+        //   //         borderRadius: BorderRadius.circular(10),
+        //   //       ),
+        //   //       child: Text('Login',textAlign: TextAlign.center,style: GoogleFonts.montserrat(
+        //   //           textStyle: Theme.of(context).textTheme.titleSmall,
+        //   //           fontWeight: FontWeight.bold,
+        //   //           color: Colors.white),)),
+        //   // ),
+        //   // SizedBox(width: 10,),
+        //
+        // ],
       ),
       body: Center(
         child: Column(
@@ -196,6 +199,9 @@ class _UserLoginPageState extends State<UserLoginPage> {
                   Center(
                     child: InkWell(
                       onTap: () async {
+                        final prefs = await SharedPreferences.getInstance();
+                        isloggedIn = await prefs.setBool('isLoggedIn', true);
+                        print("setBoolisloggedIn: $isloggedIn");
                         if(loginTextEditingcontroller.text.isEmpty){showEmptyAlert2(context,"Enter Email to Login","","","OK");}
                       else  if(!loginTextEditingcontroller.text.trim().isValidEmail()){
                           showEmptyAlert2(context,"Enter a Valid Email","${loginTextEditingcontroller.text.trim()} is not a valid email address","${loginTextEditingcontroller.text}","Retype Email Address");
@@ -270,6 +276,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                                 "Logining in\n${loginTextEditingcontroller.text}",
                                 Icons.ice_skating);
                             bool isLoginSuccessful = await ApiRepository().sendLoginMail(loginTextEditingcontroller.text);
+                            // isloggedIn = true;
                             ProgressDialog.hide();
                             if (isLoginSuccessful) {
                               // showEmptyAlert(context,"Email Sent\nSuccessfully\nYou Will Receive a link to login\nto your dashboard in your email",Icons.mark_email_read_outlined, Colors.green);
@@ -460,7 +467,8 @@ class _UserLoginPageState extends State<UserLoginPage> {
                   primary: Colors.black,
                 ),
                 onPressed: () {
-                  Navigator.pop(context);
+                  message == "Something went wrong" ? Navigator.pop(context) : context.go("/userRegister");
+
                 },
                 child: Text(
                   "Okay",

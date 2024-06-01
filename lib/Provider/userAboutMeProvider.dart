@@ -57,6 +57,15 @@ class UserAboutMEProvider with ChangeNotifier{
   String? downloadURL;
   Uint8List? fileBytes;
 
+  bool _isHintTextVisible  = false;
+
+  bool get isHintTextVisible  => _isHintTextVisible ;
+
+  void isHintText(value) {
+    _isHintTextVisible = value;
+    notifyListeners();
+  }
+
   void pickFiles() async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.any,

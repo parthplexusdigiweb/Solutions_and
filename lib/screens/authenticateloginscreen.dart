@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:thrivers/screens/homescreentab.dart';
 import 'package:thrivers/screens/new%20added%20screens/NewHomeScreen.dart';
 import 'package:thrivers/screens/new%20added%20screens/UserAboutMePage.dart';
@@ -19,7 +20,9 @@ class AuthenticateLogin extends StatefulWidget {
 
   final String loginToken;
 
-  const AuthenticateLogin({Key? key, required this.loginToken}) : super(key: key);
+  AuthenticateLogin({required this.loginToken});
+
+
 
   @override
   State<AuthenticateLogin> createState() => _AuthenticateLoginState();
@@ -34,6 +37,8 @@ class _AuthenticateLoginState extends State<AuthenticateLogin> {
     // TODO: implement initState
     authenticationFuture = authenticate();
     super.initState();
+    _checkLoginStatus();
+    print("authenticationFuture: ${widget.loginToken}");
   }
 
   @override
@@ -66,20 +71,24 @@ class _AuthenticateLoginState extends State<AuthenticateLogin> {
             final data = snapshot.data as String;
             print("The Email ID");
             print(data);
-            if(RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(data)){
+            if(RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(data) && isloggedIn==true){
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                sharedPreferences?.setBool("isLoggedIn",true);
-                sharedPreferences?.setString("userEmail",data);
+              // var abc =  sharedPreferences?.setBool("isLoggedIn",true);
+              // var www = sharedPreferences?.setString("userEmail",data);
+
+              // print("abc www: ${abc}");
+              // print("abc www: ${www}");
+                // sharedPreferences?.setString("userEmail",data);
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (BuildContext context) {
                       // return NewHomeScreenTabs();
-                      return UserAboutMePage(isClientLogeddin:true, emailId: data);
+                      // return UserAboutMePage(isClientLogeddin: true, emailId: data, loginToken: widget.loginToken);
+                      return UserAboutMePage(isClientLogeddin: isloggedIn, emailId: data, loginToken: widget.loginToken);
                     },
                   ),
                 );
               }
-
               );
               return Container(
                 color: Colors.black,
@@ -111,6 +120,8 @@ class _AuthenticateLoginState extends State<AuthenticateLogin> {
                   ),
                 ),
               );
+            } else{
+              context.go('/userlogin');
             }
             return Scaffold(
               body: Center(
@@ -168,13 +179,24 @@ class _AuthenticateLoginState extends State<AuthenticateLogin> {
     );
   }
 
+  Future<void> _checkLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isloggedIn = prefs.getBool('isLoggedIn') ?? false;
+      print("getBoolisloggedIn: $isloggedIn");
+    });
+  }
   Future<String> authenticate() async {
-    print(widget.loginToken);
+    print("widget.loginToken ${widget.loginToken}");
     Map valueMap = EncryptData.verifyToken(widget.loginToken);
     String loginResponse = valueMap["email"];
     print("loginResponse");
     print(loginResponse);
+    // checkIfLoggedIn();
+    // print(sharedPreferences?.getString('loginToken'));
+
     return loginResponse;
+
   }
 }
 

@@ -7,12 +7,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:thrivers/Provider/AddKeywordsProvider.dart';
+import 'package:thrivers/Provider/LoginAuthProvider.dart';
 import 'package:thrivers/Provider/provider_for_challenges.dart';
 import 'package:thrivers/Provider/userAboutMeProvider.dart';
 import 'package:thrivers/screens/addchallengesScreen.dart';
 import 'package:thrivers/screens/addthriverscreen.dart';
 import 'package:thrivers/screens/authenticateloginscreen.dart';
 import 'package:thrivers/screens/homescreentab.dart';
+import 'package:thrivers/screens/new%20added%20screens/AdminAboutMePage.dart';
 import 'package:thrivers/screens/new%20added%20screens/NewHomeScreen.dart';
 import 'package:thrivers/screens/new%20added%20screens/UserAboutMePage.dart';
 import 'package:thrivers/screens/new%20added%20screens/UserLoginPage.dart';
@@ -21,6 +23,7 @@ import 'package:thrivers/screens/not%20used%20screen/landingscreen.dart';
 import 'package:thrivers/screens/not%20used%20screen/loginscreen.dart';
 import 'package:thrivers/screens/new%20added%20screens/SuperAdminLoginScreen.dart';
 import 'package:thrivers/screens/new%20added%20screens/thriverLandingScreen.dart';
+import 'package:thrivers/screens/not%20used%20screen/newscreens.dart';
 import 'package:thrivers/socketConnection.dart';
 import 'package:url_strategy/url_strategy.dart';
 
@@ -32,6 +35,8 @@ import 'firebase_options.dart';
 import 'dart:io';
 
 SharedPreferences? sharedPreferences;
+
+bool? isloggedIn;
 
 /// fenil new
 Future<void> main() async {
@@ -59,6 +64,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => ChallengesProvider()),
         ChangeNotifierProvider(create: (_) => UserAboutMEProvider()),
         ChangeNotifierProvider(create: (_) => PreviewProvider()),
+        ChangeNotifierProvider(create: (_) => UserSession()),
       ],
         child: const MyApp())
       );
@@ -69,14 +75,18 @@ Future<Widget> _buildAdminScreen(BuildContext context, GoRouterState state) asyn
   var username = await ApiRepository().getSavedUsername(); // Implement getSavedUsername() to retrieve the username if logged in
   if (loggedIn) {
     return NewHomeScreenTabs(AdminName: username);
+    // return HomePage();
   }
   else {
     return SuperAdminLoginScreen();
   }
 }
 
+
 /// The route configuration.
 final GoRouter _router = GoRouter(
+  // initialLocation: '/admin',
+
   routes: <RouteBase>[
     GoRoute(
       path: '/',
@@ -132,20 +142,20 @@ final GoRouter _router = GoRouter(
         );
       },
       routes: <RouteBase>[
-        GoRoute(
-          path: 'authenticate',
-   // https://retailhub-ea728.web.app/loginTokeneyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9ashrafeyJlbWFpbCI6ImFzaHJhZmtzYWxpbTFAZ21haWwuY29tIiwiaWF0IjoxNzAzMzY0NDQ2LCJpc3MiOiJodHRwczovL2dpdGh1Yi5jb20vam9uYXNyb3Vzc2VsL2RhcnRfanNvbndlYnRva2VuIn0ashrafle57WUoi1zzp92I9O3flYoCAZZYX98SuwfzLcZP54Ng
-          builder: (BuildContext context, GoRouterState state) {
-            print(state.extra);
-            print(state.pathParameters);
-            print(state.uri.queryParameters['loginToken']);
-            final loginToken = state.uri.queryParameters['loginToken']!;
-            print("From RouteBase : "+loginToken);
-            return AuthenticateLogin(
-              loginToken: loginToken,
-            );
-          },
-        ),
+   //      GoRoute(
+   //        path: 'authenticate',
+   // // https://retailhub-ea728.web.app/loginTokeneyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9ashrafeyJlbWFpbCI6ImFzaHJhZmtzYWxpbTFAZ21haWwuY29tIiwiaWF0IjoxNzAzMzY0NDQ2LCJpc3MiOiJodHRwczovL2dpdGh1Yi5jb20vam9uYXNyb3Vzc2VsL2RhcnRfanNvbndlYnRva2VuIn0ashrafle57WUoi1zzp92I9O3flYoCAZZYX98SuwfzLcZP54Ng
+   //        builder: (BuildContext context, GoRouterState state) {
+   //          print(state.extra);
+   //          print(state.pathParameters);
+   //          print(state.uri.queryParameters['loginToken']);
+   //          final loginToken = state.uri.queryParameters['loginToken']!;
+   //          print("From RouteBase : "+loginToken);
+   //          return AuthenticateLogin(
+   //            loginToken: loginToken,
+   //          );
+   //        },
+   //      ),
 
         ///admin
         // GoRoute(
@@ -190,13 +200,31 @@ final GoRouter _router = GoRouter(
           builder: (BuildContext context, GoRouterState state) {
             return  UserLoginPage();
           },
+          routes: [
+            GoRoute(
+              path: 'authenticate',
+              // https://retailhub-ea728.web.app/loginTokeneyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9ashrafeyJlbWFpbCI6ImFzaHJhZmtzYWxpbTFAZ21haWwuY29tIiwiaWF0IjoxNzAzMzY0NDQ2LCJpc3MiOiJodHRwczovL2dpdGh1Yi5jb20vam9uYXNyb3Vzc2VsL2RhcnRfanNvbndlYnRva2VuIn0ashrafle57WUoi1zzp92I9O3flYoCAZZYX98SuwfzLcZP54Ng
+              builder: (BuildContext context, GoRouterState state) {
+                print("state.extra: ${state.extra}");
+                print("state.pathParameters: ${state.pathParameters}");
+                print("loginToken : ${state.uri.queryParameters['loginToken']}");
+                final loginToken = state.uri.queryParameters['loginToken']!;
+                print("From RouteBase : "+loginToken);
 
+                return AuthenticateLogin(
+                  loginToken: loginToken,
+                );
+              },
+            ),
+          ]
         ),
 
         GoRoute(
           path: 'userhome',
           builder: (BuildContext context, GoRouterState state) {
-            return  UserAboutMePage(isClientLogeddin: true, emailId: "fenilpatel120501@gmail.comm");
+            // return  UserAboutMePage(isClientLogeddin: true, emailId: "fenilpatel120501@gmail.com");
+            return  UserAboutMePage(isClientLogeddin: isloggedIn, emailId: "pgajdhar@gmail.com");
+            // return  UserAboutMePage(isClientLogeddin: isloggedIn, emailId: "mthlondon@gmail.com");
           },
 
         ),
@@ -205,6 +233,61 @@ final GoRouter _router = GoRouter(
     ),
   ],
 );
+
+final GoRouter _newrouter = GoRouter(
+  initialLocation: 'admin',
+  routes: [
+    GoRoute(
+        path: '/admin',
+        builder: (context, state) => SuperAdminLoginScreen(),
+        routes: [
+          GoRoute(
+            path: '/dashboard',
+            builder: (context, state) => NewHomeScreenTabs(),
+          ),
+          GoRoute(
+            path: 'report',
+            builder: (context, state) => AdminAboutMePage(),
+          ),
+          GoRoute(
+            path: 'solutions',
+            builder: (context, state) => AddThriversScreen(),
+          ),
+          GoRoute(
+            path: 'challenges',
+            builder: (context, state) => AddChallengesScreen(),
+          ),
+        ]
+    ),
+    GoRoute(
+        path: '/userlogin',
+        builder: (context, state) => UserLoginPage(),
+        routes: [
+          GoRoute(
+            path: 'dashboard',
+            builder: (BuildContext context, GoRouterState state) {
+              print(state.extra);
+              print(state.pathParameters);
+              print(state.uri.queryParameters['loginToken']);
+              final loginToken = state.uri.queryParameters['loginToken']!;
+              print("From RouteBase : "+loginToken);
+              bool isloggedIn = true;
+
+              return AuthenticateLogin(
+                loginToken: loginToken,
+              );
+            },
+          ),
+        ]
+    ),
+
+    GoRoute(
+      path: '/userRegister',
+      builder: (context, state) => RegisterPage(),)
+    // Add other routes as needed
+  ],
+);
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

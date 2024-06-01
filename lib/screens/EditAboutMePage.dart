@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:html' as html;
+import 'dart:io';
 
 import 'package:chat_bubbles/bubbles/bubble_special_three.dart';
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -49,6 +51,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
 
 
   TextEditingController searchEmailcontroller = TextEditingController();
+  TextEditingController DuplicatePurposetextController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController employerController = TextEditingController();
   TextEditingController divisionOrSectionController = TextEditingController();
@@ -57,11 +60,11 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
   TextEditingController EmployeeNumberController = TextEditingController();
   TextEditingController LineManagerController = TextEditingController();
   TextEditingController mycircumstancesController = TextEditingController();
+  TextEditingController updatemycircumstancesController = TextEditingController();
   TextEditingController AboutMeLabeltextController = TextEditingController();
   TextEditingController AboutMeDescriptiontextController = TextEditingController();
   TextEditingController AboutMeDatetextController = TextEditingController();
   TextEditingController AboutMeUseFulInfotextController = TextEditingController();
-  TextEditingController SendNametextController = TextEditingController();
   TextEditingController CopySendNametextController = TextEditingController();
   TextEditingController SendEmailtextController = TextEditingController();
   TextEditingController CopySendEmailtextController = TextEditingController();
@@ -89,8 +92,10 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
 
   // DateTime date = DateTime.now();
   // final DateFormat formatter = DateFormat('dd MMMM yyyy');
-  var formattedDate = DateFormat('dd MMMM yyyy, HH:mm a').format(DateTime.now());
 
+  QuillController _controller = QuillController(
+    document: Document(),
+    selection: TextSelection.collapsed(offset: 0),);
 
   List<SolutionModel> solutions = [];
   List<ChallengesModel> Challenges = [];
@@ -103,24 +108,6 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
   var selectedEmail,AB_Status;
   String About_Me_Label = "";
   var resultString,solutionresultString;
-
-  String messages = """
-Dear LMN,
-
-Thank you for recognising that our organisation performs better, and we achieve more together, when each of us feels safe and open to share what we need to be our best in the roles we are asked and agree to perform. This communication sets out what I think it would be helpful for you to know about me and includes what I believe helps me thrive, so that I can perform to my best, both for me and for LMN.
-
-In relation to performing to my very best, both to help me and LMN to achieve the best we can, on the next two pages I have set out:
-• information that I think it is helpful for me to share with my Team Leader and team colleagues, and
-• actions and adjustments that I’ve identified can help me perform to my best in my role for LMN.
-
-Next steps:
-I will arrange to have a meeting with my [Team Leader]/[occupational health]/[relevant HR person] to discuss my requests in person. This request includes accommodations that I view as reasonable adjustments under the Equality Act 2010.
-
-Thank you for being open to understanding me better and for considering my requests.
-
-Signed
-Date
-""";
 
 
   List<String> emailList = [];
@@ -185,6 +172,7 @@ Date
       _userAboutMEProvider.EditSolutionInPlaceadd(_previewProvider.PreviewSolutionStillNeeded,_previewProvider.PreviewSolutionNotNeededAnyMore,
           _previewProvider.PreviewSolutionNiceToHave,_previewProvider.PreviewSolutionMustHave);
       About_Me_Label = widget.aboutMeData["About_Me_Label"];
+      _controller.formatSelection(Attribute.ul);
     });
   }
 
@@ -691,7 +679,8 @@ Date
                                 print("abccccc; ${abc['AB_id'].runtimeType}");
                                 var AB_id = abc['AB_id'] + 1;
 
-                                await widget.duplicateDocument(context,documentId,AB_id);
+                                // await widget.duplicateDocument(context,documentId,AB_id);
+                                showDuplicateDialogBox(documentId);
                               },
                               child: Container(
                                 margin: EdgeInsets.all(10),
@@ -713,7 +702,7 @@ Date
                                       Expanded(
                                         child: Text(
                                           // 'Solutions',
-                                          'Create reports to share',
+                                          'Create new reports to share',
                                           overflow: TextOverflow.ellipsis,
                                           style: GoogleFonts.montserrat(
                                               textStyle:
@@ -820,6 +809,7 @@ Date
                               _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
                               _previewProvider.PreviewSolutionNiceToHave.clear();
                               _previewProvider.PreviewSolutionMustHave.clear();
+                              _previewProvider.PurposeOfReporttextController.clear();
                               widget.refreshPage();
                               Navigator.pop(context);
                               widget.page.jumpToPage(1);
@@ -883,7 +873,7 @@ Date
                                     Expanded(
                                       child: Text(
                                         // 'Solutions',
-                                        'Medical and personal document',
+                                        'Medicals and personals document',
                                         overflow: TextOverflow.ellipsis,
                                         style: GoogleFonts.montserrat(
                                             textStyle:
@@ -968,6 +958,9 @@ Date
                         // userAboutMEProvider.editpreviewKeywordssss.clear();
                         // userAboutMEProvider.editpreviewtags.clear();
                         // userAboutMEProvider.editpreview = null;
+                        _previewProvider.clearCCRecipient();
+                        _previewProvider.PurposeOfReporttextController.clear();
+                        _previewProvider.isOfficial = null;
                         widget.refreshPage();
                         Navigator.pop(context);
                       },
@@ -976,13 +969,154 @@ Date
               ),
               content: SizedBox(
                 width: double.maxFinite,
-                child: PreviewPage(),
+                child: PreviewPage(widget.aboutMeData),
           )
           );
           }));
         }
     );
   }
+
+  void showDuplicateDialogBox(aboutMeData){
+    showDialog(
+        context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+            // title: Text("Want to duplicate report?", style: GoogleFonts.lato(
+            //     textStyle: Theme.of(context).textTheme.titleMedium,
+            //     fontStyle: FontStyle.italic,
+            //     fontWeight: FontWeight.bold
+            // )),
+            content:  Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text("Purpose of report: ", style: GoogleFonts.lato(
+                    textStyle: Theme.of(context).textTheme.titleSmall,
+                    // fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.bold
+                )),
+                Flexible(
+                  child: TextField(
+                    controller: DuplicatePurposetextController,
+                    onChanged: (value) {
+                      // _previewProvider.updatetitle(value);
+                    },
+                    style: GoogleFonts.lato(
+                        textStyle: Theme.of(context).textTheme.bodyMedium,
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black),
+                    decoration: InputDecoration(
+                      hintText: "My discussion with..." ,
+                      contentPadding: EdgeInsets.all(15),
+                      // focusedBorder: OutlineInputBorder(
+                      //     borderSide: BorderSide(color: Colors.black),
+                      //     borderRadius: BorderRadius.circular(10)),
+                      // border: OutlineInputBorder(
+                      //     borderSide: BorderSide(color: Colors.black12),
+                      //     borderRadius: BorderRadius.circular(10)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              InkWell(
+                onTap: (){
+                  Navigator.pop(context);
+                  DuplicatePurposetextController.clear();
+                },
+                child:Container(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  width: MediaQuery.of(context).size.width * .15,
+                  decoration: BoxDecoration(
+                    // color:Colors.blue ,
+                    border: Border.all(
+                        color:Colors.blue ,
+                        width: 1.0),
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: Center(
+                    child:Text(
+                      'Cancel',
+                      style: GoogleFonts.montserrat(
+                        textStyle:
+                        Theme
+                            .of(context)
+                            .textTheme
+                            .titleSmall,
+                        fontWeight: FontWeight.bold,
+                        color:Colors.blue ,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () async {
+                  if(DuplicatePurposetextController.text.isEmpty){
+                    toastification.show(context: context,
+                        title: Text('Add purpose of report to proceed.'),
+                        autoCloseDuration: Duration(milliseconds: 2500),
+                        alignment: Alignment.bottomCenter,
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                        icon: Icon(Icons.error, color: Colors.white,),
+                        animationDuration: Duration(milliseconds: 1000),
+                        showProgressBar: false
+                    );
+                  }
+                  else {
+                    QuerySnapshot querySnapshots = await FirebaseFirestore
+                        .instance
+                        .collection('AboutMe')
+                        .orderBy('AB_id', descending: true)
+                        .limit(1)
+                        .get();
+                    final abc = querySnapshots.docs.first;
+                    print("abccccc; ${abc['AB_id']}");
+                    print("abccccc; ${abc['AB_id'].runtimeType}");
+                    var AB_id = abc['AB_id'] + 1;
+                    setState(() {
+                      widget.duplicateDocument(context, aboutMeData, AB_id,
+                          DuplicatePurposetextController.text);
+                    });
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    DuplicatePurposetextController.clear();
+                  }
+                },
+                child:Container(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  width: MediaQuery.of(context).size.width * .15,
+                  decoration: BoxDecoration(
+                    color:Colors.blue ,
+                    border: Border.all(
+                        color:Colors.blue ,
+                        width: 1.0),
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: Center(
+                    child:Text(
+                      'Proceed',
+                      style: GoogleFonts.montserrat(
+                        textStyle:
+                        Theme
+                            .of(context)
+                            .textTheme
+                            .titleSmall,
+                        fontWeight: FontWeight.bold,
+                        color:Colors.white ,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          );
+        }
+    );}
 
   Widget AboutmeFormpage(context,aboutMeData) {
 
@@ -1017,6 +1151,11 @@ Date
     AboutMeDatetextController.text = aboutMeData['AB_Date']==null ? "" : aboutMeData['AB_Date'];
     AboutMeUseFulInfotextController.text = aboutMeData['AB_Useful_Info']==null ? "" : aboutMeData['AB_Useful_Info'];
     AboutMeDescriptiontextController.text = aboutMeData['AB_Description']==null ? "" : aboutMeData['AB_Description'];
+
+
+    _previewProvider.PurposeOfReporttextController.text = aboutMeData['Purpose_of_report']==null ? "" : aboutMeData['Purpose_of_report'];
+
+    _previewProvider.isOfficial = aboutMeData['Purpose']==null ? "" : aboutMeData['Purpose'];
 
     // documentId = aboutMeData.id;
 
@@ -1762,7 +1901,7 @@ Date
     );
   }
 
-  Widget AssesmentAssistant() {
+  Widget AssesmentAssistant(){
     return SingleChildScrollView();
   }
 
@@ -2325,7 +2464,7 @@ Date
                             var q1 = "1. About me and my circumstance: ${mycircumstancesController.text}";
                             var q2 = "2. My strengths that I want to have the opportunity to use in my role: ${MystrengthsController.text}";
                             var q3 = "3. What I value about [my organisation] and workplace environment that helps me perform to my best: ${myOrganisationController.text}";
-                            //
+
                             // var defaulttext,defaulttextq2 ;
                             // defaulttext = q1+" "+ q2+" " +q3;//"${q1}+${q2}\n${q3}" ;
                             // // defaulttext = defaulttext +""+ "where xxx = ${originaltextEditingController.text.toString()}";
@@ -4584,28 +4723,23 @@ Date
 
   /// backup previwpage
 
-  Widget PreviewPage(){
+  Widget PreviewPage(aboutMeData){
     return Consumer<PreviewProvider>(
         builder: (c,previewProvider, _){
 
-
-
           String message = """
-Dear ${employerController.text},
+Thank you to ${employerController.text}....
 
-Thank you for recognising that our organisation performs better, and we achieve more together, when each of us feels safe and open to share what we need to be our best in the roles we are asked and agree to perform. This communication sets out what I think it would be helpful for you to know about me and includes what I believe helps me thrive, so that I can perform to my best, both for me and for ${employerController.text}.
+… for recognising that our organisation performs better, and we achieve more together,when each of us feels safe and open to share what we need in order to be our best in the roles we are asked and agree to perform.
 
-In relation to performing to my very best, both to help me and ${employerController.text} to achieve the best we can, on the next two pages I have set out:
-• information that I think it is helpful for me to share with my Team Leader and team colleagues, and
-• actions and adjustments that I’ve identified can help me perform to my best in my role for ${employerController.text}.
+This document sets out what I think it would be helpful for you to know about me and includes information about what I believe helps me to thrive, so that I can perform to my  best, both for me and for ${employerController.text}.
 
-Next steps:
-I will arrange to have a meeting with my ${LineManagerController.text} to discuss my requests in person. This request includes accommodations that I view as reasonable adjustments under the Equality Act 2010.
+Next steps
+
+I will arrange a meeting with my [you]/[occupational health]/[${LineManagerController.text}] to discuss myrequests in person, and to ascertain which are possible for me to action personally and which ${employerController.text} is able to provide for me. My requests include workplaceaccommodations that I view as reasonable adjustments under the Equality Act 2010.
 
 Thank you for being open to understanding me better and for considering my requests.
 
-Signed
-Date
 """;
 
           AboutMeDescriptiontextController.text.isEmpty ? AboutMeDescriptiontextController.text = message : "";
@@ -4623,96 +4757,297 @@ Date
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 5,),
-                  // SizedBox(height: 20,),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    // crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
 
-                      Container(
-                        width: MediaQuery.of(context).size.width * .1,
-                        child: Text("Report file name :   ", style: GoogleFonts.lato(
-                            textStyle: Theme.of(context).textTheme.titleMedium,
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.bold
-                        )),
+                  Container(
+                    padding: EdgeInsets.all(5),
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black),
+                    ),
+                    child: Text("Performing to my best in my role ${employerController.text} ",
+                        style: GoogleFonts.lato(fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                            color: Colors.blue)),
+                  ),
+
+                  SizedBox(height: 10,),
+
+                  Container(
+                    height: 45 ,
+                    // margin: EdgeInsets.all(5),
+                    // width: MediaQuery.of(context).size.width * .25,
+                    child: TextField(
+                      controller: previewProvider.PurposeOfReporttextController,
+                      onChanged: (value) {
+                        // _previewProvider.updatetitle(value);
+                        AboutMeLabeltextController.text = previewProvider.PurposeOfReporttextController.text.length > 50
+                            ? previewProvider.PurposeOfReporttextController.text.substring(0, 50)
+                            : previewProvider.PurposeOfReporttextController.text;
+                      },
+                      style: GoogleFonts.lato(
+                          textStyle: Theme.of(context).textTheme.bodySmall,
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24,
+                          color: Colors.blue),
+                      decoration: InputDecoration(
+                        hintText: "My discussion with ...." ,
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black),
+                            borderRadius: BorderRadius.circular(10)),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black12),
+                            borderRadius: BorderRadius.circular(10)),
                       ),
+                    ),
+                  ),
 
-                      Flexible(
+                  SizedBox(height: 10,),
+
+
+                  Row(
+                    children: [
+                      InkWell(
+                        onTap: (){
+                          previewProvider.updatePurposeofReport(LineManagerController.text);
+                          AboutMeLabeltextController.text = previewProvider.PurposeOfReporttextController.text.length > 50
+                              ? previewProvider.PurposeOfReporttextController.text.substring(0, 50)
+                              : previewProvider.PurposeOfReporttextController.text;
+                          previewProvider.purpose("Official");
+
+                        },
                         child: Container(
-                          height: 40,
-                          width: MediaQuery.of(context).size.width * .25,
-                          child: TextField(
-                            controller: AboutMeLabeltextController,
-                            onChanged: (value) {
-                              _previewProvider.updatetitle(value);
-                            },
-                            style: GoogleFonts.lato(
-                                textStyle: Theme.of(context).textTheme.bodySmall,
-                                fontStyle: FontStyle.italic,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black),
-                            decoration: InputDecoration(
-                              hintText: " - draft communication to " ,
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black),
-                                  borderRadius: BorderRadius.circular(10)),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black12),
-                                  borderRadius: BorderRadius.circular(10)),
+                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                          // width: MediaQuery.of(context).size.width * .15,
+                          decoration: BoxDecoration(
+                            color:Colors.blue ,
+                            border: Border.all(
+                                color:Colors.blue ,
+                                width: 1.0),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Center(
+                            child:Text(
+                              'Official communication to my employer',
+                              style: GoogleFonts.montserrat(
+                                textStyle:
+                                Theme
+                                    .of(context)
+                                    .textTheme
+                                    .titleSmall,
+                                fontWeight: FontWeight.bold,
+                                color:Colors.white ,
+                              ),
                             ),
                           ),
                         ),
                       ),
 
-                       // SizedBox(width: 10,),
-                      //
-                      // InkWell(
-                      //   onTap: () async {
-                      //     // sideMenu.changePage(2);
-                      //     // page.jumpToPage(1);
-                      //   },
-                      //   child: Container(
-                      //     // margin: EdgeInsets.all(10),
-                      //     padding: EdgeInsets.all(5),
-                      //     height: 40,
-                      //     width: MediaQuery.of(context).size.width * 0.15,
-                      //     decoration: BoxDecoration(
-                      //       // color: Colors.white,
-                      //       border: Border.all(color:primaryColorOfApp, width: 1.0),
-                      //       borderRadius: BorderRadius.circular(10.0),
-                      //     ),
-                      //     child: Row(
-                      //       mainAxisAlignment: MainAxisAlignment.center,
-                      //       crossAxisAlignment: CrossAxisAlignment.center,
-                      //       children: [
-                      //         Icon(Icons.insert_drive_file,color: Colors.black,size: 20,),
-                      //         SizedBox(width: 5,),
-                      //         Expanded(
-                      //           child: Text(
-                      //             // 'Thrivers',
-                      //             'For Someone Else',
-                      //             overflow: TextOverflow.ellipsis,
-                      //             style: GoogleFonts.montserrat(
-                      //                 textStyle:
-                      //                 Theme.of(context).textTheme.bodySmall,
-                      //                 color: Colors.black),
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      //
-                      // ),
+                      SizedBox(width: 10,),
 
+                      InkWell(
+                        onTap: (){
+                          previewProvider.updateOtherCommuniation(nameController.text,LineManagerController.text);
+                          AboutMeLabeltextController.text = previewProvider.PurposeOfReporttextController.text.length > 50
+                              ? previewProvider.PurposeOfReporttextController.text.substring(0, 50)
+                              : previewProvider.PurposeOfReporttextController.text;
+                          previewProvider.purpose("Others");
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                          // width: MediaQuery.of(context).size.width * .15,
+                          decoration: BoxDecoration(
+                            color:Colors.blue ,
+                            border: Border.all(
+                                color:Colors.blue ,
+                                width: 1.0),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Center(
+                            child:Text(
+                              'Other communication',
+                              style: GoogleFonts.montserrat(
+                                textStyle:
+                                Theme
+                                    .of(context)
+                                    .textTheme
+                                    .titleSmall,
+                                fontWeight: FontWeight.bold,
+                                color:Colors.white ,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
 
-                  // Divider(color: Colors.black26,),
+                  // Row(
+                  //   mainAxisSize: MainAxisSize.min,
+                  //   mainAxisAlignment: MainAxisAlignment.start,
+                  //   // crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children: [
+                  //
+                  //     Container(
+                  //       width: MediaQuery.of(context).size.width * .12,
+                  //       child: Text("Purpose of report:   ", style: GoogleFonts.lato(
+                  //           textStyle: Theme.of(context).textTheme.titleMedium,
+                  //           fontStyle: FontStyle.italic,
+                  //           fontWeight: FontWeight.bold
+                  //       )),
+                  //     ),
+                  //
+                  //     Flexible(
+                  //       child: Container(
+                  //         height: 40,
+                  //         width: MediaQuery.of(context).size.width * .25,
+                  //         child: TextField(
+                  //           controller: previewProvider.PurposeOfReporttextController,
+                  //           onChanged: (value) {
+                  //             // _previewProvider.updatetitle(value);
+                  //             AboutMeLabeltextController.text = previewProvider.PurposeOfReporttextController.text.length > 50
+                  //                 ? previewProvider.PurposeOfReporttextController.text.substring(0, 50)
+                  //                 : previewProvider.PurposeOfReporttextController.text;
+                  //           },
+                  //           style: GoogleFonts.lato(
+                  //               textStyle: Theme.of(context).textTheme.bodySmall,
+                  //               fontStyle: FontStyle.italic,
+                  //               fontWeight: FontWeight.w400,
+                  //               color: Colors.black),
+                  //           decoration: InputDecoration(
+                  //             hintText: "My discussion with ...." ,
+                  //             focusedBorder: OutlineInputBorder(
+                  //                 borderSide: BorderSide(color: Colors.black),
+                  //                 borderRadius: BorderRadius.circular(10)),
+                  //             border: OutlineInputBorder(
+                  //                 borderSide: BorderSide(color: Colors.black12),
+                  //                 borderRadius: BorderRadius.circular(10)),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //
+                  //     SizedBox(width: 20,),
+                  //
+                  //     InkWell(
+                  //       onTap: (){
+                  //         previewProvider.updatePurposeofReport(LineManagerController.text);
+                  //         AboutMeLabeltextController.text = previewProvider.PurposeOfReporttextController.text.length > 50
+                  //             ? previewProvider.PurposeOfReporttextController.text.substring(0, 50)
+                  //             : previewProvider.PurposeOfReporttextController.text;
+                  //         previewProvider.purpose("Official");
+                  //
+                  //       },
+                  //       child: Container(
+                  //         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  //         // width: MediaQuery.of(context).size.width * .15,
+                  //         decoration: BoxDecoration(
+                  //           color:Colors.blue ,
+                  //           border: Border.all(
+                  //               color:Colors.blue ,
+                  //               width: 1.0),
+                  //           borderRadius: BorderRadius.circular(10.0),
+                  //         ),
+                  //         child: Center(
+                  //           child:Text(
+                  //             'Official communication to my employer',
+                  //             style: GoogleFonts.montserrat(
+                  //               textStyle:
+                  //               Theme
+                  //                   .of(context)
+                  //                   .textTheme
+                  //                   .titleSmall,
+                  //               fontWeight: FontWeight.bold,
+                  //               color:Colors.white ,
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //
+                  //     SizedBox(width: 10,),
+                  //
+                  //     InkWell(
+                  //       onTap: (){
+                  //         previewProvider.updateOtherCommuniation();
+                  //         AboutMeLabeltextController.text = previewProvider.PurposeOfReporttextController.text.length > 50
+                  //             ? previewProvider.PurposeOfReporttextController.text.substring(0, 50)
+                  //             : previewProvider.PurposeOfReporttextController.text;
+                  //         previewProvider.purpose("Others");
+                  //
+                  //       },
+                  //       child: Container(
+                  //         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  //         // width: MediaQuery.of(context).size.width * .15,
+                  //         decoration: BoxDecoration(
+                  //           color:Colors.blue ,
+                  //           border: Border.all(
+                  //               color:Colors.blue ,
+                  //               width: 1.0),
+                  //           borderRadius: BorderRadius.circular(10.0),
+                  //         ),
+                  //         child: Center(
+                  //           child:Text(
+                  //             'Other communication',
+                  //             style: GoogleFonts.montserrat(
+                  //               textStyle:
+                  //               Theme
+                  //                   .of(context)
+                  //                   .textTheme
+                  //                   .titleSmall,
+                  //               fontWeight: FontWeight.bold,
+                  //               color:Colors.white ,
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //
+                  //      // SizedBox(width: 10,),
+                  //     //
+                  //     // InkWell(
+                  //     //   onTap: () async {
+                  //     //     // sideMenu.changePage(2);
+                  //     //     // page.jumpToPage(1);
+                  //     //   },
+                  //     //   child: Container(
+                  //     //     // margin: EdgeInsets.all(10),
+                  //     //     padding: EdgeInsets.all(5),
+                  //     //     height: 40,
+                  //     //     width: MediaQuery.of(context).size.width * 0.15,
+                  //     //     decoration: BoxDecoration(
+                  //     //       // color: Colors.white,
+                  //     //       border: Border.all(color:primaryColorOfApp, width: 1.0),
+                  //     //       borderRadius: BorderRadius.circular(10.0),
+                  //     //     ),
+                  //     //     child: Row(
+                  //     //       mainAxisAlignment: MainAxisAlignment.center,
+                  //     //       crossAxisAlignment: CrossAxisAlignment.center,
+                  //     //       children: [
+                  //     //         Icon(Icons.insert_drive_file,color: Colors.black,size: 20,),
+                  //     //         SizedBox(width: 5,),
+                  //     //         Expanded(
+                  //     //           child: Text(
+                  //     //             // 'Thrivers',
+                  //     //             'For Someone Else',
+                  //     //             overflow: TextOverflow.ellipsis,
+                  //     //             style: GoogleFonts.montserrat(
+                  //     //                 textStyle:
+                  //     //                 Theme.of(context).textTheme.bodySmall,
+                  //     //                 color: Colors.black),
+                  //     //           ),
+                  //     //         ),
+                  //     //       ],
+                  //     //     ),
+                  //     //   ),
+                  //     //
+                  //     // ),
+                  //
+                  //   ],
+                  // ),
 
 
-                  SizedBox(height: 5,),
+                  SizedBox(height: 15,),
 
                   Container(
                     child: Column(
@@ -4722,7 +5057,7 @@ Date
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
-                              width: MediaQuery.of(context).size.width * .1,
+                              width: MediaQuery.of(context).size.width * .12,
                               child: Text("Date:   ",
                                   style: GoogleFonts.lato(textStyle: Theme
                                       .of(context)
@@ -4755,12 +5090,16 @@ Date
                           ],
                         ),
 
-                        SizedBox(height: 5,),
+                        SizedBox(height: 15,),
+
+                    //     Text("Input email addresses of any colleagues to whom you want to send this report: ",style: GoogleFonts.lato(
+                    //     textStyle: Theme.of(context).textTheme.titleMedium, color: Colors.red,fontWeight: FontWeight.w500
+                    // ),),
 
                         Row(
                           children: [
                             Container(
-                              width: MediaQuery.of(context).size.width * .1,
+                              width: MediaQuery.of(context).size.width * .12,
                               child: Text("To: ",style: GoogleFonts.lato(
                                 textStyle:
                                 Theme
@@ -4775,7 +5114,7 @@ Date
                                 height: 40,
                                 width: MediaQuery.of(context).size.width * .19,
                                 child: TextField(
-                                  controller: SendNametextController,
+                                  controller: previewProvider.SendNametextController,
 
                                   style: GoogleFonts.lato(
                                       textStyle: Theme.of(context).textTheme.bodySmall,
@@ -4838,7 +5177,7 @@ Date
                               return Row(
                             children: [
                               Container(
-                                width: MediaQuery.of(context).size.width * .1,
+                                width: MediaQuery.of(context).size.width * .12,
                                 child: Text(
                                   "Cc: ",
                                   style: GoogleFonts.lato(
@@ -4851,7 +5190,7 @@ Date
                               Expanded(
                                 flex: 3,
                                 child: Text(
-                                    '${index + 1}. ${previewProvider.ccNames[index]}, <${previewProvider.ccEmails[index]}> - $formattedDate'),
+                                    '${index + 1}. ${previewProvider.ccNames[index]}, <${previewProvider.ccEmails[index]}>'),
                               ),
                               // SizedBox(width: 50,),
                               Flexible(
@@ -4871,7 +5210,7 @@ Date
                         Row(
                           children: [
                             Container(
-                              width: MediaQuery.of(context).size.width * 0.1,
+                              width: MediaQuery.of(context).size.width * 0.12,
                               child: Text("Cc: ",style: GoogleFonts.lato(
                                 textStyle:
                                 Theme
@@ -4906,7 +5245,7 @@ Date
                                 ),
                               ),
                             ),
-                            
+
                             SizedBox(width: 5,),
 
                             Expanded(
@@ -4963,12 +5302,52 @@ Date
                         ),
 
 
+                        SizedBox(height: 15,),
+
+
+                        TextField(
+                          controller: AboutMeDescriptiontextController,
+                          onChanged: (value) {
+                            // _previewProvider.updatetitle(value);
+                          },
+                          maxLines: 18,
+                          style: GoogleFonts.lato(
+                              textStyle: Theme.of(context).textTheme.bodyMedium,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black),
+                          decoration: InputDecoration(
+                            hintText: "$message",
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                                borderRadius: BorderRadius.circular(10)),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black12),
+                                borderRadius: BorderRadius.circular(10)),
+                          ),
+                        ),
+
+
                         SizedBox(height: 10,),
+
+                        Container(
+                          padding: EdgeInsets.all(5),
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black),
+                          ),
+                          child: Text("My basic data",
+                              style: GoogleFonts.lato(fontWeight: FontWeight.bold,
+                                  fontSize: 24,
+                                  color: Colors.blue)),
+                        ),
+
+                        SizedBox(height: 10,),
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
-                              width: MediaQuery.of(context).size.width * .1,
+                              width: MediaQuery.of(context).size.width * .12,
                               child: Text("Name: ",
                                   style: GoogleFonts.lato(textStyle: Theme
                                       .of(context)
@@ -4986,12 +5365,14 @@ Date
                           ],
                         ),
 
+                        SizedBox(height: 10,),
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
 
                           children: [
                             Container(
-                              width: MediaQuery.of(context).size.width * .1,
+                              width: MediaQuery.of(context).size.width * .12,
                               child: Text("Role: ",
                                   style: GoogleFonts.lato(textStyle: Theme
                                       .of(context)
@@ -5008,12 +5389,15 @@ Date
                             ),
                           ],
                         ),
+
+                        SizedBox(height: 10,),
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
 
                           children: [
                             Container(
-                              width: MediaQuery.of(context).size.width * .1,
+                              width: MediaQuery.of(context).size.width * .12,
                               child: Text("Location: ",
                                   style: GoogleFonts.lato(textStyle: Theme
                                       .of(context)
@@ -5030,11 +5414,14 @@ Date
                             ),
                           ],
                         ),
+
+                        SizedBox(height: 10,),
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
-                              width: MediaQuery.of(context).size.width * .1,
+                              width: MediaQuery.of(context).size.width * .12,
                               child: Text("Employee number: ",
                                   style: GoogleFonts.lato(textStyle: Theme
                                       .of(context)
@@ -5051,11 +5438,14 @@ Date
                             ),
                           ],
                         ),
+
+                        SizedBox(height: 10,),
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
-                              width: MediaQuery.of(context).size.width * .1,
+                              width: MediaQuery.of(context).size.width * .12,
                               child: Text("Team Leader:",
                                   style: GoogleFonts.lato(textStyle: Theme
                                       .of(context)
@@ -5077,257 +5467,282 @@ Date
                     ),
                   ),
 
-                  SizedBox(height: 15,),
-
-                  Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Text("Performing to my best in my role ${employerController.text}: ",
-                        style: GoogleFonts.lato(fontWeight: FontWeight.bold,
-                            // fontSize: 20,
-                            color: Colors.blue)),
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: TextField(
-                      controller: AboutMeDescriptiontextController,
-                      onChanged: (value) {
-                        // _previewProvider.updatetitle(value);
-                      },
-                      maxLines: 18,
-                      style: GoogleFonts.lato(
-                          textStyle: Theme.of(context).textTheme.bodyMedium,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black),
-                      decoration: InputDecoration(
-                        hintText: "$message",
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                            borderRadius: BorderRadius.circular(10)),
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black12),
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
-                    ),
-                  ),
 
                   SizedBox(height: 10,),
 
                   Container(
+                    padding: EdgeInsets.all(5),
                     width: MediaQuery.of(context).size.width,
-                    // padding: EdgeInsets.all(8),
-                    margin: EdgeInsets.all(5),
                     decoration: BoxDecoration(
-                      border: Border.all(color:Colors.black,),
-                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.black),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Text("About me",
+                        style: GoogleFonts.lato(fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                            color: Colors.blue)),
+                  ),
 
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 5),
-                          child: Text("To perform to my best in my role, I’d like to share this information about me:",
-                              style: GoogleFonts.lato(fontWeight: FontWeight.bold,
-                                  // fontSize: 20,
-                                  color: Colors.blue)),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 5),
-                          child: Text("Me and My circumstances: ",
-                              style: GoogleFonts.lato(textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .titleMedium,
-                                  decoration: TextDecoration.underline
-                              )),
-                        ),
-                        SizedBox(height: 5,),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 5),
-                          child: Text("${previewProvider.mycircumstance==null ? "" : previewProvider.mycircumstance}",
-                              style: GoogleFonts.lato(textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodyMedium,fontWeight: FontWeight.w600
-                              )),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 5),
-                          child: Text("My strengths that I want to have the opportunity to use in my role: ",
-                              style: GoogleFonts.lato(textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .titleMedium,
-                                  decoration: TextDecoration.underline
-                              )),
-                        ),
-                        SizedBox(height: 5,),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 5),
-                          child: Text("${previewProvider.mystrength==null ? "" : previewProvider.mystrength}",
-                              style: GoogleFonts.lato(textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodyMedium,fontWeight: FontWeight.w600
-                              )),
+                  SizedBox(height: 10,),
 
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+
+                    children: [
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(
+                      //       vertical: 10.0, horizontal: 5),
+                      //   child: Text("To perform to my best in my role, I’d like to share this information about me:",
+                      //       style: GoogleFonts.lato(fontWeight: FontWeight.bold,
+                      //           // fontSize: 20,
+                      //           color: Colors.blue)),
+                      // ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 5),
+                        child: Row(
+                           mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text("Me and my circumstances: ",
+                                style: GoogleFonts.lato(textStyle: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .titleMedium,
+                                    color: Colors.blue,
+                                    // decoration: TextDecoration.underline
+                                )),
+                            SizedBox(width: 50,),
+                            IconButton(
+                                onPressed: (){
+                                  editmeandmycircumstances(aboutMeData);
+                                  },
+                                icon: Icon(
+                              Icons.edit
+                            ))
+                          ],
                         ),
+                      ),
+                      SizedBox(height: 5,),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 5),
+                        child: Text("${previewProvider.mycircumstance==null ? "" : previewProvider.mycircumstance}",
+                            style: GoogleFonts.lato(textStyle: Theme
+                                .of(context)
+                                .textTheme
+                                .bodyMedium,fontWeight: FontWeight.w600
+                            )),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 5),
+                        child: Row(
+                          children: [
+                            Text("My strengths that I want to have the opportunity to use in my role: ",
+                                style: GoogleFonts.lato(textStyle: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .titleMedium,
+                                    color: Colors.blue,
+                                    // decoration: TextDecoration.underline
+                                )),
+                            SizedBox(width: 50,),
+                            IconButton(
+                                onPressed: (){
+                                  editmystrength();
+                                },
+                                icon: Icon(
+                                    Icons.edit
+                                ))
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 5,),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 5),
+                        child: Text("${previewProvider.mystrength==null ? "" : previewProvider.mystrength}",
+                            style: GoogleFonts.lato(textStyle: Theme
+                                .of(context)
+                                .textTheme
+                                .bodyMedium,fontWeight: FontWeight.w600,
+
+                            )),
+
+                      ),
 
 
-                        Container(
+                      Container(
 
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric( vertical: 10.0,horizontal: 5),
-                                child: Text("Things I find challenging in life that make it harder for me to perform my best:",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleMedium,
-                                      decoration: TextDecoration.underline
-                                  ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric( vertical: 10.0,horizontal: 5),
+                              child: Text("Things I find challenging in life that make it harder for me to perform my best:",
+                                style: GoogleFonts.lato(textStyle: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .titleMedium,
+                                    color: Colors.blue,
+                                    // decoration: TextDecoration.underline
                                 ),
                               ),
-                              SizedBox(height: 5,),
+                            ),
+                            SizedBox(height: 5,),
 
-                              Consumer<PreviewProvider>(
-                                builder: (context, previewProvider, _) {
-                                  return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: previewProvider.PreviewChallengesList.map((solution) {
-                                      int index = previewProvider.PreviewChallengesList.indexOf(solution);
+                            Consumer<PreviewProvider>(
+                              builder: (context, previewProvider, _) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: previewProvider.PreviewChallengesList.map((solution) {
+                                    int index = previewProvider.PreviewChallengesList.indexOf(solution);
 
-                                      return Padding(
-                                        padding: EdgeInsets.only(bottom: 20.0),
-                                        child: Row(
-                                          children: [
-                                            Flexible(
-                                              child: RichText(
-                                                maxLines: 4,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                        text: ' •  ',
-                                                        style:TextStyle(fontSize: 20)
-                                                    ),
-                                                    TextSpan(
-                                                        text: '${solution['Label']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,fontWeight: FontWeight.bold,)
-                                                    ),
-                                                    TextSpan(
-                                                        text: ' - ${solution['Final_description']}\n',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .bodyMedium,fontWeight: FontWeight.w400
-                                                        )
-                                                    ),
-                                                    TextSpan(
-                                                        text: '  ${solution['Impact_on_me']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,color: Colors.grey,)
-                                                    ),
-                                                  ],
-                                                ),
+                                    return Padding(
+                                      padding: EdgeInsets.only(bottom: 20.0),
+                                      child: Row(
+                                        children: [
+                                          Flexible(
+                                            child: RichText(
+                                              maxLines: 4,
+                                              text: TextSpan(
+                                                children: [
+                                                  TextSpan(
+                                                      text: ' •  ',
+                                                      style:TextStyle(fontSize: 20)
+                                                  ),
+                                                  TextSpan(
+                                                      text: '${solution['Label']}',
+                                                      style: GoogleFonts.lato(textStyle: Theme
+                                                          .of(context)
+                                                          .textTheme
+                                                          .titleMedium,fontWeight: FontWeight.bold,)
+                                                  ),
+                                                  TextSpan(
+                                                      text: ' - ${solution['Final_description']}\n',
+                                                      style: GoogleFonts.lato(textStyle: Theme
+                                                          .of(context)
+                                                          .textTheme
+                                                          .bodyMedium,fontWeight: FontWeight.w400
+                                                      )
+                                                  ),
+                                                  TextSpan(
+                                                      text: '  ${solution['Impact_on_me']}',
+                                                      style: GoogleFonts.lato(textStyle: Theme
+                                                          .of(context)
+                                                          .textTheme
+                                                          .titleMedium,color: Colors.grey,)
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                            SizedBox(width: 50,),
-                                            Row(
-                                              children: [
-                                                IconButton(
-                                                  icon: Icon(Icons.edit),
-                                                  onPressed: (){
-                                                    showEditconfirmChallengeDialogBox(solution['id'], solution['Label'] , solution['Description'],
-                                                        solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
-                                                        solution['Created Date'], solution['Modified By'], solution['Modified Date'],
-                                                        solution['Original Description'], solution['Impact'], solution['Final_description'],
-                                                        solution['Category'], solution['Keywords'], solution['Potential Strengths'],
-                                                        solution['Hidden Strengths'], index, solution, solution['Impact_on_me']);
-                                                  },
-                                                ),
-                                                IconButton(
-                                                  icon: Icon(Icons.delete),
-                                                  onPressed: (){
-                                                    _userAboutMEProvider.removeEditConfirmChallenge(index,solution['id'],challengesList,_previewProvider.PreviewChallengesList);
-                                                  },
-                                                )
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      );
-                                    }).toList(),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
+                                          ),
+                                          SizedBox(width: 50,),
+                                          Row(
+                                            children: [
+                                              IconButton(
+                                                icon: Icon(Icons.edit),
+                                                onPressed: (){
+                                                  showEditconfirmChallengeDialogBox(solution['id'], solution['Label'] , solution['Description'],
+                                                      solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
+                                                      solution['Created Date'], solution['Modified By'], solution['Modified Date'],
+                                                      solution['Original Description'], solution['Impact'], solution['Final_description'],
+                                                      solution['Category'], solution['Keywords'], solution['Potential Strengths'],
+                                                      solution['Hidden Strengths'], index, solution, solution['Impact_on_me']);
+                                                },
+                                              ),
+                                              IconButton(
+                                                icon: Icon(Icons.delete),
+                                                onPressed: (){
+                                                  _userAboutMEProvider.removeEditConfirmChallenge(index,solution['id'],challengesList,_previewProvider.PreviewChallengesList);
+                                                },
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  }).toList(),
+                                );
+                              },
+                            ),
+                          ],
                         ),
+                      ),
 
 
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 5),
-                          child: Text("What I value about ${employerController.text} and workplace environment that helps me perform to my best: ",
-                              style: GoogleFonts.lato(textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .titleMedium,
-                                  decoration: TextDecoration.underline
-                              )),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 5),
+                        child: Row(
+                          children: [
+                            Text("What I value about ${employerController.text} and workplace environment that helps me perform to my best: ",
+                                style: GoogleFonts.lato(textStyle: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .titleMedium,
+                                    color: Colors.blue,
+                                    // decoration: TextDecoration.underline
+                                )),
+                            SizedBox(width: 50,),
+                            IconButton(
+                                onPressed: (){editmyorganization();},
+                                icon: Icon(
+                                    Icons.edit
+                                ))
+                          ],
                         ),
-                        SizedBox(height: 5,),
+                      ),
+                      SizedBox(height: 5,),
 
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 5),
-                          child: Text("${previewProvider.myorganization==null ? "" : previewProvider.myorganization}",
-                              style: GoogleFonts.lato(textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodyMedium,fontWeight: FontWeight.w600
-                              )),
-
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 5),
+                        child: Text("${previewProvider.myorganization==null ? "" : previewProvider.myorganization}",
+                            style: GoogleFonts.lato(textStyle: Theme
+                                .of(context)
+                                .textTheme
+                                .bodyMedium,fontWeight: FontWeight.w600
+                            )),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 5),
+                        child: Row(
+                          children: [
+                            Text("What I find challenging about ${employerController.text} and the workplace environment that makes it harder for me to perform my best: ",
+                                style: GoogleFonts.lato(textStyle: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .titleMedium,
+                                    color: Colors.blue,
+                                    // decoration: TextDecoration.underline
+                                )),
+                            SizedBox(width: 50,),
+                            IconButton(
+                                onPressed: (){editmychallenges();},
+                                icon: Icon(
+                                    Icons.edit
+                                ))
+                          ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 5),
-                          child: Text("What I find challenging about ${employerController.text} and the workplace environment that makes it harder for me to perform my best: ",
-                              style: GoogleFonts.lato(textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .titleMedium,
-                                  decoration: TextDecoration.underline
-                              )),
-                        ),
-                        SizedBox(height: 5,),
+                      ),
+                      SizedBox(height: 5,),
 
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 5),
-                          child: Text("${previewProvider.mychallenge==null ? "" : previewProvider.mychallenge}",
-                              style: GoogleFonts.lato(textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodyMedium,fontWeight: FontWeight.w600
-                              )),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 5),
+                        child: Text("${previewProvider.mychallenge==null ? "" : previewProvider.mychallenge}",
+                            style: GoogleFonts.lato(textStyle: Theme
+                                .of(context)
+                                .textTheme
+                                .bodyMedium,fontWeight: FontWeight.w600
+                            )),
 
-                        ),
-                      ],
-                    ),
+                      ),
+
+                      SizedBox(height: 10,),
+
+                    ],
                   ),
 
                   Container(
@@ -5335,14 +5750,27 @@ Date
                       crossAxisAlignment: CrossAxisAlignment.start,
 
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 5),
+
+                        Container(
+                          padding: EdgeInsets.all(5),
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black),
+                          ),
                           child: Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${employerController.text}:",
                               style: GoogleFonts.lato(fontWeight: FontWeight.bold,
-                                  // fontSize: 20,
+                                  fontSize: 24,
                                   color: Colors.blue)),
                         ),
+
+                        // Padding(
+                        //   padding: const EdgeInsets.symmetric(
+                        //       vertical: 10.0, horizontal: 5),
+                        //   child: Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${employerController.text}:",
+                        //       style: GoogleFonts.lato(fontWeight: FontWeight.bold,
+                        //           // fontSize: 20,
+                        //           color: Colors.blue)),
+                        // ),
 
                         _previewProvider.PreviewSolutionMyResposibilty.isNotEmpty ?
                         Container(
@@ -5357,8 +5785,8 @@ Date
                                   style: GoogleFonts.lato(
                                       fontWeight: FontWeight.bold,
                                       // fontSize: 20,
-                                      color: Colors.black,
-                                      decoration: TextDecoration.underline
+                                      color: Colors.blue,
+                                      // decoration: TextDecoration.underline
                                   ),
                                 ),
                               ),
@@ -5467,12 +5895,12 @@ Date
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 5),
-                          child: Text("Requests of ${employerController.text}",
+                          child: Text("My requests of ${employerController.text}",
                               style: GoogleFonts.lato(
                                   fontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.underline,
+                                  // decoration: TextDecoration.underline,
                                   // fontSize: 20,
-                                  color: Colors.black)),
+                                  color: Colors.blue)),
                         ) : Container(),
 
                         _previewProvider.PreviewSolutionStillNeeded.isNotEmpty ?
@@ -5942,7 +6370,7 @@ Date
                             borderRadius: BorderRadius.circular(50),
                           ),
                         ),
-                        tooltip: "Medical and Personal",
+                        tooltip: "Medicals and Personals",
                       ),
                     ],
                   ),
@@ -5951,6 +6379,92 @@ Date
                     child: Text("${_userAboutMEProvider.aadhar==null ? "" : _userAboutMEProvider.aadhar}", style: GoogleFonts.lato(textStyle: Theme.of(context).textTheme.titleSmall,)),
                     // child: Text("document.pdf", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
                   ),
+
+                  // Row(
+                  //   mainAxisSize: MainAxisSize.min,
+                  //   mainAxisAlignment: MainAxisAlignment.start,
+                  //   // crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children: [
+                  //
+                  //     Container(
+                  //       width: MediaQuery.of(context).size.width * .12,
+                  //       child: Text("Report file name:   ", style: GoogleFonts.lato(
+                  //           textStyle: Theme.of(context).textTheme.titleMedium,
+                  //           fontStyle: FontStyle.italic,
+                  //           fontWeight: FontWeight.bold
+                  //       )),
+                  //     ),
+                  //
+                  //     Flexible(
+                  //       child: Container(
+                  //         height: 40,
+                  //         width: MediaQuery.of(context).size.width * .25,
+                  //         child: TextField(
+                  //           controller: AboutMeLabeltextController,
+                  //           onChanged: (value) {
+                  //             _previewProvider.updatetitle(value);
+                  //           },
+                  //           style: GoogleFonts.lato(
+                  //               textStyle: Theme.of(context).textTheme.bodySmall,
+                  //               fontStyle: FontStyle.italic,
+                  //               fontWeight: FontWeight.w400,
+                  //               color: Colors.black),
+                  //           decoration: InputDecoration(
+                  //             hintText: "My discussion with ...." ,
+                  //             focusedBorder: OutlineInputBorder(
+                  //                 borderSide: BorderSide(color: Colors.black),
+                  //                 borderRadius: BorderRadius.circular(10)),
+                  //             border: OutlineInputBorder(
+                  //                 borderSide: BorderSide(color: Colors.black12),
+                  //                 borderRadius: BorderRadius.circular(10)),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //
+                  //     // SizedBox(width: 10,),
+                  //     //
+                  //     // InkWell(
+                  //     //   onTap: () async {
+                  //     //     // sideMenu.changePage(2);
+                  //     //     // page.jumpToPage(1);
+                  //     //   },
+                  //     //   child: Container(
+                  //     //     // margin: EdgeInsets.all(10),
+                  //     //     padding: EdgeInsets.all(5),
+                  //     //     height: 40,
+                  //     //     width: MediaQuery.of(context).size.width * 0.15,
+                  //     //     decoration: BoxDecoration(
+                  //     //       // color: Colors.white,
+                  //     //       border: Border.all(color:primaryColorOfApp, width: 1.0),
+                  //     //       borderRadius: BorderRadius.circular(10.0),
+                  //     //     ),
+                  //     //     child: Row(
+                  //     //       mainAxisAlignment: MainAxisAlignment.center,
+                  //     //       crossAxisAlignment: CrossAxisAlignment.center,
+                  //     //       children: [
+                  //     //         Icon(Icons.insert_drive_file,color: Colors.black,size: 20,),
+                  //     //         SizedBox(width: 5,),
+                  //     //         Expanded(
+                  //     //           child: Text(
+                  //     //             // 'Thrivers',
+                  //     //             'For Someone Else',
+                  //     //             overflow: TextOverflow.ellipsis,
+                  //     //             style: GoogleFonts.montserrat(
+                  //     //                 textStyle:
+                  //     //                 Theme.of(context).textTheme.bodySmall,
+                  //     //                 color: Colors.black),
+                  //     //           ),
+                  //     //         ),
+                  //     //       ],
+                  //     //     ),
+                  //     //   ),
+                  //     //
+                  //     // ),
+                  //
+                  //   ],
+                  // ),
+
                   SizedBox(height: 10,),
 
                   Padding(
@@ -5966,6 +6480,8 @@ Date
 
                             Map<String, dynamic> AboutMEDatas = {
                               'About_Me_Label': AboutMeLabeltextController.text,
+                              'Purpose_of_report': _previewProvider.PurposeOfReporttextController.text,
+                              'Purpose': _previewProvider.isOfficial,
                               'AB_Description' : AboutMeDescriptiontextController.text,
                               'AB_Date' : AboutMeDatetextController.text,
                               'AB_Useful_Info' : AboutMeUseFulInfotextController.text,
@@ -6062,16 +6578,21 @@ Date
 
                             var createdAt = DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now());
 
+                            var formattedDate = DateFormat('dd MMMM yyyy, HH:mm a').format(DateTime.now());
+
+
                             Map<String, dynamic> AboutMEDatas = {
                               'About_Me_Label': AboutMeLabeltextController.text,
                               'AB_Status' : "Complete and Sent",
                               'AB_Description' : AboutMeDescriptiontextController.text,
                               'AB_Useful_Info' : AboutMeUseFulInfotextController.text,
+                              'Purpose_of_report': _previewProvider.PurposeOfReporttextController.text,
+                              'Purpose': _previewProvider.isOfficial,
                               'AB_Date' : AboutMeDatetextController.text,
                               'AB_Attachment' : "",
                               'Solutions': solutionsList,
                               'Challenges': challengesList,
-                              'Report_sent_to' : [{'name':  SendNametextController.text, 'email': SendEmailtextController.text, 'datetime': formattedDate}],
+                              'Report_sent_to' : [{'name':  previewProvider.SendNametextController.text, 'email': SendEmailtextController.text, 'datetime': formattedDate}],
                               'Report_sent_to_cc' : List.generate(
                                 previewProvider.ccEmails.length,
                                     (index) => {
@@ -6097,7 +6618,7 @@ Date
                             await ApiRepository().sendEmailWithAttachment(
                                 context,
                                 SendEmailtextController.text,
-                                SendNametextController.text,
+                              previewProvider.SendNametextController.text,
                                 CopySendEmailtextController.text,
                                 CopySendNametextController.text,
                                 base64EncodedData,
@@ -6110,7 +6631,7 @@ Date
 
                             print(SendEmailtextController.text);
                             print(CopySendEmailtextController.text);
-                            print(SendNametextController.text);
+                            print(previewProvider.SendNametextController.text);
                             print(CopySendNametextController.text);
 
 
@@ -6202,6 +6723,986 @@ Date
         });
   }
 
+  editmeandmycircumstances(aboutMeData){
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          // mycircumstancesController.text = aboutMeData['My_Circumstance']==null ? "" : aboutMeData['My_Circumstance'];
+          return Consumer<PreviewProvider>(
+              builder: (c,previewProvider, _)
+          {
+            mycircumstancesController.text  = previewProvider.mycircumstance;
+            return Theme(
+                data: Theme.of(context).copyWith(
+                    dialogBackgroundColor: Colors.white),
+                child: AlertDialog(
+                  insetPadding: EdgeInsets.symmetric(horizontal: MediaQuery
+                      .of(context)
+                      .size
+                      .width * 0.08, vertical: MediaQuery
+                      .of(context)
+                      .size
+                      .height * 0.1),
+                  content: SizedBox(
+                    // width: MediaQuery.of(context).size.height * .3,
+                    height: MediaQuery
+                        .of(context)
+                        .size
+                        .height * .55,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 5),
+                          child: Row(
+                            children: [
+                              Text("Me and my cirumstances:",
+                                  style: GoogleFonts.montserrat(textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .titleSmall,
+                                      fontWeight: FontWeight.w600)),
+                              Text(" edit as appropriate",
+                                  style: GoogleFonts.montserrat(textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .titleSmall,
+                                      fontSize: 14,
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.w400)),
+                            ],
+                          ),
+                        ),
+                        TextField(
+                          maxLines: 6,
+                          controller: mycircumstancesController,
+                          cursorColor: primaryColorOfApp,
+                          onChanged: (value) {
+                            if (value.isNotEmpty) {
+                              final lines = value.split('\n');
+
+                              for (int i = 0; i < lines.length; i++) {
+                                if (lines[i]
+                                    .trim()
+                                    .isNotEmpty && !lines[i].startsWith('•')) {
+                                  lines[i] = '• ' + lines[i];
+                                }
+                              }
+
+                              // Combine lines with '\n'
+                              final modifiedText = lines.join('\n');
+
+                              // Calculate new cursor position based on changes in text
+                              final newTextLength = modifiedText.length;
+                              final cursorPosition = mycircumstancesController
+                                  .selection.baseOffset +
+                                  (newTextLength - value.length);
+
+                              // Update text and cursor position
+                              mycircumstancesController.value =
+                                  mycircumstancesController.value.copyWith(
+                                    text: modifiedText,
+                                    selection: TextSelection.fromPosition(
+                                      TextPosition(offset: cursorPosition),
+                                    ),
+                                  );
+                            } else {
+                              isInitialTyping =
+                              true; // Reset when the text field becomes empty
+                            }
+                          },
+                          // readOnly: readonly,
+                          // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                          style: GoogleFonts.montserrat(
+                              textStyle: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyLarge,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black),
+                          decoration: InputDecoration(
+                            //errorText: userAccountSearchErrorText,
+                            contentPadding: EdgeInsets.all(25),
+                            // labelText: "Notes",
+                            hintText: "Anything you want to share about eg\n• Your family circumstances\n• Your education and professional qualifications\n• Your life stages or life events\n• Your ethnicity, faith, identification\n• What matters most to you in life",
+
+                            /*prefixIcon: Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Icon(Icons.question_mark_outlined,
+                                                       // color: primaryColorOfApp
+                                                          ),
+                                                    ),*/
+
+                            errorStyle: GoogleFonts.montserrat(
+                                textStyle: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .bodyLarge,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.redAccent),
+
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                                borderRadius: BorderRadius.circular(15)),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black12),
+                                borderRadius: BorderRadius.circular(15)),
+                            //hintText: "e.g Abouzied",
+                            labelStyle: GoogleFonts.montserrat(
+                                textStyle: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .bodyLarge,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black),
+                          ),
+                        ),
+                        SizedBox(height: 20,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                Navigator.pop(context);
+                                // mycircumstancesController.clear();
+                                // widget.refreshPage();
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 15),
+                                width: MediaQuery
+                                    .of(context)
+                                    .size
+                                    .width * .2,
+
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  //color: Colors.white,
+                                  border: Border.all(
+                                    //color:primaryColorOfApp ,
+                                      width: 1.0),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Cancel',
+                                    style: GoogleFonts.montserrat(
+                                      textStyle:
+                                      Theme
+                                          .of(context)
+                                          .textTheme
+                                          .titleSmall,
+                                      fontWeight: FontWeight.bold,
+                                      //color: primaryColorOfApp
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                            ),
+                            SizedBox(width: 5, height: 5,),
+                            InkWell(
+                              onTap: () async {
+                                Map<String, dynamic> AboutMEDatas = {
+                                  // 'About_Me_Label': AboutMeLabeltextController.text,
+                                  // 'My_Circumstance': updatemycircumstancesController.text,
+                                  'My_Circumstance': mycircumstancesController
+                                      .text,
+                                  // 'My_Strength': MystrengthsController.text,
+                                  // 'My_Organisation': myOrganisationController.text,
+                                  // 'My_Challenges_Organisation': myOrganisation2Controller.text,
+                                  // Add other fields as needed
+                                };
+
+
+                                ProgressDialog.show(
+                                    context, "Saving", Icons.save);
+                                await ApiRepository().updateAboutMe(
+                                    AboutMEDatas, documentId);
+                                _previewProvider.updatemycircumstance(
+                                    mycircumstancesController.text);
+                                ProgressDialog.hide();
+                                widget.refreshPage();
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                width: MediaQuery
+                                    .of(context)
+                                    .size
+                                    .width * .2,
+                                padding: EdgeInsets.symmetric(horizontal: 15),
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  border: Border.all(
+                                      color: Colors.blue,
+                                      width: 2.0),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Save',
+                                    style: GoogleFonts.montserrat(
+                                        textStyle:
+                                        Theme
+                                            .of(context)
+                                            .textTheme
+                                            .titleSmall,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                      ],
+                    ),
+                  ),
+                ));
+          });
+        });
+  }
+
+  editmystrength(){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Consumer<PreviewProvider>(
+              builder: (c,previewProvider, _) {
+                MystrengthsController.text  = previewProvider.mystrength;
+
+                return Theme(
+                data: Theme.of(context).copyWith(
+                    dialogBackgroundColor: Colors.white),
+                child: AlertDialog(
+                  insetPadding: EdgeInsets.symmetric(horizontal: MediaQuery
+                      .of(context)
+                      .size
+                      .width * 0.08, vertical: MediaQuery
+                      .of(context)
+                      .size
+                      .height * 0.1),
+                  content: SizedBox(
+                    // width: MediaQuery.of(context).size.height * .3,
+                    height: MediaQuery
+                        .of(context)
+                        .size
+                        .height * .55,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 5),
+                          child: Row(
+                            children: [
+                              Text(
+                                  "My strengths that I want to have the opportunity to use in my role:",
+                                  style: GoogleFonts.montserrat(textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .titleSmall,
+                                      fontWeight: FontWeight.w600)),
+                              Text(" edit as appropriate",
+                                  style: GoogleFonts.montserrat(textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .titleSmall,
+                                      fontSize: 14,
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.w400)),
+                            ],
+                          ),
+                        ),
+                        TextField(
+                          controller: MystrengthsController,
+                          maxLines: 6,
+                          // cursorColor: primaryColorOfApp,
+                          // onChanged: (value) {
+                          //   if (value.isNotEmpty) {
+                          //     final lines = value.split('\n');
+                          //
+                          //     for (int i = 0; i < lines.length; i++) {
+                          //       if (lines[i].trim().isNotEmpty && !lines[i].startsWith('•')) {
+                          //         lines[i] = '• ' + lines[i];
+                          //       }
+                          //     }
+                          //
+                          //     MystrengthsController.text = lines.join('\n');
+                          //     MystrengthsController.selection = TextSelection.fromPosition(
+                          //       TextPosition(offset: MystrengthsController.text.length),
+                          //     );
+                          //   } else {
+                          //     isInitialTyping = true; // Reset when the text field becomes empty
+                          //   }
+                          // },
+                          onChanged: (value) {
+                            if (value.isNotEmpty) {
+                              final lines = value.split('\n');
+
+                              for (int i = 0; i < lines.length; i++) {
+                                if (lines[i]
+                                    .trim()
+                                    .isNotEmpty && !lines[i].startsWith('•')) {
+                                  lines[i] = '• ' + lines[i];
+                                }
+                              }
+
+                              // Combine lines with '\n'
+                              final modifiedText = lines.join('\n');
+
+                              // Calculate new cursor position based on changes in text
+                              final newTextLength = modifiedText.length;
+                              final cursorPosition = MystrengthsController
+                                  .selection.baseOffset +
+                                  (newTextLength - value.length);
+
+                              // Update text and cursor position
+                              MystrengthsController.value =
+                                  MystrengthsController.value.copyWith(
+                                    text: modifiedText,
+                                    selection: TextSelection.fromPosition(
+                                      TextPosition(offset: cursorPosition),
+                                    ),
+                                  );
+                            } else {
+                              isInitialTyping =
+                              true; // Reset when the text field becomes empty
+                            }
+                          },
+                          style: GoogleFonts.montserrat(
+                              textStyle: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyLarge,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black),
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(10),
+                            // labelText: "Name",
+                            hintText: "What do you view as your strengths, passions and values that you hope and want to be able to deploy in your role at work - create a list",
+                            errorStyle: GoogleFonts.montserrat(
+                                textStyle: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .bodyLarge,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.redAccent),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                                borderRadius: BorderRadius.circular(15)),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black12),
+                                borderRadius: BorderRadius.circular(15)),
+                            labelStyle: GoogleFonts.montserrat(
+                                textStyle: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .bodyLarge,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black),
+                          ),
+                        ),
+                        SizedBox(height: 20,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 15),
+                                width: MediaQuery
+                                    .of(context)
+                                    .size
+                                    .width * .2,
+
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  //color: Colors.white,
+                                  border: Border.all(
+                                    //color:primaryColorOfApp ,
+                                      width: 1.0),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Cancel',
+                                    style: GoogleFonts.montserrat(
+                                      textStyle:
+                                      Theme
+                                          .of(context)
+                                          .textTheme
+                                          .titleSmall,
+                                      fontWeight: FontWeight.bold,
+                                      //color: primaryColorOfApp
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                            ),
+                            SizedBox(width: 5, height: 5,),
+                            InkWell(
+                              onTap: () async {
+                                Map<String, dynamic> AboutMEDatas = {
+                                  // 'About_Me_Label': AboutMeLabeltextController.text,
+                                  // 'My_Circumstance': mycircumstancesController.text,
+                                  'My_Strength': MystrengthsController.text,
+                                  // 'My_Organisation': myOrganisationController.text,
+                                  // 'My_Challenges_Organisation': myOrganisation2Controller.text,
+                                  // Add other fields as needed
+                                };
+
+                                String solutionJson = json.encode(AboutMEDatas);
+                                print(solutionJson);
+
+                                ProgressDialog.show(
+                                    context, "Saving", Icons.save);
+                                await ApiRepository().updateAboutMe(
+                                    AboutMEDatas, documentId);
+                                _previewProvider.updatemystrength(
+                                    MystrengthsController.text);
+                                ProgressDialog.hide();
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                width: MediaQuery
+                                    .of(context)
+                                    .size
+                                    .width * .2,
+                                padding: EdgeInsets.symmetric(horizontal: 15),
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  border: Border.all(
+                                      color: Colors.blue,
+                                      width: 2.0),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Save',
+                                    style: GoogleFonts.montserrat(
+                                        textStyle:
+                                        Theme
+                                            .of(context)
+                                            .textTheme
+                                            .titleSmall,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                      ],
+                    ),
+                  ),
+                ));
+          });
+        });
+  }
+
+  editmyorganization(){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Consumer<PreviewProvider>(
+              builder: (c,previewProvider, _)
+          {myOrganisationController.text  = previewProvider.myorganization;
+
+          return Theme(
+                data: Theme.of(context).copyWith(
+                    dialogBackgroundColor: Colors.white),
+                child: AlertDialog(
+                  insetPadding: EdgeInsets.symmetric(horizontal: MediaQuery
+                      .of(context)
+                      .size
+                      .width * 0.08, vertical: MediaQuery
+                      .of(context)
+                      .size
+                      .height * 0.1),
+                  content: SizedBox(
+                    // width: MediaQuery.of(context).size.height * .3,
+                    height: MediaQuery
+                        .of(context)
+                        .size
+                        .height * .55,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 5),
+                          child: Row(
+                            children: [
+                              Text("What I value about ${employerController.text
+                                  .isEmpty
+                                  ? "[my organisation]"
+                                  : employerController
+                                  .text} and workplace environment that helps me perform to my best: ",
+                                  style: GoogleFonts.montserrat(textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .titleSmall,
+                                      fontWeight: FontWeight.w600)),
+                              Text(" edit as appropriate",
+                                  style: GoogleFonts.montserrat(textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .titleSmall,
+                                      fontSize: 14,
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.w400)),
+                            ],
+                          ),
+                        ),
+                        TextField(
+                          controller: myOrganisationController,
+
+                          maxLines: 6,
+
+
+                          // onChanged: (value) {
+                          //   if (value.isNotEmpty) {
+                          //     final lines = value.split('\n');
+                          //     final lastLine = lines.last;
+                          //
+                          //     if (isInitialTyping || (lastLine.trimLeft().startsWith('• ') && !lastLine.contains('• '))) {
+                          //       isInitialTyping = false;
+                          //       myOrganisationController.text = value.replaceAll('\n', '\n• ');
+                          //       myOrganisationController.selection = TextSelection.fromPosition(
+                          //         TextPosition(offset: myOrganisationController.text.length),
+                          //       );
+                          //     } else if (value.endsWith('\n')) {
+                          //       // If the last character entered is a newline, append a bullet point
+                          //       myOrganisationController.text += '• ';
+                          //       myOrganisationController.selection = TextSelection.fromPosition(
+                          //         TextPosition(offset: myOrganisationController.text.length),
+                          //       );
+                          //     }
+                          //   } else {
+                          //     isInitialTyping = true; // Reset when the text field becomes empty
+                          //   }
+                          // },
+
+                          onChanged: (value) {
+                            if (value.isNotEmpty) {
+                              final lines = value.split('\n');
+
+                              for (int i = 0; i < lines.length; i++) {
+                                if (lines[i]
+                                    .trim()
+                                    .isNotEmpty && !lines[i].startsWith('•')) {
+                                  lines[i] = '• ' + lines[i];
+                                }
+                              }
+
+                              // Combine lines with '\n'
+                              final modifiedText = lines.join('\n');
+
+                              // Calculate new cursor position based on changes in text
+                              final newTextLength = modifiedText.length;
+                              final cursorPosition = myOrganisationController
+                                  .selection.baseOffset +
+                                  (newTextLength - value.length);
+
+                              // Update text and cursor position
+                              myOrganisationController.value =
+                                  myOrganisationController.value.copyWith(
+                                    text: modifiedText,
+                                    selection: TextSelection.fromPosition(
+                                      TextPosition(offset: cursorPosition),
+                                    ),
+                                  );
+                            } else {
+                              isInitialTyping =
+                              true; // Reset when the text field becomes empty
+                            }
+                          },
+                          style: GoogleFonts.montserrat(
+                              textStyle: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyLarge,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black),
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(10),
+                            // labelText: "Name",
+                            hintText: "What do you like about your organisation and the work environment that helps you be your best?\nThese could be e.g. a policy or process, something about the culture or environment - create a list.",
+                            errorStyle: GoogleFonts.montserrat(
+                                textStyle: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .bodyLarge,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.redAccent),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                                borderRadius: BorderRadius.circular(15)),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black12),
+                                borderRadius: BorderRadius.circular(15)),
+                            labelStyle: GoogleFonts.montserrat(
+                                textStyle: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .bodyLarge,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black),
+                          ),
+                        ),
+                        SizedBox(height: 20,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 15),
+                                width: MediaQuery
+                                    .of(context)
+                                    .size
+                                    .width * .2,
+
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  //color: Colors.white,
+                                  border: Border.all(
+                                    //color:primaryColorOfApp ,
+                                      width: 1.0),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Cancel',
+                                    style: GoogleFonts.montserrat(
+                                      textStyle:
+                                      Theme
+                                          .of(context)
+                                          .textTheme
+                                          .titleSmall,
+                                      fontWeight: FontWeight.bold,
+                                      //color: primaryColorOfApp
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                            ),
+                            SizedBox(width: 5, height: 5,),
+                            InkWell(
+                              onTap: () async {
+                                Map<String, dynamic> AboutMEDatas = {
+                                  // 'About_Me_Label': AboutMeLabeltextController.text,
+                                  // 'My_Circumstance': mycircumstancesController.text,
+                                  // 'My_Strength': MystrengthsController.text,
+                                  'My_Organisation': myOrganisationController
+                                      .text,
+                                  // 'My_Challenges_Organisation': myOrganisation2Controller.text,
+                                  // Add other fields as needed
+                                };
+
+                                String solutionJson = json.encode(AboutMEDatas);
+                                print(solutionJson);
+
+                                ProgressDialog.show(
+                                    context, "Saving", Icons.save);
+                                await ApiRepository().updateAboutMe(
+                                    AboutMEDatas, documentId);
+                                _previewProvider.updatemyorganization(
+                                    myOrganisationController.text);
+                                ProgressDialog.hide();
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                width: MediaQuery
+                                    .of(context)
+                                    .size
+                                    .width * .2,
+                                padding: EdgeInsets.symmetric(horizontal: 15),
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  border: Border.all(
+                                      color: Colors.blue,
+                                      width: 2.0),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Save',
+                                    style: GoogleFonts.montserrat(
+                                        textStyle:
+                                        Theme
+                                            .of(context)
+                                            .textTheme
+                                            .titleSmall,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                      ],
+                    ),
+                  ),
+                ));
+          });
+        });
+  }
+
+  editmychallenges(){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Consumer<PreviewProvider>(
+              builder: (c,previewProvider, _)
+          { myOrganisation2Controller.text  = previewProvider.mychallenge;
+            return Theme(
+                data: Theme.of(context).copyWith(
+                    dialogBackgroundColor: Colors.white),
+                child: AlertDialog(
+                  insetPadding: EdgeInsets.symmetric(horizontal: MediaQuery
+                      .of(context)
+                      .size
+                      .width * 0.08, vertical: MediaQuery
+                      .of(context)
+                      .size
+                      .height * 0.1),
+                  content: SizedBox(
+                    // width: MediaQuery.of(context).size.height * .3,
+                    height: MediaQuery
+                        .of(context)
+                        .size
+                        .height * .55,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 5),
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: "What I find challenging about ${employerController
+                                      .text.isEmpty
+                                      ? "[my organisation]"
+                                      : employerController
+                                      .text} and workplace environment that gets in the way of me performing to my best: ",
+                                  style: GoogleFonts.montserrat(
+                                    textStyle: Theme
+                                        .of(context)
+                                        .textTheme
+                                        .titleSmall,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: " edit as appropriate",
+                                  style: GoogleFonts.montserrat(
+                                    textStyle: Theme
+                                        .of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.copyWith(
+                                      fontSize: 14,
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        TextField(
+                          controller: myOrganisation2Controller,
+                          keyboardType: TextInputType.multiline,
+                          // onSubmitted: (_) => userAboutMEProvider.handleEnter(myOrganisation2Controller),
+                          maxLines: 6,
+                          onChanged: (value) {
+                            if (value.isNotEmpty) {
+                              final lines = value.split('\n');
+
+                              for (int i = 0; i < lines.length; i++) {
+                                if (lines[i]
+                                    .trim()
+                                    .isNotEmpty && !lines[i].startsWith('•')) {
+                                  lines[i] = '• ' + lines[i];
+                                }
+                              }
+
+                              // Combine lines with '\n'
+                              final modifiedText = lines.join('\n');
+
+                              // Calculate new cursor position based on changes in text
+                              final newTextLength = modifiedText.length;
+                              final cursorPosition = myOrganisation2Controller
+                                  .selection.baseOffset +
+                                  (newTextLength - value.length);
+
+                              // Update text and cursor position
+                              myOrganisation2Controller.value =
+                                  myOrganisation2Controller.value.copyWith(
+                                    text: modifiedText,
+                                    selection: TextSelection.fromPosition(
+                                      TextPosition(offset: cursorPosition),
+                                    ),
+                                  );
+                            } else {
+                              isInitialTyping =
+                              true; // Reset when the text field becomes empty
+                            }
+                          },
+                          style: GoogleFonts.montserrat(
+                              textStyle: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyLarge,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black),
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(10),
+                            // labelText: "Name",
+                            hintText: "What is it about your organisation and the work environment that gets in the way of you being your best?\nThese could be a policy or process, something about the culture or environment - create a list.",
+                            errorStyle: GoogleFonts.montserrat(
+                                textStyle: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .bodyLarge,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.redAccent),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                                borderRadius: BorderRadius.circular(15)),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black12),
+                                borderRadius: BorderRadius.circular(15)),
+                            labelStyle: GoogleFonts.montserrat(
+                                textStyle: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .bodyLarge,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black),
+                          ),
+                        ),
+                        SizedBox(height: 20,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 15),
+                                width: MediaQuery
+                                    .of(context)
+                                    .size
+                                    .width * .2,
+
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  //color: Colors.white,
+                                  border: Border.all(
+                                    //color:primaryColorOfApp ,
+                                      width: 1.0),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Cancel',
+                                    style: GoogleFonts.montserrat(
+                                      textStyle:
+                                      Theme
+                                          .of(context)
+                                          .textTheme
+                                          .titleSmall,
+                                      fontWeight: FontWeight.bold,
+                                      //color: primaryColorOfApp
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                            ),
+                            SizedBox(width: 5, height: 5,),
+                            InkWell(
+                              onTap: () async {
+                                Map<String, dynamic> AboutMEDatas = {
+                                  // 'About_Me_Label': AboutMeLabeltextController.text,
+                                  // 'My_Circumstance': mycircumstancesController.text,
+                                  // 'My_Strength': MystrengthsController.text,
+                                  // 'My_Organisation': myOrganisationController.text,
+                                  'My_Challenges_Organisation': myOrganisation2Controller
+                                      .text,
+                                  // Add other fields as needed
+                                };
+
+                                String solutionJson = json.encode(AboutMEDatas);
+                                print(solutionJson);
+
+                                ProgressDialog.show(
+                                    context, "Saving", Icons.save);
+                                await ApiRepository().updateAboutMe(
+                                    AboutMEDatas, documentId);
+                                _previewProvider.updatemychallenge(
+                                    myOrganisation2Controller.text);
+                                ProgressDialog.hide();
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                width: MediaQuery
+                                    .of(context)
+                                    .size
+                                    .width * .2,
+                                padding: EdgeInsets.symmetric(horizontal: 15),
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  border: Border.all(
+                                      color: Colors.blue,
+                                      width: 2.0),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Save',
+                                    style: GoogleFonts.montserrat(
+                                        textStyle:
+                                        Theme
+                                            .of(context)
+                                            .textTheme
+                                            .titleSmall,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                      ],
+                    ),
+                  ),
+                ));
+          });
+        });
+  }
+
   sendMailPopUp(dataList,dataList2){
 
     showDialog(
@@ -6252,7 +7753,7 @@ Date
                               padding: const EdgeInsets.symmetric(
                                   vertical: 5.0, horizontal: 5),
                               child: TextField(
-                                controller: SendNametextController,
+                                controller: _previewProvider.SendNametextController,
 
                                 style: GoogleFonts.montserrat(
                                     textStyle: Theme.of(context).textTheme.bodySmall,
@@ -6375,7 +7876,7 @@ Date
                         onTap: (){
                           SendEmailtextController.clear();
                           CopySendEmailtextController.clear();
-                          SendNametextController.clear();
+                          _previewProvider.SendNametextController.clear();
                           CopySendNametextController.clear();
                           Navigator.pop(context);
                         },
@@ -6417,7 +7918,7 @@ Date
                           // AboutMeDatetextController.text = formattedDate;
 
                           Map<String, dynamic> sentTojson1 ={
-                            "Sent_to" : SendNametextController.text,
+                            "Sent_to" : _previewProvider.SendNametextController.text,
                             "email": SendEmailtextController.text,
                             "Date_sent" : formattedDate,
                           };
@@ -6448,7 +7949,7 @@ Date
                         await ApiRepository().sendEmailWithAttachment(
                               context,
                               SendEmailtextController.text,
-                              SendNametextController.text,
+                            _previewProvider.SendNametextController.text,
                               CopySendEmailtextController.text,
                               CopySendNametextController.text,
                               base64EncodedData,
@@ -6461,7 +7962,7 @@ Date
 
                           print(SendEmailtextController.text);
                           print(CopySendEmailtextController.text);
-                          print(SendNametextController.text);
+                          print(_previewProvider.SendNametextController.text);
                           print(CopySendNametextController.text);
 
 
@@ -6545,6 +8046,14 @@ Date
     );
   }
 
+  Future<pw.MemoryImage> loadImage(String assetPath) async {
+    final imageByteData = await rootBundle.load(assetPath);
+
+    final imageUint8List = imageByteData.buffer
+        .asUint8List(imageByteData.offsetInBytes, imageByteData.lengthInBytes);
+
+    return pw.MemoryImage(imageUint8List);
+  }
 
   Future<Uint8List> makePdf(List<Map<String, dynamic>> dataList, List<Map<String, dynamic>> dataList2) async {
     final pdf = pw.Document();
@@ -6554,18 +8063,1402 @@ Date
     final headingfont1 = await PdfGoogleFonts.latoBold();
     final bodyfont1 = await PdfGoogleFonts.latoRegular();
 
+    final imageByteData = await rootBundle.load('assets/images/header.png');
+
+    final imageUint8List = imageByteData.buffer
+        .asUint8List(imageByteData.offsetInBytes, imageByteData.lengthInBytes);
+
+    final image = pw.MemoryImage(imageUint8List);
+
+    final circumstance = await loadImage('assets/images/circumstance.png');
+    final challenges = await loadImage('assets/images/challenges.png');
+    final myrole = await loadImage('assets/images/myrole.png');
+    final liked = await loadImage('assets/images/liked.png');
+    final disliked = await loadImage('assets/images/disliked.png');
+    final myresponsibility = await loadImage('assets/images/myresponsibility.png');
+    final request1 = await loadImage('assets/images/request1.png');
+    final request2 = await loadImage('assets/images/request2.png');
+
+    final customBgColor = PdfColor.fromInt(0xFFD9E2F3);
+    final customFontColor = PdfColor.fromInt(0xFF4478D4);
+
+    List<pw.Widget> SolutiontableRows1 =  generateSolutionsMyResponsibiltyWidgets(dataList2,headingfont1,bodyfont1);
+    List<pw.Widget> SolutiontableRows2 =  generateSolutionsStillNeededWidgets(dataList2,headingfont1,bodyfont1);
+    List<pw.Widget> SolutiontableRows3 =  generateSolutionsNotNeededAnymoreWidgets(dataList2,headingfont1,bodyfont1);
+    List<pw.Widget> SolutiontableRows4 =  generateSolutionsNoNicetohaveWidgets(dataList2,headingfont1,bodyfont1);
+    List<pw.Widget> SolutiontableRows5 =  generateSolutionsMustHaveWidgets(dataList2,headingfont1,bodyfont1);
+
+
     pdf.addPage(
         pw.MultiPage(
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           pageFormat: PdfPageFormat.a4,
-          margin: pw.EdgeInsets.all(20),
+          header: (context) {
+            return pw.Image(image);
+          },
+          footer: (context) {
+            return pw.Column(
+              children: [
+                pw.Image(image),
+                pw.SizedBox(height: 5,),
+
+                pw.Padding(
+                  padding: pw.EdgeInsets.symmetric(horizontal: 30),
+                  child:  pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.center,
+                      children: [
+                        pw.Text("${nameController.text}: my confidential preview summary",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                        pw.SizedBox(width: 70,),
+
+                        pw.Text("${AboutMeDatetextController.text}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                        pw.SizedBox(width: 120,),
+
+                        pw.Text("Page 1 of 5",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                      ]
+                  ),
+                ),
+
+
+
+                pw.SizedBox(height: 15,),
+
+              ]
+            );
+          },
+          margin: pw.EdgeInsets.all(0),
           build: (context) {
             // List<pw.Widget> ChallengetableRows = generateChallengeWidgets(dataList,headingfont1,bodyfont1);
             List<pw.TableRow> SolutiontableRows = generateSolutionTableRows(dataList2);
             return [
+
+              pw.SizedBox(height: 10,),
+
+              pw.Container(
+                padding: pw.EdgeInsets.all(5),
+                margin: pw.EdgeInsets.symmetric(horizontal: 30),
+                width: double.maxFinite,
+                decoration: pw.BoxDecoration(
+                  border: pw.Border.all(color: PdfColors.black),
+                 color: PdfColor.fromInt(0xffd9e2f3),
+                ),
+                child: pw.Text("Performing to my best in my role ${employerController.text} ",
+                    style: pw.TextStyle(font: headingfont1,fontSize: 24, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                ),
+              ),
+
+              pw.SizedBox(height: 10,),
+
               pw.Padding(
                 padding: const pw.EdgeInsets.symmetric(
-                  vertical: 10.0,),
+                  vertical: 10.0, horizontal: 30),
+                child: pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.start,
+                  children: [
+                    // pw.Text("Report file name: ", style: pw.TextStyle(font: Reportfont)),
+
+                    pw.Text("${nameController.text}: my confidential preview summary",style: pw.TextStyle(font: Reportfont,color: PdfColor.fromInt(0xFF4472c4),fontSize: 16)),
+
+                  ],
+                ),
+              ),
+
+              // pw.SizedBox(height: 5,),
+
+
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.start,
+                children: [
+                  pw.Container(
+                    width: 180,
+                    margin: pw.EdgeInsets.symmetric(horizontal: 30),
+                    child: pw.Text(
+                      "Date of preview report: ",
+                      style: pw.TextStyle(
+                        font: headingfont1,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  pw.Text(
+                    "${AboutMeDatetextController.text}",
+                    style: pw.TextStyle(font: bodyfont1),
+                  ),
+                ],
+              ),
+
+              pw.SizedBox(height: 30,),
+
+              pw.Container(
+                width: double.maxFinite,
+                  margin: pw.EdgeInsets.symmetric(horizontal: 30),
+                  height: 280,
+                decoration: pw.BoxDecoration(
+                  gradient: pw.LinearGradient(colors: [PdfColor.fromInt(0xffd9e2f3),PdfColor.fromInt(0xFF8faadc)],begin: pw.Alignment.topLeft, end:pw.Alignment.bottomRight )
+                ),
+                child: pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                    pw.Container(
+                      width: 220,
+                      margin: pw.EdgeInsets.only(left: 10,top: 45),
+                      child: pw.Text(
+                        "This document highlights my strengths and challenges at work, and provides suggestions for what I and my employer can do to help me to thrive in my workplace.",
+                        style: pw.TextStyle(
+                          font: headingfont1,
+                          fontWeight: pw.FontWeight.bold,
+                          fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                        ),
+                      ),
+                    ),
+
+                    pw.Container(
+                        width: 260,
+                        height: 200,
+                        margin: pw.EdgeInsets.only(right: 15, top: 40),
+                        padding: pw.EdgeInsets.all(10),
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border.all(color: PdfColors.black),
+                        ),
+                      child: pw.Column(
+                          mainAxisAlignment: pw.MainAxisAlignment.start,
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+
+                          pw.Text(
+                            "Report prepared for:",
+                            style: pw.TextStyle(
+                              font: headingfont1,
+                              fontWeight: pw.FontWeight.bold,
+                              fontSize: 18, color: PdfColor.fromInt(0xFF4472c4),
+                            ),
+                          ),
+
+                          pw.SizedBox(height: 15,),
+
+                          pw.Row(
+                            mainAxisAlignment: pw.MainAxisAlignment.start,
+                            children: [
+                              pw.Container(
+                                width: 130,
+                                child: pw.Text(
+                                  "Name: ",
+                                  style: pw.TextStyle(
+                                    font: headingfont1,
+                                    fontWeight: pw.FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              pw.Text(
+                                "${nameController.text}",
+                                style: pw.TextStyle(font: bodyfont1),
+                              ),
+                            ],
+                          ),
+
+                          pw.SizedBox(height: 15,),
+
+                          pw.Row(
+                            mainAxisAlignment: pw.MainAxisAlignment.start,
+                            children: [
+                              pw.Container(
+                                width: 130,
+                                child: pw.Text(
+                                  "Role: ",
+                                  style: pw.TextStyle(
+                                    font: headingfont1,
+                                    fontWeight: pw.FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              pw.Text(
+                                "${RoleController.text}",
+                                style: pw.TextStyle(font: bodyfont1),
+                              ),
+                            ],
+                          ),
+
+                          pw.SizedBox(height: 15,),
+
+                          pw.Row(
+                            mainAxisAlignment: pw.MainAxisAlignment.start,
+                            children: [
+                              pw.Container(
+                                width: 130,
+                                child: pw.Text(
+                                  "Location: ",
+                                  style: pw.TextStyle(
+                                    font: headingfont1,
+                                    fontWeight: pw.FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              pw.Text(
+                                "${LocationController.text}",
+                                style: pw.TextStyle(font: bodyfont1),
+                              ),
+                            ],
+                          ),
+
+                          pw.SizedBox(height: 15,),
+
+                          pw.Row(
+                            mainAxisAlignment: pw.MainAxisAlignment.start,
+                            children: [
+                              pw.Container(
+                                width: 130,
+                                child: pw.Text(
+                                  "Employee number: ",
+                                  style: pw.TextStyle(
+                                    font: headingfont1,
+                                    fontWeight: pw.FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              pw.Text(
+                                "${EmployeeNumberController.text}",
+                                style: pw.TextStyle(font: bodyfont1),
+                              ),
+                            ],
+                          ),
+
+                          pw.SizedBox(height: 15,),
+
+                          pw.Row(
+                            mainAxisAlignment: pw.MainAxisAlignment.start,
+                            children: [
+                              pw.Container(
+                                width: 130,
+                                child: pw.Text(
+                                  "Team Leader: ",
+                                  style: pw.TextStyle(
+                                    font: headingfont1,
+                                    fontWeight: pw.FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              pw.Text(
+                                "${LineManagerController.text}",
+                                style: pw.TextStyle(font: bodyfont1),
+                              ),
+                            ],
+                          ),
+                        ]
+                      )
+                    )
+                  ]
+                )
+              ),
+
+              // pw.SizedBox(height: 15,),
+              //
+              //
+              //
+              // pw.SizedBox(height: 10,),
+              //
+              // pw.Padding(
+              //     padding: const pw.EdgeInsets.symmetric(
+              //       vertical: 10.0,),
+              //     child: pw.Text("Performing to my best in my role ${employerController.text}: ",
+              //         style: pw.TextStyle(fontWeight: pw.FontWeight.bold, font:headingfont1))
+              // ),
+              //
+              // pw.SizedBox(height: 5,),
+              //
+              //
+              // pw.Text(
+              //   "${AboutMeDescriptiontextController.text}",
+              //   style: pw.TextStyle(font: bodyfont1),
+              // ),
+              //
+              //
+              // pw.SizedBox(height: 20,),
+
+
+            ];
+          },));
+
+    pdf.addPage(
+
+        pw.MultiPage(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          pageFormat: PdfPageFormat.a4,
+          header: (context) {
+            return pw.Image(image);
+          },
+          footer: (context) {
+            return pw.Column(
+                children: [
+                  pw.Image(image),
+                  pw.SizedBox(height: 5,),
+
+                  pw.Padding(
+                    padding: pw.EdgeInsets.symmetric(horizontal: 30),
+                    child:  pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Text("${nameController.text}: my confidential preview summary",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                          pw.SizedBox(width: 70,),
+
+                          pw.Text("${AboutMeDatetextController.text}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                          pw.SizedBox(width: 120,),
+
+                          pw.Text("Page 2 of 5",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                        ]
+                    ),
+                  ),
+
+
+
+                  pw.SizedBox(height: 15,),
+
+                ]
+            );
+          },
+          margin: pw.EdgeInsets.all(0),
+          build: (context) {
+            List<pw.Widget> ChallengetableRows = generateChallengeWidgets(dataList,headingfont1,bodyfont1);
+            return [
+
+              pw.Container(
+                padding: pw.EdgeInsets.all(5),
+                margin: pw.EdgeInsets.symmetric(horizontal: 30),
+                width: double.maxFinite,
+                decoration: pw.BoxDecoration(
+                  border: pw.Border.all(color: PdfColors.black),
+                  color: PdfColor.fromInt(0xffd9e2f3),
+                ),
+                child: pw.Text("About me:",
+                    style: pw.TextStyle(font: headingfont1,fontSize: 18, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                ),
+              ),
+
+              pw.SizedBox(height: 10,),
+
+              pw.Padding(
+                  padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                  child: pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.start,
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                  pw.Column(
+                  mainAxisAlignment: pw.MainAxisAlignment.start,
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                      pw.Text("Me and my circumstances:",
+                        style: pw.TextStyle(
+                          font: headingfont1,
+                          fontWeight: pw.FontWeight.bold,
+                          fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                        ),
+                      ),
+
+                        pw.SizedBox(height: 10,),
+
+                        pw.Image(circumstance,width: 70, height:70)
+                      ],
+                  ),
+
+                      pw.Container(
+                        padding: pw.EdgeInsets.all(10),
+                        margin: pw.EdgeInsets.symmetric(horizontal: 30),
+                        width: 340,
+                        constraints: pw.BoxConstraints(
+                          minHeight: 130,
+                        ),
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border.all(color: PdfColors.black),
+                        ),
+                        child: pw.Text("${mycircumstancesController.text}",
+                            style: pw.TextStyle(font: bodyfont1,fontSize: 12,
+                                decorationStyle: pw.TextDecorationStyle.double),
+                        ),
+                      ),
+                    ]
+                  ),
+              ),
+
+              pw.SizedBox(height: 20,),
+
+              pw.Padding(
+                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                child: pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.start,
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Column(
+                        mainAxisAlignment: pw.MainAxisAlignment.start,
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Container(
+                            // padding: pw.EdgeInsets.all(10),
+                            width: 175,
+
+                            // height: 100,
+                            // decoration: pw.BoxDecoration(
+                            //   border: pw.Border.all(color: PdfColors.black),
+                            // ),
+                            child: pw.Text("My strengths that I want to have the opportunity to use in my role: ",
+                              style: pw.TextStyle(
+                                font: headingfont1,
+                                fontWeight: pw.FontWeight.bold,
+                                fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                              ),
+                            ),
+                          ),
+
+
+
+                          pw.SizedBox(height: 10,),
+
+                          pw.Image(myrole,width: 70, height:70)
+                        ],
+                      ),
+
+                      pw.Container(
+                        padding: pw.EdgeInsets.all(10),
+                        margin: pw.EdgeInsets.only(right: 30, left: 19.5),
+                        width: 340,
+                        constraints: pw.BoxConstraints(
+                          minHeight: 130,
+                        ),
+                        // height: 100,
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border.all(color: PdfColors.black),
+                        ),
+                        child: pw.Text("${MystrengthsController.text}",
+                            style: pw.TextStyle(font: bodyfont1,fontSize: 12)
+                        ),
+                      ),
+                    ]
+                ),
+              ),
+
+              pw.SizedBox(height: 30,),
+
+              pw.Padding(
+                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                child: pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.start,
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Column(
+                        mainAxisAlignment: pw.MainAxisAlignment.start,
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Container(
+                            // padding: pw.EdgeInsets.all(10),
+                            width: 175,
+
+                            // height: 100,
+                            // decoration: pw.BoxDecoration(
+                            //   border: pw.Border.all(color: PdfColors.black),
+                            // ),
+                            child: pw.Text("Things I find challenging in life that make it harder for me to perform my best:",
+                              style: pw.TextStyle(
+                                font: headingfont1,
+                                fontWeight: pw.FontWeight.bold,
+                                fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                              ),
+                            ),
+                          ),
+
+
+
+                          pw.SizedBox(height: 10,),
+
+                          pw.Image(challenges,width: 70, height:70)
+                        ],
+                      ),
+
+                      pw.Container(
+                        padding: pw.EdgeInsets.all(10),
+                        margin: pw.EdgeInsets.only(right: 30, left: 19.5),
+                        width: 340,
+                        constraints: pw.BoxConstraints(
+                          minHeight: 300,
+                        ),
+                        // height: 100,
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border.all(color: PdfColors.black),
+                        ),
+                        child: pw.Column(children: [...ChallengetableRows]),
+                      ),
+                    ]
+                ),
+              ),
+
+              // pw.SizedBox(height: 30,),
+              //
+              //
+              // pw.SizedBox(height: 10,),
+              //
+              // pw.Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${employerController.text}",
+              //     style: pw.TextStyle(fontWeight: pw.FontWeight.bold, font:headingfont1)),
+              //
+              // pw.SizedBox(height: 10,),
+              //
+              // (SolutiontableRows1.isNotEmpty) ?  pw.Text(
+              //   "Personal Responsibility ",
+              //   style: pw.TextStyle(font: headingfont1, decoration: pw.TextDecoration.underline),
+              // ) :
+              //
+              // pw.SizedBox(),
+              //
+              // (SolutiontableRows1.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+              //
+              //
+              // (SolutiontableRows1.isNotEmpty) ? pw.Text("Things I already or will do to help myself:",
+              //     style: pw.TextStyle( font:bodyfont1)) :
+              //
+              // pw.SizedBox(),
+              //
+              // (SolutiontableRows1.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+              //
+              // ...SolutiontableRows1,
+              //
+              // (SolutiontableRows1.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+              //
+              // (SolutiontableRows2.isNotEmpty || SolutiontableRows3.isNotEmpty || SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty ) ? pw.Text(
+              //   "Requests of ${employerController.text}",
+              //   style: pw.TextStyle(font: headingfont1, decoration: pw.TextDecoration.underline),
+              // ) : pw.SizedBox(),
+              //
+              // (SolutiontableRows2.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+              //
+              // (SolutiontableRows2.isNotEmpty) ?  pw.Text("${employerController.text} already provides the following assistance to me, which I’d like to continue to receive:",
+              //     style: pw.TextStyle( font:bodyfont1)) : pw.SizedBox(),
+              //
+              // (SolutiontableRows2.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+              //
+              //
+              // ...SolutiontableRows2,
+              //
+              //
+              // (SolutiontableRows2.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+              //
+              // (SolutiontableRows3.isNotEmpty) ? pw.Text("I’m asking ${employerController.text} to start providing for me:",
+              //     style: pw.TextStyle( font:bodyfont1)) : pw.SizedBox(),
+              //
+              // (SolutiontableRows3.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+              //
+              // ...SolutiontableRows3,
+              //
+              //
+              // (SolutiontableRows3.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+              //
+              // (SolutiontableRows4.isNotEmpty) ? pw.Text("I’m asking ${employerController.text} to start providing for me but they are not essential:",
+              //     style: pw.TextStyle( font:bodyfont1)) : pw.SizedBox(),
+              //
+              // (SolutiontableRows4.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+              //
+              // ...SolutiontableRows4,
+              //
+              //
+              // (SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+              //
+              // (SolutiontableRows5.isNotEmpty) ? pw.Text("${employerController.text} already provides for me but are not needed anymore:",
+              //     style: pw.TextStyle( font:bodyfont1)) : pw.SizedBox(),
+              //
+              // (SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+              //
+              // ...SolutiontableRows5,
+
+///
+              // pw.Padding(
+              //   padding: const pw.EdgeInsets.symmetric(
+              //       vertical: 10.0, horizontal: 8),
+              //   child: pw.Row(
+              //     mainAxisAlignment: pw.MainAxisAlignment.start,
+              //     children: [
+              //
+              //       pw.Text("Useful Info: ",),
+              //       pw.Text("${AboutMeUseFulInfotextController.text}",),
+              //
+              //     ],
+              //   ),
+              // ),
+              //
+              // pw.Padding(
+              //   padding: const pw.EdgeInsets.symmetric(
+              //       vertical: 10.0, horizontal: 8),
+              //   child: pw.Row(
+              //     mainAxisAlignment: pw.MainAxisAlignment.start,
+              //     children: [
+              //
+              //       pw.Text("Attachment: ",),
+              //       pw.Text("Attachment",),
+              //
+              //     ],
+              //   ),
+              // ),
+
+            ];
+          },));
+
+    pdf.addPage(
+        pw.MultiPage(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            pageFormat: PdfPageFormat.a4,
+            header: (context) {
+              return pw.Image(image);
+            },
+            footer: (context) {
+              return pw.Column(
+                  children: [
+                    pw.Image(image),
+                    pw.SizedBox(height: 5,),
+
+                    pw.Padding(
+                      padding: pw.EdgeInsets.symmetric(horizontal: 30),
+                      child:  pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.center,
+                          children: [
+                            pw.Text("${nameController.text}: my confidential preview summary",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                            pw.SizedBox(width: 70,),
+
+                            pw.Text("${AboutMeDatetextController.text}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                            pw.SizedBox(width: 120,),
+
+                            pw.Text("Page 2 of 5",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                          ]
+                      ),
+                    ),
+
+
+
+                    pw.SizedBox(height: 15,),
+
+                  ]
+              );
+            },
+            margin: pw.EdgeInsets.all(0),
+            build: ( context) {
+              return [
+                pw.Container(
+                  padding: pw.EdgeInsets.all(5),
+                  margin: pw.EdgeInsets.symmetric(horizontal: 30),
+                  width: double.maxFinite,
+                  decoration: pw.BoxDecoration(
+                    border: pw.Border.all(color: PdfColors.black),
+                    color: PdfColor.fromInt(0xffd9e2f3),
+                  ),
+                  child: pw.Text("What I find helps and hinders me in my workplace environment:",
+                      style: pw.TextStyle(font: headingfont1,fontSize: 18, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                  ),
+                ),
+
+                pw.SizedBox(height: 25,),
+                //pw.Padding(padding: pw.EdgeInsets.all(20)),
+
+                pw.Padding(
+                  padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                  child: pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.start,
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Column(
+                          mainAxisAlignment: pw.MainAxisAlignment.start,
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            pw.Container(
+                              // padding: pw.EdgeInsets.all(10),
+                              width: 175,
+
+                              // height: 100,
+                              // decoration: pw.BoxDecoration(
+                              //   border: pw.Border.all(color: PdfColors.black),
+                              // ),
+                              child: pw.Text("What I value about ${employerController.text} and workplace environment that helps me perform to my best: ",
+                                style: pw.TextStyle(
+                                  font: headingfont1,
+                                  fontWeight: pw.FontWeight.bold,
+                                  fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                                ),
+                              ),
+                            ),
+
+
+
+                            pw.SizedBox(height: 10,),
+
+                            pw.Image(liked,width: 70, height:70)
+                          ],
+                        ),
+
+                        pw.Container(
+                          padding: pw.EdgeInsets.all(10),
+                          margin: pw.EdgeInsets.only(right: 30, left: 19.5),
+                          width: 340,
+                          constraints: pw.BoxConstraints(
+                            minHeight: 140,
+                          ),
+                          // height: 100,
+                          decoration: pw.BoxDecoration(
+                            border: pw.Border.all(color: PdfColors.black),
+                          ),
+                          child: pw.Text("${myOrganisationController.text}",
+                              style: pw.TextStyle(font: bodyfont1,fontSize: 12)
+                          ),
+                        ),
+                      ]
+                  ),
+                ),
+
+                pw.SizedBox(height: 50,),
+
+                pw.Padding(
+                  padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                  child: pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.start,
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Column(
+                          mainAxisAlignment: pw.MainAxisAlignment.start,
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            pw.Container(
+                              // padding: pw.EdgeInsets.all(10),
+                              width: 175,
+
+                              // height: 100,
+                              // decoration: pw.BoxDecoration(
+                              //   border: pw.Border.all(color: PdfColors.black),
+                              // ),
+                              child: pw.Text("What I find challenging about ${employerController.text} and the workplace environment that makes it harder for me to perform my best: ",
+                                style: pw.TextStyle(
+                                  font: headingfont1,
+                                  fontWeight: pw.FontWeight.bold,
+                                  fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                                ),
+                              ),
+                            ),
+
+
+
+                            pw.SizedBox(height: 10,),
+
+                            pw.Image(disliked,width: 70, height:70)
+                          ],
+                        ),
+
+                        pw.Container(
+                          padding: pw.EdgeInsets.all(10),
+                          margin: pw.EdgeInsets.only(right: 30, left: 19.5),
+                          width: 340,
+                          constraints: pw.BoxConstraints(
+                            minHeight: 140,
+                          ),
+                          // height: 100,
+                          decoration: pw.BoxDecoration(
+                            border: pw.Border.all(color: PdfColors.black),
+                          ),
+                          child: pw.Text("${myOrganisation2Controller.text}",
+                              style: pw.TextStyle(font: bodyfont1,fontSize: 12)
+                          ),
+                        ),
+                      ]
+                  ),
+                ),
+
+              ];  })
+    );
+
+    (SolutiontableRows1.isNotEmpty) ? pdf.addPage(
+        pw.MultiPage(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          pageFormat: PdfPageFormat.a4,
+          header: (context) {
+            return pw.Image(image);
+          },
+          footer: (context) {
+            return pw.Column(
+                children: [
+                  pw.Image(image),
+                  pw.SizedBox(height: 5,),
+
+                  pw.Padding(
+                    padding: pw.EdgeInsets.symmetric(horizontal: 30),
+                    child:  pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Text("${nameController.text}: my confidential preview summary",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                          pw.SizedBox(width: 70,),
+
+                          pw.Text("${AboutMeDatetextController.text}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                          pw.SizedBox(width: 120,),
+
+                          pw.Text("Page 2 of 5",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                        ]
+                    ),
+                  ),
+
+
+
+                  pw.SizedBox(height: 15,),
+
+                ]
+            );
+          },
+          margin: pw.EdgeInsets.all(0),
+          build: (context) {
+            return [
+              pw.Container(
+                padding: pw.EdgeInsets.all(5),
+                margin: pw.EdgeInsets.symmetric(horizontal: 30),
+                width: double.maxFinite,
+                decoration: pw.BoxDecoration(
+                  border: pw.Border.all(color: PdfColors.black),
+                  color: PdfColor.fromInt(0xffd9e2f3),
+                ),
+                child: pw.Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${employerController.text}",
+                    style: pw.TextStyle(font: headingfont1,fontSize: 18, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                ),
+              ),
+
+              pw.SizedBox(height: 20,),
+              //pw.Padding(padding: pw.EdgeInsets.all(20)),
+
+              pw.Padding(
+                  padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                  child: pw.Text("Here are things that can help me, for which I can and want to take",
+                  style: pw.TextStyle(font: headingfont1,fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),)
+              )),
+
+              pw.SizedBox(height: 10,),
+
+              (SolutiontableRows1.isNotEmpty) ? pw.Padding(
+                  padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                  child: pw.Text("Personal Responsibility",
+                  style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+              )) : pw.SizedBox(),
+
+              (SolutiontableRows1.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+
+              (SolutiontableRows1.isNotEmpty) ?  pw.Padding(
+                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                child: pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.start,
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Column(
+                        mainAxisAlignment: pw.MainAxisAlignment.start,
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Container(
+                            // padding: pw.EdgeInsets.all(10),
+                            width: 175,
+
+                            // height: 100,
+                            // decoration: pw.BoxDecoration(
+                            //   border: pw.Border.all(color: PdfColors.black),
+                            // ),
+                            child: pw.Text("Things I already or will do to help myself:",
+                              style: pw.TextStyle(
+                                font: headingfont1,
+                                fontWeight: pw.FontWeight.bold,
+                                fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                              ),
+                            ),
+                          ),
+
+
+
+                          pw.SizedBox(height: 10,),
+
+                          pw.Image(myresponsibility,width: 70, height:70)
+                        ],
+                      ),
+
+                      pw.Container(
+                        padding: pw.EdgeInsets.all(10),
+                        margin: pw.EdgeInsets.only(right: 30, left: 19.5),
+                        width: 340,
+                        constraints: pw.BoxConstraints(
+                          minHeight: 140,
+                        ),
+                        // height: 100,
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border.all(color: PdfColors.black),
+                        ),
+                        child: pw.Column(children: [...SolutiontableRows1]),
+                      ),
+                    ]
+                ),
+              ) : pw.SizedBox(),
+
+              (SolutiontableRows1.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+
+
+
+            ];
+          },
+        ),
+    ) : pw.SizedBox();
+
+    (SolutiontableRows2.isNotEmpty||SolutiontableRows3.isNotEmpty) ?  pdf.addPage(
+        pw.MultiPage(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          pageFormat: PdfPageFormat.a4,
+          header: (context) {
+            return pw.Image(image);
+          },
+          footer: (context) {
+            return pw.Column(
+                children: [
+                  pw.Image(image),
+                  pw.SizedBox(height: 5,),
+
+                  pw.Padding(
+                    padding: pw.EdgeInsets.symmetric(horizontal: 30),
+                    child:  pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Text("${nameController.text}: my confidential preview summary",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                          pw.SizedBox(width: 70,),
+
+                          pw.Text("${AboutMeDatetextController.text}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                          pw.SizedBox(width: 120,),
+
+                          pw.Text("Page 2 of 5",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                        ]
+                    ),
+                  ),
+
+
+
+                  pw.SizedBox(height: 15,),
+
+                ]
+            );
+          },
+          margin: pw.EdgeInsets.all(0),
+          build: (context) {
+            return [
+              pw.Container(
+                padding: pw.EdgeInsets.all(5),
+                margin: pw.EdgeInsets.symmetric(horizontal: 30),
+                width: double.maxFinite,
+                decoration: pw.BoxDecoration(
+                  border: pw.Border.all(color: PdfColors.black),
+                  color: PdfColor.fromInt(0xffd9e2f3),
+                ),
+                child: pw.Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${employerController.text}",
+                    style: pw.TextStyle(font: headingfont1,fontSize: 18, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                ),
+              ),
+
+              pw.SizedBox(height: 20,),
+              //pw.Padding(padding: pw.EdgeInsets.all(20)),
+
+              pw.Padding(
+                  padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                  child: pw.Text("Here are things that can help me, for which I can and want to take",
+                  style: pw.TextStyle(font: headingfont1,fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),)
+              )),
+
+              pw.SizedBox(height: 10,),
+
+
+              (SolutiontableRows2.isNotEmpty) ? pw.Padding(
+                  padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                  child: pw.Text("request from my employer",
+                      style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                  )) : pw.SizedBox(),
+
+              (SolutiontableRows2.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+
+              (SolutiontableRows2.isNotEmpty) ? pw.Padding(
+                  padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                  child: pw.Text("My request of ${employerController.text}",
+                      style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                  )) : pw.SizedBox(),
+
+              (SolutiontableRows2.isNotEmpty) ? pw.SizedBox(height: 15,) : pw.SizedBox(),
+
+              (SolutiontableRows2.isNotEmpty) ?  pw.Padding(
+                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                child: pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.start,
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Column(
+                        mainAxisAlignment: pw.MainAxisAlignment.start,
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Container(
+                            // padding: pw.EdgeInsets.all(10),
+                            width: 175,
+
+                            // height: 100,
+                            // decoration: pw.BoxDecoration(
+                            //   border: pw.Border.all(color: PdfColors.black),
+                            // ),
+                            child: pw.Text("${employerController.text} already provides the following assistance to me, which I’d like if possible to continue to receive",
+                              style: pw.TextStyle(
+                                font: headingfont1,
+                                fontWeight: pw.FontWeight.bold,
+                                fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                              ),
+                            ),
+                          ),
+
+
+
+                          pw.SizedBox(height: 10,),
+
+                          pw.Image(request1,width: 70, height:70)
+                        ],
+                      ),
+
+                      pw.Container(
+                        padding: pw.EdgeInsets.all(10),
+                        margin: pw.EdgeInsets.only(right: 30, left: 19.5),
+                        width: 340,
+                        constraints: pw.BoxConstraints(
+                          minHeight: 140,
+                        ),
+                        // height: 100,
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border.all(color: PdfColors.black),
+                        ),
+                        child: pw.Column(children: [...SolutiontableRows2]),
+                      ),
+                    ]
+                ),
+              ) : pw.SizedBox(),
+
+              (SolutiontableRows2.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+
+
+              (SolutiontableRows3.isNotEmpty) ?  pw.Padding(
+                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                child: pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.start,
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Column(
+                        mainAxisAlignment: pw.MainAxisAlignment.start,
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Container(
+                            // padding: pw.EdgeInsets.all(10),
+                            width: 175,
+
+                            // height: 100,
+                            // decoration: pw.BoxDecoration(
+                            //   border: pw.Border.all(color: PdfColors.black),
+                            // ),
+                            child: pw.Text("I’m asking ${employerController.text} whether it is possible to start providing for me:",
+                              style: pw.TextStyle(
+                                font: headingfont1,
+                                fontWeight: pw.FontWeight.bold,
+                                fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                              ),
+                            ),
+                          ),
+
+
+
+                          pw.SizedBox(height: 10,),
+
+                          pw.Image(request2,width: 70, height:70)
+                        ],
+                      ),
+
+                      pw.Container(
+                        padding: pw.EdgeInsets.all(10),
+                        margin: pw.EdgeInsets.only(right: 30, left: 19.5),
+                        width: 340,
+                        constraints: pw.BoxConstraints(
+                          minHeight: 140,
+                        ),
+                        // height: 100,
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border.all(color: PdfColors.black),
+                        ),
+                        child: pw.Column(children: [...SolutiontableRows3]),
+                      ),
+                    ]
+                ),
+              ) : pw.SizedBox(),
+
+              (SolutiontableRows3.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+
+            ];
+          },
+        ),
+    ) : pw.SizedBox();
+
+    (SolutiontableRows4.isNotEmpty||SolutiontableRows5.isNotEmpty) ? pdf.addPage(
+      pw.MultiPage(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        pageFormat: PdfPageFormat.a4,
+        header: (context) {
+          return pw.Image(image);
+        },
+        footer: (context) {
+          return pw.Column(
+              children: [
+                pw.Image(image),
+                pw.SizedBox(height: 5,),
+
+                pw.Padding(
+                  padding: pw.EdgeInsets.symmetric(horizontal: 30),
+                  child:  pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.center,
+                      children: [
+                        pw.Text("${nameController.text}: my confidential preview summary",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                        pw.SizedBox(width: 70,),
+
+                        pw.Text("${AboutMeDatetextController.text}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                        pw.SizedBox(width: 120,),
+
+                        pw.Text("Page 2 of 5",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                      ]
+                  ),
+                ),
+
+
+
+                pw.SizedBox(height: 15,),
+
+              ]
+          );
+        },
+        margin: pw.EdgeInsets.all(0),
+        build: (context) {
+          // List<pw.Widget> SolutiontableRows4 =  generateSolutionsNoNicetohaveWidgets(dataList2,headingfont1,bodyfont1);
+          // List<pw.Widget> SolutiontableRows5 =  generateSolutionsMustHaveWidgets(dataList2,headingfont1,bodyfont1);
+          return [
+            (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.Container(
+              padding: pw.EdgeInsets.all(5),
+              margin: pw.EdgeInsets.symmetric(horizontal: 30),
+              width: double.maxFinite,
+              decoration: pw.BoxDecoration(
+                border: pw.Border.all(color: PdfColors.black),
+                color: PdfColor.fromInt(0xffd9e2f3),
+              ),
+              child: pw.Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${employerController.text}",
+                  style: pw.TextStyle(font: headingfont1,fontSize: 18, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+              ),
+            ) : pw.SizedBox(),
+
+            (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 20,) : pw.SizedBox(),
+            //pw.Padding(padding: pw.EdgeInsets.all(20)),
+
+            (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.Padding(
+                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                child: pw.Text("Here are things that can help me, for which I can and want to take",
+                    style: pw.TextStyle(font: headingfont1,fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),)
+                )) : pw.SizedBox(),
+
+            (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+
+
+            (SolutiontableRows4.isNotEmpty) ? pw.Padding(
+                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                child: pw.Text("request from my employer",
+                    style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                )) : pw.SizedBox(),
+
+            (SolutiontableRows4.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+
+            (SolutiontableRows4.isNotEmpty) ? pw.Padding(
+                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                child: pw.Text("My request of ${employerController.text}",
+                    style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                )) : pw.SizedBox(),
+
+            (SolutiontableRows4.isNotEmpty) ? pw.SizedBox(height: 15,) : pw.SizedBox(),
+
+            (SolutiontableRows4.isNotEmpty) ?  pw.Padding(
+              padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+              child: pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.start,
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Column(
+                      mainAxisAlignment: pw.MainAxisAlignment.start,
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Container(
+                          // padding: pw.EdgeInsets.all(10),
+                          width: 175,
+
+                          // height: 100,
+                          // decoration: pw.BoxDecoration(
+                          //   border: pw.Border.all(color: PdfColors.black),
+                          // ),
+                          child: pw.Text("I’m asking ${employerController.text} to start providing for me but they are not essential:",
+                            style: pw.TextStyle(
+                              font: headingfont1,
+                              fontWeight: pw.FontWeight.bold,
+                              fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                            ),
+                          ),
+                        ),
+
+
+
+                        pw.SizedBox(height: 10,),
+
+                        pw.Image(myresponsibility,width: 70, height:70)
+                      ],
+                    ),
+
+                    pw.Container(
+                      padding: pw.EdgeInsets.all(10),
+                      margin: pw.EdgeInsets.only(right: 30, left: 19.5),
+                      width: 340,
+                      constraints: pw.BoxConstraints(
+                        minHeight: 140,
+                      ),
+                      // height: 100,
+                      decoration: pw.BoxDecoration(
+                        border: pw.Border.all(color: PdfColors.black),
+                      ),
+                      child: pw.Column(children: [...SolutiontableRows4]),
+                    ),
+                  ]
+              ),
+            ) : pw.SizedBox(),
+
+            (SolutiontableRows4.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+
+
+            (SolutiontableRows5.isNotEmpty) ?  pw.Padding(
+              padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+              child: pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.start,
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Column(
+                      mainAxisAlignment: pw.MainAxisAlignment.start,
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Container(
+                          // padding: pw.EdgeInsets.all(10),
+                          width: 175,
+
+                          // height: 100,
+                          // decoration: pw.BoxDecoration(
+                          //   border: pw.Border.all(color: PdfColors.black),
+                          // ),
+                          child: pw.Text("${employerController.text} already provides for me but are not needed anymore:",
+                            style: pw.TextStyle(
+                              font: headingfont1,
+                              fontWeight: pw.FontWeight.bold,
+                              fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                            ),
+                          ),
+                        ),
+
+
+
+                        pw.SizedBox(height: 10,),
+
+                        pw.Image(myresponsibility,width: 70, height:70)
+                      ],
+                    ),
+
+                    pw.Container(
+                      padding: pw.EdgeInsets.all(10),
+                      margin: pw.EdgeInsets.only(right: 30, left: 19.5),
+                      width: 340,
+                      constraints: pw.BoxConstraints(
+                        minHeight: 140,
+                      ),
+                      // height: 100,
+                      decoration: pw.BoxDecoration(
+                        border: pw.Border.all(color: PdfColors.black),
+                      ),
+                      child: pw.Column(children: [...SolutiontableRows5]),
+                    ),
+                  ]
+              ),
+            ) : pw.SizedBox(),
+
+            (SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+
+            pw.Padding(
+                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+            child:  pw.Text("My requests include workplace accommodations that I view as reasonable adjustments under the Equality Act 2010",
+                style: pw.TextStyle(font: bodyfont1,fontSize: 14,)
+            )),
+
+          ];
+        },
+      ),
+    ) : pw.SizedBox();
+
+    return pdf.save();
+  }
+
+  Future<Uint8List> ForBackupmakePdf(List<Map<String, dynamic>> dataList, List<Map<String, dynamic>> dataList2) async {
+    final pdf = pw.Document();
+    final Reportfont = await PdfGoogleFonts.latoBoldItalic();
+    final Reportansfont = await PdfGoogleFonts.latoItalic();
+
+    final headingfont1 = await PdfGoogleFonts.latoBold();
+    final bodyfont1 = await PdfGoogleFonts.latoRegular();
+
+    final imageByteData = await rootBundle.load('assets/images/header.png');
+
+    final imageUint8List = imageByteData.buffer
+        .asUint8List(imageByteData.offsetInBytes, imageByteData.lengthInBytes);
+
+    final image = pw.MemoryImage(imageUint8List);
+
+    pdf.addPage(
+        pw.MultiPage(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          pageFormat: PdfPageFormat.a4,
+          header: (context) {
+            return pw.Image(image);
+          },
+          margin: pw.EdgeInsets.all(0),
+          build: (context) {
+            // List<pw.Widget> ChallengetableRows = generateChallengeWidgets(dataList,headingfont1,bodyfont1);
+            List<pw.TableRow> SolutiontableRows = generateSolutionTableRows(dataList2);
+            return [
+
+              pw.SizedBox(height: 10,),
+
+              pw.Container(
+                padding: pw.EdgeInsets.all(5),
+                margin: pw.EdgeInsets.symmetric(horizontal: 30),
+                width: double.maxFinite,
+                decoration: pw.BoxDecoration(
+                  border: pw.Border.all(color: PdfColors.black),
+                  color: PdfColor.fromInt(0xffd9e2f3),
+                ),
+                child: pw.Text("Performing to my best in my role ${employerController.text} ",
+                    style: pw.TextStyle(font: headingfont1,fontSize: 24, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                ),
+              ),
+
+              pw.Padding(
+                padding: const pw.EdgeInsets.symmetric(
+                    vertical: 10.0, horizontal: 30),
                 child: pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.start,
                   children: [
@@ -6585,6 +9478,7 @@ Date
                 children: [
                   pw.Container(
                     width: 120,
+                    margin: pw.EdgeInsets.symmetric(horizontal: 30),
                     child: pw.Text(
                       "Date: ",
                       style: pw.TextStyle(
@@ -6731,7 +9625,11 @@ Date
         pw.MultiPage(
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           pageFormat: PdfPageFormat.a4,
-          margin: pw.EdgeInsets.all(20),
+          header: (context) {
+            return pw.Image(image);
+          },
+
+          margin: pw.EdgeInsets.all(0),
           build: (context) {
             List<pw.Widget> ChallengetableRows = generateChallengeWidgets(dataList,headingfont1,bodyfont1);
             List<pw.Widget> SolutiontableRows1 =  generateSolutionsMyResponsibiltyWidgets(dataList2,headingfont1,bodyfont1);
@@ -6758,7 +9656,7 @@ Date
                         pw.SizedBox(height: 10,),
 
                         pw.Text(
-                          "Me and My circumstances: ",
+                          "Me and my circumstances: ",
                           style: pw.TextStyle(font: bodyfont1, decoration: pw.TextDecoration.underline),
                         ),
 
@@ -6942,6 +9840,7 @@ Date
 
     return pdf.save();
   }
+
 
   Future<void> downloadAboutMePdf(dataList,dataList2) async {
     // final Uint8List pdfBytes = await generateAboutMePdf();
