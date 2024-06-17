@@ -190,103 +190,59 @@ Date
     //       _previewProvider.PreviewSolutionNiceToHave,_previewProvider.PreviewSolutionMustHave);
     //   About_Me_Label = widget.aboutMeData["About_Me_Label"];
     // });
-
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      _userAboutMEProvider.editchallengess.clear();
-      _userAboutMEProvider.editsolutionss.clear();
-      challengesList.clear();
-      solutionsList.clear();
-      _previewProvider.PreviewChallengesList.clear();
-      _previewProvider.PreviewSolutionStillNeeded.clear();
-      _previewProvider.PreviewSolutionMyResposibilty.clear();
-      _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
-      _previewProvider.PreviewSolutionNiceToHave.clear();
-      _previewProvider.PreviewSolutionMustHave.clear();
-      print("Cleared");
-      print("Adding now");
-      _userAboutMEProvider.EditChallengeList(widget.aboutMeData["Challenges"]);
-      _userAboutMEProvider.EditChallengeListadd(challengesList);
-      _userAboutMEProvider.EditChallengeListadd(_previewProvider.PreviewChallengesList);
-      _userAboutMEProvider.EditSolutionList(widget.aboutMeData["Solutions"]);
-      _userAboutMEProvider.EditSolutionListadd(solutionsList);
-      _userAboutMEProvider.EditSolutionProvideradd(_previewProvider.PreviewSolutionMyResposibilty);
-      _userAboutMEProvider.EditSolutionInPlaceadd(_previewProvider.PreviewSolutionStillNeeded,
-          _previewProvider.PreviewSolutionNotNeededAnyMore, _previewProvider.PreviewSolutionNiceToHave, _previewProvider.PreviewSolutionMustHave);
-      About_Me_Label = widget.aboutMeData["About_Me_Label"];
-
-      AboutMeLabeltextController.text = widget.aboutMeData['About_Me_Label']==null ? "" : widget.aboutMeData['About_Me_Label'];
-      _previewProvider.title = AboutMeLabeltextController.text;
-
-      mycircumstancesController.text = widget.aboutMeData['My_Circumstance']==null ? "" : widget.aboutMeData['My_Circumstance'];
-      _previewProvider.mycircumstance = mycircumstancesController.text;
-
-      MystrengthsController.text = widget.aboutMeData['My_Strength']==null ? "" : widget.aboutMeData['My_Strength'];
-      _previewProvider.mystrength = MystrengthsController.text;
-
-      myOrganisationController.text = widget.aboutMeData['My_Organisation']==null ? "" : widget.aboutMeData['My_Organisation'];
-      _previewProvider.myorganization =  myOrganisationController.text;
-
-      myOrganisation2Controller.text = widget.aboutMeData['My_Challenges_Organisation']==null ? "" : widget.aboutMeData['My_Challenges_Organisation'];
-      _previewProvider.mychallenge = myOrganisation2Controller.text;
-
-      // _controller.formatSelection(Attribute.ul);
-      print("Entered editpageffffff");
-      print("$_isInitialized");
-    });
-
   }
 
-    // @override
-    // void didChangeDependencies() {
-    //   super.didChangeDependencies();
-    //   if (!_isInitialized) {
-    //     WidgetsBinding.instance!.addPostFrameCallback((_) {
-    //       _userAboutMEProvider.editchallengess.clear();
-    //       _userAboutMEProvider.editsolutionss.clear();
-    //       challengesList.clear();
-    //       solutionsList.clear();
-    //       _previewProvider.PreviewChallengesList.clear();
-    //       _previewProvider.PreviewSolutionStillNeeded.clear();
-    //       _previewProvider.PreviewSolutionMyResposibilty.clear();
-    //       _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
-    //       _previewProvider.PreviewSolutionNiceToHave.clear();
-    //       _previewProvider.PreviewSolutionMustHave.clear();
-    //       print("Cleared");
-    //       print("Adding now");
-    //       _userAboutMEProvider.EditChallengeList(widget.aboutMeData["Challenges"]);
-    //       _userAboutMEProvider.EditChallengeListadd(challengesList);
-    //       _userAboutMEProvider.EditChallengeListadd(_previewProvider.PreviewChallengesList);
-    //       _userAboutMEProvider.EditSolutionList(widget.aboutMeData["Solutions"]);
-    //       _userAboutMEProvider.EditSolutionListadd(solutionsList);
-    //       _userAboutMEProvider.EditSolutionProvideradd(_previewProvider.PreviewSolutionMyResposibilty);
-    //       _userAboutMEProvider.EditSolutionInPlaceadd(_previewProvider.PreviewSolutionStillNeeded,
-    //           _previewProvider.PreviewSolutionNotNeededAnyMore, _previewProvider.PreviewSolutionNiceToHave, _previewProvider.PreviewSolutionMustHave);
-    //       About_Me_Label = widget.aboutMeData["About_Me_Label"];
-    //
-    //       AboutMeLabeltextController.text = widget.aboutMeData['About_Me_Label']==null ? "" : widget.aboutMeData['About_Me_Label'];
-    //       _previewProvider.title = AboutMeLabeltextController.text;
-    //
-    //       mycircumstancesController.text = widget.aboutMeData['My_Circumstance']==null ? "" : widget.aboutMeData['My_Circumstance'];
-    //       _previewProvider.mycircumstance = mycircumstancesController.text;
-    //
-    //       MystrengthsController.text = widget.aboutMeData['My_Strength']==null ? "" : widget.aboutMeData['My_Strength'];
-    //       _previewProvider.mystrength = MystrengthsController.text;
-    //
-    //       myOrganisationController.text = widget.aboutMeData['My_Organisation']==null ? "" : widget.aboutMeData['My_Organisation'];
-    //       _previewProvider.myorganization =  myOrganisationController.text;
-    //
-    //       myOrganisation2Controller.text = widget.aboutMeData['My_Challenges_Organisation']==null ? "" : widget.aboutMeData['My_Challenges_Organisation'];
-    //       _previewProvider.mychallenge = myOrganisation2Controller.text;
-    //
-    //       // _controller.formatSelection(Attribute.ul);
-    //       print("Entered editpageffffff");
-    //       print("$_isInitialized");
-    //     });
-    //     _isInitialized = true;
-    //     print("didChangeDependencies");
-    //     print("$_isInitialized");
-    //   }
-    // }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitialized) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        _userAboutMEProvider.editchallengess.clear();
+        _userAboutMEProvider.editsolutionss.clear();
+        challengesList.clear();
+        solutionsList.clear();
+        _previewProvider.PreviewChallengesList.clear();
+        _previewProvider.PreviewSolutionStillNeeded.clear();
+        _previewProvider.PreviewSolutionMyResposibilty.clear();
+        _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
+        _previewProvider.PreviewSolutionNiceToHave.clear();
+        _previewProvider.PreviewSolutionMustHave.clear();
+        print("Cleared");
+        print("Adding now");
+        _userAboutMEProvider.EditChallengeList(widget.aboutMeData["Challenges"]);
+        _userAboutMEProvider.EditChallengeListadd(challengesList);
+        _userAboutMEProvider.EditChallengeListadd(_previewProvider.PreviewChallengesList);
+        _userAboutMEProvider.EditSolutionList(widget.aboutMeData["Solutions"]);
+        _userAboutMEProvider.EditSolutionListadd(solutionsList);
+        _userAboutMEProvider.EditSolutionProvideradd(_previewProvider.PreviewSolutionMyResposibilty);
+        _userAboutMEProvider.EditSolutionInPlaceadd(_previewProvider.PreviewSolutionStillNeeded,
+            _previewProvider.PreviewSolutionNotNeededAnyMore, _previewProvider.PreviewSolutionNiceToHave, _previewProvider.PreviewSolutionMustHave);
+        About_Me_Label = widget.aboutMeData["About_Me_Label"];
+
+        AboutMeLabeltextController.text = widget.aboutMeData['About_Me_Label']==null ? "" : widget.aboutMeData['About_Me_Label'];
+        _previewProvider.title = AboutMeLabeltextController.text;
+
+        mycircumstancesController.text = widget.aboutMeData['My_Circumstance']==null ? "" : widget.aboutMeData['My_Circumstance'];
+        _previewProvider.mycircumstance = mycircumstancesController.text;
+
+        MystrengthsController.text = widget.aboutMeData['My_Strength']==null ? "" : widget.aboutMeData['My_Strength'];
+        _previewProvider.mystrength = MystrengthsController.text;
+
+        myOrganisationController.text = widget.aboutMeData['My_Organisation']==null ? "" : widget.aboutMeData['My_Organisation'];
+        _previewProvider.myorganization =  myOrganisationController.text;
+
+        myOrganisation2Controller.text = widget.aboutMeData['My_Challenges_Organisation']==null ? "" : widget.aboutMeData['My_Challenges_Organisation'];
+        _previewProvider.mychallenge = myOrganisation2Controller.text;
+
+        // _controller.formatSelection(Attribute.ul);
+        print("Entered editpageffffff");
+        print("$_isInitialized");
+      });
+      _isInitialized = true;
+      print("didChangeDependencies");
+      print("$_isInitialized");
+    }
+  }
 
   void dispose() {
     _tabController!.dispose(); // Dispose the TabController
@@ -1145,146 +1101,61 @@ Date
                                         Expanded(
                                           child: Column(
                                             children: [
-                                              InkWell(
-                                                onTap:() async {
-                                                  QuerySnapshot querySnapshots = await FirebaseFirestore.instance
-                                                      .collection('AboutMe')
-                                                      .where('Email', isEqualTo: aboutMeData.get("Email"))
-                                                      .where('isPPS', isEqualTo: false)
-                                                      .where('isOS', isEqualTo: true)
-                                                      .get();
+                                              Container(
+                                                padding: EdgeInsets.all(10),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                                  borderRadius: BorderRadius.circular(10.0),
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                  children: [
+                                                    // Icon(Icons.article,color: Colors.black,size: 30,),
+                                                    Icon(Icons.insert_drive_file,color: Colors.black,size: 25,),
+                                                    SizedBox(width: 5,),
 
-                                                  if(querySnapshots.docs.isNotEmpty){
-                                                    // showEditAboutMeDialogBox(querySnapshots.docs.first.id);
-
-                                                    var data =   querySnapshots.docs.first;
-
-                                                    var challenges = data['Challenges'];
-                                                    var solutions = data['Solutions'];
-                                                    About_Me_Label = data['About_Me_Label'];
-
-                                                    List<Map<String, dynamic>> solutionsList = [];
-                                                    List<Map<String, dynamic>> challengesList = [];
-
-                                                    // Print the runtimeType for debugging
-                                                    print("Challenges runtimeType: ${challenges.runtimeType}");
-
-                                                    // Check if challenges is a List
-                                                    if (challenges is List<dynamic>) {
-                                                      // Add each challenge to challengesList
-                                                      for (var challenge in challenges) {
-                                                        if (challenge is Map<String, dynamic>) {
-                                                          challengesList.add(challenge);
-                                                        }
-                                                      }
-                                                    }
-
-                                                    if (solutions is List<dynamic>) {
-                                                      // Add each challenge to challengesList
-                                                      for (var challenge in solutions) {
-                                                        if (challenge is Map<String, dynamic>) {
-                                                          solutionsList.add(challenge);
-                                                        }
-                                                      }
-                                                    }
-                                                    // dataList[i]['Challenges'] = challengesList;
-                                                    // dataList[i]['Solutions'] = solutionsList;
-
-                                                    ProgressDialog.show(context, "Previewing", Icons.picture_as_pdf);
-                                                    Uint8List pdfBytes = await makePdf(challengesList, solutionsList);
-                                                    showDialog(
-                                                        context: context,
-                                                        builder: (BuildContext context) {
-                                                          ProgressDialog.hide();
-                                                          return  AlertDialog(
-                                                              icon: Row(
-                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                children: [
-                                                                  Text("${About_Me_Label}",
-                                                                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-                                                                  ),
-                                                                  IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.close)),
-                                                                ],
-                                                              ),
-                                                              backgroundColor: Colors.white,
-                                                              content: SizedBox(
-                                                                width: double.maxFinite,
-                                                                child: PdfPreview(
-                                                                  maxPageWidth: MediaQuery.of(context).size.width * .6,
-                                                                  allowSharing: false,
-                                                                  canChangeOrientation: false,
-                                                                  canChangePageFormat: false,
-                                                                  canDebug: false,
-                                                                  allowPrinting: false,
-                                                                  pdfFileName: About_Me_Label,
-                                                                  previewPageMargin: EdgeInsets.all(10),
-                                                                  useActions: true,
-                                                                  pdfPreviewPageDecoration: BoxDecoration(color: Colors.white),
-                                                                  build: (format) => pdfBytes,
-                                                                ),
-                                                              ));
-                                                        });
-                                                  }
-
-                                                },
-                                                child: Container(
-                                                  padding: EdgeInsets.all(10),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    border: Border.all(color:primaryColorOfApp, width: 1.0),
-                                                    borderRadius: BorderRadius.circular(10.0),
-                                                  ),
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                    children: [
-                                                      // Icon(Icons.article,color: Colors.black,size: 30,),
-                                                      Icon(Icons.insert_drive_file,color: Colors.black,size: 25,),
-                                                      SizedBox(width: 5,),
-
-                                                      Expanded(
-                                                        child: Text(
-                                                          // 'Solutions',
-                                                          'Preview',
-                                                          overflow: TextOverflow.ellipsis,
-                                                          style: GoogleFonts.montserrat(
-                                                              textStyle:
-                                                              Theme.of(context).textTheme.titleMedium,
-                                                              color: Colors.black),
-                                                        ),
+                                                    Expanded(
+                                                      child: Text(
+                                                        // 'Solutions',
+                                                        'Preview',
+                                                        overflow: TextOverflow.ellipsis,
+                                                        style: GoogleFonts.montserrat(
+                                                            textStyle:
+                                                            Theme.of(context).textTheme.titleMedium,
+                                                            color: Colors.black),
                                                       ),
-                                                    ],
-                                                  ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
                                               Icon(Icons.arrow_downward_sharp, size: 40),
-                                              InkWell(
-                                                child: Container(
-                                                  padding: EdgeInsets.all(10),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    border: Border.all(color:primaryColorOfApp, width: 1.0),
-                                                    borderRadius: BorderRadius.circular(10.0),
-                                                  ),
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                    children: [
-                                                      // Icon(Icons.article,color: Colors.black,size: 30,),
-                                                      Icon(Icons.save_alt,color: Colors.black,size: 25,),
-                                                      SizedBox(width: 5,),
+                                              Container(
+                                                padding: EdgeInsets.all(10),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                                  borderRadius: BorderRadius.circular(10.0),
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                  children: [
+                                                    // Icon(Icons.article,color: Colors.black,size: 30,),
+                                                    Icon(Icons.save_alt,color: Colors.black,size: 25,),
+                                                    SizedBox(width: 5,),
 
-                                                      Expanded(
-                                                        child: Text(
-                                                          // 'Solutions',
-                                                          'Submit',
-                                                          overflow: TextOverflow.ellipsis,
-                                                          style: GoogleFonts.montserrat(
-                                                              textStyle:
-                                                              Theme.of(context).textTheme.titleMedium,
-                                                              color: Colors.black),
-                                                        ),
+                                                    Expanded(
+                                                      child: Text(
+                                                        // 'Solutions',
+                                                        'Submit',
+                                                        overflow: TextOverflow.ellipsis,
+                                                        style: GoogleFonts.montserrat(
+                                                            textStyle:
+                                                            Theme.of(context).textTheme.titleMedium,
+                                                            color: Colors.black),
                                                       ),
-                                                    ],
-                                                  ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
                                             ],
@@ -2472,53 +2343,53 @@ Date
                         Expanded(
                           child: InkWell(
                             onTap: (){
-                              // selectedEmail = null;
-                              // searchEmailcontroller.clear();
-                              // nameController.clear();
-                              // employerController.clear();
-                              // divisionOrSectionController.clear();
-                              // RoleController.clear();
-                              // LocationController.clear();
-                              // EmployeeNumberController.clear();
-                              // LineManagerController.clear();
-                              // mycircumstancesController.clear();
-                              // MystrengthsController.clear();
-                              // mycircumstancesController.clear();
-                              // AboutMeLabeltextController.clear();
-                              // AboutMeUseFulInfotextController.clear();
-                              // AboutMeDatetextController.clear();
-                              // AboutMeDescriptiontextController.clear();
-                              // RefineController.clear();
-                              // solutionsList.clear();
-                              // _userAboutMEProvider.solutionss.clear();
-                              // _userAboutMEProvider.challengess.clear();
-                              // _userAboutMEProvider.editchallengess.clear();
-                              // _userAboutMEProvider.editsolutionss.clear();
-                              // _userAboutMEProvider.combinedSolutionsResults.clear();
-                              // _userAboutMEProvider.combinedResults.clear();
-                              // _userAboutMEProvider.isEditChallengeListAdded.clear();
-                              // _userAboutMEProvider.isEditSolutionListAdded.clear();
-                              // _previewProvider.email=null;
-                              // _previewProvider.name=null;
-                              // _previewProvider.employer=null;
-                              // _previewProvider.division=null;
-                              // _previewProvider.role=null;
-                              // _previewProvider.location=null;
-                              // _previewProvider.employeeNumber=null ;
-                              // _previewProvider.linemanager=null;
-                              // _previewProvider.title=null;
-                              // _previewProvider.mycircumstance=null;
-                              // _previewProvider.mystrength=null ;
-                              // _previewProvider.myorganization=null ;
-                              // _previewProvider.mychallenge=null ;
-                              // _previewProvider.PreviewChallengesList.clear();
-                              // _previewProvider.PreviewSolutionList.clear();
-                              // _previewProvider.PreviewSolutionMyResposibilty.clear();
-                              // _previewProvider.PreviewSolutionStillNeeded.clear();
-                              // _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
-                              // _previewProvider.PreviewSolutionNiceToHave.clear();
-                              // _previewProvider.PreviewSolutionMustHave.clear();
-                              // widget.refreshPage();
+                              selectedEmail = null;
+                              searchEmailcontroller.clear();
+                              nameController.clear();
+                              employerController.clear();
+                              divisionOrSectionController.clear();
+                              RoleController.clear();
+                              LocationController.clear();
+                              EmployeeNumberController.clear();
+                              LineManagerController.clear();
+                              mycircumstancesController.clear();
+                              MystrengthsController.clear();
+                              mycircumstancesController.clear();
+                              AboutMeLabeltextController.clear();
+                              AboutMeUseFulInfotextController.clear();
+                              AboutMeDatetextController.clear();
+                              AboutMeDescriptiontextController.clear();
+                              RefineController.clear();
+                              solutionsList.clear();
+                              _userAboutMEProvider.solutionss.clear();
+                              _userAboutMEProvider.challengess.clear();
+                              _userAboutMEProvider.editchallengess.clear();
+                              _userAboutMEProvider.editsolutionss.clear();
+                              _userAboutMEProvider.combinedSolutionsResults.clear();
+                              _userAboutMEProvider.combinedResults.clear();
+                              _userAboutMEProvider.isEditChallengeListAdded.clear();
+                              _userAboutMEProvider.isEditSolutionListAdded.clear();
+                              _previewProvider.email=null;
+                              _previewProvider.name=null;
+                              _previewProvider.employer=null;
+                              _previewProvider.division=null;
+                              _previewProvider.role=null;
+                              _previewProvider.location=null;
+                              _previewProvider.employeeNumber=null ;
+                              _previewProvider.linemanager=null;
+                              _previewProvider.title=null;
+                              _previewProvider.mycircumstance=null;
+                              _previewProvider.mystrength=null ;
+                              _previewProvider.myorganization=null ;
+                              _previewProvider.mychallenge=null ;
+                              _previewProvider.PreviewChallengesList.clear();
+                              _previewProvider.PreviewSolutionList.clear();
+                              _previewProvider.PreviewSolutionMyResposibilty.clear();
+                              _previewProvider.PreviewSolutionStillNeeded.clear();
+                              _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
+                              _previewProvider.PreviewSolutionNiceToHave.clear();
+                              _previewProvider.PreviewSolutionMustHave.clear();
+                              widget.refreshPage();
                               // Navigator.pop(context);
                               // widget.page.jumpToPage(1);
                               _navigateToTab(0);
@@ -2646,7 +2517,6 @@ Date
   }
 
   void showEditAboutMeDialogBox(aboutMeData){
-    print("showEditAboutMeDialogBox aboutMeData: $aboutMeData");
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -2668,58 +2538,6 @@ Date
                         // userAboutMEProvider.editpreviewKeywordssss.clear();
                         // userAboutMEProvider.editpreviewtags.clear();
                         // userAboutMEProvider.editpreview = null;
-                        ///
-                        // selectedEmail = null;
-                        // searchEmailcontroller.clear();
-                        // nameController.clear();
-                        // employerController.clear();
-                        // divisionOrSectionController.clear();
-                        // RoleController.clear();
-                        // LocationController.clear();
-                        // EmployeeNumberController.clear();
-                        // LineManagerController.clear();
-                        // mycircumstancesController.clear();
-                        // MystrengthsController.clear();
-                        // myOrganisationController.clear();
-                        // myOrganisation2Controller.clear();
-                        // mycircumstancesController.clear();
-                        // AboutMeLabeltextController.clear();
-                        // AboutMeUseFulInfotextController.clear();
-                        // AboutMeDatetextController.clear();
-                        // AboutMeDescriptiontextController.clear();
-                        // RefineController.clear();
-                        // solutionsList.clear();
-                        // _userAboutMEProvider.solutionss.clear();
-                        // _userAboutMEProvider.challengess.clear();
-                        // _userAboutMEProvider.editchallengess.clear();
-                        // _userAboutMEProvider.editsolutionss.clear();
-                        // _userAboutMEProvider.combinedSolutionsResults.clear();
-                        // _userAboutMEProvider.combinedResults.clear();
-                        // _userAboutMEProvider.isEditChallengeListAdded.clear();
-                        // _userAboutMEProvider.isEditSolutionListAdded.clear();
-                        // _previewProvider.email=null;
-                        // _previewProvider.name=null;
-                        // _previewProvider.employer=null;
-                        // _previewProvider.division=null;
-                        // _previewProvider.role=null;
-                        // _previewProvider.location=null;
-                        // _previewProvider.employeeNumber=null ;
-                        // _previewProvider.linemanager=null;
-                        // _previewProvider.title=null;
-                        // _previewProvider.mycircumstance=null;
-                        // _previewProvider.mystrength=null ;
-                        // _previewProvider.myorganization=null ;
-                        // _previewProvider.mychallenge=null ;
-                        // _previewProvider.PreviewChallengesList.clear();
-                        // _previewProvider.PreviewSolutionList.clear();
-                        // _previewProvider.PreviewSolutionMyResposibilty.clear();
-                        // _previewProvider.PreviewSolutionStillNeeded.clear();
-                        // _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
-                        // _previewProvider.PreviewSolutionNiceToHave.clear();
-                        // _previewProvider.PreviewSolutionMustHave.clear();
-                        // widget.refreshPage();
-                        // Navigator.pop(context);
-                        // widget.page.jumpToPage(1);
                         widget.refreshPage();
                         Navigator.pop(context);
                       },
@@ -6554,7 +6372,7 @@ Date
 
   /// backup previwpage
 
-  Widget PreviewPages(aboutMeData){
+  Widget PreviewPage(aboutMeData){
     return Consumer<PreviewProvider>(
         builder: (c,previewProvider, _){
 
@@ -7236,7 +7054,7 @@ Date
                               SizedBox(width: 50,),
                               IconButton(
                                   onPressed: (){
-                                    editmystrength(aboutMeData);
+                                    editmystrength();
                                   },
                                   icon: Icon(
                                       Icons.edit
@@ -7370,7 +7188,7 @@ Date
                                   )),
                               SizedBox(width: 50,),
                               IconButton(
-                                  onPressed: (){editmyorganization(aboutMeData);},
+                                  onPressed: (){editmyorganization();},
                                   icon: Icon(
                                       Icons.edit
                                   ))
@@ -7403,7 +7221,7 @@ Date
                                   )),
                               SizedBox(width: 50,),
                               IconButton(
-                                  onPressed: (){editmychallenges(aboutMeData);},
+                                  onPressed: (){editmychallenges();},
                                   icon: Icon(
                                       Icons.edit
                                   ))
@@ -8395,2024 +8213,6 @@ Date
         });
   }
 
-  Widget PreviewPage(aboutMeData){
-    return Consumer<PreviewProvider>(
-        builder: (c,previewProvider, _){
-
-          String message = """
-Thank you to ${employerController.text}....
-
-… for recognising that our organisation performs better, and we achieve more together,when each of us feels safe and open to share what we need in order to be our best in the roles we are asked and agree to perform.
-
-This document sets out what I think it would be helpful for you to know about me and includes information about what I believe helps me to thrive, so that I can perform to my  best, both for me and for ${employerController.text}.
-
-Next steps
-
-I will arrange a meeting with my [you]/[occupational health]/[${LineManagerController.text}] to discuss myrequests in person, and to ascertain which are possible for me to action personally and which ${employerController.text} is able to provide for me. My requests include workplaceaccommodations that I view as reasonable adjustments under the Equality Act 2010.
-
-Thank you for being open to understanding me better and for considering my requests.
-
-""";
-
-          AboutMeDescriptiontextController.text.isEmpty ? AboutMeDescriptiontextController.text = message : "";
-
-          print("previewProvider.PurposeOfReporttextController: ${previewProvider.PurposeOfReporttextController.text}");
-
-          // AboutMeLabeltextController.text = "${nameController.text} - draft communication to ${employerController.text}";
-
-          return  Container(
-            height: MediaQuery.of(context).size.height,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 5,),
-
-                  Container(
-                    padding: EdgeInsets.all(5),
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black),
-                    ),
-                    child: Text("Performing to my best in my role ${employerController.text} ",
-                        style: GoogleFonts.lato(fontWeight: FontWeight.bold,
-                            fontSize: 24,
-                            color: Colors.blue)),
-                  ),
-
-                  SizedBox(height: 10,),
-
-                  Container(
-                    height: 45 ,
-                    // margin: EdgeInsets.all(5),
-                    // width: MediaQuery.of(context).size.width * .25,
-                    child: TextField(
-                      controller: previewProvider.PurposeOfReporttextController,
-                      onChanged: (value) {
-                        // _previewProvider.updatetitle(value);
-                        AboutMeLabeltextController.text = previewProvider.PurposeOfReporttextController.text.length > 50
-                            ? previewProvider.PurposeOfReporttextController.text.substring(0, 50)
-                            : previewProvider.PurposeOfReporttextController.text;
-                      },
-                      style: GoogleFonts.lato(
-                          textStyle: Theme.of(context).textTheme.bodySmall,
-                          fontStyle: FontStyle.italic,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24,
-                          color: Colors.blue),
-                      decoration: InputDecoration(
-                        hintText: "My discussion with ...." ,
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                            borderRadius: BorderRadius.circular(10)),
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black12),
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(height: 10,),
-
-
-                  Row(
-                    children: [
-                      InkWell(
-                        onTap: (){
-                          previewProvider.updatePurposeofReport(LineManagerController.text);
-                          AboutMeLabeltextController.text = previewProvider.PurposeOfReporttextController.text.length > 50
-                              ? previewProvider.PurposeOfReporttextController.text.substring(0, 50)
-                              : previewProvider.PurposeOfReporttextController.text;
-                          previewProvider.purpose("Official");
-
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                          // width: MediaQuery.of(context).size.width * .15,
-                          decoration: BoxDecoration(
-                            color:Colors.blue ,
-                            border: Border.all(
-                                color:Colors.blue ,
-                                width: 1.0),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Center(
-                            child:Text(
-                              'Official communication to my employer',
-                              style: GoogleFonts.montserrat(
-                                textStyle:
-                                Theme
-                                    .of(context)
-                                    .textTheme
-                                    .titleSmall,
-                                fontWeight: FontWeight.bold,
-                                color:Colors.white ,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(width: 10,),
-
-                      InkWell(
-                        onTap: (){
-                          previewProvider.updateOtherCommuniation(nameController.text,LineManagerController.text);
-                          AboutMeLabeltextController.text = previewProvider.PurposeOfReporttextController.text.length > 50
-                              ? previewProvider.PurposeOfReporttextController.text.substring(0, 50)
-                              : previewProvider.PurposeOfReporttextController.text;
-                          previewProvider.purpose("Others");
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                          // width: MediaQuery.of(context).size.width * .15,
-                          decoration: BoxDecoration(
-                            color:Colors.blue ,
-                            border: Border.all(
-                                color:Colors.blue ,
-                                width: 1.0),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Center(
-                            child:Text(
-                              'Other communication',
-                              style: GoogleFonts.montserrat(
-                                textStyle:
-                                Theme
-                                    .of(context)
-                                    .textTheme
-                                    .titleSmall,
-                                fontWeight: FontWeight.bold,
-                                color:Colors.white ,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  // Row(
-                  //   mainAxisSize: MainAxisSize.min,
-                  //   mainAxisAlignment: MainAxisAlignment.start,
-                  //   // crossAxisAlignment: CrossAxisAlignment.start,
-                  //   children: [
-                  //
-                  //     Container(
-                  //       width: MediaQuery.of(context).size.width * .12,
-                  //       child: Text("Purpose of report:   ", style: GoogleFonts.lato(
-                  //           textStyle: Theme.of(context).textTheme.titleMedium,
-                  //           fontStyle: FontStyle.italic,
-                  //           fontWeight: FontWeight.bold
-                  //       )),
-                  //     ),
-                  //
-                  //     Flexible(
-                  //       child: Container(
-                  //         height: 40,
-                  //         width: MediaQuery.of(context).size.width * .25,
-                  //         child: TextField(
-                  //           controller: previewProvider.PurposeOfReporttextController,
-                  //           onChanged: (value) {
-                  //             // _previewProvider.updatetitle(value);
-                  //             AboutMeLabeltextController.text = previewProvider.PurposeOfReporttextController.text.length > 50
-                  //                 ? previewProvider.PurposeOfReporttextController.text.substring(0, 50)
-                  //                 : previewProvider.PurposeOfReporttextController.text;
-                  //           },
-                  //           style: GoogleFonts.lato(
-                  //               textStyle: Theme.of(context).textTheme.bodySmall,
-                  //               fontStyle: FontStyle.italic,
-                  //               fontWeight: FontWeight.w400,
-                  //               color: Colors.black),
-                  //           decoration: InputDecoration(
-                  //             hintText: "My discussion with ...." ,
-                  //             focusedBorder: OutlineInputBorder(
-                  //                 borderSide: BorderSide(color: Colors.black),
-                  //                 borderRadius: BorderRadius.circular(10)),
-                  //             border: OutlineInputBorder(
-                  //                 borderSide: BorderSide(color: Colors.black12),
-                  //                 borderRadius: BorderRadius.circular(10)),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //
-                  //     SizedBox(width: 20,),
-                  //
-                  //     InkWell(
-                  //       onTap: (){
-                  //         previewProvider.updatePurposeofReport(LineManagerController.text);
-                  //         AboutMeLabeltextController.text = previewProvider.PurposeOfReporttextController.text.length > 50
-                  //             ? previewProvider.PurposeOfReporttextController.text.substring(0, 50)
-                  //             : previewProvider.PurposeOfReporttextController.text;
-                  //         previewProvider.purpose("Official");
-                  //
-                  //       },
-                  //       child: Container(
-                  //         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  //         // width: MediaQuery.of(context).size.width * .15,
-                  //         decoration: BoxDecoration(
-                  //           color:Colors.blue ,
-                  //           border: Border.all(
-                  //               color:Colors.blue ,
-                  //               width: 1.0),
-                  //           borderRadius: BorderRadius.circular(10.0),
-                  //         ),
-                  //         child: Center(
-                  //           child:Text(
-                  //             'Official communication to my employer',
-                  //             style: GoogleFonts.montserrat(
-                  //               textStyle:
-                  //               Theme
-                  //                   .of(context)
-                  //                   .textTheme
-                  //                   .titleSmall,
-                  //               fontWeight: FontWeight.bold,
-                  //               color:Colors.white ,
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //
-                  //     SizedBox(width: 10,),
-                  //
-                  //     InkWell(
-                  //       onTap: (){
-                  //         previewProvider.updateOtherCommuniation();
-                  //         AboutMeLabeltextController.text = previewProvider.PurposeOfReporttextController.text.length > 50
-                  //             ? previewProvider.PurposeOfReporttextController.text.substring(0, 50)
-                  //             : previewProvider.PurposeOfReporttextController.text;
-                  //         previewProvider.purpose("Others");
-                  //
-                  //       },
-                  //       child: Container(
-                  //         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  //         // width: MediaQuery.of(context).size.width * .15,
-                  //         decoration: BoxDecoration(
-                  //           color:Colors.blue ,
-                  //           border: Border.all(
-                  //               color:Colors.blue ,
-                  //               width: 1.0),
-                  //           borderRadius: BorderRadius.circular(10.0),
-                  //         ),
-                  //         child: Center(
-                  //           child:Text(
-                  //             'Other communication',
-                  //             style: GoogleFonts.montserrat(
-                  //               textStyle:
-                  //               Theme
-                  //                   .of(context)
-                  //                   .textTheme
-                  //                   .titleSmall,
-                  //               fontWeight: FontWeight.bold,
-                  //               color:Colors.white ,
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //
-                  //      // SizedBox(width: 10,),
-                  //     //
-                  //     // InkWell(
-                  //     //   onTap: () async {
-                  //     //     // sideMenu.changePage(2);
-                  //     //     // page.jumpToPage(1);
-                  //     //   },
-                  //     //   child: Container(
-                  //     //     // margin: EdgeInsets.all(10),
-                  //     //     padding: EdgeInsets.all(5),
-                  //     //     height: 40,
-                  //     //     width: MediaQuery.of(context).size.width * 0.15,
-                  //     //     decoration: BoxDecoration(
-                  //     //       // color: Colors.white,
-                  //     //       border: Border.all(color:primaryColorOfApp, width: 1.0),
-                  //     //       borderRadius: BorderRadius.circular(10.0),
-                  //     //     ),
-                  //     //     child: Row(
-                  //     //       mainAxisAlignment: MainAxisAlignment.center,
-                  //     //       crossAxisAlignment: CrossAxisAlignment.center,
-                  //     //       children: [
-                  //     //         Icon(Icons.insert_drive_file,color: Colors.black,size: 20,),
-                  //     //         SizedBox(width: 5,),
-                  //     //         Expanded(
-                  //     //           child: Text(
-                  //     //             // 'Thrivers',
-                  //     //             'For Someone Else',
-                  //     //             overflow: TextOverflow.ellipsis,
-                  //     //             style: GoogleFonts.montserrat(
-                  //     //                 textStyle:
-                  //     //                 Theme.of(context).textTheme.bodySmall,
-                  //     //                 color: Colors.black),
-                  //     //           ),
-                  //     //         ),
-                  //     //       ],
-                  //     //     ),
-                  //     //   ),
-                  //     //
-                  //     // ),
-                  //
-                  //   ],
-                  // ),
-
-
-                  SizedBox(height: 15,),
-
-                  Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * .12,
-                              child: Text("Date:   ",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleMedium,fontWeight: FontWeight.w700)),
-                            ),
-                            Flexible(
-                              flex: 1,
-                              child: Container(
-                                height: 40,
-                                width: MediaQuery.of(context).size.width * .19,
-                                child: TextField(
-                                  controller: AboutMeDatetextController,
-                                  style: GoogleFonts.lato(
-                                      textStyle: Theme.of(context).textTheme.bodyLarge,
-                                      color: Colors.black),
-                                  decoration: InputDecoration(
-                                    hintText: "" ,
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(10)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black12),
-                                        borderRadius: BorderRadius.circular(10)),
-                                  ),
-                                ),
-                              ),
-
-                            ),
-                          ],
-                        ),
-
-                        SizedBox(height: 15,),
-
-                        //     Text("Input email addresses of any colleagues to whom you want to send this report: ",style: GoogleFonts.lato(
-                        //     textStyle: Theme.of(context).textTheme.titleMedium, color: Colors.red,fontWeight: FontWeight.w500
-                        // ),),
-
-                        Row(
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * .12,
-                              child: Text("To: ",style: GoogleFonts.lato(
-                                  textStyle:
-                                  Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleMedium,
-                                  fontWeight: FontWeight.w700
-                              ),),
-                            ),
-                            Expanded(
-                              child:Container(
-                                height: 40,
-                                width: MediaQuery.of(context).size.width * .19,
-                                child: TextField(
-                                  controller: previewProvider.SendNametextController,
-
-                                  style: GoogleFonts.lato(
-                                      textStyle: Theme.of(context).textTheme.bodySmall,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black),
-                                  decoration: InputDecoration(
-                                    hintText: "Name",
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(10)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black12),
-                                        borderRadius: BorderRadius.circular(10)),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 5,),
-
-                            Expanded(
-                              child: Container(
-                                height: 40,
-                                width: MediaQuery.of(context).size.width * .19,
-                                child: TextField(
-                                  controller: SendEmailtextController,
-                                  style: GoogleFonts.lato(
-                                      textStyle: Theme.of(context).textTheme.bodySmall,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black),
-                                  decoration: InputDecoration(
-                                    hintText: "Email",
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(10)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black12),
-                                        borderRadius: BorderRadius.circular(10)),
-                                  ),
-                                ),
-                              ),
-                            ),
-
-                            SizedBox(width: 5,),
-
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              margin: EdgeInsets.all(11),
-                              width:  MediaQuery.of(context).size.width * .05,),
-
-
-
-                          ],
-                        ),
-                        SizedBox(height: 5,),
-
-                        Column(
-                          children: List.generate(
-                            previewProvider.ccEmails.length,
-                                (index) {
-                              return Row(
-                                children: [
-                                  Container(
-                                    width: MediaQuery.of(context).size.width * .12,
-                                    child: Text(
-                                      "Cc: ",
-                                      style: GoogleFonts.lato(
-                                          textStyle: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium,
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Text(
-                                        '${index + 1}. ${previewProvider.ccNames[index]}, <${previewProvider.ccEmails[index]}>'),
-                                  ),
-                                  // SizedBox(width: 50,),
-                                  Flexible(
-                                    flex: 2,
-                                    child: InkWell(
-                                      child: Text("remove",style: TextStyle(color: Colors.red)),
-                                      onTap: () =>
-                                          previewProvider.removeCCRecipient(index),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
-                        ),
-
-                        Row(
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.12,
-                              child: Text("Cc: ",style: GoogleFonts.lato(
-                                  textStyle:
-                                  Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleMedium,
-                                  fontWeight: FontWeight.w700
-                              ),),
-                            ),
-
-
-                            Expanded(
-                              child: Container(
-                                height: 40,
-                                width: MediaQuery.of(context).size.width * .19,
-                                child: TextField(
-                                  controller: CopySendNametextController,
-
-                                  style: GoogleFonts.lato(
-                                      textStyle: Theme.of(context).textTheme.bodySmall,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black),
-                                  decoration: InputDecoration(
-                                    hintText: "Name",
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(10)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black12),
-                                        borderRadius: BorderRadius.circular(10)),
-                                  ),
-                                ),
-                              ),
-                            ),
-
-                            SizedBox(width: 5,),
-
-                            Expanded(
-                              child: Container(
-                                height: 40,
-                                width: MediaQuery.of(context).size.width * .19,
-                                child: TextField(
-                                  controller: CopySendEmailtextController,
-                                  style: GoogleFonts.lato(
-                                      textStyle: Theme.of(context).textTheme.bodySmall,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black),
-                                  decoration: InputDecoration(
-                                    hintText: "Email",
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(10)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black12),
-                                        borderRadius: BorderRadius.circular(10)),
-                                  ),
-                                ),
-                              ),
-                            ),
-
-                            SizedBox(width: 5,),
-
-                            InkWell(
-                              onTap: () {
-                                previewProvider.addCCRecipient(
-                                    CopySendEmailtextController.text,
-                                    CopySendNametextController.text);
-                                CopySendEmailtextController.clear();
-                                CopySendNametextController.clear();
-                              },
-                              child: Container(
-                                  width: MediaQuery.of(context).size.width * 0.05,
-                                  padding: EdgeInsets.all(10),
-                                  margin: EdgeInsets.all(11),
-                                  decoration: BoxDecoration(
-                                      color: Colors.blue,
-                                      borderRadius: BorderRadius.circular(10)
-                                  ),
-                                  child: Text('Add',
-                                    textAlign: TextAlign.center,style: GoogleFonts.montserrat(
-                                        textStyle: Theme.of(context).textTheme.titleSmall,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white),
-                                  )
-                              ),
-                            ),
-
-                          ],
-                        ),
-
-
-                        SizedBox(height: 15,),
-
-
-                        TextField(
-                          controller: AboutMeDescriptiontextController,
-                          onChanged: (value) {
-                            // _previewProvider.updatetitle(value);
-                          },
-                          maxLines: 18,
-                          style: GoogleFonts.lato(
-                              textStyle: Theme.of(context).textTheme.bodyMedium,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.black),
-                          decoration: InputDecoration(
-                            hintText: "$message",
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black),
-                                borderRadius: BorderRadius.circular(10)),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(10)),
-                          ),
-                        ),
-
-
-                        SizedBox(height: 10,),
-
-                        Container(
-                          padding: EdgeInsets.all(5),
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black),
-                          ),
-                          child: Text("My basic data",
-                              style: GoogleFonts.lato(fontWeight: FontWeight.bold,
-                                  fontSize: 24,
-                                  color: Colors.blue)),
-                        ),
-
-                        SizedBox(height: 10,),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * .12,
-                              child: Text("Name: ",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleMedium,fontWeight: FontWeight.w700)),
-                            ),
-                            Expanded(
-                              flex: 5,
-                              child: Text("${previewProvider.name==null ? "" : previewProvider.name}",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .bodyLarge,)),
-                            ),
-                          ],
-                        ),
-
-                        SizedBox(height: 10,),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * .12,
-                              child: Text("Role: ",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleMedium,fontWeight: FontWeight.w700)),
-                            ),
-                            Expanded(
-                              flex: 5,
-                              child: Text("${previewProvider.role==null ? "" : previewProvider.role}",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .bodyLarge,)),
-                            ),
-                          ],
-                        ),
-
-                        SizedBox(height: 10,),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * .12,
-                              child: Text("Location: ",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleMedium,fontWeight: FontWeight.w700)),
-                            ),
-                            Expanded(
-                              flex: 5,
-                              child: Text("${previewProvider.location==null ? "" : previewProvider.location}",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .bodyLarge,)),
-                            ),
-                          ],
-                        ),
-
-                        SizedBox(height: 10,),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * .12,
-                              child: Text("Employee number: ",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleMedium,fontWeight: FontWeight.w700)),
-                            ),
-                            Expanded(
-                              flex: 5,
-                              child: Text("${previewProvider.employeeNumber==null ? "" : previewProvider.employeeNumber}",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .bodyLarge,)),
-                            ),
-                          ],
-                        ),
-
-                        SizedBox(height: 10,),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * .12,
-                              child: Text("Team Leader:",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleMedium,fontWeight: FontWeight.w700)),
-                            ),
-                            Expanded(
-                              flex: 5,
-                              child: Text("${previewProvider.linemanager==null ? "" : previewProvider.linemanager}",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .bodyLarge,)),
-                            ),
-                          ],
-                        ),
-
-                      ],
-                    ),
-                  ),
-
-
-                  SizedBox(height: 10,),
-
-                  Container(
-                    padding: EdgeInsets.all(5),
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black),
-                    ),
-                    child: Text("About me",
-                        style: GoogleFonts.lato(fontWeight: FontWeight.bold,
-                            fontSize: 24,
-                            color: Colors.blue)),
-                  ),
-
-                  SizedBox(height: 10,),
-
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-
-                    children: [
-                      // Padding(
-                      //   padding: const EdgeInsets.symmetric(
-                      //       vertical: 10.0, horizontal: 5),
-                      //   child: Text("To perform to my best in my role, I’d like to share this information about me:",
-                      //       style: GoogleFonts.lato(fontWeight: FontWeight.bold,
-                      //           // fontSize: 20,
-                      //           color: Colors.blue)),
-                      // ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 5),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text("Me and my circumstances: ",
-                                style: GoogleFonts.lato(textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .titleMedium,
-                                  color: Colors.blue,
-                                  // decoration: TextDecoration.underline
-                                )),
-                            SizedBox(width: 50,),
-                            IconButton(
-                                onPressed: (){
-                                  editmeandmycircumstances(aboutMeData);
-                                },
-                                icon: Icon(
-                                    Icons.edit
-                                ))
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 5,),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 5),
-                        child: Text("${previewProvider.mycircumstance==null ? "" : previewProvider.mycircumstance}",
-                            style: GoogleFonts.lato(textStyle: Theme
-                                .of(context)
-                                .textTheme
-                                .bodyMedium,fontWeight: FontWeight.w600
-                            )),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 5),
-                        child: Row(
-                          children: [
-                            Text("My strengths that I want to have the opportunity to use in my role: ",
-                                style: GoogleFonts.lato(textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .titleMedium,
-                                  color: Colors.blue,
-                                  // decoration: TextDecoration.underline
-                                )),
-                            SizedBox(width: 50,),
-                            IconButton(
-                                onPressed: (){
-                                  editmystrength(aboutMeData);
-                                },
-                                icon: Icon(
-                                    Icons.edit
-                                ))
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 5,),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 5),
-                        child: Text("${previewProvider.mystrength==null ? "" : previewProvider.mystrength}",
-                            style: GoogleFonts.lato(textStyle: Theme
-                                .of(context)
-                                .textTheme
-                                .bodyMedium,fontWeight: FontWeight.w600,
-
-                            )),
-
-                      ),
-
-
-                      Container(
-
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric( vertical: 10.0,horizontal: 5),
-                              child: Text("Things I find challenging in life that make it harder for me to perform my best:",
-                                style: GoogleFonts.lato(textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .titleMedium,
-                                  color: Colors.blue,
-                                  // decoration: TextDecoration.underline
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 5,),
-
-                            Consumer<UserAboutMEProvider> (
-                              builder: (context, userAboutMEProvider, _) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: previewProvider.PreviewChallengesList.map((solution) {
-                                    int index = previewProvider.PreviewChallengesList.indexOf(solution);
-
-                                    return Padding(
-                                      padding: EdgeInsets.only(bottom: 20.0),
-                                      child: Row(
-                                        children: [
-                                          Flexible(
-                                            child: RichText(
-                                              maxLines: 4,
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                      text: ' •  ',
-                                                      style:TextStyle(fontSize: 20)
-                                                  ),
-                                                  TextSpan(
-                                                      text: '${solution['Label']}',
-                                                      style: GoogleFonts.lato(textStyle: Theme
-                                                          .of(context)
-                                                          .textTheme
-                                                          .titleMedium,fontWeight: FontWeight.bold,)
-                                                  ),
-                                                  TextSpan(
-                                                      text: ' - ${solution['Final_description']}\n',
-                                                      style: GoogleFonts.lato(textStyle: Theme
-                                                          .of(context)
-                                                          .textTheme
-                                                          .bodyMedium,fontWeight: FontWeight.w400
-                                                      )
-                                                  ),
-                                                  TextSpan(
-                                                      text: '  ${solution['Impact_on_me']}',
-                                                      style: GoogleFonts.lato(textStyle: Theme
-                                                          .of(context)
-                                                          .textTheme
-                                                          .titleMedium,color: Colors.grey,)
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(width: 50,),
-                                          Consumer<PreviewProvider>(
-                                              builder: (context, previewProvider, _) {
-                                                return Row(
-                                                  children: [
-                                                    IconButton(
-                                                      icon: Icon(Icons.edit),
-                                                      onPressed: (){
-                                                        showEditconfirmChallengeDialogBox(solution['id'], solution['Label'] , solution['Description'],
-                                                            solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
-                                                            solution['Created Date'], solution['Modified By'], solution['Modified Date'],
-                                                            solution['Original Description'], solution['Impact'], solution['Final_description'],
-                                                            solution['Category'], solution['Keywords'], solution['Potential Strengths'],
-                                                            solution['Hidden Strengths'], index, solution, solution['Impact_on_me']);
-                                                      },
-                                                    ),
-                                                    IconButton(
-                                                      icon: Icon(Icons.delete),
-                                                      onPressed: (){
-                                                        print("solution['id']: ${solution['id']}");
-                                                        userAboutMEProvider.removeEditConfirmChallenge(index,solution['id'],challengesList,previewProvider.PreviewChallengesList);
-                                                      },
-                                                    )
-                                                  ],
-                                                );
-                                              })
-                                        ],
-                                      ),
-                                    );
-                                  }).toList(),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-
-
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 5),
-                        child: Row(
-                          children: [
-                            Text("What I value about ${employerController.text} and workplace environment that helps me perform to my best: ",
-                                style: GoogleFonts.lato(textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .titleMedium,
-                                  color: Colors.blue,
-                                  // decoration: TextDecoration.underline
-                                )),
-                            SizedBox(width: 50,),
-                            IconButton(
-                                onPressed: (){editmyorganization(aboutMeData);},
-                                icon: Icon(
-                                    Icons.edit
-                                ))
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 5,),
-
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 5),
-                        child: Text("${previewProvider.myorganization==null ? "" : previewProvider.myorganization}",
-                            style: GoogleFonts.lato(textStyle: Theme
-                                .of(context)
-                                .textTheme
-                                .bodyMedium,fontWeight: FontWeight.w600
-                            )),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 5),
-                        child: Row(
-                          children: [
-                            Text("What I find challenging about ${employerController.text} and the workplace environment that makes it harder for me to perform my best: ",
-                                style: GoogleFonts.lato(textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .titleMedium,
-                                  color: Colors.blue,
-                                  // decoration: TextDecoration.underline
-                                )),
-                            SizedBox(width: 50,),
-                            IconButton(
-                                onPressed: (){editmychallenges(aboutMeData);},
-                                icon: Icon(
-                                    Icons.edit
-                                ))
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 5,),
-
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 5),
-                        child: Text("${previewProvider.mychallenge==null ? "" : previewProvider.mychallenge}",
-                            style: GoogleFonts.lato(textStyle: Theme
-                                .of(context)
-                                .textTheme
-                                .bodyMedium,fontWeight: FontWeight.w600
-                            )),
-
-                      ),
-
-                      SizedBox(height: 10,),
-
-                    ],
-                  ),
-
-                  Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-
-                      children: [
-
-                        Container(
-                          padding: EdgeInsets.all(5),
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black),
-                          ),
-                          child: Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${employerController.text}:",
-                              style: GoogleFonts.lato(fontWeight: FontWeight.bold,
-                                  fontSize: 24,
-                                  color: Colors.blue)),
-                        ),
-
-                        // Padding(
-                        //   padding: const EdgeInsets.symmetric(
-                        //       vertical: 10.0, horizontal: 5),
-                        //   child: Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${employerController.text}:",
-                        //       style: GoogleFonts.lato(fontWeight: FontWeight.bold,
-                        //           // fontSize: 20,
-                        //           color: Colors.blue)),
-                        // ),
-
-                        _previewProvider.PreviewSolutionMyResposibilty.isNotEmpty ?
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10.0, horizontal: 5),
-                                child: Text("Personal Responsibility",
-                                  style: GoogleFonts.lato(
-                                    fontWeight: FontWeight.bold,
-                                    // fontSize: 20,
-                                    color: Colors.blue,
-                                    // decoration: TextDecoration.underline
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10.0, horizontal: 5),
-                                child: Text("Things I already or will do to help myself: ",
-                                    style: GoogleFonts.lato(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .titleMedium
-                                    )),
-                              ),
-                              Consumer<UserAboutMEProvider>(
-                                builder: (context, userAboutMEProvider, _) {
-                                  return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: previewProvider.PreviewSolutionMyResposibilty.map((solution) {
-
-                                      print("PreviewSolutionMyResposibilty: ${previewProvider.PreviewSolutionMyResposibilty}");
-                                      return Padding(
-                                        padding: EdgeInsets.only(bottom: 20.0),
-                                        child: Row(
-                                          children: [
-                                            Flexible(
-                                              child: RichText(
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                        text: ' •  ',
-                                                        style: TextStyle(fontSize: 20)
-                                                    ),
-                                                    TextSpan(
-                                                        text: '${solution['Label']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,fontWeight: FontWeight.bold,)
-                                                    ),
-                                                    TextSpan(
-                                                        text: ' - ${solution['Final_description']}\n',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .bodyMedium,fontWeight: FontWeight.w400
-                                                        )
-                                                    ),
-                                                    TextSpan(
-                                                      text: '  ${solution['AboutMe_Notes']}',
-                                                      style: GoogleFonts.lato(
-                                                        textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,color: Colors.grey,),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(width: 50,),
-
-                                            Consumer<PreviewProvider>(
-                                                builder: (context, previewProvider, _) {
-                                                  return  Row(
-                                                    children: [
-                                                      IconButton(
-                                                        icon: Icon(Icons.edit),
-                                                        onPressed: (){
-                                                          showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
-                                                              solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
-                                                              solution['Created Date'], solution['Modified By'], solution['Modified Date'],
-                                                              solution['Original Description'], solution['Impact'], solution['Final_description'],
-                                                              solution['Category'], solution['Keywords'], solution['Potential Strengths'],
-                                                              solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],
-                                                              solution['InPlace']);
-                                                        },
-                                                      ),
-                                                      IconButton(
-                                                        icon: Icon(Icons.delete),
-                                                        onPressed: (){
-                                                          userAboutMEProvider.removeEditConfirmSolution(solution["id"],solutionsList,
-                                                            previewProvider.PreviewSolutionMyResposibilty,
-                                                            previewProvider.PreviewSolutionStillNeeded,
-                                                            previewProvider.PreviewSolutionNotNeededAnyMore,
-                                                            previewProvider.PreviewSolutionNiceToHave,
-                                                            previewProvider.PreviewSolutionMustHave,
-                                                          );
-                                                        },
-                                                      )
-                                                    ],
-                                                  ); }),
-                                          ],
-                                        ),
-                                      );
-                                    }).toList(),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ) : Container(),
-
-                        (_previewProvider.PreviewSolutionNotNeededAnyMore.isNotEmpty ||
-                            _previewProvider.PreviewSolutionMustHave.isNotEmpty ||
-                            _previewProvider.PreviewSolutionNiceToHave.isNotEmpty ||
-                            _previewProvider.PreviewSolutionStillNeeded.isNotEmpty ) ?
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 5),
-                          child: Text("My requests of ${employerController.text}",
-                              style: GoogleFonts.lato(
-                                  fontWeight: FontWeight.bold,
-                                  // decoration: TextDecoration.underline,
-                                  // fontSize: 20,
-                                  color: Colors.blue)),
-                        ) : Container(),
-
-                        _previewProvider.PreviewSolutionStillNeeded.isNotEmpty ?
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10.0, horizontal: 5),
-                                child: Text("${employerController.text} already provides the following assistance to me, which I’d like to continue to receive: ",
-                                    style: GoogleFonts.lato(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .titleMedium
-                                    )),
-                              ),
-                              Consumer<UserAboutMEProvider> (
-                                builder: (context, userAboutMEProvider, _) {
-                                  return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: previewProvider.PreviewSolutionStillNeeded.map((solution) {
-                                      return Padding(
-                                        padding: EdgeInsets.only(bottom: 20.0),
-                                        child: Row(
-                                          children: [
-                                            Flexible(
-                                              child: RichText(
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                        text: ' •  ',
-                                                        style: TextStyle(fontSize: 20)
-                                                    ),
-                                                    TextSpan(
-                                                        text: '${solution['Label']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,fontWeight: FontWeight.bold,)
-                                                    ),
-                                                    TextSpan(
-                                                        text: ' - ${solution['Final_description']}\n',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .bodyMedium,fontWeight: FontWeight.w400
-                                                        )
-                                                    ),
-                                                    TextSpan(
-                                                        text: '  ${solution['AboutMe_Notes']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,color: Colors.grey,)
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(width: 50,),
-                                            Consumer<PreviewProvider> (
-                                                builder: (context, previewProvider, _) {
-                                                  return   Row(
-                                                    children: [
-                                                      IconButton(
-                                                        icon: Icon(Icons.edit),
-                                                        onPressed: (){
-                                                          showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
-                                                              solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
-                                                              solution['Created Date'], solution['Modified By'], solution['Modified Date'],
-                                                              solution['Original Description'], solution['Impact'], solution['Final_description'],
-                                                              solution['Category'], solution['Keywords'], solution['Potential Strengths'],
-                                                              solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']);
-                                                        },
-                                                      ),
-                                                      IconButton(
-                                                        icon: Icon(Icons.delete),
-                                                        onPressed: (){
-                                                          userAboutMEProvider.removeEditConfirmSolution(solution["id"],solutionsList,
-                                                            previewProvider.PreviewSolutionMyResposibilty,
-                                                            previewProvider.PreviewSolutionStillNeeded,
-                                                            previewProvider.PreviewSolutionNotNeededAnyMore,
-                                                            previewProvider.PreviewSolutionNiceToHave,
-                                                            previewProvider.PreviewSolutionMustHave,
-                                                          );
-                                                        },
-                                                      )
-                                                    ],
-                                                  );
-                                                }),
-                                          ],
-                                        ),
-                                      );
-                                    }).toList(),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ) : Container(),
-
-                        _previewProvider.PreviewSolutionMustHave.isNotEmpty ?
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10.0, horizontal: 5),
-                                child: Text("I’m asking ${employerController.text} to start providing for me:",
-                                    style: GoogleFonts.lato(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .titleMedium
-                                    )),
-                              ),
-                              Consumer<UserAboutMEProvider> (
-                                builder: (context, userAboutMEProvider, _) {
-                                  return  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: previewProvider.PreviewSolutionMustHave.map((solution) {
-                                      return Padding(
-                                        padding: EdgeInsets.only(bottom: 20.0),
-                                        child: Row(
-                                          children: [
-                                            Flexible(
-                                              child: RichText(
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                        text: ' •  ',
-                                                        style: TextStyle(fontSize: 20)
-                                                    ),
-                                                    TextSpan(
-                                                        text: '${solution['Label']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,fontWeight: FontWeight.bold,)
-                                                    ),
-                                                    TextSpan(
-                                                        text: ' - ${solution['Final_description']}\n',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .bodyMedium,fontWeight: FontWeight.w400
-                                                        )
-                                                    ),
-                                                    TextSpan(
-                                                        text: '  ${solution['AboutMe_Notes']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,color: Colors.grey,)
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(width: 50,),
-                                            Consumer<PreviewProvider>(
-                                                builder: (context, previewProvider, _) {
-                                                  return  Row(
-                                                    children: [
-                                                      IconButton(
-                                                        icon: Icon(Icons.edit),
-                                                        onPressed: (){
-                                                          showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
-                                                              solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
-                                                              solution['Created Date'], solution['Modified By'], solution['Modified Date'],
-                                                              solution['Original Description'], solution['Impact'], solution['Final_description'],
-                                                              solution['Category'], solution['Keywords'], solution['Potential Strengths'],
-                                                              solution['Hidden Strengths'],solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']);
-                                                        },
-                                                      ),
-                                                      IconButton(
-                                                        icon: Icon(Icons.delete),
-                                                        onPressed: (){
-                                                          userAboutMEProvider.removeEditConfirmSolution(solution["id"],solutionsList,
-                                                            previewProvider.PreviewSolutionMyResposibilty,
-                                                            previewProvider.PreviewSolutionStillNeeded,
-                                                            previewProvider.PreviewSolutionNotNeededAnyMore,
-                                                            previewProvider.PreviewSolutionNiceToHave,
-                                                            previewProvider.PreviewSolutionMustHave,
-                                                          );
-                                                        },
-                                                      )
-                                                    ],
-                                                  );
-                                                }),
-                                          ],
-                                        ),
-                                      );
-                                    }).toList(),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ) : Container(),
-
-                        _previewProvider.PreviewSolutionNiceToHave.isNotEmpty ?
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10.0, horizontal: 5),
-                                child: Text("I’m asking  ${employerController.text} to start providing for me but they are not essential: ",
-                                    style: GoogleFonts.lato(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .titleMedium
-                                    )),
-                              ),
-                              Consumer<UserAboutMEProvider> (
-                                builder: (context, userAboutMEProvider, _) {
-                                  return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: previewProvider.PreviewSolutionNiceToHave.map((solution) {
-                                      return Padding(
-                                        padding: EdgeInsets.only(bottom: 20.0),
-                                        child: Row(
-                                          children: [
-                                            Flexible(
-                                              child: RichText(
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                        text: ' •  ',
-                                                        style: TextStyle(fontSize: 20)
-                                                    ),
-                                                    TextSpan(
-                                                        text: '${solution['Label']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,fontWeight: FontWeight.bold,)
-                                                    ),
-                                                    TextSpan(
-                                                        text: ' - ${solution['Final_description']}\n',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .bodyMedium,fontWeight: FontWeight.w400
-                                                        )
-                                                    ),
-                                                    TextSpan(
-                                                        text: '  ${solution['AboutMe_Notes']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,color: Colors.grey,)
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(width: 50,),
-                                            Consumer<PreviewProvider>(
-                                                builder: (context, previewProvider, _) {
-                                                  return Row(
-                                                    children: [
-                                                      IconButton(
-                                                        icon: Icon(Icons.edit),
-                                                        onPressed: (){
-                                                          showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
-                                                              solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
-                                                              solution['Created Date'], solution['Modified By'], solution['Modified Date'],
-                                                              solution['Original Description'], solution['Impact'], solution['Final_description'],
-                                                              solution['Category'], solution['Keywords'], solution['Potential Strengths'],
-                                                              solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']);
-                                                        },
-                                                      ),
-                                                      IconButton(
-                                                        icon: Icon(Icons.delete),
-                                                        onPressed: (){
-                                                          userAboutMEProvider.removeEditConfirmSolution(solution["id"],solutionsList,
-                                                            previewProvider.PreviewSolutionMyResposibilty,
-                                                            previewProvider.PreviewSolutionStillNeeded,
-                                                            previewProvider.PreviewSolutionNotNeededAnyMore,
-                                                            previewProvider.PreviewSolutionNiceToHave,
-                                                            previewProvider.PreviewSolutionMustHave,
-                                                          );
-                                                        },
-                                                      )
-                                                    ],
-                                                  );}),
-                                          ],
-                                        ),
-                                      );
-                                    }).toList(),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ) : Container(),
-
-                        _previewProvider.PreviewSolutionNotNeededAnyMore .isNotEmpty ?
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10.0, horizontal: 5),
-                                child: Text("${employerController.text} already provides for me but are not needed anymore: ",
-                                    style: GoogleFonts.lato(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .titleMedium
-                                    )),
-                              ),
-                              Consumer<UserAboutMEProvider> (
-                                builder: (context, userAboutMEProvider, _) {
-                                  return  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: previewProvider.PreviewSolutionNotNeededAnyMore.map((solution) {
-                                      return Padding(
-                                        padding: EdgeInsets.only(bottom: 20.0),
-                                        child: Row(
-                                          children: [
-                                            Flexible(
-                                              child: RichText(
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                        text: ' •  ',
-                                                        style: TextStyle(fontSize: 20)
-                                                    ),
-                                                    TextSpan(
-                                                        text: '${solution['Label']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,fontWeight: FontWeight.bold,)
-                                                    ),
-                                                    TextSpan(
-                                                        text: ' - ${solution['Final_description']}\n',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .bodyMedium,fontWeight: FontWeight.w400
-                                                        )
-                                                    ),
-                                                    TextSpan(
-                                                        text: '  ${solution['AboutMe_Notes']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,color: Colors.grey,)
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(width: 50,),
-                                            Consumer<PreviewProvider>(
-                                                builder: (context, previewProvider, _) {
-                                                  return Row(
-                                                    children: [
-                                                      IconButton(
-                                                        icon: Icon(Icons.edit),
-                                                        onPressed: (){
-                                                          showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
-                                                              solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
-                                                              solution['Created Date'], solution['Modified By'], solution['Modified Date'],
-                                                              solution['Original Description'], solution['Impact'], solution['Final_description'],
-                                                              solution['Category'], solution['Keywords'], solution['Potential Strengths'],
-                                                              solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']);
-                                                        },
-                                                      ),
-                                                      IconButton(
-                                                        icon: Icon(Icons.delete),
-                                                        onPressed: (){
-                                                          userAboutMEProvider.removeEditConfirmSolution(solution["id"],solutionsList,
-                                                            previewProvider.PreviewSolutionMyResposibilty,
-                                                            previewProvider.PreviewSolutionStillNeeded,
-                                                            previewProvider.PreviewSolutionNotNeededAnyMore,
-                                                            previewProvider.PreviewSolutionNiceToHave,
-                                                            previewProvider.PreviewSolutionMustHave,
-                                                          );
-                                                        },
-                                                      )
-                                                    ],
-                                                  );
-                                                }),
-                                          ],
-                                        ),
-                                      );
-                                    }).toList(),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ) : Container(),
-
-                        SizedBox(height: 5,),
-                      ],
-                    ),
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 15.0, horizontal: 5),
-                    child: TextField(
-                      controller: AboutMeUseFulInfotextController,
-                      onChanged: (value) {
-                        _previewProvider.updatetitle(value);
-                      },
-                      style: GoogleFonts.lato(
-                          textStyle: Theme.of(context).textTheme.bodySmall,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black),
-                      decoration: InputDecoration(
-                        hintText: "Links/Document/Product Info",
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                            borderRadius: BorderRadius.circular(10)),
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black12),
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
-                    ),
-                  ),
-
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                        child: Text("Attachments :", style: GoogleFonts.lato(textStyle: Theme.of(context).textTheme.titleSmall,)),
-                      ),
-                      SizedBox(width: 10,),
-
-                      // InkWell(
-                      //   onTap: (){
-                      //     // _userAboutMEProvider.pickFiles();
-                      //   },
-                      //   child: Container(
-                      //     // padding: EdgeInsets.all(20),
-                      //     child: Center(child: Icon(Icons.add, size: 30, color: Colors.white,)),
-                      //     width: 30,
-                      //     height: 30,
-                      //     decoration: BoxDecoration(
-                      //       color: Colors.blue,
-                      //       borderRadius: BorderRadius.circular(50),
-                      //     ),
-                      //   ),
-                      // ),
-                      IconButton(onPressed: (){},
-                        icon: Container(
-                          // padding: EdgeInsets.all(20),
-                          child: Center(child: Icon(Icons.add, size: 30, color: Colors.white,)),
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                        ),
-                        tooltip: "Medicals and Personals",
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("${_userAboutMEProvider.aadhar==null ? "" : _userAboutMEProvider.aadhar}", style: GoogleFonts.lato(textStyle: Theme.of(context).textTheme.titleSmall,)),
-                    // child: Text("document.pdf", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
-                  ),
-
-                  // Row(
-                  //   mainAxisSize: MainAxisSize.min,
-                  //   mainAxisAlignment: MainAxisAlignment.start,
-                  //   // crossAxisAlignment: CrossAxisAlignment.start,
-                  //   children: [
-                  //
-                  //     Container(
-                  //       width: MediaQuery.of(context).size.width * .12,
-                  //       child: Text("Report file name:   ", style: GoogleFonts.lato(
-                  //           textStyle: Theme.of(context).textTheme.titleMedium,
-                  //           fontStyle: FontStyle.italic,
-                  //           fontWeight: FontWeight.bold
-                  //       )),
-                  //     ),
-                  //
-                  //     Flexible(
-                  //       child: Container(
-                  //         height: 40,
-                  //         width: MediaQuery.of(context).size.width * .25,
-                  //         child: TextField(
-                  //           controller: AboutMeLabeltextController,
-                  //           onChanged: (value) {
-                  //             _previewProvider.updatetitle(value);
-                  //           },
-                  //           style: GoogleFonts.lato(
-                  //               textStyle: Theme.of(context).textTheme.bodySmall,
-                  //               fontStyle: FontStyle.italic,
-                  //               fontWeight: FontWeight.w400,
-                  //               color: Colors.black),
-                  //           decoration: InputDecoration(
-                  //             hintText: "My discussion with ...." ,
-                  //             focusedBorder: OutlineInputBorder(
-                  //                 borderSide: BorderSide(color: Colors.black),
-                  //                 borderRadius: BorderRadius.circular(10)),
-                  //             border: OutlineInputBorder(
-                  //                 borderSide: BorderSide(color: Colors.black12),
-                  //                 borderRadius: BorderRadius.circular(10)),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //
-                  //     // SizedBox(width: 10,),
-                  //     //
-                  //     // InkWell(
-                  //     //   onTap: () async {
-                  //     //     // sideMenu.changePage(2);
-                  //     //     // page.jumpToPage(1);
-                  //     //   },
-                  //     //   child: Container(
-                  //     //     // margin: EdgeInsets.all(10),
-                  //     //     padding: EdgeInsets.all(5),
-                  //     //     height: 40,
-                  //     //     width: MediaQuery.of(context).size.width * 0.15,
-                  //     //     decoration: BoxDecoration(
-                  //     //       // color: Colors.white,
-                  //     //       border: Border.all(color:primaryColorOfApp, width: 1.0),
-                  //     //       borderRadius: BorderRadius.circular(10.0),
-                  //     //     ),
-                  //     //     child: Row(
-                  //     //       mainAxisAlignment: MainAxisAlignment.center,
-                  //     //       crossAxisAlignment: CrossAxisAlignment.center,
-                  //     //       children: [
-                  //     //         Icon(Icons.insert_drive_file,color: Colors.black,size: 20,),
-                  //     //         SizedBox(width: 5,),
-                  //     //         Expanded(
-                  //     //           child: Text(
-                  //     //             // 'Thrivers',
-                  //     //             'For Someone Else',
-                  //     //             overflow: TextOverflow.ellipsis,
-                  //     //             style: GoogleFonts.montserrat(
-                  //     //                 textStyle:
-                  //     //                 Theme.of(context).textTheme.bodySmall,
-                  //     //                 color: Colors.black),
-                  //     //           ),
-                  //     //         ),
-                  //     //       ],
-                  //     //     ),
-                  //     //   ),
-                  //     //
-                  //     // ),
-                  //
-                  //   ],
-                  // ),
-
-                  SizedBox(height: 10,),
-
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-
-                        InkWell(
-                          onTap: () async {
-
-                            var createdAt = DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now());
-
-                            Map<String, dynamic> AboutMEDatas = {
-                              'About_Me_Label': AboutMeLabeltextController.text,
-                              'Purpose_of_report': _previewProvider.PurposeOfReporttextController.text,
-                              'Purpose': _previewProvider.isOfficial,
-                              'AB_Description' : AboutMeDescriptiontextController.text,
-                              'AB_Date' : AboutMeDatetextController.text,
-                              'AB_Useful_Info' : AboutMeUseFulInfotextController.text,
-                              'AB_Attachment' : "",
-                              'Solutions': solutionsList,
-                              'Challenges': challengesList,
-                            };
-
-                            String solutionJson = json.encode(AboutMEDatas);
-                            print("About_Me_Label: ${AboutMEDatas['About_Me_Label']}");
-
-                            ProgressDialog.show(context, "Completing", Icons.save);
-                            await ApiRepository().updateAboutMe(AboutMEDatas,aboutMeData);
-
-                            // downloadAboutMePdf(challengesList,solutionsList);
-
-                            widget.refreshPage();
-
-                            ProgressDialog.hide();
-
-                            // sendMailPopUp(challengesList,solutionsList);
-
-                            // selectedEmail = null;
-                            // nameController.clear();
-                            // searchEmailcontroller.clear();
-                            // employerController.clear();
-                            // divisionOrSectionController.clear();
-                            // RoleController.clear();
-                            // LocationController.clear();
-                            // EmployeeNumberController.clear();
-                            // LineManagerController.clear();
-                            // mycircumstancesController.clear();
-                            // MystrengthsController.clear();
-                            // mycircumstancesController.clear();
-                            // AboutMeLabeltextController.clear();
-                            // RefineController.clear();
-                            // solutionsList.clear();
-                            // _userAboutMEProvider.solutionss.clear();
-                            // _userAboutMEProvider.challengess.clear();
-                            // _userAboutMEProvider.combinedSolutionsResults.clear();
-                            // _userAboutMEProvider.combinedResults.clear();
-                            // previewProvider.email=null;
-                            // previewProvider.name=null;
-                            // previewProvider.employer=null;
-                            // previewProvider.division=null;
-                            // previewProvider.role=null;
-                            // previewProvider.location=null;
-                            // previewProvider.employeeNumber=null ;
-                            // previewProvider.linemanager=null;
-                            // previewProvider.title=null;
-                            // previewProvider.mycircumstance=null;
-                            // previewProvider.mystrength=null ;
-                            // previewProvider.myorganization=null ;
-                            // previewProvider.mychallenge=null ;
-                            // previewProvider.PreviewChallengesList.clear();
-                            // previewProvider.PreviewSolutionList.clear();
-                            // // _navigateToTab(0);
-                            // // Navigator.pop(context);
-                            // setState(() {
-                            //   page.jumpToPage(1);
-                            // });
-
-                          },
-                          child:Container(
-                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                            width: MediaQuery.of(context).size.width * .15,
-                            decoration: BoxDecoration(
-                              color:Colors.blue ,
-                              border: Border.all(
-                                  color:Colors.blue ,
-                                  width: 1.0),
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            child: Center(
-                              child:Text(
-                                'Save',
-                                style: GoogleFonts.montserrat(
-                                  textStyle:
-                                  Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleSmall,
-                                  fontWeight: FontWeight.bold,
-                                  color:Colors.white ,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 10,),
-
-                        InkWell(
-                          onTap: () async {
-
-                            var createdAt = DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now());
-
-                            var formattedDate = DateFormat('dd MMMM yyyy, HH:mm a').format(DateTime.now());
-
-
-                            Map<String, dynamic> AboutMEDatas = {
-                              'About_Me_Label': AboutMeLabeltextController.text,
-                              'AB_Status' : "Complete and Sent",
-                              'AB_Description' : AboutMeDescriptiontextController.text,
-                              'AB_Useful_Info' : AboutMeUseFulInfotextController.text,
-                              'Purpose_of_report': _previewProvider.PurposeOfReporttextController.text,
-                              'Purpose': _previewProvider.isOfficial,
-                              'AB_Date' : AboutMeDatetextController.text,
-                              'AB_Attachment' : "",
-                              'Solutions': solutionsList,
-                              'Challenges': challengesList,
-                              'Report_sent_to' : [{'name':  previewProvider.SendNametextController.text, 'email': SendEmailtextController.text, 'datetime': formattedDate}],
-                              'Report_sent_to_cc' : List.generate(
-                                previewProvider.ccEmails.length,
-                                    (index) => {
-                                  'name': previewProvider.ccNames[index],
-                                  'email': previewProvider.ccEmails[index],
-                                  'datetime': formattedDate, // Format datetime
-                                },
-                              ),
-
-                            };
-
-                            // String solutionJson = json.encode(AboutMEDatas);
-                            // print(solutionJson);
-
-                            ProgressDialog.show(context, "Completing", Icons.save);
-                            await ApiRepository().updateAboutMe(AboutMEDatas,aboutMeData);
-
-                            final Uint8List pdfBytes = await makePdf(challengesList,solutionsList);
-                            String base64EncodedData = base64.encode(pdfBytes);
-                            String filename = "${About_Me_Label}.pdf";
-                            print("sendMailPopUp chunks: ${base64EncodedData}");
-                            print("sendMailPopUp filename: ${ filename}");
-                            await ApiRepository().sendEmailWithAttachment(
-                              context,
-                              SendEmailtextController.text,
-                              previewProvider.SendNametextController.text,
-                              CopySendEmailtextController.text,
-                              CopySendNametextController.text,
-                              base64EncodedData,
-                              filename,
-                              ccEmails: previewProvider.ccEmails,
-                              ccNames: previewProvider.ccNames,
-                            );
-
-                            await downloadAboutMePdf(challengesList,solutionsList);
-
-                            print(SendEmailtextController.text);
-                            print(CopySendEmailtextController.text);
-                            print(previewProvider.SendNametextController.text);
-                            print(CopySendNametextController.text);
-
-
-                            setState(() {
-                              Navigator.pop(context);
-                            });
-
-                            ProgressDialog.hide();
-
-                            // sendMailPopUp(challengesList,solutionsList);
-
-                            // downloadAboutMePdf(challengesList,solutionsList);
-                            ///
-                            // selectedEmail = null;
-                            // nameController.clear();
-                            // searchEmailcontroller.clear();
-                            // employerController.clear();
-                            // divisionOrSectionController.clear();
-                            // RoleController.clear();
-                            // LocationController.clear();
-                            // EmployeeNumberController.clear();
-                            // LineManagerController.clear();
-                            // mycircumstancesController.clear();
-                            // MystrengthsController.clear();
-                            // mycircumstancesController.clear();
-                            // AboutMeLabeltextController.clear();
-                            // RefineController.clear();
-                            // solutionsList.clear();
-                            // _userAboutMEProvider.solutionss.clear();
-                            // _userAboutMEProvider.challengess.clear();
-                            // _userAboutMEProvider.combinedSolutionsResults.clear();
-                            // _userAboutMEProvider.combinedResults.clear();
-                            // previewProvider.email=null;
-                            // previewProvider.name=null;
-                            // previewProvider.employer=null;
-                            // previewProvider.division=null;
-                            // previewProvider.role=null;
-                            // previewProvider.location=null;
-                            // previewProvider.employeeNumber=null ;
-                            // previewProvider.linemanager=null;
-                            // previewProvider.title=null;
-                            // previewProvider.mycircumstance=null;
-                            // previewProvider.mystrength=null ;
-                            // previewProvider.myorganization=null ;
-                            // previewProvider.mychallenge=null ;
-                            // previewProvider.PreviewChallengesList.clear();
-                            // previewProvider.PreviewSolutionList.clear();
-                            // // _navigateToTab(0);
-                            // // Navigator.pop(context);
-                            // setState(() {
-                            //   page.jumpToPage(1);
-                            // });
-
-                          },
-                          child:Container(
-                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                            width: MediaQuery.of(context).size.width * .15,
-                            decoration: BoxDecoration(
-                              color:Colors.blue ,
-                              border: Border.all(
-                                  color:Colors.blue ,
-                                  width: 1.0),
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            child: Center(
-                              child:Text(
-                                'Complete and Send',
-                                style: GoogleFonts.montserrat(
-                                  textStyle:
-                                  Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleSmall,
-                                  fontWeight: FontWeight.bold,
-                                  color:Colors.white ,
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-
   editmeandmycircumstances(aboutMeData){
 
     showDialog(
@@ -10596,7 +8396,8 @@ Thank you for being open to understanding me better and for considering my reque
                                     Map<String, dynamic> AboutMEDatas = {
                                       // 'About_Me_Label': AboutMeLabeltextController.text,
                                       // 'My_Circumstance': updatemycircumstancesController.text,
-                                      'My_Circumstance': mycircumstancesController.text,
+                                      'My_Circumstance': mycircumstancesController
+                                          .text,
                                       // 'My_Strength': MystrengthsController.text,
                                       // 'My_Organisation': myOrganisationController.text,
                                       // 'My_Challenges_Organisation': myOrganisation2Controller.text,
@@ -10607,7 +8408,7 @@ Thank you for being open to understanding me better and for considering my reque
                                     ProgressDialog.show(
                                         context, "Saving", Icons.save);
                                     await ApiRepository().updateAboutMe(
-                                        AboutMEDatas, aboutMeData);
+                                        AboutMEDatas, documentId);
                                     _previewProvider.updatemycircumstance(
                                         mycircumstancesController.text);
                                     ProgressDialog.hide();
@@ -10654,7 +8455,7 @@ Thank you for being open to understanding me better and for considering my reque
         });
   }
 
-  editmystrength(aboutMeData){
+  editmystrength(){
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -10851,7 +8652,7 @@ Thank you for being open to understanding me better and for considering my reque
                                     ProgressDialog.show(
                                         context, "Saving", Icons.save);
                                     await ApiRepository().updateAboutMe(
-                                        AboutMEDatas, aboutMeData);
+                                        AboutMEDatas, documentId);
                                     _previewProvider.updatemystrength(
                                         MystrengthsController.text);
                                     ProgressDialog.hide();
@@ -10897,7 +8698,7 @@ Thank you for being open to understanding me better and for considering my reque
         });
   }
 
-  editmyorganization(aboutMeData){
+  editmyorganization(){
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -11105,7 +8906,7 @@ Thank you for being open to understanding me better and for considering my reque
                                   ProgressDialog.show(
                                       context, "Saving", Icons.save);
                                   await ApiRepository().updateAboutMe(
-                                      AboutMEDatas, aboutMeData);
+                                      AboutMEDatas, documentId);
                                   _previewProvider.updatemyorganization(
                                       myOrganisationController.text);
                                   ProgressDialog.hide();
@@ -11151,7 +8952,7 @@ Thank you for being open to understanding me better and for considering my reque
         });
   }
 
-  editmychallenges(aboutMeData){
+  editmychallenges(){
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -11346,7 +9147,7 @@ Thank you for being open to understanding me better and for considering my reque
                                   ProgressDialog.show(
                                       context, "Saving", Icons.save);
                                   await ApiRepository().updateAboutMe(
-                                      AboutMEDatas, aboutMeData);
+                                      AboutMEDatas, documentId);
                                   _previewProvider.updatemychallenge(
                                       myOrganisation2Controller.text);
                                   ProgressDialog.hide();

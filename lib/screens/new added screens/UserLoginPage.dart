@@ -304,6 +304,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                                 'Employee_Number': userData['Employee_Number'],
                                 'Line_Manager': userData['Line_Manager'],
                                 'isPPS': true,
+                                'isOS': false,
                                 'About_Me_Label': "PPS",
                                 'Purpose_of_report': "PPS",
                                 'Purpose': "Others" ,
