@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:thrivers/Network/FirebaseApi.dart';
 import 'package:thrivers/core/apphelper.dart';
@@ -271,11 +273,70 @@ class _UserLoginPageState extends State<UserLoginPage> {
                           QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Users').
                           where('email', isEqualTo: loginTextEditingcontroller.text.trim()).get();
                           if (querySnapshot.docs.isNotEmpty) {
-                            ProgressDialog.show(
-                                context,
-                                "Logining in\n${loginTextEditingcontroller.text}",
-                                Icons.ice_skating);
+                            ProgressDialog.show(context, "Logining in\n${loginTextEditingcontroller.text}", Icons.ice_skating);
+
+                            QuerySnapshot newquerySnapshot = await FirebaseFirestore.instance.collection('Users').where('email', isEqualTo: loginTextEditingcontroller.text).where('isPPS', isEqualTo: false).limit(1).get();
+
+                            if(newquerySnapshot.docs.isNotEmpty){
+
+                              var userData = newquerySnapshot.docs.first;
+
+                              QuerySnapshot AboutMequerySnapshot = await FirebaseFirestore.instance.collection('AboutMe').orderBy('AB_id', descending: true).limit(1).get();
+                              var createdAt = DateFormat('yyyy-MM-dd, HH:mm').format(DateTime.now());
+                              int ids;
+                              if (AboutMequerySnapshot.size == 0) {
+                                // Collection doesn't exist, set 'AB_id' to 1 by default
+                                ids = 1;
+                              } else {
+                                final abc = AboutMequerySnapshot.docs.first;
+                                print("AB_id; ${abc['AB_id']}");
+                                print("AB_id; ${abc['AB_id'].runtimeType}");
+                                ids = abc['AB_id'] + 1;
+                              }
+                              Map<String, dynamic> AboutMEDatas = {
+                                'AB_id': ids,
+                                'Email': loginTextEditingcontroller.text,
+                                'User_Name': userData['UserName'],
+                                'Employer': userData['Employer'],
+                                'Division_or_Section': userData['Division_or_Section'],
+                                'Role': userData['Role'],
+                                'Location': userData['Location'],
+                                'Employee_Number': userData['Employee_Number'],
+                                'Line_Manager': userData['Line_Manager'],
+                                'isPPS': true,
+                                'About_Me_Label': "PPS",
+                                'Purpose_of_report': "PPS",
+                                'Purpose': "Others" ,
+                                'AB_Description' : "",
+                                'AB_Date' : DateFormat('yyyy-MM-dd, HH:mm:ss').format(DateTime.now()),
+                                'AB_Useful_Info' : "",
+                                'AB_Attachment' : "",
+                                'AB_Status' : "main",
+                                'My_Circumstance': "",
+                                'My_Strength': "",
+                                'My_Organisation': "",
+                                'My_Challenges_Organisation': "",
+                                'Solutions': [],
+                                'Challenges': [],
+                                "Created_By": userData['UserName'],
+                                "Created_Date": DateFormat('yyyy-MM-dd, HH:mm:ss').format(DateTime.now()),
+                                "Modified_By": "",
+                                "Modified_Date": "",
+                                "Report_sent_to": [],
+                                "Report_sent_to_cc": [],
+                                // Add other fields as needed
+                              };
+
+                              String solutionJson = json.encode(AboutMEDatas);
+                              print(solutionJson);
+                              print("runtimeType :${AboutMEDatas.runtimeType}");
+                              // ProgressDialog.show(context, "Creating About Me", Icons.chair);
+                              var userdocs = await newquerySnapshot.docs.first.id;
+                              await ApiRepository().updateUserDetail({"isPPS": true},userdocs);
+                             var documentId = await ApiRepository().createAboutMe(AboutMEDatas);
+                            }
                             bool isLoginSuccessful = await ApiRepository().sendLoginMail(loginTextEditingcontroller.text);
+                            // bool isLoginSuccessful = true;
                             // isloggedIn = true;
                             ProgressDialog.hide();
                             if (isLoginSuccessful) {

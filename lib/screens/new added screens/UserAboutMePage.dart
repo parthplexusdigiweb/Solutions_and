@@ -105,6 +105,8 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
     );
   }
 
+  // late final PreviewProvider _userPreviewProvider;
+
 
   @override
   void initState() {
@@ -121,6 +123,7 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
     _fetchUserData();
     // _initSharedPreferences();
   }
+
 
   _fetchUserData() async {
     QuerySnapshot userData = await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: widget.emailId).get();
@@ -189,25 +192,625 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
 
           ],
         ),
-        body: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-              child: PageView(
-                physics: NeverScrollableScrollPhysics(),
-                controller: page,
+        body:Consumer<PreviewProvider>(
+            builder: (c,previewProvider, _){
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  // DashBoardScreen(),
-                  UserLogedInAboutMePage(AdminName: widget.emailId,),
-                  AboutMEScreen(),
-                  // UserLogedInAboutMePage(AdminName: widget.emailId,),
-              ],
+                  Expanded(
+                    child: PageView(
+                      physics: NeverScrollableScrollPhysics(),
+                      controller: page,
+                      children: [
+                        // DashBoardScreen(),
+                        EmployeePageView(),
+                        // UserLogedInAboutMePage(AdminName: widget.emailId,Pagejump: false, sideMenu: sideMenu),
+                        UserLogedInAboutMePage(AdminName: widget.emailId,tabindex: previewProvider.tabindex, sideMenu: sideMenu),
+                        AboutMEScreen(),
+                        // UserLogedInAboutMePage(AdminName: widget.emailId,),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            })
+    );
+  }
+
+  Widget EmployeePageView(){
+    return Scaffold(
+      // key: _scaffoldKey,
+      backgroundColor: Colors.grey.withOpacity(0.2),
+      //appBar:AppHelper().CustomAppBarForRetailHub(context),
+      body:Container(
+        margin: EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.7),
+          borderRadius: BorderRadius.circular(20),
+          // image: DecorationImage(
+          //   image: NetworkImage("https://e0.pxfuel.com/wallpapers/1/408/desktop-wallpaper-expo-2020-dubai-live-from-the-opening-ceremony.jpg"),
+          //   fit: BoxFit.cover,
+          // ),
+        ),
+        child: Center(
+          child: Container(
+            // width: MediaQuery.of(context).size.width * 0.5,
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: Card(
+
+              color: Colors.white,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Center(
+                          child: Text("Employee home page",style: GoogleFonts.montserrat(
+                              textStyle: Theme.of(context).textTheme.headlineLarge,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),),
+                        ),
+                      ),
+                      // Padding(
+                      //   padding: EdgeInsets.only(left: 10.0,bottom: 5),
+                      //   child: Text("",style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      //       color: Colors.grey,
+                      //       fontWeight: FontWeight.w300
+                      //
+                      //   ),),
+                      // ),
+                      ///
+                      // Align(
+                      //   alignment: Alignment.topLeft,
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.start,
+                      //     children: [
+                      //       InkWell(
+                      //           onTap: (){
+                      //             widget.Pagejump.jumpToPage(0);
+                      //           },
+                      //           child: Text("<<- Dashboard",
+                      //             style: TextStyle(
+                      //                 // decoration: TextDecoration.underline
+                      //             ),
+                      //           )),
+                      //     ],
+                      //   ),
+                      // ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: () async {
+                              // _navigateToTab(3);
+                              // await showAddAddAboutMeDialogBox();
+                              page.jumpToPage(1);
+                              sideMenu.changePage(1);
+                              _userPreviewProvider.pagechange(1);
+                              ///
+                              // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
+                              //
+                              // // Check if there are any documents
+                              //
+                              // print("querySnapshot :${querySnapshot}");
+                              // print("querySnapshot :${querySnapshot.docs.length}");
+                              //
+                              // if (querySnapshot.docs.isNotEmpty) {
+                              //   // Get the last document
+                              //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                              //   print("lastDocument :$lastDocument");
+                              //   showUserLogedInEditAboutMeDialogBox(lastDocument,0);
+                              // }
+                              // else{
+                              //   _navigateToTab(0);
+                              //   await showAddAddAboutMeDialogBox();
+                              // }
+                            },
+                            child: Container(
+                              margin: EdgeInsets.all(10),
+                              height: 60,
+                              width: MediaQuery.of(context).size.width * 0.2,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.add_box_outlined,color: Colors.black,size: 30,),
+                                    SizedBox(width: 5,),
+                                    Flexible(
+                                      child: Text(
+                                        // 'Thrivers',
+                                        'Employee data',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: GoogleFonts.montserrat(
+                                            textStyle:
+                                            Theme.of(context).textTheme.titleLarge,
+                                            color: Colors.black),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+
+                          ),
+
+                          Row(
+                            // mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              InkWell(
+                                onTap: () async {
+                                  // sideMenu.changePage(3);
+                                  page.jumpToPage(1);
+                                  sideMenu.changePage(1);
+                                  _userPreviewProvider.pagechange(2);
+                                  // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
+                                  //
+                                  // // Check if there are any documents
+                                  //
+                                  // print("querySnapshot :${querySnapshot}");
+                                  // print("querySnapshot :${querySnapshot.docs.length}");
+                                  //
+                                  // if (querySnapshot.docs.isNotEmpty) {
+                                  //   // Get the last document
+                                  //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                                  //   print("lastDocument :$lastDocument");
+                                  //   showUserLogedInEditAboutMeDialogBox(lastDocument,1);
+                                  // }
+                                  // else{
+                                  //   _navigateToTab(1);
+                                  //   await showAddAddAboutMeDialogBox();
+                                  // }
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.all(10),
+                                  height: 60,
+                                  width: MediaQuery.of(context).size.width * 0.2,
+
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.person_add_outlined ,color: Colors.black,size: 30,),
+                                        SizedBox(width: 5,),
+                                        Flexible(
+                                          child: Text(
+                                            'Insight about me',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.montserrat(
+                                                textStyle:
+                                                Theme.of(context).textTheme.titleLarge,
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+
+                              ),
+
+                              InkWell(
+                                onTap: () async {
+                                  page.jumpToPage(1);
+                                  sideMenu.changePage(1);
+                                  _userPreviewProvider.pagechange(3);
+                                  // sideMenu.changePage(5);
+                                  // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
+                                  //
+                                  // // Check if there are any documents
+                                  //
+                                  // print("querySnapshot :${querySnapshot}");
+                                  // print("querySnapshot :${querySnapshot.docs.length}");
+                                  //
+                                  // if (querySnapshot.docs.isNotEmpty) {
+                                  //   // Get the last document
+                                  //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                                  //   print("lastDocument :$lastDocument");
+                                  //   showUserLogedInEditAboutMeDialogBox(lastDocument,2);
+                                  // }
+                                  // else{
+                                  //   _navigateToTab(2);
+                                  //   await showAddAddAboutMeDialogBox();
+                                  // }
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.all(10),
+                                  height: 60,
+                                  width: MediaQuery.of(context).size.width * 0.2,
+
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        // Icon(Icons.person_outline_outlined,color: Colors.black,size: 30,),
+                                        Icon(Icons.edit_attributes,color: Colors.black,size: 30,),
+                                        SizedBox(width: 5,),
+                                        Flexible(
+                                          child: Text(
+                                            // 'User',
+                                            'My attributes',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.montserrat(
+                                                textStyle:
+                                                Theme.of(context).textTheme.titleLarge,
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+
+                              ),
+
+                              InkWell(
+                                onTap: () async {
+                                  page.jumpToPage(1);
+                                  sideMenu.changePage(1);
+                                  _userPreviewProvider.pagechange(4);
+                                  // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
+                                  //
+                                  // // Check if there are any documents
+                                  //
+                                  // print("querySnapshot :${querySnapshot}");
+                                  // print("querySnapshot :${querySnapshot.docs.length}");
+                                  //
+                                  // if (querySnapshot.docs.isNotEmpty) {
+                                  //   // Get the last document
+                                  //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                                  //   print("lastDocument :$lastDocument");
+                                  //   showUserLogedInEditAboutMeDialogBox(lastDocument,3);
+                                  // }
+                                  // else{
+                                  //   _navigateToTab(3);
+                                  //   await showAddAddAboutMeDialogBox();
+                                  // }
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.all(10),
+                                  height: 60,
+                                  width: MediaQuery.of(context).size.width * 0.2,
+
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        // Icon(Icons.person_outline_outlined,color: Colors.black,size: 30,),
+                                        Icon(Icons.sync_problem,color: Colors.black,size: 30,),
+                                        SizedBox(width: 5,),
+                                        Flexible(
+                                          child: Text(
+                                            // 'User',
+                                            'My challenges',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.montserrat(
+                                                textStyle:
+                                                Theme.of(context).textTheme.titleLarge,
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+
+                              ),
+
+                              InkWell(
+                                onTap: () async {
+                                  page.jumpToPage(1);
+                                  sideMenu.changePage(1);
+                                  _userPreviewProvider.pagechange(5);
+                                  // sideMenu.changePage(6);
+                                  // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
+                                  //
+                                  // // Check if there are any documents
+                                  //
+                                  // print("querySnapshot :${querySnapshot}");
+                                  // print("querySnapshot :${querySnapshot.docs.length}");
+                                  //
+                                  // if (querySnapshot.docs.isNotEmpty) {
+                                  //   // Get the last document
+                                  //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                                  //   print("lastDocument :$lastDocument");
+                                  //   showUserLogedInEditAboutMeDialogBox(lastDocument,4);
+                                  // } else{
+                                  //   _navigateToTab(4);
+                                  //   await showAddAddAboutMeDialogBox();
+                                  // }
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.all(10),
+                                  height: 60,
+                                  width: MediaQuery.of(context).size.width * 0.2,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        // Icon(Icons.article,color: Colors.black,size: 30,),
+                                        Icon(Icons.checklist_rtl,color: Colors.black,size: 30,),
+                                        SizedBox(width: 5,),
+
+                                        Flexible(
+                                          child: Text(
+                                            // 'Solutions',
+                                            'My solutions',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.montserrat(
+                                                textStyle:
+                                                Theme.of(context).textTheme.titleLarge,
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+
+                              ),
+
+                            ],
+                          ),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              InkWell(
+                                onTap: () async {
+                                  page.jumpToPage(1);
+                                  sideMenu.changePage(1);
+                                  _userPreviewProvider.pagechange(6);
+                                  // page.jumpToPage(1);
+                                  // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
+                                  //
+                                  // // Check if there are any documents
+                                  //
+                                  // print("querySnapshot :${querySnapshot}");
+                                  // print("querySnapshot :${querySnapshot.docs.length}");
+                                  //
+                                  // if (querySnapshot.docs.isNotEmpty) {
+                                  //   // Get the last document
+                                  //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                                  //   print("lastDocument :$lastDocument");
+                                  //   showUserLogedInEditAboutMeDialogBox(lastDocument,5);
+                                  // }
+                                  // else{
+                                  //   _navigateToTab(5);
+                                  //   await showAddAddAboutMeDialogBox();
+                                  // }
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.all(10),
+                                  height: 60,
+                                  width: MediaQuery.of(context).size.width * 0.2,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        // Icon(Icons.article,color: Colors.black,size: 30,),
+                                        Icon(Icons.insert_drive_file,color: Colors.black,size: 30,),
+                                        SizedBox(width: 5,),
+
+                                        Flexible(
+                                          child: Text(
+                                            // 'Solutions',
+                                            'Generate reports',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.montserrat(
+                                                textStyle:
+                                                Theme.of(context).textTheme.titleLarge,
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              InkWell(
+                                onTap: () async {
+                                  page.jumpToPage(1);
+                                  sideMenu.changePage(1);
+                                  _userPreviewProvider.pagechange(7);
+                                  // page.jumpToPage(1);
+                                  // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
+                                  //
+                                  // // Check if there are any documents
+                                  //
+                                  // print("querySnapshot :${querySnapshot}");
+                                  // print("querySnapshot :${querySnapshot.docs.length}");
+                                  //
+                                  // if (querySnapshot.docs.isNotEmpty) {
+                                  //   // Get the last document
+                                  //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                                  //   print("lastDocument :$lastDocument");
+                                  //   showUserLogedInEditAboutMeDialogBox(lastDocument,6);
+                                  // }
+                                  // else{
+                                  //   // _navigateToTab(5);
+                                  //   // await showAddAddAboutMeDialogBox();
+                                  //   page.jumpToPage(1);
+                                  //   print("page.jumpToPage(1)");
+                                  // }
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.all(10),
+                                  height: 60,
+                                  width: MediaQuery.of(context).size.width * 0.2,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        // Icon(Icons.person_outline_outlined,color: Colors.black,size: 30,),
+                                        Icon(Icons.library_books_outlined,color: Colors.black,size: 30,),
+                                        SizedBox(width: 5,),
+                                        Flexible(
+                                          child: Text(
+                                            // 'User',
+                                            'My library',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.montserrat(
+                                                textStyle:
+                                                Theme.of(context).textTheme.titleLarge,
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+
+                              ),
+                            ],
+                          ),
+
+
+                          // Row(
+                          //   children: [
+                          //     Expanded(
+                          //       child: InkWell(
+                          //         onTap: () {},
+                          //         child: Container(
+                          //           margin: EdgeInsets.all(10),
+                          //           height: 60,
+                          //
+                          //           decoration: BoxDecoration(
+                          //             color: Colors.white,
+                          //             border: Border.all(color:primaryColorOfApp, width: 1.0),
+                          //             borderRadius: BorderRadius.circular(20.0),
+                          //           ),
+                          //           child: Padding(
+                          //             padding: const EdgeInsets.all(8.0),
+                          //             child: Row(
+                          //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          //               children: [
+                          //                 // Icon(Icons.article,color: Colors.black,size: 30,),
+                          //                 Icon(Icons.medical_information_outlined,color: Colors.black,size: 30,),
+                          //                 SizedBox(width: 5,),
+                          //
+                          //                 Expanded(
+                          //                   child: Text(
+                          //                     // 'Solutions',
+                          //                     'Medical and Personal',
+                          //                     overflow: TextOverflow.ellipsis,
+                          //                     style: GoogleFonts.montserrat(
+                          //                         textStyle:
+                          //                         Theme.of(context).textTheme.titleLarge,
+                          //                         color: Colors.black),
+                          //                   ),
+                          //                 ),
+                          //               ],
+                          //             ),
+                          //           ),
+                          //         ),
+                          //
+                          //       ),
+                          //     ),
+                          //     Expanded(
+                          //       child: InkWell(
+                          //         onTap: () {},
+                          //         child: Container(
+                          //           margin: EdgeInsets.all(10),
+                          //           height: 60,
+                          //
+                          //           decoration: BoxDecoration(
+                          //             color: Colors.white,
+                          //             border: Border.all(color:primaryColorOfApp, width: 1.0),
+                          //             borderRadius: BorderRadius.circular(20.0),
+                          //           ),
+                          //           child: Padding(
+                          //             padding: const EdgeInsets.all(8.0),
+                          //             child: Row(
+                          //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          //               children: [
+                          //                 // Icon(Icons.article,color: Colors.black,size: 30,),
+                          //                 Icon(Icons.perm_device_info_sharp,color: Colors.black,size: 30,),
+                          //                 SizedBox(width: 5,),
+                          //
+                          //                 Expanded(
+                          //                   child: Text(
+                          //                     // 'Solutions',
+                          //                     'Useful info',
+                          //                     overflow: TextOverflow.ellipsis,
+                          //                     style: GoogleFonts.montserrat(
+                          //                         textStyle:
+                          //                         Theme.of(context).textTheme.titleLarge,
+                          //                         color: Colors.black),
+                          //                   ),
+                          //                 ),
+                          //               ],
+                          //             ),
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
+
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }
+
 
   Widget DashBoardScreen(){
     return Scaffold(
@@ -472,6 +1075,18 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
           ),
           SideMenuItem(
             priority: 1,
+            title: 'My Reports',
+            //badgeColor: Colors.amber,
+            // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
+            tooltipContent: "My Reports",
+            onTap: (page, _) {
+              sideMenu.changePage(page);
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.list),
+          ),
+          SideMenuItem(
+            priority: 2,
             title: 'ABOUT ME',
             //badgeColor: Colors.amber,
             // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),

@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:thrivers/Network/FirebaseApi.dart';
 import 'package:thrivers/core/apphelper.dart';
 import 'package:thrivers/core/constants.dart';
@@ -49,6 +52,8 @@ class _RegisterPageState extends State<RegisterPage> {
   String? emailErrorText;
 
   String? nameErrorText;
+
+  var documentId;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -97,14 +102,70 @@ class _RegisterPageState extends State<RegisterPage> {
           'UserName': nameTextEditingController.text,
           'email': emailTextEditingController.text,
           // 'Description': descriptionTextEditingController.text,
+          'isPPS': true,
           'Employer': employerController.text,
           'Division_or_Section': divisionOrSectionController.text,
           'Role': RoleController.text,
           'Location': LocationController.text,
           'Employee_Number': EmployeeNumberController.text,
           'Line_Manager': LineManagerController.text,
-
         });
+
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').orderBy('AB_id', descending: true).limit(1).get();
+        var createdAt = DateFormat('yyyy-MM-dd, HH:mm').format(DateTime.now());
+        int ids;
+        if (querySnapshot.size == 0) {
+          // Collection doesn't exist, set 'AB_id' to 1 by default
+          ids = 1;
+        } else {
+          final abc = querySnapshot.docs.first;
+          print("AB_id; ${abc['AB_id']}");
+          print("AB_id; ${abc['AB_id'].runtimeType}");
+          ids = abc['AB_id'] + 1;
+        }
+        Map<String, dynamic> AboutMEDatas = {
+          'AB_id': ids,
+          'Email': emailTextEditingController.text,
+          'User_Name': nameTextEditingController.text,
+          'Employer': employerController.text,
+          'Division_or_Section': divisionOrSectionController.text,
+          'Role': RoleController.text,
+          'Location': LocationController.text,
+          'Employee_Number': EmployeeNumberController.text,
+          'Line_Manager': LineManagerController.text,
+          'isPPS': true,
+          'About_Me_Label': "${createdAt}_" + nameTextEditingController.text + "_PPS",
+          'Purpose_of_report': "${createdAt}_" + nameTextEditingController.text + "_PPS",
+          'Purpose': "Others" ,
+          'AB_Description' : "",
+          'AB_Date' : DateFormat('yyyy-MM-dd, HH:mm:ss').format(DateTime.now()),
+          'AB_Useful_Info' : "",
+          'AB_Attachment' : "",
+          'AB_Status' : "Draft",
+          'My_Circumstance': "",
+          'My_Strength': "",
+          'My_Organisation': "",
+          'My_Challenges_Organisation': "",
+          'Solutions': [],
+          'Challenges': [],
+          "Created_By": nameTextEditingController.text,
+          "Created_Date": DateFormat('yyyy-MM-dd, HH:mm:ss').format(DateTime.now()),
+          "Modified_By": "",
+          "Modified_Date": "",
+          "Report_sent_to": [],
+          "Report_sent_to_cc": [],
+          // Add other fields as needed
+        };
+
+        String solutionJson = json.encode(AboutMEDatas);
+        print(solutionJson);
+
+        print("runtimeType :${AboutMEDatas.runtimeType}");
+
+
+        // ProgressDialog.show(context, "Creating About Me", Icons.chair);
+        documentId = await ApiRepository().createAboutMe(AboutMEDatas);
+
         showEmptyAlert(context,'Registration Successful',Icons.mark_email_read , Colors.green);
         // showDialog(
         //   context: context,

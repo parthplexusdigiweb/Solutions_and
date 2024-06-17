@@ -330,7 +330,8 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
                 physics: NeverScrollableScrollPhysics(),
                 children: [
                   // BrevoScreen(),
-                  DashBoardScreen(),
+                  // DashBoardScreen(),
+                  AdminAboutMePage(AdminName: (widget.AdminName==null) ? "Admin" : widget.AdminName, Pagejump: page),
                   AdminAboutMePage(AdminName: (widget.AdminName==null) ? "Admin" : widget.AdminName, Pagejump: page),
                   AddThriversScreen(AdminName: (widget.AdminName==null) ? "Admin" : widget.AdminName),
                   AddChallengesScreen(AdminName: (widget.AdminName==null) ? "Admin" : widget.AdminName),

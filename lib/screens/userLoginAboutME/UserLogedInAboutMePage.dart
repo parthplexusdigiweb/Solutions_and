@@ -31,9 +31,11 @@ import 'package:toastification/toastification.dart';
 
 
 class UserLogedInAboutMePage extends StatefulWidget {
-  var AdminName,Pagejump;
+  var AdminName,tabindex;
+  final SideMenuController sideMenu;
 
-  UserLogedInAboutMePage({this.AdminName,this.Pagejump});
+
+  UserLogedInAboutMePage({this.AdminName,this.tabindex,required this.sideMenu});
 
   @override
   State<UserLogedInAboutMePage> createState() => _UserLogedInAboutMePageState();
@@ -123,7 +125,7 @@ class _UserLogedInAboutMePageState extends State<UserLogedInAboutMePage> with Ti
       // Extract emails from documents
       emailList = querySnapshot.docs.map((doc) => doc['email'] as String).toList();
 
-      setState(() {});
+      // setState(() {});
     } catch (e) {
       print("Error fetching email list: $e");
     }
@@ -224,6 +226,13 @@ Date
     newSelectCategories();
     newSolSelectCategories();
     getChatgptSettingsApiKey();
+    _futureFirstDraftDocument = getFirstDraftDocument();
+    print("widget.Pagejump: ${widget.tabindex}");
+    print("widget.AdminName: ${widget.AdminName}");
+    // if(widget.Pagejump==true){
+    //   page.jumpToPage(3);
+    //   _previewProvider.pagechange(0);
+    // }
   }
 
   @override
@@ -241,23 +250,96 @@ Date
     setState(() {});
   }
 
-  @override
-  Widget build(BuildContext context){
-    return Scaffold(
-      body: PageView(
-        controller: page,
-        physics: NeverScrollableScrollPhysics(),
-        children: [
-          EmployeePageView(),
-          MyLibrary(),
-          MyReportScreen(),
-        ],
-      ),
-      // body: EmployeePageView(),
-      // body: AboutMEScreen(),
-    );
+  late Future<DocumentSnapshot> _futureFirstDraftDocument;
+
+  Future<DocumentSnapshot> getFirstDraftDocument() async {
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe')
+          .where('AB_Status', isEqualTo: 'main')
+          .where("Email", isEqualTo: widget.AdminName)
+          .orderBy('AB_id', descending: true)
+          .limit(1).get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        print("querySnapshot.docs getFirstDraftDocument: ${querySnapshot.docs.length}");
+        return querySnapshot.docs.first;
+      } else {
+        throw Exception("No draft document found");
+      }
+    } catch (e) {
+      throw Exception("Error getting first draft document: $e");
+    }
   }
 
+  @override
+  // Widget build(BuildContext context){
+  //   return Scaffold(
+  //     body: PageView(
+  //       controller: page,
+  //       physics: NeverScrollableScrollPhysics(),
+  //       children: [
+  //         EmployeePageView(),
+  //         MyLibrary(),
+  //         MyReportScreen(),
+  //         // UserLogedInEditAboutMEScreen(aboutMeData:  aboutMeData,
+  //         // refreshPage: refreshPage,
+  //         // showAddAddAboutMeDialogBox: showAddAddAboutMeDialogBox,
+  //         // showReportViewPageDialogBox: showReportViewPageDialogBox,
+  //         // AdminName: widget.AdminName,
+  //         // tabindex: 0,
+  //         // duplicateDocument: duplicateDocument,
+  //         // page: page);
+  //       ],
+  //     ),
+  //     // body: EmployeePageView(),
+  //     // body: AboutMEScreen(),
+  //   );
+  // }
+  Widget build(BuildContext context) {
+    print("isRepeating");
+    return FutureBuilder<DocumentSnapshot>(
+      // future: getFirstDraftDocument(),
+      future: _futureFirstDraftDocument,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          print("Error: ${snapshot.error}");
+          return Center(child: Text("Error: ${snapshot.error}"));
+        } else if (!snapshot.hasData || snapshot.data == null) {
+          return Center(child: Text("No draft document found"));
+        } else {
+          // if (widget.Pagejump) {
+          //   // Navigate to the third page in the PageView
+          //   WidgetsBinding.instance?.addPostFrameCallback((_) {
+          //     page.jumpToPage(3);
+          //   });
+          // }
+          return  Consumer<PreviewProvider>(
+            builder: (c,previewProvider, _){
+              return PageView(
+                controller: page,
+                physics: NeverScrollableScrollPhysics(),
+                children: [
+                  // EmployeePageView(),
+                  // MyLibrary(),
+                  // MyReportScreen(),
+                  UserLogedInEditAboutMEScreen(
+                      aboutMeData:  snapshot.data!,
+                      refreshPage: refreshPage,
+                      showAddAddAboutMeDialogBox: showAddAddAboutMeDialogBox,
+                      showReportViewPageDialogBox: showReportViewPageDialogBox,
+                      AdminName: widget.AdminName,
+                      tabindex: widget.tabindex,
+                      duplicateDocument: duplicateDocument,
+                      page: page),
+                ],
+              );
+            });
+        }
+      },
+    );
+  }
   Widget AboutMEScreen(){
     return Scaffold(
       backgroundColor: Colors.grey.withOpacity(0.2),
@@ -2110,23 +2192,27 @@ Date
                                   onTap: () async {
                                     // _navigateToTab(3);
                                    // await showAddAddAboutMeDialogBox();
-                                    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
-
-                                    // Check if there are any documents
-
-                                    print("querySnapshot :${querySnapshot}");
-                                    print("querySnapshot :${querySnapshot.docs.length}");
-
-                                    if (querySnapshot.docs.isNotEmpty) {
-                                      // Get the last document
-                                      DocumentSnapshot lastDocument = querySnapshot.docs.first;
-                                      print("lastDocument :$lastDocument");
-                                      showUserLogedInEditAboutMeDialogBox(lastDocument,0);
-                                    }
-                                    else{
-                                      _navigateToTab(0);
-                                      await showAddAddAboutMeDialogBox();
-                                    }
+                                     page.jumpToPage(3);
+                                     widget.sideMenu.changePage(1);
+                                     _previewProvider.pagechange(1);
+                                    ///
+                                    // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
+                                    //
+                                    // // Check if there are any documents
+                                    //
+                                    // print("querySnapshot :${querySnapshot}");
+                                    // print("querySnapshot :${querySnapshot.docs.length}");
+                                    //
+                                    // if (querySnapshot.docs.isNotEmpty) {
+                                    //   // Get the last document
+                                    //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                                    //   print("lastDocument :$lastDocument");
+                                    //   showUserLogedInEditAboutMeDialogBox(lastDocument,0);
+                                    // }
+                                    // else{
+                                    //   _navigateToTab(0);
+                                    //   await showAddAddAboutMeDialogBox();
+                                    // }
                                   },
                                   child: Container(
                                     margin: EdgeInsets.all(10),
@@ -2165,23 +2251,26 @@ Date
                                 child: InkWell(
                                   onTap: () async {
                                     // sideMenu.changePage(3);
-                                    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
-
-                                    // Check if there are any documents
-
-                                    print("querySnapshot :${querySnapshot}");
-                                    print("querySnapshot :${querySnapshot.docs.length}");
-
-                                    if (querySnapshot.docs.isNotEmpty) {
-                                      // Get the last document
-                                      DocumentSnapshot lastDocument = querySnapshot.docs.first;
-                                      print("lastDocument :$lastDocument");
-                                      showUserLogedInEditAboutMeDialogBox(lastDocument,1);
-                                    }
-                                    else{
-                                      _navigateToTab(1);
-                                      await showAddAddAboutMeDialogBox();
-                                    }
+                                    page.jumpToPage(3);
+                                    widget.sideMenu.changePage(1);
+                                     _previewProvider.pagechange(2);
+                                    // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
+                                    //
+                                    // // Check if there are any documents
+                                    //
+                                    // print("querySnapshot :${querySnapshot}");
+                                    // print("querySnapshot :${querySnapshot.docs.length}");
+                                    //
+                                    // if (querySnapshot.docs.isNotEmpty) {
+                                    //   // Get the last document
+                                    //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                                    //   print("lastDocument :$lastDocument");
+                                    //   showUserLogedInEditAboutMeDialogBox(lastDocument,1);
+                                    // }
+                                    // else{
+                                    //   _navigateToTab(1);
+                                    //   await showAddAddAboutMeDialogBox();
+                                    // }
                                   },
                                   child: Container(
                                     margin: EdgeInsets.all(10),
@@ -2222,24 +2311,27 @@ Date
                               Expanded(
                                 child: InkWell(
                                   onTap: () async {
+                                    page.jumpToPage(3);
+                                    widget.sideMenu.changePage(1);
+                                    _previewProvider.pagechange(3);
                                     // sideMenu.changePage(5);
-                                    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
-
-                                    // Check if there are any documents
-
-                                    print("querySnapshot :${querySnapshot}");
-                                    print("querySnapshot :${querySnapshot.docs.length}");
-
-                                    if (querySnapshot.docs.isNotEmpty) {
-                                      // Get the last document
-                                      DocumentSnapshot lastDocument = querySnapshot.docs.first;
-                                      print("lastDocument :$lastDocument");
-                                      showUserLogedInEditAboutMeDialogBox(lastDocument,2);
-                                    }
-                                    else{
-                                      _navigateToTab(2);
-                                      await showAddAddAboutMeDialogBox();
-                                    }
+                                    // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
+                                    //
+                                    // // Check if there are any documents
+                                    //
+                                    // print("querySnapshot :${querySnapshot}");
+                                    // print("querySnapshot :${querySnapshot.docs.length}");
+                                    //
+                                    // if (querySnapshot.docs.isNotEmpty) {
+                                    //   // Get the last document
+                                    //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                                    //   print("lastDocument :$lastDocument");
+                                    //   showUserLogedInEditAboutMeDialogBox(lastDocument,2);
+                                    // }
+                                    // else{
+                                    //   _navigateToTab(2);
+                                    //   await showAddAddAboutMeDialogBox();
+                                    // }
                                   },
                                   child: Container(
                                     margin: EdgeInsets.all(10),
@@ -2280,23 +2372,26 @@ Date
                               Expanded(
                                 child: InkWell(
                                   onTap: () async {
-                                    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
-
-                                    // Check if there are any documents
-
-                                    print("querySnapshot :${querySnapshot}");
-                                    print("querySnapshot :${querySnapshot.docs.length}");
-
-                                    if (querySnapshot.docs.isNotEmpty) {
-                                      // Get the last document
-                                      DocumentSnapshot lastDocument = querySnapshot.docs.first;
-                                      print("lastDocument :$lastDocument");
-                                      showUserLogedInEditAboutMeDialogBox(lastDocument,3);
-                                    }
-                                    else{
-                                      _navigateToTab(3);
-                                      await showAddAddAboutMeDialogBox();
-                                    }
+                                    page.jumpToPage(3);
+                                    widget.sideMenu.changePage(1);
+                                    _previewProvider.pagechange(4);
+                                    // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
+                                    //
+                                    // // Check if there are any documents
+                                    //
+                                    // print("querySnapshot :${querySnapshot}");
+                                    // print("querySnapshot :${querySnapshot.docs.length}");
+                                    //
+                                    // if (querySnapshot.docs.isNotEmpty) {
+                                    //   // Get the last document
+                                    //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                                    //   print("lastDocument :$lastDocument");
+                                    //   showUserLogedInEditAboutMeDialogBox(lastDocument,3);
+                                    // }
+                                    // else{
+                                    //   _navigateToTab(3);
+                                    //   await showAddAddAboutMeDialogBox();
+                                    // }
                                     },
                                   child: Container(
                                     margin: EdgeInsets.all(10),
@@ -2340,23 +2435,26 @@ Date
                               Expanded(
                                 child: InkWell(
                                   onTap: () async {
+                                    page.jumpToPage(3);
+                                    widget.sideMenu.changePage(1);
+                                    _previewProvider.pagechange(5);
                                     // sideMenu.changePage(6);
-                                    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
-
-                                    // Check if there are any documents
-
-                                    print("querySnapshot :${querySnapshot}");
-                                    print("querySnapshot :${querySnapshot.docs.length}");
-
-                                    if (querySnapshot.docs.isNotEmpty) {
-                                      // Get the last document
-                                      DocumentSnapshot lastDocument = querySnapshot.docs.first;
-                                      print("lastDocument :$lastDocument");
-                                      showUserLogedInEditAboutMeDialogBox(lastDocument,4);
-                                    } else{
-                                      _navigateToTab(4);
-                                      await showAddAddAboutMeDialogBox();
-                                    }
+                                    // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
+                                    //
+                                    // // Check if there are any documents
+                                    //
+                                    // print("querySnapshot :${querySnapshot}");
+                                    // print("querySnapshot :${querySnapshot.docs.length}");
+                                    //
+                                    // if (querySnapshot.docs.isNotEmpty) {
+                                    //   // Get the last document
+                                    //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                                    //   print("lastDocument :$lastDocument");
+                                    //   showUserLogedInEditAboutMeDialogBox(lastDocument,4);
+                                    // } else{
+                                    //   _navigateToTab(4);
+                                    //   await showAddAddAboutMeDialogBox();
+                                    // }
                                   },
                                   child: Container(
                                     margin: EdgeInsets.all(10),
@@ -2397,24 +2495,27 @@ Date
                               Expanded(
                                 child: InkWell(
                                   onTap: () async {
+                                    page.jumpToPage(3);
+                                    widget.sideMenu.changePage(1);
+                                    _previewProvider.pagechange(6);
                                     // page.jumpToPage(2);
-                                    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
-
-                                    // Check if there are any documents
-
-                                    print("querySnapshot :${querySnapshot}");
-                                    print("querySnapshot :${querySnapshot.docs.length}");
-
-                                    if (querySnapshot.docs.isNotEmpty) {
-                                      // Get the last document
-                                      DocumentSnapshot lastDocument = querySnapshot.docs.first;
-                                      print("lastDocument :$lastDocument");
-                                      showUserLogedInEditAboutMeDialogBox(lastDocument,5);
-                                    }
-                                    else{
-                                      _navigateToTab(5);
-                                      await showAddAddAboutMeDialogBox();
-                                    }
+                                    // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
+                                    //
+                                    // // Check if there are any documents
+                                    //
+                                    // print("querySnapshot :${querySnapshot}");
+                                    // print("querySnapshot :${querySnapshot.docs.length}");
+                                    //
+                                    // if (querySnapshot.docs.isNotEmpty) {
+                                    //   // Get the last document
+                                    //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                                    //   print("lastDocument :$lastDocument");
+                                    //   showUserLogedInEditAboutMeDialogBox(lastDocument,5);
+                                    // }
+                                    // else{
+                                    //   _navigateToTab(5);
+                                    //   await showAddAddAboutMeDialogBox();
+                                    // }
                                   },
                                   child: Container(
                                     margin: EdgeInsets.all(10),
@@ -2456,26 +2557,29 @@ Date
 
                           InkWell(
                             onTap: () async {
+                              page.jumpToPage(3);
+                              widget.sideMenu.changePage(1);
+                              _previewProvider.pagechange(7);
                               // page.jumpToPage(1);
-                              QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
-
-                              // Check if there are any documents
-
-                              print("querySnapshot :${querySnapshot}");
-                              print("querySnapshot :${querySnapshot.docs.length}");
-
-                              if (querySnapshot.docs.isNotEmpty) {
-                                // Get the last document
-                                DocumentSnapshot lastDocument = querySnapshot.docs.first;
-                                print("lastDocument :$lastDocument");
-                                showUserLogedInEditAboutMeDialogBox(lastDocument,6);
-                              }
-                              else{
-                                // _navigateToTab(5);
-                                // await showAddAddAboutMeDialogBox();
-                                page.jumpToPage(1);
-                                print("page.jumpToPage(1)");
-                              }
+                              // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').where("Email", isEqualTo: widget.AdminName).orderBy('AB_id', descending: true).limit(1).get();
+                              //
+                              // // Check if there are any documents
+                              //
+                              // print("querySnapshot :${querySnapshot}");
+                              // print("querySnapshot :${querySnapshot.docs.length}");
+                              //
+                              // if (querySnapshot.docs.isNotEmpty) {
+                              //   // Get the last document
+                              //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                              //   print("lastDocument :$lastDocument");
+                              //   showUserLogedInEditAboutMeDialogBox(lastDocument,6);
+                              // }
+                              // else{
+                              //   // _navigateToTab(5);
+                              //   // await showAddAddAboutMeDialogBox();
+                              //   page.jumpToPage(1);
+                              //   print("page.jumpToPage(1)");
+                              // }
                             },
                             child: Container(
                               margin: EdgeInsets.all(10),
@@ -10531,8 +10635,9 @@ Date
           return UserLogedInEditAboutMEScreen(aboutMeData:  aboutMeData,
               refreshPage: refreshPage,
               showAddAddAboutMeDialogBox: showAddAddAboutMeDialogBox,
+              showReportViewPageDialogBox: showReportViewPageDialogBox,
               AdminName: widget.AdminName,
-              tabindex: tabindex,
+              tabindex: 0,
               duplicateDocument: duplicateDocument,
               page: page);
           // return Theme(
@@ -10787,9 +10892,9 @@ Date
       print('duplicatedData: ${duplicatedData}');
 
 
-      await showUserLogedInEditAboutMeDialogBox(duplicatedDocumentSnapshot, 0);
+      // await showUserLogedInEditAboutMeDialogBox(duplicatedDocumentSnapshot, 0);
 
-      _previewProvider.isDuplicate = true;
+      // _previewProvider.isDuplicate = true;
 
       // Notify the user that the duplication was successful
       ScaffoldMessenger.of(context).showSnackBar(

@@ -64,7 +64,7 @@ class _SuperAdminLoginScreenState extends State<SuperAdminLoginScreen> {
           leading: Container(),
 
           title: Center(
-            child: Text("SOLUTIONS", style: GoogleFonts.montserrat(
+            child: Text("SOLUTIONS INCLUSIONS", style: GoogleFonts.montserrat(
                 textStyle: Theme.of(context).textTheme.headlineLarge,
                 fontWeight: FontWeight.bold,
                 color: Colors.white),
@@ -91,10 +91,10 @@ class _SuperAdminLoginScreenState extends State<SuperAdminLoginScreen> {
                     decoration: BoxDecoration(
                       color: Colors.blue,
                       borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(color: Colors.black,blurRadius: 10,),
-
-                      ]
+                      // boxShadow: [
+                      //   BoxShadow(color: Colors.black,blurRadius: 10,),
+                      //
+                      // ]
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
@@ -211,25 +211,30 @@ class _SuperAdminLoginScreenState extends State<SuperAdminLoginScreen> {
                             }
                           },
 
-                          child: Material(
-                            elevation: 20,
-                            child: Container(
-                              margin: EdgeInsets.all(0),
-                              height: 60,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                // border: Border.all(color:Colors.blue, width: 2.0),
-                                // borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Login',
-                                  style: GoogleFonts.poppins(
-                                      textStyle:
-                                      Theme.of(context).textTheme.titleSmall,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blue),
-                                ),
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 8),
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              // border: Border.all(color:Colors.blue, width: 2.0),
+                              borderRadius: BorderRadius.circular(8.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurStyle: BlurStyle.outer,
+                                  offset: Offset(8, 10),
+                                  // blurRadius: 10
+                                )
+                              ]
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Login',
+                                style: GoogleFonts.poppins(
+                                    textStyle:
+                                    Theme.of(context).textTheme.titleSmall,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue),
                               ),
                             ),
                           ),

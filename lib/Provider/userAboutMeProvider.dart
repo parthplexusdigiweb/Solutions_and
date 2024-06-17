@@ -682,6 +682,8 @@ class UserAboutMEProvider with ChangeNotifier{
       print("editchallengessAdded: $editchallengess");
 
       print("isEditChallengeListAddedADDING: $isEditChallengeListAdded");
+      notifyListeners();
+
     }
 
   }
@@ -712,9 +714,10 @@ class UserAboutMEProvider with ChangeNotifier{
         'Attachment':challenge.attachment,
       };
       mainList.add(solutionData);
-      // print("mainList.length challenge: ${mainList.length}");
-      // print("mainList challenge: ${mainList}");
-
+      print("EditChallengeListadd challenge: ${mainList.length}");
+      print("EditChallengeListadd challenge: ${mainList}");
+      print("EditChallengeListadd");
+      notifyListeners();
     }
   }
 
@@ -748,12 +751,10 @@ class UserAboutMEProvider with ChangeNotifier{
 
         print("isEditSolutionListAdded: $editsolutionss");
 
-        print(
-            "isEditSolutionListAddedADDING: $isEditSolutionListAdded");
+        print("isEditSolutionListAddedADDING: $isEditSolutionListAdded");
+      notifyListeners();
+
     }
-
-
-    // notifyListeners();
 
   }
 
@@ -786,13 +787,16 @@ class UserAboutMEProvider with ChangeNotifier{
         // 'confirmed': false, // Add a 'confirmed' field
       };
 
-      print("Provider object:${solutionData["Provider"]}");
-      print("InPlace object:${solutionData["InPlace"]}");
+      // print("Provider object:${solutionData["Provider"]}");
+      // print("InPlace object:${solutionData["InPlace"]}");
+
       mainList.add(solutionData);
       updatenewprovider(solutionData["Provider"], solutionData["id"]);
       updatenewInplace(solutionData["InPlace"], solutionData["id"]);
-      // print("mainList.length: ${mainList.length}");
-      // print("mainList: ${mainList}");
+      print("mainList.length: ${mainList.length}");
+      print("mainList: ${mainList}");
+      notifyListeners();
+
     }
   }
 
@@ -826,6 +830,8 @@ class UserAboutMEProvider with ChangeNotifier{
       };
       if(solutionData["Provider"]=="My Responsibilty"){
       mainList.add(solutionData);
+      notifyListeners();
+
       }
       // print("mainList.length solution: ${mainList.length}");
       // print("mainList solution: ${mainList}");
@@ -872,7 +878,7 @@ class UserAboutMEProvider with ChangeNotifier{
      else if(solutionData["InPlace"]=='No (Must Have)'){
     mainList3.add(solutionData);
     }
-
+      notifyListeners();
     }
   }
 

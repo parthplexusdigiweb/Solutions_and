@@ -16,6 +16,7 @@ import 'package:thrivers/screens/authenticateloginscreen.dart';
 import 'package:thrivers/screens/homescreentab.dart';
 import 'package:thrivers/screens/new%20added%20screens/AdminAboutMePage.dart';
 import 'package:thrivers/screens/new%20added%20screens/NewHomeScreen.dart';
+import 'package:thrivers/screens/new%20added%20screens/NewSolutionsLandingScreen.dart';
 import 'package:thrivers/screens/new%20added%20screens/UserAboutMePage.dart';
 import 'package:thrivers/screens/new%20added%20screens/UserLoginPage.dart';
 import 'package:thrivers/screens/new%20added%20screens/UserRegisterPage.dart';
@@ -38,6 +39,8 @@ SharedPreferences? sharedPreferences;
 
 bool? isloggedIn;
 
+Future<Widget>? _cachedAdminScreen;
+
 /// fenil new
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,6 +59,9 @@ Future<void> main() async {
    await Firebase.initializeApp(
      options: DefaultFirebaseOptions.currentPlatform,
    );
+
+  _cachedAdminScreen = _buildAdminScreen();
+
   // runApp(const MyApp());
   runApp(
       MultiProvider(
@@ -70,7 +76,7 @@ Future<void> main() async {
       );
 }
 
-Future<Widget> _buildAdminScreen(BuildContext context, GoRouterState state) async {
+Future<Widget> _buildAdminScreen() async {
   bool loggedIn = await ApiRepository().isLoggedIn(); // Implement isLoggedIn() according to your authentication logic
   var username = await ApiRepository().getSavedUsername(); // Implement getSavedUsername() to retrieve the username if logged in
   if (loggedIn) {
@@ -90,13 +96,13 @@ final GoRouter _router = GoRouter(
   routes: <RouteBase>[
     GoRoute(
       path: '/',
-      // builder: (BuildContext context, GoRouterState state) {
-      //   // return  NewHomeScreenTabs();
-      //   // return  LandingScreen();
-      //   // return  ThriverLandingScreen();
-      //   return  SuperAdminLoginScreen();
-      //   // return  socketConnection();
-      // },
+      builder: (BuildContext context, GoRouterState state) {
+        // return  NewHomeScreenTabs();
+        // return  LandingScreen();
+        // return  ThriverLandingScreen();
+        return  SolutionsLandingScreen();
+        // return  socketConnection();
+      },
       ///
       // builder: (BuildContext context, GoRouterState state) {
       //   return FutureBuilder<bool>(
@@ -128,19 +134,19 @@ final GoRouter _router = GoRouter(
       //   );
       // },
       ///
-      builder: (BuildContext context, GoRouterState state) {
-        return FutureBuilder<Widget>(
-          future: _buildAdminScreen(context, state),
-          builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
-            } else {
-              return snapshot.data ??
-                  Container(); // Return an empty container if snapshot.data is null
-            }
-          },
-        );
-      },
+      // builder: (BuildContext context, GoRouterState state) {
+      //   return FutureBuilder<Widget>(
+      //     future: _buildAdminScreen(context, state),
+      //     builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+      //       if (snapshot.connectionState == ConnectionState.waiting) {
+      //         return CircularProgressIndicator();
+      //       } else {
+      //         return snapshot.data ??
+      //             Container(); // Return an empty container if snapshot.data is null
+      //       }
+      //     },
+      //   );
+      // },
       routes: <RouteBase>[
    //      GoRoute(
    //        path: 'authenticate',
@@ -170,22 +176,23 @@ final GoRouter _router = GoRouter(
         //   },
         // ),
 
-        // GoRoute(
-        //   path: 'admin',
-        //   builder: (BuildContext context, GoRouterState state){
-        //     return FutureBuilder<Widget>(
-        //       future: _buildAdminScreen(context, state),
-        //       builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
-        //         if (snapshot.connectionState == ConnectionState.waiting) {
-        //           return CircularProgressIndicator();
-        //         } else {
-        //           return snapshot.data ??
-        //               Container(); // Return an empty container if snapshot.data is null
-        //         }
-        //       },
-        //     );
-        //   },
-        // ),
+        GoRoute(
+          path: 'admin',
+          builder: (BuildContext context, GoRouterState state){
+            return FutureBuilder<Widget>(
+              // future: _buildAdminScreen(context),
+              future: _cachedAdminScreen,
+              builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else {
+                  return snapshot.data ??
+                      Container(); // Return an empty container if snapshot.data is null
+                }
+              },
+            );
+          },
+        ),
 
         GoRoute(
           path: 'userRegister',
@@ -209,10 +216,15 @@ final GoRouter _router = GoRouter(
                 print("state.pathParameters: ${state.pathParameters}");
                 print("loginToken : ${state.uri.queryParameters['loginToken']}");
                 final loginToken = state.uri.queryParameters['loginToken']!;
+                // final islogin = state.uri.queryParameters['islogin']!;
+
                 print("From RouteBase : "+loginToken);
+                // print("isloginnnnnn ${islogin}");
+
 
                 return AuthenticateLogin(
                   loginToken: loginToken,
+                    // islogin:islogin
                 );
               },
             ),
@@ -222,8 +234,8 @@ final GoRouter _router = GoRouter(
         GoRoute(
           path: 'userhome',
           builder: (BuildContext context, GoRouterState state) {
-            // return  UserAboutMePage(isClientLogeddin: true, emailId: "fenilpatel120501@gmail.com");
-            return  UserAboutMePage(isClientLogeddin: isloggedIn, emailId: "pgajdhar@gmail.com");
+            return  UserAboutMePage(isClientLogeddin: true, emailId: "fenilpatel120501@gmail.com");
+            // return  UserAboutMePage(isClientLogeddin: isloggedIn, emailId: "pgajdhar@gmail.com");
             // return  UserAboutMePage(isClientLogeddin: isloggedIn, emailId: "mthlondon@gmail.com");
           },
 
@@ -291,6 +303,7 @@ final GoRouter _newrouter = GoRouter(
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
 
   // This widget is the root of your application.
 

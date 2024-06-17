@@ -19,6 +19,13 @@ class PreviewProvider with ChangeNotifier{
   List<String> ccEmails = [];
   List<String> ccNames = [];
 
+  int tabindex = 0;
+
+   pagechange(index) {
+      tabindex = index;
+      notifyListeners();
+  }
+
   void addCCRecipient(email,name) {
       ccEmails.add(email);
       ccNames.add(name);

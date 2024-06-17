@@ -19,8 +19,8 @@ import 'not used screen/landingscreen.dart';
 class AuthenticateLogin extends StatefulWidget {
 
   final String loginToken;
-
-  AuthenticateLogin({required this.loginToken});
+var islogin;
+  AuthenticateLogin({required this.loginToken,this.islogin});
 
 
 
@@ -72,6 +72,7 @@ class _AuthenticateLoginState extends State<AuthenticateLogin> {
             print("The Email ID");
             print(data);
             if(RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(data) && isloggedIn==true){
+            // if(RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(data)){
               WidgetsBinding.instance.addPostFrameCallback((_) {
               // var abc =  sharedPreferences?.setBool("isLoggedIn",true);
               // var www = sharedPreferences?.setString("userEmail",data);
@@ -183,6 +184,8 @@ class _AuthenticateLoginState extends State<AuthenticateLogin> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       isloggedIn = prefs.getBool('isLoggedIn') ?? false;
+      // isloggedIn = widget.islogin;
+      // print("isloginislogin ${widget.islogin}");
       print("getBoolisloggedIn: $isloggedIn");
     });
   }
