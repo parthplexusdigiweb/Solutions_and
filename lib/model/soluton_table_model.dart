@@ -19,6 +19,7 @@ class SolutionModel {
   var attachment;
   var InPlace;
   var Provider;
+  var Help,PositiveImpactstoEmployee,PositiveImpactstoOrganisation,RelatedSolutionsTags,SuggestedChallengesTags;
 
   bool isConfirmed; // Add a boolean for confirmation status
 
@@ -48,6 +49,11 @@ class SolutionModel {
     this.attachment,
     this.Provider,
     this.InPlace,
+    this.Help,
+    this.PositiveImpactstoEmployee,
+    this.PositiveImpactstoOrganisation,
+    this.RelatedSolutionsTags,
+    this.SuggestedChallengesTags,
 
     this.isConfirmed = false, // Default to false for not confirmed
     // this.attachments,

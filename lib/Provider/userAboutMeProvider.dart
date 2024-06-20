@@ -52,6 +52,7 @@ class UserAboutMEProvider with ChangeNotifier{
 
 
   bool isRefinetextChange = false;
+  bool issearchsolutionChange = false;
 
   var aadhar;
   String? downloadURL;
@@ -115,6 +116,12 @@ class UserAboutMEProvider with ChangeNotifier{
     notifyListeners();
   }
 
+  updateissearchsolutionChange(bool value){
+    issearchsolutionChange = value;
+    print("issearchsolutionChange: $issearchsolutionChange");
+    notifyListeners();
+  }
+
   updateconfirmList(listname, indexToUpdate,updatedData){
     listname[indexToUpdate] = updatedData;
     // print("listname.length: ${listname.length}");
@@ -153,13 +160,13 @@ class UserAboutMEProvider with ChangeNotifier{
   updatenewprovider(value,id){
     newprovider[id] = value;
     print("newprovider: $newprovider");
-    notifyListeners();
+    // notifyListeners();
   }
 
   updatenewInplace(value,id){
     newInplace[id] = value;
     print("newInplace: $newInplace");
-    notifyListeners();
+    // notifyListeners();
   }
 
   List<dynamic> previewKeywordssss = [];
@@ -682,7 +689,7 @@ class UserAboutMEProvider with ChangeNotifier{
       print("editchallengessAdded: $editchallengess");
 
       print("isEditChallengeListAddedADDING: $isEditChallengeListAdded");
-      notifyListeners();
+      // notifyListeners();
 
     }
 
@@ -717,7 +724,7 @@ class UserAboutMEProvider with ChangeNotifier{
       print("EditChallengeListadd challenge: ${mainList.length}");
       print("EditChallengeListadd challenge: ${mainList}");
       print("EditChallengeListadd");
-      notifyListeners();
+      // notifyListeners();
     }
   }
 
@@ -752,7 +759,7 @@ class UserAboutMEProvider with ChangeNotifier{
         print("isEditSolutionListAdded: $editsolutionss");
 
         print("isEditSolutionListAddedADDING: $isEditSolutionListAdded");
-      notifyListeners();
+      // notifyListeners();
 
     }
 
@@ -795,7 +802,7 @@ class UserAboutMEProvider with ChangeNotifier{
       updatenewInplace(solutionData["InPlace"], solutionData["id"]);
       print("mainList.length: ${mainList.length}");
       print("mainList: ${mainList}");
-      notifyListeners();
+      // notifyListeners();
 
     }
   }
@@ -830,7 +837,7 @@ class UserAboutMEProvider with ChangeNotifier{
       };
       if(solutionData["Provider"]=="My Responsibilty"){
       mainList.add(solutionData);
-      notifyListeners();
+      // notifyListeners();
 
       }
       // print("mainList.length solution: ${mainList.length}");
@@ -878,7 +885,7 @@ class UserAboutMEProvider with ChangeNotifier{
      else if(solutionData["InPlace"]=='No (Must Have)'){
     mainList3.add(solutionData);
     }
-      notifyListeners();
+      // notifyListeners();
     }
   }
 

@@ -10897,9 +10897,19 @@ Date
       // _previewProvider.isDuplicate = true;
 
       // Notify the user that the duplication was successful
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Document duplicated successfully!'), backgroundColor: Colors.green),
+      toastification.show(context: context,
+          title: Text('${duplicatedData["About_Me_Label"]} is saved to library'),
+          autoCloseDuration: Duration(milliseconds: 2500),
+          alignment: Alignment.center,
+          backgroundColor: Colors.green,
+          foregroundColor: Colors.white,
+          icon: Icon(Icons.check_circle, color: Colors.white,),
+          animationDuration: Duration(milliseconds: 1000),
+          showProgressBar: false
       );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(content: Text('Document duplicated successfully!'), backgroundColor: Colors.green),
+      // );
     } catch (error) {
       // Handle any errors that occur
       print('Error duplicating document: $error');

@@ -69,6 +69,7 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
 
 
   List<Widget> nodes = [];
+  List<Widget> tagsnodes = [];
 
   List<String> categories = [];
 
@@ -104,6 +105,7 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
   List<DocumentReference> solutionsDocRefs = [];
 
   bool showTreeView = false;
+  bool showTagView = false;
 
   static List<Animal> _animals = [];
 
@@ -738,10 +740,18 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
                                   return Container(
                                       child: Padding(
                                         padding: const EdgeInsets.all(15.0),
-                                        child: Text("No Tags Available",style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),
+                                        child: Text("Hit Enter to search tag : ${searchbyTagcontroller.text}",style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),
                                         ),
                                       )
                                   );
+
+                                  // return Container(
+                                  //     child: Padding(
+                                  //       padding: const EdgeInsets.all(15.0),
+                                  //       child: Text("No Tags Available",style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),
+                                  //       ),
+                                  //     )
+                                  // );
                                 },
                                 // direction: AxisDirection.up,
                                 suggestionsBoxDecoration: SuggestionsBoxDecoration(
@@ -787,6 +797,15 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
                                     color: Colors.black,
                                     fontWeight: FontWeight.w400,fontStyle: FontStyle.normal,
                                   ),
+                                  onSubmitted: (suggestion){
+                                    setState(() {
+                                      _challengeProvider.addtags(suggestion,_challengeProvider.searchbytag);
+                                      _challengeProvider.loadDataForPageFilter(1,'tags',_challengeProvider.searchbytag);
+                                      _challengeProvider.setFirstpageNo();
+                                    });
+                                    print("fenil tags added: ${_challengeProvider.searchbytag}");
+                                    searchbyTagcontroller.clear();
+                                  },
                                   decoration: InputDecoration(
                                     //errorText: userAccountSearchErrorText,
                                     contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
@@ -1022,6 +1041,15 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 // Container(width: MediaQuery.of(context).size.width*0.01,),
+
+                                InkWell(
+                                    onTap: (){
+                                      showTagView = !showTagView;
+                                      setState(() {});
+                                    },
+                                    child: (!showTagView)?FaIcon(FontAwesomeIcons.tag):FaIcon(FontAwesomeIcons.tags)),
+
+                                SizedBox(width: 30,),
                                 InkWell(
                                     onTap: (){
                                       showTreeView = !showTreeView;
@@ -1074,6 +1102,34 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
                             itemCount: nodes.length,
                             itemBuilder: (context, index) {
                               return nodes[index];
+                            },
+                          ),
+                        );
+                      },
+                    ) : showTagView ? FutureBuilder(
+                      future: fetchbytags(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Container(
+                            child: Center(child: CircularProgressIndicator()),
+                          );
+                        }
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
+
+                        // Reset the list of nodes
+                        // nodes.clear();
+
+                        print("tagsnodes");
+                        print(tagsnodes.length);
+
+                        return Container(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: tagsnodes.length,
+                            itemBuilder: (context, index) {
+                              return tagsnodes[index];
                             },
                           ),
                         );
@@ -1675,6 +1731,61 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
       }
     }
   }
+
+  Future<void> fetchbytags() async {
+    // Fetch specific document by ID
+    DocumentSnapshot specificDocument = await FirebaseFirestore.instance
+        .collection('Keywords').doc('GEdua4iCBaakTpNB1NY5')
+        .get();
+
+    if (specificDocument.exists) {
+      List<dynamic> values = specificDocument['Values'];
+      // print("avluesssss: $values");
+
+      for (var value in values) {
+        // Fetch data from "Thrivers" where category matches
+        var thriversSnapshot = await FirebaseFirestore.instance.collection('Challenges').where('tags', arrayContains: value).get();
+
+        // print("thriversSnapshot  $thriversSnapshot" );
+
+        List<Widget> thriverNodes = [];
+
+        for (QueryDocumentSnapshot thriverDocument in thriversSnapshot.docs) {
+          String thriverName = thriverDocument['Label'];
+          // print("category nameee $thriverName");
+          thriverNodes.add(
+            ListTile(
+              title: InkWell(
+                  onTap: (){
+                    // thriversDetails.reference,thriversDetails.id, thriversDetails['Label'], thriversDetails['Description'], thriversDetails['Category']
+                    // ,thriversDetails['Keywords'],thriversDetails['Created Date'],thriversDetails['Created By'],thriversDetails['tags'],thriversDetails['Modified By']
+                    // ,thriversDetails['Modified Date'],thriversDetails['id']
+                    ViewChallengesDialog(thriverDocument.reference, thriverDocument.id,
+                        thriverDocument['Label'], thriverDocument['Description'], thriverDocument['Category'],
+                        thriverDocument['Keywords'], thriverDocument['Created Date'], thriverDocument['Created By'],
+                        thriverDocument['tags'], thriverDocument['Modified By'], thriverDocument['Modified Date'], thriverDocument['id']);
+                  },
+                  child: Text(thriverName, style: TextStyle(color: Colors.black))),
+            ),
+          );
+        }
+
+        // Create a parent node with child nodes
+        Widget categoryNode = ExpansionTile(
+          controlAffinity: ListTileControlAffinity.leading,
+          title: Text("$value (${thriverNodes.length})", style: TextStyle(color: Colors.black)),
+          children: thriverNodes,
+        );
+
+        if (!categoriesStringList.contains(value)) {
+          categoriesStringList.add(value);
+          // Add the parent node to the list
+          tagsnodes.add(categoryNode);
+        }
+      }
+    }
+  }
+
 
 
   Widget ChallengesListTile(DocumentSnapshot<Object?> challengesDetails, i, documents) {

@@ -121,7 +121,8 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
     _loadDataForPage(_currentPage);
     super.initState();
     _fetchUserData();
-    // _initSharedPreferences();
+    WidgetsBinding.instance!.addPostFrameCallback((_) {});
+      // _initSharedPreferences();
   }
 
 
@@ -203,7 +204,7 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
                       controller: page,
                       children: [
                         // DashBoardScreen(),
-                        EmployeePageView(),
+                        // EmployeePageView(),
                         // UserLogedInAboutMePage(AdminName: widget.emailId,Pagejump: false, sideMenu: sideMenu),
                         UserLogedInAboutMePage(AdminName: widget.emailId,tabindex: previewProvider.tabindex, sideMenu: sideMenu),
                         AboutMEScreen(),
@@ -1073,20 +1074,20 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
             },
             icon: const Icon(Icons.dashboard),
           ),
+          // SideMenuItem(
+          //   priority: 1,
+          //   title: 'My Reports',
+          //   //badgeColor: Colors.amber,
+          //   // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
+          //   tooltipContent: "My Reports",
+          //   onTap: (page, _) {
+          //     sideMenu.changePage(page);
+          //     Navigator.pop(context);
+          //   },
+          //   icon: const Icon(Icons.list),
+          // ),
           SideMenuItem(
             priority: 1,
-            title: 'My Reports',
-            //badgeColor: Colors.amber,
-            // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
-            tooltipContent: "My Reports",
-            onTap: (page, _) {
-              sideMenu.changePage(page);
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.list),
-          ),
-          SideMenuItem(
-            priority: 2,
             title: 'ABOUT ME',
             //badgeColor: Colors.amber,
             // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
@@ -1522,6 +1523,26 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
                         // LineManagerController.text = await userData.docs.first['Line_Manager'];
                           /// Add more fields as needed
                         }, userdocs);
+
+                        print("widget.emailId; ${widget.emailId}");
+
+                        QuerySnapshot userData = await FirebaseFirestore.instance.collection('AboutMe')
+                            .where('Email' , isEqualTo: widget.emailId)
+                            .where('isPPS' , isEqualTo: true)
+                            // .where('isOS' , isEqualTo: false).limit(1)
+                            .get();
+                        print("userData; ${userData.docs.first['User_Name']}");
+                        print("userData.docs:  ${userData.docs.first.id}");
+
+                        var documentId = await userData.docs.first.id;
+                        ApiRepository().updateAboutMe({
+                          'User_Name': nameController.text,
+                          'Employer': employerController.text,
+                          'Division_or_Section': divisionOrSectionController.text,
+                          'Role': RoleController.text,
+                          'Location': LocationController.text,
+                          'Employee_Number': EmployeeNumberController.text,
+                          'Line_Manager': LineManagerController.text,}, documentId);
                         // _loadDataForPage(1);
                         // Navigator.pop(context);
                         ProgressDialog.hide();

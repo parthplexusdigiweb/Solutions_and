@@ -70,7 +70,7 @@ class _DSemoState extends State<DSemo> {
 
   void _loadCSV() async {
     print("inisde load csv");
-    final _rawData = await rootBundle.loadString("Solutions_import_march8th.csv");
+    final _rawData = await rootBundle.loadString("TagList_import.csv");
     List<List<dynamic>> _listData = const CsvToListConverter().convert(_rawData);
 
     setState(() {
@@ -123,7 +123,7 @@ class _DSemoState extends State<DSemo> {
     super.initState();
     // KeywordServices();
     addKeywordProvider = Provider.of<AddKeywordProvider>(context, listen: false);
-    _loadCSV(); /// this
+    _loadCSV(); /// this file is used
     // _loadCSVvvvv();
   }
 
@@ -325,74 +325,102 @@ class _DSemoState extends State<DSemo> {
             itemBuilder: (_, index) {
               // print("descripbjhfbcjdf${_data[index][13].toString()}");
               return GestureDetector(
+                /// 1 challenges
                 // onTap: () async {
                 //
                 //   int x = 0;
                 //   for(var i in _data){
-                //   List<String> Keywordsarray = i[8].split(', ');
-                //   List<String> Tagsarray = i[9].split(', ');
+                //   List<String> Keywordsarray = i[7].split(', ');
+                //   // List<String> Tagsarray = i[9].split(', ');
+                //   List<String> RelatedTagsarray = i[8].split(', ');
+                //   List<String> SuggestedTagsarray = i[9].split(', ');
+                //
+                //
+                //   List<String> Tagsarray = [];
+                //   Tagsarray.addAll(RelatedTagsarray);
+                //   Tagsarray.addAll(SuggestedTagsarray);
                 //
                 //   x = x + 1;
                 //
-                //     // print(i[13]);
+                //   print("RelatedTagsarray: ${RelatedTagsarray}");
+                //   print("Suggested: ${SuggestedTagsarray}");
+                //   print("Tagsarray: ${Tagsarray}");
+                //    // print(i[13]);
                 //     await ApiRepository().createchallenges({
-                //       "Source" : i[1].toString(),
+                //       "Source" : "",
                 //       "id": x ,
                 //       "Challenge Status" : "New",
                 //       "tags": Tagsarray,
-                //       "Created By": i[0],
+                //       "Related_challenges_tags": RelatedTagsarray,
+                //       "Suggested_solutions_tags": SuggestedTagsarray,
+                //       "Created By": "MK",
                 //       "Created Date": DateTime.now(),
                 //       "Modified By": "",
                 //       "Modified Date": "",
-                //       'Label':  i[4].toString(),
-                //       'Final_description': i[5].toString(),
-                //       'Description':i[7].toString(),
-                //       'Impact':i[6].toString(),
+                //       'Label':  i[0].toString(),
+                //       'Final_description': i[1].toString(),
+                //       'Description':i[3].toString(),
+                //       'Impact':i[2].toString(),
+                //       'Impacts_to_employee':i[4].toString(),
+                //       'Impacts_to_Coworkers':i[6].toString(),
+                //       'Negative_impacts_to_organisation':i[5].toString(),
                 //       // 'Details': _controller.document.insert(0, addDetailsController.text.toString()),
                 //       // 'Category': addKeywordProvider.selectedValue.toString(),
                 //       'Category': "Challenge Category",
                 //       'Keywords':Keywordsarray,
-                //       "Original Description": i[3].toString(),
+                //       "Original Description": "",
                 //       "Notes": "",//i[12].toString(),
-                //       "Hidden Strengths": i[10].toString(),
-                //       "Potential Strengths": i[11].toString(),
+                //       "Hidden Strengths": "",//i[10].toString(),
+                //       "Potential Strengths":"",// i[11].toString(),
                 //       // Add more fields as needed
-                //     }
-                //     );
+                //     });
                 //   }
                 //
                 // },
-                ///
+                /// 2 solutions
                 // onTap: () async {
                 //
                 //   int x = 0;
                 //   for(var i in _data){
-                //   List<String> Keywordsarray = i[8].split(', ');
-                //   List<String> Tagsarray = i[9].split(', ');
+                //   List<String> Keywordsarray = i[7].split(', ');
+                //   // List<String> Tagsarray = i[9].split(', ');
+                //   List<String> RelatedTagsarray = i[8].split(', ');
+                //   List<String> Suggested = i[9].split(', ');
+                //
+                //   List<String> Tagsarray = [];
+                //   Tagsarray.addAll(RelatedTagsarray);
+                //   Tagsarray.addAll(Suggested);
                 //
                 //   x = x + 1;
                 //
-                //     // print(i[13]);
+                //     print("RelatedTagsarray: ${RelatedTagsarray}");
+                //     print("Suggested: ${Suggested}");
+                //     print("Tagsarray: ${Tagsarray}");
                 //     await ApiRepository().createThriversss({
                 //       "id": x,
-                //       "Source" : i[1].toString(),
+                //       "Source" : "",
                 //       "Thirver Status" : addKeywordProvider.selectThriversStatusItems,
                 //       "tags": Tagsarray,
-                //       "Created By": i[0],
+                //       "Related_solution_tags": RelatedTagsarray,
+                //       "Suggested_challenges_tags": Suggested,
+                //       "Positive_impacts_to_employee": i[5].toString(),
+                //       "Positive_impacts_to_organisation": i[6].toString(),
+                //       "Helps": i[4].toString(),
+                //       "Created By": "MK",
                 //       "Created Date": DateTime.now(),
                 //       "Modified By": "",
                 //       "Modified Date": "",
-                //       'Label': i[4].toString(),
+                //       'Label': i[0].toString(),
                 //       // 'Description': thriverDescTextEditingController.text,
-                //       'Description': i[7].toString(),
-                //       'Original Description': i[3].toString(),
-                //       'Final_description': i[5].toString(),
-                //       'Impact': i[6].toString(),
+                //       'Description': i[3].toString(),
+                //       'Original Description': "",
+                //       'Final_description': i[1].toString(),
+                //       'Impact': i[2].toString(),
                 //       // 'Details': _controller.document.insert(0, addDetailsController.text.toString()),
                 //       // 'Category': addKeywordProvider.selectedValue.toString(),
                 //       'Category': "Thrivers Category",
                 //       'Keywords': Keywordsarray,
-                //       "Notes" :  i[10].toString()
+                //       "Notes" :  "gpt4"
                 //       // 'Associated Thrivers': "",
                 //       // 'Associated Challenges': ""
                 //     }
@@ -400,6 +428,154 @@ class _DSemoState extends State<DSemo> {
                 //   }
                 //
                 // },
+                /// 3 add tag list
+                onTap: () async {
+                  // for(var i in _data) {
+                  //
+                  List<String> TagsList = [
+                    "access barriers",
+                    "accessibility",
+                    "accommodation",
+                    "accidents",
+                    "ADHD",
+                    "administrative inefficiency",
+                    "anxiety",
+                    "aphasia",
+                    "attention issues",
+                    "auditory processing",
+                    "biased assessments",
+                    "burnout",
+                    "career challenges",
+                    "chronic illness",
+                    "chronic pain",
+                    "cliques",
+                    "clutter management",
+                    "cognitive challenges",
+                    "communication anxiety",
+                    "communication barriers",
+                    "comprehension difficulties",
+                    "computer strain",
+                    "cultural misunderstandings",
+                    "deadline pressures",
+                    "decreased productivity",
+                    "depression",
+                    "digital barriers",
+                    "disability accommodation",
+                    "discomfort at work",
+                    "discrimination",
+                    "dyslexia",
+                    "dyspraxia",
+                    "emotional distress",
+                    "environmental and ergonomic issues",
+                    "ethical concerns",
+                    "exclusion",
+                    "fatigue",
+                    "gossip",
+                    "group dynamics",
+                    "health and well-being",
+                    "high stress levels",
+                    "inefficiency",
+                    "information management issues",
+                    "integrity concerns",
+                    "isolation",
+                    "job rejection",
+                    "lack of advancement",
+                    "learning difficulties",
+                    "memory challenges",
+                    "mental health",
+                    "miscommunication",
+                    "mistakes",
+                    "mobility challenges",
+                    "multitasking difficulties",
+                    "noise distraction",
+                    "nonverbal communication",
+                    "organisational inefficiencies",
+                    "peer relations",
+                    "performance issues",
+                    "performance anxiety",
+                    "physical barriers",
+                    "physical exertion",
+                    "poor organisation",
+                    "procrastination",
+                    "prolonged screen time",
+                    "recruitment bias",
+                    "remote work challenges",
+                    "repetitive strain injuries",
+                    "scheduling challenges",
+                    "sensory challenges",
+                    "sensory overload",
+                    "social difficulties",
+                    "social anxiety",
+                    "task execution errors",
+                    "task management difficulties",
+                    "technology adaptation challenges",
+                    "time management problems",
+                    "tokenism",
+                    "underemployment",
+                    "visual discomfort",
+                    "web accessibility",
+                    "workplace conflicts",
+                    "workplace culture issues",
+                    "accessibility and inclusion",
+                    "accessible formats",
+                    "adaptable strategies",
+                    "adjustable furniture",
+                    "alternative communication",
+                    "assistive technology",
+                    "awareness training",
+                    "career guidance",
+                    "childcare support",
+                    "clear communication",
+                    "cognitive support",
+                    "comfort and ergonomics",
+                    "communication tools",
+                    "custom tools",
+                    "daily planning",
+                    "diverse hiring",
+                    "educational inclusion",
+                    "efficient workspace",
+                    "emergency preparedness",
+                    "emotional support",
+                    "environmental modifications",
+                    "equal opportunity",
+                    "ergonomic adjustments",
+                    "flexible schedules",
+                    "wellness programs",
+                    "inclusive hiring",
+                    "memory training",
+                    "mental health support",
+                    "mentorship programs",
+                    "neurodiversity inclusion",
+                    "noise management",
+                    "organisational tools",
+                    "peer reviews",
+                    "physical conditioning",
+                    "organisation planning",
+                    "productivity tools",
+                    "professional counselling",
+                    "professional development",
+                    "project management",
+                    "reliable VPNs",
+                    "risk management",
+                    "safe environment",
+                    "safety training",
+                    "schedule management",
+                    "skills workshops",
+                    "stress management",
+                    "support networks",
+                    "task management",
+                    "time management",
+                    "visual planning",
+                    "workflow automation"
+                  ];
+                  // SolutionList.addAll(_data[index][0].split(", "));
+                  //   print("SolutionList: ${TagsList}");
+                  //   print("SolutionList: ${TagsList.length}");
+                    // addKeywordProvider.addKeyword(context, "Challenges tags", Challenges);
+                    // addKeywordProvider.updateKeyword(context,"GEdua4iCBaakTpNB1NY5", "Tag List", TagsList);
+                  // }
+
+                },
                 child: Card(
                   margin: const EdgeInsets.all(3),
                   color: index == 0 ? Colors.amber : Colors.white,
@@ -426,7 +602,8 @@ class _DSemoState extends State<DSemo> {
                     //     Text(_data[index][5]),
                     //   ],
                     // ),
-                    title: Text("${_data[index][4]}"),
+                    title: Text("${_data[index][0].split(", ")}"),
+                    // subtitle: Text("${_data[index][1].split(", ")}"),
                   ),
                 ),
               );

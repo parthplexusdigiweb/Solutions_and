@@ -19,6 +19,11 @@ class ChallengesModel {
   var HiddenStrengths;
   var attachment_link;
   var attachment;
+  var ImpactToCoworker;
+  var ImpactToEmployee;
+  var NegativeImpactToOrganisation;
+  var RelatedChallengesTag;
+  var SuggestedChallengesTag;
   bool isConfirmed; // Add a boolean for confirmation status
   bool isChecked; // Add a boolean for confirmation status
 
@@ -48,6 +53,11 @@ class ChallengesModel {
     this.HiddenStrengths,
     this.attachment_link,
     this.attachment,
+    this.ImpactToCoworker,
+    this.ImpactToEmployee,
+    this.NegativeImpactToOrganisation,
+    this.RelatedChallengesTag,
+    this.SuggestedChallengesTag,
     this.isConfirmed = false, // Default to false for not confirmed
     this.isChecked = false, // Default to false for not confirmed
     // required this.attachments,
