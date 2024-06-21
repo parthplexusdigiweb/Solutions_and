@@ -736,16 +736,16 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
           ),
           SideMenuItem(
             priority: 11,
-            title: 'Challenges Chat-Gpt Settings',
+            title: 'Chat Gpt Prompt',
             //badgeColor: Colors.amber,
             // badgeContent: FaIcon(FontAwesomeIcons.triangleExclamation,color:Colors.black ,size: 10,),
-            tooltipContent: "Challenges Chat-Gpt Settings",
+            tooltipContent: "Chat Gpt Prompt",
             onTap: (page, _) {
               sideMenu.changePage(page);
               Navigator.pop(context);
             },
             // icon: const Icon(Icons.email_outlined),
-            icon: const Icon(Icons.settings_suggest),
+            icon: const Icon(Icons.message),
           ),
           SideMenuItem(
             priority: 12,
