@@ -5012,35 +5012,21 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                     var q1 = "1. About me and my circumstance: ${mycircumstancesController.text}";
                                     var q2 = "2. My strengths that I want to have the opportunity to use in my role: ${MystrengthsController.text}";
                                     var q3 = "3. What I value about [my organisation] and workplace environment that helps me perform to my best: ${myOrganisationController.text}";
-                                    //
-                                    // var defaulttext,defaulttextq2 ;
-                                    // defaulttext = q1+" "+ q2+" " +q3;//"${q1}+${q2}\n${q3}" ;
-                                    // // defaulttext = defaulttext +""+ "where xxx = ${originaltextEditingController.text.toString()}";
-                                    // defaulttext = "Generate tags in a one list with from :$defaulttext";
-                                    // // defaulttextq2 =  defaulttext + " and select category from "+"${resultString}";
-                                    // defaulttextq2 =  "These is a category list : ${resultString} . Choose the categories that describe this text : $defaulttext.";
+
 
                                     var defaulttext = "Generate tags in a one list with ',' from :$prompt";
 
-                                    //
-                                    // var defaulttext =  q1+""+q2+" "+q3 + " where yyy is "+mycircumstancesController.text+" "+ MystrengthsController.text +" "+myOrganisationController.text;
 
 
                                     var defaulttextq2 = "These are the category list: $resultString. Choose the categories that describe this text: $defaulttext.";
 
-                                    // print(defaulttext);
                                     print("defaulttextq2 $defaulttextq2");
 
-                                    // await getChatKeywordsResponse(defaulttext,defaulttextq2);
+                                    await getChatKeywordsResponse(defaulttext,defaulttextq2);
 
-                                    // await _userAboutMEProvider.getRelatedChallenges(generatedtags, generatedcategory);
-                                    // await _userAboutMEProvider.getRelatedSolutions(generatedsolutionstags, generatedsolutionscategory);
+                                    await _userAboutMEProvider.getRelatedChallenges(generatedtags, generatedcategory);
+                                    await _userAboutMEProvider.getRelatedSolutions(generatedsolutionstags, generatedsolutionscategory);
 
-                                    // await getChatResponse(defaulttext,defaulttextq2);
-
-                                    // await getRelatedChallenges(generatedtags, generatedcategory);
-
-                                    // await page.animateToPage(2, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
 
                                     Map<String, dynamic> AboutMEDatas = {
                                       // 'About_Me_Label': AboutMeLabeltextController.text,
@@ -5135,7 +5121,8 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
 
                     TextField(
                       controller: RefineController,
-                      maxLines: 3,
+                      maxLines: null,
+                      minLines: 3,
                       // onChanged: (value) {
                       //   if (value.isNotEmpty) {
                       //     final lines = value.split('\n');
@@ -5227,11 +5214,26 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
 
                     InkWell(
                       onTap:() async {
-                        var defaulttext = "Refine this sentence and give it in proper sentence";
+                        // var defaulttext = "Refine this sentence and give it in proper sentence";
+                        //
+                        // defaulttext = defaulttext +"=" +" ${RefineController.text}";
+                        //
+                        // getChatRefineResponse(defaulttext);
 
-                        defaulttext = defaulttext +"=" +" ${RefineController.text}";
+                        var defaulttext1, defaulttext2;
 
-                        getChatRefineResponse(defaulttext);
+                        FirebaseFirestore.instance.collection('ChatGpt-Settings').doc("Prompt").get().then((value) {
+                          defaulttext1 = value['prompt_1'];
+                          defaulttext2 = value['prompt_2'];
+
+                          var defaulttext3 = "$defaulttext1 where [xxxx] = ${RefineController.text}";
+
+                          print("defaulttext3.text: ${defaulttext3}");
+                          print("defaulttext2.text: ${defaulttext2}");
+
+                          chatGptChallengesResponse(defaulttext3,defaulttext2);
+                        });
+
 
 
                       },
@@ -22851,6 +22853,80 @@ Thank you for being open to understanding me better and for considering my reque
         print("generatedcategory: ${generatedcategory}");
         print("generatedsolutionscategory: ${generatedsolutionscategory}");
         print("response: ${element.message!.content}");
+      }
+    }
+
+    ProgressDialog.hide();
+
+  }
+
+  String responseContent = "";
+
+  Future<void> chatGptChallengesResponse(defaulttext, defaulttextq2) async {
+    setState(() {
+      _messages.insert(0, defaulttext);
+      // _typingUsers.add(_gptChatUser);
+    });
+    ProgressDialog.show(context, "Searching Challenges", Icons.search);
+
+    List<Messages> _messagesHistory = _messages.reversed.map((m) {
+      return Messages(role: Role.user, content: defaulttext);
+    }).toList();
+    final request = ChatCompleteText(
+      model: Gpt4ChatModel(),
+      messages: _messagesHistory,
+      maxToken: 200,
+    );
+    final response = await _openAI.onChatCompletion(request: request);
+    for (var element in response!.choices) {
+      if (element.message != null) {
+        setState(() {
+          String gptResponse = element.message!.content;
+          responseContent = gptResponse.replaceAll('[zzzz] = ','');
+          RefineController.text += "\n \n" + responseContent;
+          _userAboutMEProvider.updateisRefinetextChange(true);
+
+          // String gptResponse = element.message!.content;
+          // String responseContent = gptResponse.replaceAll(', ', ',');
+          // generatedtags = responseContent.split(',');
+          // generatedsolutionstags.addAll(generatedtags);
+        });
+        // print("generatedtags: ${generatedtags}");
+        // print("generatedsolutionstags: ${generatedsolutionstags}");
+        print("response: ${element.message!.content}");
+        print("responseContent: ${responseContent}");
+        print("RefineController.text: ${RefineController.text}");
+      }
+    }
+
+    List<Messages> _messagesHistory2 = _messages.reversed.map((m) {
+      return Messages(role: Role.user, content: defaulttextq2+"where [zzzz] = ${responseContent} and Get me this relavant tags in a one list with ','");
+    }).toList();
+    final request2 = ChatCompleteText(
+      model: Gpt4ChatModel(),
+      messages: _messagesHistory2,
+      maxToken: 200,
+    );
+    final response2 = await _openAI.onChatCompletion(request: request2);
+    for (var element in response2!.choices) {
+      if (element.message != null) {
+        setState(() {
+          String gptResponse = element.message!.content;
+          print("gptResponse: $gptResponse");
+          // RefineController.text = gptResponse;
+          RefineController.text += "\n \n" + gptResponse;
+          String responseContent = gptResponse.replaceAll(', ', ',');
+          generatedtags = responseContent.split(',');
+          // generatedsolutionscategory.addAll(generatedcategory);
+
+        });
+        print("generatedtags: ${generatedtags}");
+        print("generatedcategory: ${generatedcategory}");
+        // print("generatedsolutionscategory: ${generatedsolutionscategory}");
+        print("response: ${element.message!.content}");
+
+        await _userAboutMEProvider.getSuggestChallengesUsingTags(generatedtags);
+
       }
     }
 

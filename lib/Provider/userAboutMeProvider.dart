@@ -274,6 +274,39 @@ class UserAboutMEProvider with ChangeNotifier{
     return combinedResults.toList();
   }
 
+  Future<List<DocumentSnapshot>> getSuggestChallengesUsingTags(List<dynamic> tags) async {
+    // Assuming your Firestore collection is named "solutions"
+    CollectionReference solutionsCollection = FirebaseFirestore.instance.collection('Challenges');
+
+    // print("relatedd tagsss: $tags");
+    // print("relatedd keywords: $keywords");
+    // Perform a query based on tags and keywords
+    QuerySnapshot tagsQuery = await solutionsCollection
+        .where('tags', arrayContainsAny: tags)
+        .get();
+
+    // QuerySnapshot keywordsQuery = await solutionsCollection
+    //     .where('Keywords', arrayContainsAny: keywords).limit(10)
+    //     .get();
+
+    // Combine the results of both queries
+    List<DocumentSnapshot> tagsResults = tagsQuery.docs;
+    // List<DocumentSnapshot> keywordsResults = keywordsQuery.docs;
+
+    print("tagsChallengesResults: $tagsResults");
+    // print("keywordsChallengesResults: ${keywordsResults}");
+    // Use a set to avoid duplicate documents
+    combinedResults = Set.from(tagsResults);
+    // combinedResults.addAll(keywordsResults);
+
+    // print("combinedResults: $combinedResults");
+    print("combinedResults.length: ${combinedResults.length}");
+
+    notifyListeners();
+
+    return combinedResults.toList();
+  }
+
 
   Future<List<DocumentSnapshot>> getRelatedSolutionss(List<dynamic> tags, List<dynamic> keywords) async {
     // Assuming your Firestore collection is named "solutions"

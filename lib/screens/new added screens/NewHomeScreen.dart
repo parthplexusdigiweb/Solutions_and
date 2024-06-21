@@ -19,6 +19,7 @@ import 'package:thrivers/screens/new%20added%20screens/AdminAboutMePage.dart';
 import 'package:thrivers/screens/new%20added%20screens/ReportScreen.dart';
 import 'package:thrivers/screens/new%20added%20screens/SuperAdminLoginScreen.dart';
 import 'package:thrivers/screens/new%20added%20screens/admin_user_setting_screen.dart';
+import 'package:thrivers/screens/new%20added%20screens/chatGptPromptPage.dart';
 import 'package:thrivers/screens/new%20added%20screens/chatgptSettings.dart';
 import 'package:thrivers/screens/new%20added%20screens/chatgptscreen.dart';
 import 'package:thrivers/screens/new%20added%20screens/thriverLandingScreen.dart';
@@ -346,7 +347,7 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
                   BrevoScreen(),
                   ChatGptScreen(),
                   ChatGptSettingsScreen(),
-                  // AdminAboutMePage(),
+                  ChatGptPromptScreen(),
                   DSemo(),
                   /*AddChallenges(),
                   AddSolutionsScreen,
