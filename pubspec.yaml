@@ -75,6 +75,7 @@ dependencies:
   mailer: ^6.1.0
   go_router_paths: ^0.2.2
   chat_bubbles:
+  widget_and_text_animator: ^1.1.5
 
 dev_dependencies:
   flutter_test:

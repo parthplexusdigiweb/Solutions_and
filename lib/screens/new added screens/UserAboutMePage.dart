@@ -155,16 +155,64 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
         drawerDragStartBehavior: DragStartBehavior.start,
         // appBar:AppHelper().CustomAppBar(context),
         drawerScrimColor: Colors.black26,
-        drawer: Drawer(
-          elevation: 50,
-          child: ListView(
-            children: [
-              SideMenuScreen(),
-            ],
-          ),
-        ),
+        // drawer: Drawer(
+        //   elevation: 50,
+        //   child: ListView(
+        //     children: [
+        //       SideMenuScreen(),
+        //     ],
+        //   ),
+        // ),
         appBar: AppBar(
-          leadingWidth: 100,
+          leading: InkWell(
+            onTap: (){
+              showDialog(
+                  context: context,
+                  builder: (context) => Consumer<PreviewProvider>(
+                    builder: (c,previewProvider, _){
+                      return AlertDialog(
+                        title: Text('Logout Confirmation'),
+                        content: Text('Are you sure you want to log out?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
+                            child: Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              // Navigator.pop(context);
+                              // print("Dialog closed");
+                              // setState(() {
+                              //   logout(context);
+                              // });
+                              // context.go('/userLogin');
+                              previewProvider.userlogout(context);
+                              print("Navigated to login screen"); // Debugging: Check if navigation is triggered
+                            },
+                            child: Text('Logout'),
+                          ),
+                        ],
+                      );},
+                  )
+              );
+            },
+            child: Container(
+              child: Row(
+                children: [
+                  SizedBox(width: 5,),
+                  Icon(Icons.logout,color: Colors.white),
+                  SizedBox(width: 5,),
+                  Text("Logout",style: GoogleFonts.montserrat(
+                  textStyle: Theme.of(context).textTheme.bodyLarge,
+                fontWeight: FontWeight.w600,
+                color: Colors.white),
+                  )
+              ],),
+            ),
+          ),
+          leadingWidth: MediaQuery.of(context).size.width * .1,
           backgroundColor: Colors.blue,
           centerTitle: true,
           title: Text("Solution Inclusion", style: GoogleFonts.montserrat(

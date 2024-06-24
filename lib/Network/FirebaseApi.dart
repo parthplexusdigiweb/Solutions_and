@@ -665,9 +665,7 @@ class ApiRepository{
           'api-key': BREVO_API_KEY_FROM_BACKEND /// this is the main api key for mail clear before push
 
         },
-
         body: (ccEmails.isEmpty || ccNames.isEmpty) ? body2 : body1,
-
       );
 
       if (response.statusCode == 200 ||response.statusCode == 201) {

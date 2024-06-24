@@ -31,6 +31,7 @@ class UserAboutMEProvider with ChangeNotifier{
 
   bool isConfirm = false;
   bool isxyz = false;
+  bool issuggestedloading = false;
 
   String alertDialogTitle = "1. Personal Info:";
 
@@ -282,13 +283,15 @@ class UserAboutMEProvider with ChangeNotifier{
     // print("relatedd keywords: $keywords");
     // Perform a query based on tags and keywords
     QuerySnapshot tagsQuery = await solutionsCollection
-        .where('tags', arrayContainsAny: tags)
+        .where('tags', arrayContains: tags)
+        // .limit(100)
         .get();
 
     // QuerySnapshot keywordsQuery = await solutionsCollection
     //     .where('Keywords', arrayContainsAny: keywords).limit(10)
     //     .get();
 
+    print("tagsQuery: $tagsQuery");
     // Combine the results of both queries
     List<DocumentSnapshot> tagsResults = tagsQuery.docs;
     // List<DocumentSnapshot> keywordsResults = keywordsQuery.docs;
@@ -296,8 +299,60 @@ class UserAboutMEProvider with ChangeNotifier{
     print("tagsChallengesResults: $tagsResults");
     // print("keywordsChallengesResults: ${keywordsResults}");
     // Use a set to avoid duplicate documents
-    combinedResults = Set.from(tagsResults);
+    // combinedResults = Set.from(tagsResults);
+    if(combinedResults.isNotEmpty) {
+      combinedResults.addAll(tagsResults);
+    } else{
+      combinedResults = Set.from(tagsResults);
+    }
     // combinedResults.addAll(keywordsResults);
+
+    // print("combinedResults: $combinedResults");
+    print("combinedResults.length: ${combinedResults.length}");
+
+    notifyListeners();
+
+    return combinedResults.toList();
+  }
+
+  Future<List<DocumentSnapshot>> getTagsfromInsightABme(List<dynamic> tags,List<dynamic> keywords) async {
+
+    CollectionReference solutionsCollection = FirebaseFirestore.instance.collection('Challenges');
+
+    // Perform a query based on tags and keywords
+    if(tags.isNotEmpty){
+      print("inside getTagsfromInsightABme => tags: $tags");
+      QuerySnapshot tagsQuery = await solutionsCollection
+          .where('tags', arrayContainsAny: tags)
+      // .limit(100)
+          .get();
+
+      print("tagsQuery: $tagsQuery");
+      // Combine the results of both queries
+      List<DocumentSnapshot> tagsResults = tagsQuery.docs;
+
+      print("tagsChallengesResults: $tagsResults");
+      // Use a set to avoid duplicate documents
+      combinedResults = Set.from(tagsResults);
+      // combinedResults.add(tagsResults);
+      print("combinedResults.length: ${combinedResults.length}");
+    }
+
+    if(keywords.isNotEmpty) {
+
+      print("inside getTagsfromInsightABme => keywords: $keywords");
+
+      QuerySnapshot keywordsQuery = await solutionsCollection
+      .where('tags', arrayContainsAny: keywords)
+  // .limit(10)
+      .get();
+  List<DocumentSnapshot> keywordsResults = keywordsQuery.docs;
+  print("keywordsChallengesResults: ${keywordsResults}");
+  combinedResults.addAll(keywordsResults);
+  print("combinedResults.length: ${combinedResults.length}");
+
+    }
+
 
     // print("combinedResults: $combinedResults");
     print("combinedResults.length: ${combinedResults.length}");

@@ -25,6 +25,7 @@ import 'package:thrivers/core/progress_dialog.dart';
 import 'package:thrivers/model/challenges_table_model.dart';
 import 'package:thrivers/model/soluton_table_model.dart';
 import 'package:toastification/toastification.dart';
+import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
 
 class UserLogedInEditAboutMEScreen extends StatefulWidget {
@@ -276,7 +277,11 @@ Date
       print("Entered editpageffffff");
       print("$_isInitialized");
     // });
-
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging) {
+        saveDataOnTabChange(_tabController.index);
+      }
+    });
   }
 
     // @override
@@ -456,6 +461,272 @@ Date
     }
   }
 
+  void saveDataOnTabChange(int index) {
+    // Perform saving operations based on the index of the tab
+    switch (index) {
+      case 0:
+        print("Saving data for Home tab");
+        // Save data for Home tab
+        break;
+      case 1:
+        print("Saving data for Employee data tab");
+        // Save data for Employee data tab
+        break;
+      case 2:
+        print("Saving data for Employee data");
+        savingdetails();
+        break;
+      case 3:
+        print("Saving data for Insight ");
+        // Save data for My attributes tab
+        break;
+      case 4:
+        print("Saving data for Insight");
+        savingdetails();
+        savingInsightAboutMe();
+        break;
+      case 5:
+        print("Saving data for My challenges");
+        // Save data for My solutions tab
+        savingdetails();
+        savingInsightAboutMe();
+        savingMyChallenges();
+        break;
+      case 6:
+        print("Saving data for Generate reports tab");
+        // Save data for Generate reports tab
+        savingdetails();
+        savingInsightAboutMe();
+        savingMyChallenges();
+        savingMySolutions();
+        break;
+      case 7:
+        print("Saving data for My library tab");
+        // Save data for My library tab
+        break;
+    }
+  }
+
+  savingdetails() async {
+    var createdAt = DateFormat('yyyy-MM-dd, HH:mm:ss').format(DateTime.now());
+
+    Map<String, dynamic> AboutMEDatas = {
+      // 'AB_id': ids,
+      'Email': selectedEmail,
+      'User_Name': nameController.text,
+      'Employer': employerController.text,
+      'Division_or_Section': divisionOrSectionController.text,
+      'Role': RoleController.text,
+      'Location': LocationController.text,
+      'Employee_Number': EmployeeNumberController.text,
+      'Line_Manager': LineManagerController.text,
+      // 'AB_Status' : (AB_Status=="Complete") ? "Complete" :"Draft",
+      // 'About_Me_Label': AboutMeLabeltextController.text,
+      // 'AB_Description' : AboutMeDescriptiontextController.text,
+      // 'AB_Useful_Info' : AboutMeUseFulInfotextController.text,
+      // 'AB_Date' : AboutMeDatetextController.text,
+      // 'AB_Attachment' : "",
+      // 'My_Circumstance': mycircumstancesController.text,
+      // 'My_Strength': MystrengthsController.text,
+      // 'My_Organisation': myOrganisationController.text,
+      // 'My_Challenges_Organisation': myOrganisation2Controller.text,
+      // 'Solutions': solutionsList,
+      // 'Challenges': challengesList,
+      // // "Created_By": widget.AdminName,
+      // "Created_Date": createdAt,
+      "Modified_By": widget.AdminName,
+      "Modified_Date": createdAt,
+      // 'Report_sent_to' : [],
+      // 'Report_sent_to_cc' : [],
+
+      // Add other fields as needed
+    };
+
+    String solutionJson = json.encode(AboutMEDatas);
+    print(solutionJson);
+
+    // ProgressDialog.show(context, "Updating", Icons.update);
+    await ApiRepository().updateAboutMe(AboutMEDatas, documentId);
+    QuerySnapshot userData = await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: widget.AdminName).get();
+    print("userData; ${userData.docs.first['UserName']}");
+    print("userData.docs:  ${userData.docs.first.id}");
+
+    var  userdocs = await userData.docs.first.id;
+    await ApiRepository().updateUserDetail({
+      "UserName": nameController.text,
+      "Employer": employerController.text,
+      "Division_or_Section": divisionOrSectionController.text,
+      "Role": RoleController.text,
+      "Location": LocationController.text,
+      "Employee_Number": EmployeeNumberController.text,
+      "Line_Manager": LineManagerController.text,
+
+      // nameController.text = await userData.docs.first['UserName'];
+      // employerController.text = await userData.docs.first['Employer'];
+      // divisionOrSectionController.text = await userData.docs.first['Division_or_Section'];
+      // RoleController.text = await userData.docs.first['Role'];
+      // LocationController.text = await userData.docs.first['Location'];
+      // EmployeeNumberController.text = await userData.docs.first['Employee_Number'];
+      // LineManagerController.text = await userData.docs.first['Line_Manager'];
+      /// Add more fields as needed
+    }, userdocs);
+    // ProgressDialog.hide();
+  }
+
+  savingInsightAboutMe() async{
+    Map<String, dynamic> AboutMEDatas = {
+      // 'About_Me_Label': AboutMeLabeltextController.text,
+      'My_Circumstance': mycircumstancesController.text,
+      'My_Strength': MystrengthsController.text,
+      'My_Organisation': myOrganisationController.text,
+      'My_Challenges_Organisation': myOrganisation2Controller.text,
+      // Add other fields as needed
+    };
+
+    String solutionJson = json.encode(AboutMEDatas);
+    print(solutionJson);
+
+    // ProgressDialog.show(context, "Saving", Icons.save);
+    await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
+
+    var defaulttext1, defaulttext2;
+
+    if(mycircumstancesController.text.isNotEmpty || myOrganisation2Controller.text.isNotEmpty) {
+      FirebaseFirestore.instance.collection('ChatGpt-Settings')
+          .doc("Prompt")
+          .get()
+          .then((value) {
+        defaulttext1 = value['prompt_1'];
+        defaulttext2 = value['prompt_2'];
+
+        var defaulttext3 = "$defaulttext1 where [xxxx] = ${mycircumstancesController.text} ${myOrganisation2Controller.text}";
+
+        print("defaulttext3.text: ${defaulttext3}");
+        print("defaulttext2.text: ${defaulttext2}");
+
+        ResponsefromInsightABme(defaulttext3, defaulttext2);
+      });
+    }
+    }
+
+  savingMyChallenges() async {
+    await _userAboutMEProvider.getRelatedSolutions(generatedsolutionstags, generatedsolutionscategory);
+
+
+    Map<String, dynamic> AboutMEDatas = {
+
+      'Challenges': challengesList,
+
+    };
+
+    String solutionJson = json.encode(AboutMEDatas);
+    print("solutionJson: $solutionJson");
+
+    // ProgressDialog.show(context, "Saving", Icons.save);
+    await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
+  }
+
+  savingMySolutions() async {
+    Map<String, dynamic> AboutMEDatas = {
+      'Solutions': solutionsList,
+    };
+
+    String solutionJson = json.encode(AboutMEDatas);
+    print("ssss :${solutionJson}");
+
+    // ProgressDialog.show(context, "Saving", Icons.save);
+    await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
+  }
+
+  Future<void> ResponsefromInsightABme(defaulttext, defaulttextq2) async {
+
+    _userAboutMEProvider.issuggestedloading = false;
+
+    setState(() {
+      _messages.insert(0, defaulttext);
+      // _typingUsers.add(_gptChatUser);
+    });
+    // ProgressDialog.show(context, "Searching Challenges", Icons.search);
+
+    List<Messages> _messagesHistory = _messages.reversed.map((m) {
+      return Messages(role: Role.user, content: defaulttext);
+    }).toList();
+    final request = ChatCompleteText(
+      model: Gpt4ChatModel(),
+      messages: _messagesHistory,
+      maxToken: 200,
+    );
+    final response = await _openAI.onChatCompletion(request: request);
+    for (var element in response!.choices) {
+      if (element.message != null) {
+        setState(() {
+          String gptResponse = element.message!.content;
+          responseContent = gptResponse.replaceAll('[zzzz] = ','');
+          // RefineController.text += "\n \n" + responseContent;
+          // _userAboutMEProvider.updateisRefinetextChange(true);
+
+          // String gptResponse = element.message!.content;
+          // String responseContent = gptResponse.replaceAll(', ', ',');
+          // generatedtags = responseContent.split(',');
+          // generatedsolutionstags.addAll(generatedtags);
+        });
+        // print("generatedtags: ${generatedtags}");
+        // print("generatedsolutionstags: ${generatedsolutionstags}");
+        print("response: ${element.message!.content}");
+        print("responseContent: ${responseContent}");
+        // print("RefineController.text: ${RefineController.text}");
+      }
+    }
+
+    var contenttext = defaulttextq2+"where [zzzz] = ${responseContent} and Get me this relavant tags list in a one list with ','";
+    List<Messages> _messagesHistory2 = _messages.reversed.map((m) {
+      return Messages(role: Role.user, content: contenttext);
+    }).toList();
+      print("contenttext : $contenttext");
+    var tags  = [];
+    var limitedTags = [];
+    var remainingTags = [];
+    final request2 = ChatCompleteText(
+      model: Gpt4ChatModel(),
+      messages: _messagesHistory2,
+      maxToken: 200,
+    );
+    final response2 = await _openAI.onChatCompletion(request: request2);
+    for (var element in response2!.choices) {
+      if (element.message != null) {
+        setState(() {
+          String gptResponse = element.message!.content;
+          print("gptResponse: $gptResponse");
+          // RefineController.text = gptResponse;
+          // RefineController.text += "\n \n" + gptResponse;
+          String responseContent = gptResponse.replaceAll(', ', ',');
+          tags = responseContent.split(',');
+          // generatedsolutionscategory.addAll(generatedcategory);
+
+// Distribute the tags into the two arrays
+          for (var i = 0; i < tags.length; i++) {
+            if (i < 29) {
+              limitedTags.add(tags[i]);
+            } else {
+              remainingTags.add(tags[i]);
+            }
+          }
+
+        });
+        print("limitedTags: ${limitedTags}");
+        print("limitedTags.length: ${limitedTags.length}");
+        print("remainingTags: ${remainingTags}");
+        print("remainingTags.length: ${remainingTags.length}");
+        // print("response: ${element.message!.content}");
+
+        await _userAboutMEProvider.getTagsfromInsightABme(limitedTags,remainingTags);
+
+      }
+    }
+
+    _userAboutMEProvider.issuggestedloading = true;
+
+  }
 
 
   @override
@@ -5024,8 +5295,8 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
 
                                     await getChatKeywordsResponse(defaulttext,defaulttextq2);
 
-                                    await _userAboutMEProvider.getRelatedChallenges(generatedtags, generatedcategory);
-                                    await _userAboutMEProvider.getRelatedSolutions(generatedsolutionstags, generatedsolutionscategory);
+                                    // await _userAboutMEProvider.getRelatedChallenges(generatedtags, generatedcategory);
+                                    // await _userAboutMEProvider.getRelatedSolutions(generatedsolutionstags, generatedsolutionscategory);
 
 
                                     Map<String, dynamic> AboutMEDatas = {
@@ -5281,22 +5552,69 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                             children: [
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                child: Text("Suggested challenges (${userAboutMEProvider.combinedResults.length}):",
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.montserrat(
-                                      textStyle: Theme.of(context).textTheme.titleLarge,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("Suggested challenges (${userAboutMEProvider.combinedResults.length}):",
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.montserrat(
+                                          textStyle: Theme.of(context).textTheme.titleLarge,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black),
+                                    ),
+                                    // InkWell(
+                                    //   onTap: (){
+                                    //     RelatedChallengesdocuments.clear();
+                                    //     print("object: ${RelatedChallengesdocuments}");
+                                    //     // _userAboutMEProvider.combinedResults;
+                                    //   },
+                                    //   child: Text("Reset",
+                                    //     overflow: TextOverflow.ellipsis,
+                                    //     style: GoogleFonts.montserrat(
+                                    //         textStyle: Theme.of(context).textTheme.bodySmall,
+                                    //         fontWeight: FontWeight.bold,
+                                    //         color: Colors.blue),
+                                    //   ),
+                                    // ),
+                                  ],
                                 ),
                               ),
                               SizedBox(height: 6,),
-                              (userAboutMEProvider.combinedResults.isEmpty) ?
+                                (userAboutMEProvider.combinedResults.isEmpty) ?
                               Container(
                                 // height: 350,
                                 height: MediaQuery.of(context).size.height * .48,
                                 width: MediaQuery.of(context).size.width ,
                                 child: Center(
-                                  child: Text("No Suggestions Yet",
+                                  child: (userAboutMEProvider.issuggestedloading==false) ?
+                                  TextAnimatorSequence(
+                                    children: [
+                                      TextAnimator('Loading...',
+                                          incomingEffect: WidgetTransitionEffects.incomingScaleDown(),
+                                          atRestEffect: WidgetRestingEffects.bounce(),
+                                          outgoingEffect: WidgetTransitionEffects.outgoingScaleUp(),
+                                          style: GoogleFonts.montserrat(textStyle: const TextStyle(fontWeight: FontWeight.w900, fontSize: 20))),
+                                      TextAnimator('Suggested challenges...',
+                                          incomingEffect: WidgetTransitionEffects.incomingSlideInFromLeft(),
+                                          atRestEffect: WidgetRestingEffects.bounce(),
+                                          outgoingEffect: WidgetTransitionEffects.outgoingSlideOutToBottom(),
+                                          style: GoogleFonts.montserrat(textStyle: const TextStyle(fontWeight: FontWeight.w900, fontSize: 20))),
+                                      TextAnimator('wait...',
+                                          incomingEffect: WidgetTransitionEffects(blur: const Offset(2, 2), duration: const Duration(milliseconds: 600)),
+                                          atRestEffect: WidgetRestingEffects.wave(),
+                                          outgoingEffect: WidgetTransitionEffects(blur: const Offset(2, 2), duration: const Duration(milliseconds: 600)),
+                                          style: GoogleFonts.montserrat(textStyle: const TextStyle(fontWeight: FontWeight.w900, fontSize: 20))),
+                                    ],
+                                    tapToProceed: true,
+                                    loop: true,
+                                    transitionTime: const Duration(seconds: 4),
+                                  )
+                                  // TextAnimator("loading",
+                                  //   atRestEffect: WidgetRestingEffects.wave(
+                                  //       curve: Curves.slowMiddle
+                                  //   ),
+                                  // )
+                                      : Text("No Suggestions Yet",
                                     overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.headlineLarge,
                                         fontWeight: FontWeight.bold,
@@ -22921,6 +23239,7 @@ Thank you for being open to understanding me better and for considering my reque
 
         });
         print("generatedtags: ${generatedtags}");
+        print("generatedtags.length: ${generatedtags.length}");
         print("generatedcategory: ${generatedcategory}");
         // print("generatedsolutionscategory: ${generatedsolutionscategory}");
         print("response: ${element.message!.content}");
