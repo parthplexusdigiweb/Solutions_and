@@ -17715,16 +17715,21 @@ Thank you for being open to understanding me better and for considering my reque
                                                                                   IconButton(
                                                                                       onPressed: (){
                                                                                         userAboutMEProvider.updateEditChallengePreview(
-                                                                                            challengesData['Label'],
-                                                                                            challengesData['Description'],
-                                                                                            challengesData['Final_description'],
-                                                                                            challengesData['Impact'],
-                                                                                            challengesData['Keywords'],
-                                                                                            challengesData['tags'],
-                                                                                            challengesData['id'],
-                                                                                            isTrueOrFalse,
-                                                                                            challengesData,
-                                                                                          false
+                                                                                          challengesData['Label'],
+                                                                                          challengesData['Description'],
+                                                                                          challengesData['Final_description'],
+                                                                                          challengesData['Impact'],
+                                                                                          challengesData['Keywords'],
+                                                                                          challengesData['tags'],
+                                                                                          challengesData['id'],
+                                                                                          isTrueOrFalse,
+                                                                                          challengesData,
+                                                                                          false,
+                                                                                          challengesData['Impacts_to_Coworkers'],
+                                                                                          challengesData['Impacts_to_employee'],
+                                                                                          challengesData['Negative_impacts_to_organisation'],
+                                                                                          challengesData['Related_challenges_tags'],
+                                                                                          challengesData['Suggested_solutions_tags'],
                                                                                         );
                                                                                       },
                                                                                       icon: Icon(Icons.visibility, color: Colors.blue,)
@@ -18828,7 +18833,13 @@ Thank you for being open to understanding me better and for considering my reque
                                                                                             solutionData['id'],
                                                                                             isTrueOrFalse,
                                                                                             solutionData,
-                                                                                          false
+                                                                                          false,
+                                                                                          solutionData['Helps'],
+                                                                                          solutionData['Positive_impacts_to_employee'],
+                                                                                          solutionData['Positive_impacts_to_organisation'],
+                                                                                          solutionData['Related_solution_tags'],
+                                                                                          solutionData['Suggested_challenges_tags'],
+
                                                                                         );
                                                                                       },
 

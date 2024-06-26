@@ -174,6 +174,8 @@ class UserAboutMEProvider with ChangeNotifier{
   List<dynamic> previewtags = [];
   List<dynamic> editpreviewKeywordssss = [];
   List<dynamic> editpreviewtags = [];
+  List<dynamic> editpreviewRelatedChallengesTag = [];
+  List<dynamic> editpreviewSuggestedChallengesTag = [];
 
   var previewname, previewDescription, previewFinalDescription, previewImpact, previewId, preview;
 
@@ -211,10 +213,11 @@ class UserAboutMEProvider with ChangeNotifier{
  }
 
   var editpreviewname, editpreviewDescription, editpreviewFinalDescription, editpreviewImpact, editpreviewId, editpreview;
-
+  var editpreviewImpactToCoworker, editpreviewImpactToEmployee, editpreviewNegativeImpactToOrganisation;
   bool editborderColor = false;
 
-  updateEditChallengePreview(name, Description, FinalDescription, Impact,Keywordssss,tags,Id,isTrueOrFalse, document,isborderColor){
+  updateEditChallengePreview(name, Description, FinalDescription, Impact,Keywordssss,tags,Id,isTrueOrFalse, document,isborderColor,
+      ImpactToCoworker,ImpactToEmployee,NegativeImpactToOrganisation,RelatedChallengesTag, SuggestedChallengesTag){
     editpreviewname = name;
     editpreviewDescription = Description;
     editpreviewFinalDescription = FinalDescription;
@@ -225,10 +228,16 @@ class UserAboutMEProvider with ChangeNotifier{
     editpreview = document;
     isEditChallengeListAdded = isTrueOrFalse;
     editborderColor = isborderColor;
+    editpreviewImpactToCoworker = ImpactToCoworker;
+    editpreviewImpactToEmployee = ImpactToEmployee;
+    editpreviewNegativeImpactToOrganisation = NegativeImpactToOrganisation;
+    editpreviewRelatedChallengesTag = RelatedChallengesTag;
+    editpreviewSuggestedChallengesTag = SuggestedChallengesTag;
     notifyListeners();
   }
 
-  updateEditSolutionPreview(name, Description, FinalDescription, Impact,Keywordssss,tags,Id,isTrueOrFalse, document,isborderColor){
+  updateEditSolutionPreview(name, Description, FinalDescription, Impact,Keywordssss,tags,Id,isTrueOrFalse, document,isborderColor,
+      Help,PositiveImpactstoEmployee,PositiveImpactstoOrganisation,RelatedSolutionsTags,SuggestedChallengesTags){
     editpreviewname = name;
     editpreviewDescription = Description;
     editpreviewFinalDescription = FinalDescription;
@@ -239,6 +248,11 @@ class UserAboutMEProvider with ChangeNotifier{
     editpreview = document;
     isEditSolutionListAdded = isTrueOrFalse;
     editborderColor = isborderColor;
+    editpreviewImpactToCoworker = Help;
+    editpreviewImpactToEmployee = PositiveImpactstoEmployee;
+    editpreviewNegativeImpactToOrganisation = PositiveImpactstoOrganisation;
+    editpreviewRelatedChallengesTag = RelatedSolutionsTags;
+    editpreviewSuggestedChallengesTag = SuggestedChallengesTags;
     notifyListeners();
   }
 
@@ -283,7 +297,7 @@ class UserAboutMEProvider with ChangeNotifier{
     // print("relatedd keywords: $keywords");
     // Perform a query based on tags and keywords
     QuerySnapshot tagsQuery = await solutionsCollection
-        .where('tags', arrayContains: tags)
+        .where('tags', arrayContainsAny: tags)
         // .limit(100)
         .get();
 
@@ -323,7 +337,7 @@ class UserAboutMEProvider with ChangeNotifier{
     if(tags.isNotEmpty){
       print("inside getTagsfromInsightABme => tags: $tags");
       QuerySnapshot tagsQuery = await solutionsCollection
-          .where('tags', arrayContainsAny: tags)
+          .where('tags', arrayContainsAny: tags).orderBy("Label")
       // .limit(100)
           .get();
 
@@ -333,27 +347,31 @@ class UserAboutMEProvider with ChangeNotifier{
 
       print("tagsChallengesResults: $tagsResults");
       // Use a set to avoid duplicate documents
-      combinedResults = Set.from(tagsResults);
+      if(combinedResults.isNotEmpty){
+        combinedResults.addAll(tagsResults);
+      }
+      else combinedResults = Set.from(tagsResults);
+      // combinedResults = Set.from(tagsResults);
       // combinedResults.add(tagsResults);
       print("combinedResults.length: ${combinedResults.length}");
     }
+/// hide for now
+  //   if(keywords.isNotEmpty) {
+  //
+  //     print("inside getTagsfromInsightABme => keywords: $keywords");
+  //
+  //     QuerySnapshot keywordsQuery = await solutionsCollection
+  //     .where('tags', arrayContainsAny: keywords)
+  // // .limit(10)
+  //     .get();
+  // List<DocumentSnapshot> keywordsResults = keywordsQuery.docs;
+  // print("keywordsChallengesResults: ${keywordsResults}");
+  // combinedResults.addAll(keywordsResults);
+  // print("combinedResults.length: ${combinedResults.length}");
+  //
+  //   }
 
-    if(keywords.isNotEmpty) {
-
-      print("inside getTagsfromInsightABme => keywords: $keywords");
-
-      QuerySnapshot keywordsQuery = await solutionsCollection
-      .where('tags', arrayContainsAny: keywords)
-  // .limit(10)
-      .get();
-  List<DocumentSnapshot> keywordsResults = keywordsQuery.docs;
-  print("keywordsChallengesResults: ${keywordsResults}");
-  combinedResults.addAll(keywordsResults);
-  print("combinedResults.length: ${combinedResults.length}");
-
-    }
-
-
+///
     // print("combinedResults: $combinedResults");
     print("combinedResults.length: ${combinedResults.length}");
 
@@ -362,6 +380,97 @@ class UserAboutMEProvider with ChangeNotifier{
     return combinedResults.toList();
   }
 
+  Future<List<DocumentSnapshot>> getSolutionsTagsfromInsightABme(List<dynamic> tags,List<dynamic> keywords) async {
+
+    CollectionReference solutionsCollection = FirebaseFirestore.instance.collection('Thrivers');
+
+    // Perform a query based on tags and keywords
+    if(tags.isNotEmpty){
+      print("inside getSolutionsTagsfromInsightABme => tags: $tags");
+      QuerySnapshot tagsQuery = await solutionsCollection
+          .where('tags', arrayContainsAny: tags).orderBy("Label")
+      // .limit(100)
+          .get();
+
+      print("tagsQuery: $tagsQuery");
+      // Combine the results of both queries
+      List<DocumentSnapshot> tagsResults = tagsQuery.docs;
+
+      print("tagsSolutionResults: $tagsResults");
+      // Use a set to avoid duplicate documents
+      if(combinedSolutionsResults.isNotEmpty){
+        combinedSolutionsResults.addAll(tagsResults);
+      }
+      else combinedSolutionsResults = Set.from(tagsResults);
+      // combinedSolutionsResults = Set.from(tagsResults);
+      // combinedSolutionsResults.add(tagsResults);
+      print("combinedSolutionsResults.length: ${combinedSolutionsResults.length}");
+    }
+/// hide for now
+//     if(keywords.isNotEmpty) {
+//
+//       print("inside getSolutionsTagsfromInsightABme => keywords: $keywords");
+//
+//       QuerySnapshot keywordsQuery = await solutionsCollection
+//       .where('tags', arrayContainsAny: keywords)
+//   // .limit(10)
+//       .get();
+//   List<DocumentSnapshot> keywordsResults = keywordsQuery.docs;
+//   print("keywordsChallengesResults: ${keywordsResults}");
+//   combinedSolutionsResults.addAll(keywordsResults);
+//   print("combinedSolutionsResults.length: ${combinedSolutionsResults.length}");
+//
+//     }
+
+///
+    // print("combinedSolutionsResults: $combinedSolutionsResults");
+    print("combinedSolutionsResults.length: ${combinedSolutionsResults.length}");
+
+    notifyListeners();
+
+    return combinedSolutionsResults.toList();
+  }
+
+
+  Future<List<DocumentSnapshot>> getSuggestedSolutions(List<dynamic> tags) async {
+    // Assuming your Firestore collection is named "solutions"
+    CollectionReference solutionsCollection = FirebaseFirestore.instance.collection('Thrivers');
+
+    print("relatedd tagsss: $tags");
+    // print("relatedd keywords: $keywords");
+    // Perform a query based on tags and keywords
+    QuerySnapshot tagsQuery = await solutionsCollection
+        .where('tags', arrayContainsAny: tags)
+    // .limit(100)
+        .get();
+
+    // QuerySnapshot keywordsQuery = await solutionsCollection
+    //     .where('Keywords', arrayContainsAny: keywords).limit(10)
+    //     .get();
+
+    print("tagsQuery: $tagsQuery");
+    // Combine the results of both queries
+    List<DocumentSnapshot> tagsResults = tagsQuery.docs;
+    // List<DocumentSnapshot> keywordsResults = keywordsQuery.docs;
+
+    // print("tagsSoluionResults: $tagsResults");
+    // print("keywordsChallengesResults: ${keywordsResults}");
+    // Use a set to avoid duplicate documents
+    // combinedResults = Set.from(tagsResults);
+    if(combinedSolutionsResults.isNotEmpty) {
+      combinedSolutionsResults.addAll(tagsResults);
+    } else{
+      combinedSolutionsResults = Set.from(tagsResults);
+    }
+    // combinedResults.addAll(keywordsResults);
+
+    // print("combinedResults: $combinedResults");
+    print("combinedSolutionsResults.length: ${combinedSolutionsResults.length}");
+
+    notifyListeners();
+
+    return combinedSolutionsResults.toList();
+  }
 
   Future<List<DocumentSnapshot>> getRelatedSolutionss(List<dynamic> tags, List<dynamic> keywords) async {
     // Assuming your Firestore collection is named "solutions"
@@ -416,7 +525,8 @@ class UserAboutMEProvider with ChangeNotifier{
       print("search tagChunk: $tagChunk");
 
       QuerySnapshot tagsQuery = await solutionsCollection
-          .where('tags', arrayContainsAny: tagChunk).limit(10)
+          .where('tags', arrayContainsAny: tagChunk)
+          // .limit(10)
           .get();
       allQueries.add(tagsQuery);
     }
@@ -427,7 +537,8 @@ class UserAboutMEProvider with ChangeNotifier{
       print("search keywordChunk: $keywordChunk");
 
       QuerySnapshot keywordsQuery = await solutionsCollection
-          .where('Keywords', arrayContainsAny: keywordChunk).limit(10)
+          .where('Keywords', arrayContainsAny: keywordChunk)
+          // .limit(10)
           .get();
       allQueries.add(keywordsQuery);
     }
@@ -442,6 +553,7 @@ class UserAboutMEProvider with ChangeNotifier{
     combinedSolutionsResults = combinedSolutionsResults.toSet();
 
     print("getRelatedSolutions: ${combinedSolutionsResults}");
+    print("getRelatedSolutions: ${combinedSolutionsResults.length}");
 
     return combinedSolutionsResults;
   }
@@ -750,6 +862,8 @@ class UserAboutMEProvider with ChangeNotifier{
 
   void EditChallengeList(challengesList) {
 
+    List<dynamic> allTags = [];
+
     for(var ChallengesDetails in challengesList) {
       editchallengess.add(ChallengesModel(
           id: ChallengesDetails['id'],
@@ -759,12 +873,17 @@ class UserAboutMEProvider with ChangeNotifier{
           Source: ChallengesDetails['Source'],
           Status: ChallengesDetails['Challenge Status'],
           tags: ChallengesDetails['tags'],
+          RelatedChallengesTag: ChallengesDetails['Related_challenges_tags'],
+          SuggestedChallengesTag: ChallengesDetails['Suggested_solutions_tags'],
           CreatedBy: ChallengesDetails['Created By'],
           CreatedDate: ChallengesDetails['Created Date'],
           ModifiedBy: ChallengesDetails['Modified By'],
           ModifiedDate: ChallengesDetails['Modified Date'],
           OriginalDescription: ChallengesDetails['Original Description'],
           Impact: ChallengesDetails['Impact'],
+          ImpactToCoworker: ChallengesDetails['Impacts_to_Coworkers'],
+          ImpactToEmployee: ChallengesDetails['Impacts_to_employee'],
+          NegativeImpactToOrganisation: ChallengesDetails['Negative_impacts_to_organisation'],
           Final_description: ChallengesDetails['Final_description'],
           Category: ChallengesDetails['Category'],
           Keywords: ChallengesDetails['Keywords'],
@@ -778,8 +897,13 @@ class UserAboutMEProvider with ChangeNotifier{
 
       print("isEditChallengeListAddedADDING: $isEditChallengeListAdded");
       // notifyListeners();
+      allTags.addAll(ChallengesDetails['tags']);
 
     }
+    print("All tags combined: $allTags");
+    print("All tags combined length: ${allTags.length}");
+
+  // getSuggestedSolutions(allTags);
 
   }
 
@@ -793,12 +917,17 @@ class UserAboutMEProvider with ChangeNotifier{
         'Source':challenge.Source,
         'Challenge Status':challenge.Source,
         'tags':challenge.tags,
+        'Related_challenges_tags':challenge.RelatedChallengesTag,
+        'Suggested_solutions_tags':challenge.SuggestedChallengesTag,
         'Created By':challenge.CreatedBy,
         'Created Date':challenge.CreatedDate,
         'Modified By':challenge.ModifiedBy,
         'Modified Date':challenge.ModifiedDate,
         'Original Description':challenge.OriginalDescription,
         'Impact':challenge.Impact,
+        'Impacts_to_Coworkers':challenge.ImpactToCoworker,
+        'Impacts_to_employee':challenge.ImpactToEmployee,
+        'Negative_impacts_to_organisation':challenge.NegativeImpactToOrganisation,
         'Final_description':challenge.Final_description,
         'Category':challenge.Category,
         'Keywords':challenge.Keywords,
@@ -840,6 +969,11 @@ class UserAboutMEProvider with ChangeNotifier{
         attachment: SolutionDetails['Attachment'],
         InPlace: SolutionDetails['InPlace'],
         Provider: SolutionDetails['Provider'],
+        Help: SolutionDetails['Helps'],
+        PositiveImpactstoEmployee: SolutionDetails['Positive_impacts_to_employee'],
+        PositiveImpactstoOrganisation: SolutionDetails['Positive_impacts_to_organisation'],
+        RelatedSolutionsTags: SolutionDetails['Related_solution_tags'],
+        SuggestedChallengesTags: SolutionDetails['Suggested_challenges_tags'],
         ));
       isEditSolutionListAdded[SolutionDetails['id']] = true;
 
@@ -879,6 +1013,11 @@ class UserAboutMEProvider with ChangeNotifier{
         'InPlace':solution.InPlace,
         'Attachment_link' : solution.attachment_link,
         'Attachment': solution.attachment,
+        "Help": solution.Help,
+        "Positive_impacts_to_employee": solution.PositiveImpactstoEmployee,
+        "Positive_impacts_to_organisation": solution.PositiveImpactstoOrganisation,
+        "Related_solution_tags": solution.RelatedSolutionsTags,
+        "Suggested_challenges_tags": solution.SuggestedChallengesTags,
         // 'confirmed': false, // Add a 'confirmed' field
       };
 
@@ -921,6 +1060,11 @@ class UserAboutMEProvider with ChangeNotifier{
         'InPlace':solution.InPlace,
         'Attachment_link' : solution.attachment_link,
         'Attachment': solution.attachment,
+        "Help": solution.Help,
+        "Positive_impacts_to_employee": solution.PositiveImpactstoEmployee,
+        "Positive_impacts_to_organisation": solution.PositiveImpactstoOrganisation,
+        "Related_solution_tags": solution.RelatedSolutionsTags,
+        "Suggested_challenges_tags": solution.SuggestedChallengesTags,
         // 'confirmed': false, // Add a 'confirmed' field
       };
       if(solutionData["Provider"]=="My Responsibilty"){
@@ -959,6 +1103,11 @@ class UserAboutMEProvider with ChangeNotifier{
         'InPlace':solution.InPlace,
         'Attachment_link' : solution.attachment_link,
         'Attachment': solution.attachment,
+        "Help": solution.Help,
+        "Positive_impacts_to_employee": solution.PositiveImpactstoEmployee,
+        "Positive_impacts_to_organisation": solution.PositiveImpactstoOrganisation,
+        "Related_solution_tags": solution.RelatedSolutionsTags,
+        "Suggested_challenges_tags": solution.SuggestedChallengesTags,
         // 'confirmed': false, // Add a 'confirmed' field
       };
       if(solutionData["InPlace"]=='Yes (Still Needed)'){
@@ -988,12 +1137,17 @@ class UserAboutMEProvider with ChangeNotifier{
         Source: ChallengesDetails['Source'],
         Status: ChallengesDetails['Challenge Status'],
         tags: ChallengesDetails['tags'],
+        RelatedChallengesTag: ChallengesDetails['Related_challenges_tags'],
+        SuggestedChallengesTag: ChallengesDetails['Suggested_solutions_tags'],
         CreatedBy: ChallengesDetails['Created By'],
         CreatedDate: ChallengesDetails['Created Date'],
         ModifiedBy: ChallengesDetails['Modified By'],
         ModifiedDate: ChallengesDetails['Modified Date'],
         OriginalDescription: ChallengesDetails['Original Description'],
         Impact: ChallengesDetails['Impact'],
+        ImpactToCoworker: ChallengesDetails['Impacts_to_Coworkers'],
+        ImpactToEmployee: ChallengesDetails['Impacts_to_employee'],
+        NegativeImpactToOrganisation: ChallengesDetails['Negative_impacts_to_organisation'],
         Final_description: ChallengesDetails['Final_description'],
         Category: ChallengesDetails['Category'],
         Keywords: ChallengesDetails['Keywords'],
@@ -1032,6 +1186,11 @@ class UserAboutMEProvider with ChangeNotifier{
         Final_description: SolutionDetails['Final_description'],
         Category: SolutionDetails['Category'],
         Keywords: SolutionDetails['Keywords'],
+        Help: SolutionDetails['Helps'],
+        PositiveImpactstoEmployee: SolutionDetails['Positive_impacts_to_employee'],
+        PositiveImpactstoOrganisation: SolutionDetails['Positive_impacts_to_organisation'],
+        RelatedSolutionsTags: SolutionDetails['Related_solution_tags'],
+        SuggestedChallengesTags: SolutionDetails['Suggested_challenges_tags'],
       ));
       isEditSolutionListAdded[SolutionDetails['id']] = value;
 
@@ -1065,6 +1224,11 @@ class UserAboutMEProvider with ChangeNotifier{
       Keywords: ChallengesDetails['Keywords'],
       PotentialStrengths: ChallengesDetails['Potential Strengths'],
       HiddenStrengths: ChallengesDetails['Hidden Strengths'],
+      RelatedChallengesTag: ChallengesDetails['Related_challenges_tags'],
+      SuggestedChallengesTag: ChallengesDetails['Suggested_solutions_tags'],
+      ImpactToCoworker: ChallengesDetails['Impacts_to_Coworkers'],
+      ImpactToEmployee: ChallengesDetails['Impacts_to_employee'],
+      NegativeImpactToOrganisation: ChallengesDetails['Negative_impacts_to_organisation'],
     ));
 
     print("ChallengesData:${challengess.first.Keywords}");
@@ -1095,6 +1259,11 @@ class UserAboutMEProvider with ChangeNotifier{
       Keywords: ChallengesDetails['Keywords'],
       PotentialStrengths: ChallengesDetails['Potential Strengths'],
       HiddenStrengths: ChallengesDetails['Hidden Strengths'],
+      RelatedChallengesTag: ChallengesDetails['Related_challenges_tags'],
+      SuggestedChallengesTag: ChallengesDetails['Suggested_solutions_tags'],
+      ImpactToCoworker: ChallengesDetails['Impacts_to_Coworkers'],
+      ImpactToEmployee: ChallengesDetails['Impacts_to_employee'],
+      NegativeImpactToOrganisation: ChallengesDetails['Negative_impacts_to_organisation'],
     ));
 
     print("ChallengesData:${editchallengess}");
@@ -1122,6 +1291,11 @@ class UserAboutMEProvider with ChangeNotifier{
       Final_description: SolutionDetails['Final_description'],
       Category: SolutionDetails['Category'],
       Keywords: SolutionDetails['Keywords'],
+      Help: SolutionDetails['Helps'],
+      PositiveImpactstoEmployee: SolutionDetails['Positive_impacts_to_employee'],
+      PositiveImpactstoOrganisation: SolutionDetails['Positive_impacts_to_organisation'],
+      RelatedSolutionsTags: SolutionDetails['Related_solution_tags'],
+      SuggestedChallengesTags: SolutionDetails['Suggested_challenges_tags'],
     ));
 
     print("SolutionsData:${solutionss}");
@@ -1149,6 +1323,11 @@ class UserAboutMEProvider with ChangeNotifier{
       Final_description: SolutionDetails['Final_description'],
       Category: SolutionDetails['Category'],
       Keywords: SolutionDetails['Keywords'],
+      Help: SolutionDetails['Helps'],
+      PositiveImpactstoEmployee: SolutionDetails['Positive_impacts_to_employee'],
+      PositiveImpactstoOrganisation: SolutionDetails['Positive_impacts_to_organisation'],
+      RelatedSolutionsTags: SolutionDetails['Related_solution_tags'],
+      SuggestedChallengesTags: SolutionDetails['Suggested_challenges_tags'],
     ));
     print("SolutionsData:${editsolutionss}");
     isEditSolutionListAdded[SolutionDetails['id']] = true;
@@ -1912,6 +2091,213 @@ class UserAboutMEProvider with ChangeNotifier{
     notifyListeners();
   }
 
+  bool isLoadingMore = false;
+  bool get isLoadingMoree => isLoadingMore;
 
+  Future<void> searchchallenges(search) async   {
+
+    try {
+      issuggestedloading = true;
+
+      List<QueryDocumentSnapshot<Object?>>? docssssss;
+      final CollectionReference productsCollection = FirebaseFirestore.instance.collection('Challenges');
+      QuerySnapshot? querySnapshotsss = await productsCollection.orderBy("Label").get();
+      docssssss  = querySnapshotsss?.docs;
+
+      print("_addKeywordProvider.searchbycategory ${search}");
+      List<String> keywordsList = [];
+      if (search.isNotEmpty) {
+        // Remove "- " from the string and replace newlines with spaces
+        String refinedString = search.replaceAll("- ", "").replaceAll("\n", " ");
+
+        // Split the string into words
+        List<String> words = refinedString.split(RegExp(r'\s+'));
+
+        // Remove any empty strings that may result from splitting
+        words.removeWhere((word) => word.isEmpty);
+
+        // Check if the string has more than 2 words
+        if (words.length > 1) {
+          print("inside words.length: ${words.length}");
+          keywordsList.addAll(words);
+        } else {
+          print("inside refinedString: ${refinedString}");
+          keywordsList.add(refinedString);
+        }
+      } else {
+        print("inside search: ${search}");
+        keywordsList.add(search);
+      }
+      print("keywordsList ${keywordsList}");
+
+      // if (search.isEmpty) {
+      //   loadDataForPage(1);
+      // } else {
+      //   challengesdocuments.clear();
+
+      docssssss?.map((e) => print("$e"));
+      final dc = docssssss?.where((element) {
+        var name = element.get("Label").toLowerCase();
+        var description = element.get("Description").toLowerCase();
+        var tags = element.get('tags').toString().toLowerCase();
+        var category = element.get('Keywords').toString().toLowerCase();
+
+        // Check if selectAllAny is "All"
+        // if (selectAllAny == "All") {
+        // return name.contains(search.toLowerCase()) ||
+        //     description.contains(search.toLowerCase()) ||
+        //     tags.contains(search.toLowerCase()) ||
+        //     category.contains(search.toLowerCase());
+        // } else {
+        //   // Otherwise, search for individual words
+          return keywordsList.any((keyword) =>
+          name.contains(keyword.toLowerCase()) ||
+              description.contains(keyword.toLowerCase())
+              // ||
+              // tags.contains(keyword.toLowerCase()) ||
+              // category.contains(keyword.toLowerCase())
+          );
+        // }
+      }).toList();
+      // combinedResults.addAll(dc!);
+      // if(combinedResults.isNotEmpty){
+      //   combinedResults.addAll(dc!);
+      // }
+      // else
+        combinedResults = Set.from(dc!);
+
+
+      // Notify listeners after a delay to ensure the UI is updated
+      Future.delayed(Duration(seconds: 1), () {
+        issuggestedloading = false;
+        var lengthOfdocument = combinedResults.length;
+        print("length of lengthOfdocument: ${lengthOfdocument}");
+        notifyListeners();
+      });
+      notifyListeners();
+
+    }
+
+    catch (error) {
+      print('Error loading data: $error');
+    } finally {
+      // Notify listeners after a delay to ensure the UI is updated
+      Future.delayed(Duration(seconds: 1), () {
+        issuggestedloading = false;
+        var lengthOfdocument = combinedResults.length;
+        print("length of lengthOfdocument: ${lengthOfdocument}");
+        notifyListeners(); // This will trigger UI update if necessary
+      });
+      notifyListeners();
+    }
+  }
+
+  Future<void> searchsolutions(search) async   {
+
+    try {
+      isLoadingMore = true;
+
+      List<QueryDocumentSnapshot<Object?>>? docssssss;
+      final CollectionReference productsCollection = FirebaseFirestore.instance.collection('Thrivers');
+      QuerySnapshot? querySnapshotsss = await productsCollection.orderBy("Label").get();
+      docssssss  = querySnapshotsss?.docs;
+
+      print("_addKeywordProvider.searchbycategory ${search}");
+      List<String> keywordsList = [];
+      if (search.isNotEmpty) {
+        // Remove "- " from the string and replace newlines with spaces
+        String refinedString = search.replaceAll("- ", "").replaceAll("\n", " ");
+
+        // Split the string into words
+        List<String> words = refinedString.split(RegExp(r'\s+'));
+
+        // Remove any empty strings that may result from splitting
+        words.removeWhere((word) => word.isEmpty);
+
+        // Check if the string has more than 2 words
+        if (words.length > 1) {
+          print("inside words.length: ${words.length}");
+          keywordsList.addAll(words);
+        } else {
+          print("inside refinedString: ${refinedString}");
+          keywordsList.add(refinedString);
+        }
+      } else {
+        print("inside search: ${search}");
+        keywordsList.add(search);
+      }
+      print("keywordsList ${keywordsList}");
+
+      // if (search.isEmpty) {
+      //   loadDataForPage(1);
+      // } else {
+      //   challengesdocuments.clear();
+
+      docssssss?.map((e) => print("$e"));
+      final dc = docssssss?.where((element) {
+        var name = element.get("Label").toLowerCase();
+        var description = element.get("Description").toLowerCase();
+        var tags = element.get('tags').toString().toLowerCase();
+        var category = element.get('Keywords').toString().toLowerCase();
+
+        // Check if selectAllAny is "All"
+        // if (selectAllAny == "All") {
+        // return name.contains(search.toLowerCase()) ||
+        //     description.contains(search.toLowerCase()) ||
+        //     tags.contains(search.toLowerCase()) ||
+        //     category.contains(search.toLowerCase());
+        // } else {
+        //   // Otherwise, search for individual words
+          return keywordsList.any((keyword) =>
+          name.contains(keyword.toLowerCase()) ||
+              description.contains(keyword.toLowerCase())
+              // ||
+              // tags.contains(keyword.toLowerCase()) ||
+              // category.contains(keyword.toLowerCase())
+          );
+        // }
+      }).toList();
+      // combinedResults.addAll(dc!);
+      combinedSolutionsResults = Set.from(dc!);
+
+
+      // Notify listeners after a delay to ensure the UI is updated
+      Future.delayed(Duration(seconds: 1), () {
+        isLoadingMore = false;
+        var lengthOfdocument = combinedSolutionsResults.length;
+        print("length of lengthOfdocument: ${lengthOfdocument}");
+        notifyListeners();
+      });
+      notifyListeners();
+
+    }
+
+    catch (error) {
+      print('Error loading data: $error');
+    } finally {
+      // Notify listeners after a delay to ensure the UI is updated
+      Future.delayed(Duration(seconds: 1), () {
+        isLoadingMore = false;
+        var lengthOfdocument = combinedSolutionsResults.length;
+        print("length of lengthOfdocument: ${lengthOfdocument}");
+        notifyListeners(); // This will trigger UI update if necessary
+      });
+      notifyListeners();
+    }
+  }
+
+  clearsuggestedChallenges(anytext){
+    // anytext.clear();
+    combinedResults.clear();
+    issuggestedloading = true;
+    notifyListeners();
+  }
+
+  clearsuggestedsolutions(anytext){
+    // anytext.clear();
+    combinedSolutionsResults.clear();
+    isLoadingMore = true;
+    notifyListeners();
+  }
 
 }

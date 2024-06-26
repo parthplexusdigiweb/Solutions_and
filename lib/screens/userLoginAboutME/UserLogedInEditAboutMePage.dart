@@ -51,6 +51,9 @@ class _UserLogedInEditAboutMEScreenState extends State<UserLogedInEditAboutMEScr
 
   late final PreviewProvider _previewProvider;
 
+  late final ChallengesProvider _challengeProvider;
+
+
 
   TextEditingController searchEmailcontroller = TextEditingController();
   TextEditingController DuplicatePurposetextController = TextEditingController();
@@ -176,6 +179,8 @@ Date
     _tabController.index = widget.tabindex;
     _addKeywordProvider.lengthOfdocument = null;
     _challengesProvider.lengthOfdocument = null;
+    _userAboutMEProvider.issuggestedloading = true;
+    _userAboutMEProvider.isLoadingMore = true;
     documentId = widget.aboutMeData.id;
     print("widget.aboutMeData.id : $documentId");
     fetchEmailList();
@@ -489,14 +494,13 @@ Date
         print("Saving data for My challenges");
         // Save data for My solutions tab
         savingdetails();
-        savingInsightAboutMe();
         savingMyChallenges();
+        savingInsightAboutMe();
         break;
       case 6:
         print("Saving data for Generate reports tab");
         // Save data for Generate reports tab
         savingdetails();
-        savingInsightAboutMe();
         savingMyChallenges();
         savingMySolutions();
         break;
@@ -604,7 +608,18 @@ Date
         print("defaulttext3.text: ${defaulttext3}");
         print("defaulttext2.text: ${defaulttext2}");
 
-        ResponsefromInsightABme(defaulttext3, defaulttext2);
+        if(_userAboutMEProvider.combinedResults.isEmpty||_userAboutMEProvider.combinedSolutionsResults.isEmpty){
+
+         if(_userAboutMEProvider.combinedResults.isEmpty && _tabController.index == 4){
+          print("calling chat gpt search ResponsefromInsightABme challenges");
+          ResponsefromInsightABme(defaulttext3, defaulttext2);
+        }
+        else if(_userAboutMEProvider.combinedSolutionsResults.isEmpty && _tabController.index == 5){
+           print("calling chat gpt search ResponsefromInsightABme solution");
+           ResponsefromInsightABme(defaulttext3, defaulttext2);
+         }
+        }
+
       });
     }
     }
@@ -641,6 +656,7 @@ Date
   Future<void> ResponsefromInsightABme(defaulttext, defaulttextq2) async {
 
     _userAboutMEProvider.issuggestedloading = false;
+    _userAboutMEProvider.isLoadingMore = false;
 
     setState(() {
       _messages.insert(0, defaulttext);
@@ -678,7 +694,7 @@ Date
       }
     }
 
-    var contenttext = defaulttextq2+"where [zzzz] = ${responseContent} and Get me this relavant tags list in a one list with ','";
+    var contenttext = defaulttextq2+"where [zzzz] = ${responseContent} and Get me as a result only less than 29 this most relavant tags list in a one list with ','";
     List<Messages> _messagesHistory2 = _messages.reversed.map((m) {
       return Messages(role: Role.user, content: contenttext);
     }).toList();
@@ -718,13 +734,18 @@ Date
         print("remainingTags: ${remainingTags}");
         print("remainingTags.length: ${remainingTags.length}");
         // print("response: ${element.message!.content}");
-
-        await _userAboutMEProvider.getTagsfromInsightABme(limitedTags,remainingTags);
-
+        if(_tabController.index==4){
+          await _userAboutMEProvider.getTagsfromInsightABme(limitedTags,remainingTags);
+        }
+        else if(_tabController.index==5) {
+          await _userAboutMEProvider.getSolutionsTagsfromInsightABme(limitedTags, remainingTags);
+        }
       }
     }
 
     _userAboutMEProvider.issuggestedloading = true;
+    _userAboutMEProvider.isLoadingMore = true;
+
 
   }
 
@@ -1506,7 +1527,6 @@ Date
     );
   }
 
-
   Widget GenerateReportScreen(aboutMeData){
     return Scaffold(
       backgroundColor: Colors.grey.withOpacity(0.2),
@@ -1570,7 +1590,7 @@ Date
                                     builder: (c,previewProvider, _){
                                       return Container(
                                         margin: EdgeInsets.all(10),
-                                        height: MediaQuery.of(context).size.height * 0.5,
+                                        height: MediaQuery.of(context).size.height * 0.4,
                                         decoration: BoxDecoration(
                                           color: Colors.white,
                                           border: Border.all(color:primaryColorOfApp, width: 1.0),
@@ -1578,349 +1598,351 @@ Date
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 10.0,bottom: 10),
-                                                // child: Text("Here is your master report summarising your findings as a result of your most recent input.",style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                                child: Center(
-                                                  child: Column(
-                                                    children: [
-                                                      Text("Personal Private Summary ",style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                                          color: Colors.black87,
-                                                          fontWeight: FontWeight.w300
-                                                      ),
-                                                      ),
-                                                      // Text("(PPS)",style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                                      //     color: Colors.black87,
-                                                      //     fontWeight: FontWeight.w300
-                                                      //
-                                                      // ),),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Divider(),
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 10.0,bottom: 10),
-                                                // child: Text("Here is your master report summarising your findings as a result of your most recent input.",style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                                child: Column(
-                                                  children: [
-                                                    Text("Here is your private report:",style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                                        color: Colors.black87,
-                                                        fontWeight: FontWeight.w300
-
-                                                    ),),
-                                                    Text("",style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                                        color: Colors.black87,
-                                                        fontWeight: FontWeight.w300
-
-                                                    ),),
-                                                  ],
-                                                ),
-                                              ),
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Expanded(
-                                                    child: InkWell(
-                                                      onTap: () async {
-                                                        // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
-                                                        //
-                                                        //
-                                                        // print("querySnapshot :${querySnapshot}");
-                                                        // print("querySnapshot :${querySnapshot.docs.length}");
-                                                        //
-                                                        // if (querySnapshot.docs.isNotEmpty) {
-                                                        //   // Get the last document
-                                                        //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
-                                                        //   print("lastDocument :$lastDocument");
-                                                        ///
-                                                        // showEditAboutMeDialogBox(lastDocument,4);
-                                                        // showReportViewPageDialogBox(lastDocument);
-                                                        ///
-                                                        // About_Me_Label = aboutMeData['About_Me_Label']==null ? "" : aboutMeData['About_Me_Label'];
-                                                        // AboutMeLabeltextController.text = aboutMeData['About_Me_Label']==null ? "" : aboutMeData['About_Me_Label'];
-                                                        // AboutMeDescriptiontextController.text = aboutMeData['AB_Description']==null ? "" : aboutMeData['AB_Description'];
-                                                        // AboutMeUseFulInfotextController.text = aboutMeData['AB_Useful_Info']==null ? "" : aboutMeData['AB_Useful_Info'];
-                                                        // AboutMeDatetextController.text = aboutMeData['AB_Date']==null ? "" : aboutMeData['AB_Date'];
-                                                        // selectedEmail = aboutMeData['Email']==null ? "" : aboutMeData['Email'];
-                                                        // _previewProvider.email = selectedEmail;
-                                                        // searchEmailcontroller.text = aboutMeData['Email']==null ? "" : aboutMeData['Email'];
-                                                        // // _previewProvider.email = selectedEmail;
-                                                        // nameController.text = aboutMeData['User_Name']==null ? "" : aboutMeData['User_Name'];
-                                                        // _previewProvider.name = nameController.text;
-                                                        // employerController.text = aboutMeData['Employer']==null ? "" : aboutMeData['Employer'];
-                                                        // _previewProvider.employer = employerController.text;
-                                                        // divisionOrSectionController.text = aboutMeData['Division_or_Section']==null ? "" : aboutMeData['Division_or_Section'];
-                                                        // _previewProvider.division = divisionOrSectionController.text;
-                                                        // RoleController.text = aboutMeData['Role']==null ? "" : aboutMeData['Role'];
-                                                        // _previewProvider.role = RoleController.text;
-                                                        // LocationController.text = aboutMeData['Location']==null ? "" : aboutMeData['Location'];
-                                                        // _previewProvider.location = LocationController.text;
-                                                        // EmployeeNumberController.text = aboutMeData['Employee_Number']==null ? "" : aboutMeData['Employee_Number'];
-                                                        // _previewProvider.employeeNumber = EmployeeNumberController.text;
-                                                        // LineManagerController.text = aboutMeData['Line_Manager']==null ? "" : aboutMeData['Line_Manager'];
-                                                        // _previewProvider.linemanager = LineManagerController.text;
-                                                        //
-                                                        // mycircumstancesController.text = aboutMeData['My_Circumstance']==null ? "" : aboutMeData['My_Circumstance'];
-                                                        // _previewProvider.mycircumstance = mycircumstancesController.text;
-                                                        // MystrengthsController.text = aboutMeData['My_Strength']==null ? "" : aboutMeData['My_Strength'];
-                                                        // _previewProvider.mystrength = MystrengthsController.text;
-                                                        // myOrganisationController.text = aboutMeData['My_Organisation']==null ? "" : aboutMeData['My_Organisation'];
-                                                        // _previewProvider.myorganization = myOrganisationController.text;
-                                                        // myOrganisation2Controller.text = aboutMeData['My_Challenges_Organisation']==null ? "" : aboutMeData['My_Challenges_Organisation'];
-                                                        // _previewProvider.mychallenge = myOrganisation2Controller.text;
-                                                        ///
-                                                        About_Me_Label = previewProvider.title;
-                                                        // List<dynamic> challengesList = aboutMeData['Challenges'] ?? [];
-                                                        // List<dynamic> solutionsList = aboutMeData['Solutions'] ?? [];
-                                                        //
-                                                        // Iterable<Map<String, dynamic>> challengesIterable = challengesList.map((item) => item as Map<String, dynamic>);
-                                                        // Iterable<Map<String, dynamic>> solutionsIterable = solutionsList.map((item) => item as Map<String, dynamic>);
-                                                        //
-                                                        // List<Map<String, dynamic>> abc = [];
-                                                        // List<Map<String, dynamic>> xyz = [];
-                                                        //
-                                                        // abc.addAll(challengesIterable);
-                                                        // xyz.addAll(solutionsIterable);
-
-                                                        ProgressDialog.show(context, "Previewing", Icons.picture_as_pdf);
-                                                        Uint8List pdfBytes = await makePdf(challengesList, solutionsList );
-                                                        showDialog(
-                                                            context: context,
-                                                            builder: (BuildContext context) {
-                                                              ProgressDialog.hide();
-                                                              return  AlertDialog(
-                                                                  icon: Row(
-                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                    children: [
-                                                                      Text("${About_Me_Label}",
-                                                                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-                                                                      ),
-                                                                      IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.close)),
-                                                                    ],
-                                                                  ),
-                                                                  backgroundColor: Colors.white,
-                                                                  content: SizedBox(
-                                                                    width: double.maxFinite,
-                                                                    child: PdfPreview(
-                                                                      maxPageWidth: MediaQuery.of(context).size.width * .6,
-                                                                      allowSharing: false,
-                                                                      canChangeOrientation: false,
-                                                                      canChangePageFormat: false,
-                                                                      canDebug: false,
-                                                                      allowPrinting: false,
-                                                                      pdfFileName: About_Me_Label,
-                                                                      previewPageMargin: EdgeInsets.all(10),
-                                                                      useActions: true,
-                                                                      pdfPreviewPageDecoration: BoxDecoration(color: Colors.white),
-                                                                      build: (format) => pdfBytes,
-                                                                    ),
-                                                                  ));
-                                                            });
-
-                                                        // }
-                                                        // else{
-                                                        //   _navigateToTab(4);
-                                                        //   await showAddAddAboutMeDialogBox();
-                                                        // }
-                                                      },
-                                                      child: Container(
-                                                        padding: EdgeInsets.all(10),
-                                                        decoration: BoxDecoration(
-                                                          color: Colors.white,
-                                                          border: Border.all(color:primaryColorOfApp, width: 1.0),
-                                                          borderRadius: BorderRadius.circular(10.0),
-                                                        ),
-                                                        child: Row(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                          children: [
-                                                            // Icon(Icons.article,color: Colors.black,size: 30,),
-                                                            Icon(Icons.picture_as_pdf_outlined,color: Colors.black,size: 25,),
-                                                            SizedBox(width: 5,),
-
-                                                            Expanded(
-                                                              child: Text(
-                                                                // 'Solutions',
-                                                                'Private Summary',
-                                                                overflow: TextOverflow.ellipsis,
-                                                                style: GoogleFonts.montserrat(
-                                                                    textStyle:
-                                                                    Theme.of(context).textTheme.titleMedium,
-                                                                    color: Colors.black),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Icon(Icons.sync, size: 40),
-                                                  Expanded(
+                                          child: SingleChildScrollView(
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(left: 10.0,bottom: 10),
+                                                  // child: Text("Here is your master report summarising your findings as a result of your most recent input.",style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                  child: Center(
                                                     child: Column(
                                                       children: [
-                                                        InkWell(
-                                                          onTap: () async {
-                                                            // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
-                                                            //
-                                                            // // Check if there are any documents
-                                                            //
-                                                            // print("querySnapshot :${querySnapshot}");
-                                                            // print("querySnapshot :${querySnapshot.docs.length}");
-                                                            //
-                                                            // if (querySnapshot.docs.isNotEmpty) {
-                                                            //   // Get the last document
-                                                            //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
-                                                            //   print("lastDocument :$lastDocument");
-                                                            // showEditAboutMeDialogBox(5);
-                                                            ///
-                                                            // showEditAboutMeDialogBox();
-                                                            // }
-                                                            ///
-                                                            // else{
-                                                            //   _navigateToTab(5);
-                                                            //   await showAddAddAboutMeDialogBox();
-                                                            //
-                                                            // }
-
-                                                            toastification.show(context: context,
-                                                                title: Text('To make changes go back to the corresponding tabs and your report will be automatically updated'),
-                                                                // autoCloseDuration: Duration(milliseconds: 2500),
-                                                                alignment: Alignment.center,
-                                                                backgroundColor: Colors.green,
-                                                                foregroundColor: Colors.white,
-                                                                icon: Icon(Icons.check_circle, color: Colors.white,),
-                                                                animationDuration: Duration(milliseconds: 1000),
-                                                                showProgressBar: false
-                                                            );
-                                                          },
-                                                          child: Container(
-                                                            padding: EdgeInsets.all(10),
-                                                            decoration: BoxDecoration(
-                                                              color: Colors.white,
-                                                              border: Border.all(color:primaryColorOfApp, width: 1.0),
-                                                              borderRadius: BorderRadius.circular(10.0),
-                                                            ),
-                                                            child: Row(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                              children: [
-                                                                // Icon(Icons.article,color: Colors.black,size: 30,),
-                                                                Icon(Icons.create,color: Colors.black,size: 25,),
-                                                                SizedBox(width: 5,),
-
-                                                                Expanded(
-                                                                  child: Text(
-                                                                    // 'Solutions',
-                                                                    'Edit',
-                                                                    overflow: TextOverflow.ellipsis,
-                                                                    style: GoogleFonts.montserrat(
-                                                                        textStyle:
-                                                                        Theme.of(context).textTheme.titleMedium,
-                                                                        color: Colors.black),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
+                                                        Text("Personal Private Summary ",style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                            color: Colors.black87,
+                                                            fontWeight: FontWeight.w300
                                                         ),
-                                                        Icon(Icons.arrow_downward_sharp, size: 40),
-                                                        InkWell(
-                                                          // onTap: () async {
-                                                          //   QuerySnapshot querySnapshots = await FirebaseFirestore.instance
-                                                          //       .collection('AboutMe')
-                                                          //       .orderBy('AB_id', descending: true)
-                                                          //       .limit(1)
-                                                          //       .get();
-                                                          //   final abc =   querySnapshots.docs.first;
-                                                          //   print("abccccc; ${abc['AB_id']}");
-                                                          //   print("abccccc; ${abc['AB_id'].runtimeType}");
-                                                          //   var AB_id = abc['AB_id'] + 1;
-                                                          //
-                                                          //   // await widget.duplicateDocument(context,documentId,AB_id);
-                                                          //   showDuplicateDialogBox(documentId);
-                                                          // },
-                                                          onTap: () async {
-                                                            QuerySnapshot querySnapshots = await FirebaseFirestore.instance
-                                                                .collection('AboutMe').where("isPPS", isEqualTo: true)
-                                                                .where('AB_id', isEqualTo: aboutMeData.get("AB_id"))
-                                                                .limit(1)
-                                                                .get();
-                                                            // final abc =   querySnapshots.docs.first;
-                                                            // print("abccccc; ${abc['AB_id']}");
-                                                            // print("abccccc; ${abc['AB_id'].runtimeType}");
-                                                            // var AB_id = abc['AB_id'] + 1;
-
-                                                            // await widget.duplicateDocument(context,documentId,AB_id);
-
-                                                            if(querySnapshots.docs.isNotEmpty){
-                                                              print("aboutMeData.get; ${aboutMeData.get("AB_id")}");
-                                                              // showDuplicateDialogBox(aboutMeData.id);
-
-                                                              QuerySnapshot querySnapshots = await FirebaseFirestore.instance
-                                                                  .collection('AboutMe')
-                                                                  .orderBy('AB_id', descending: true)
-                                                                  .limit(1)
-                                                                  .get();
-                                                              final abc = querySnapshots.docs.first;
-                                                              print("abccccc; ${abc['AB_id']}");
-                                                              print("abccccc; ${abc['AB_id'].runtimeType}");
-                                                              var AB_id = abc['AB_id'] + 1;
-                                                              var createdAt = DateFormat('yyyy-MM-dd').format(DateTime.now());
-
-                                                              QuerySnapshot count = await FirebaseFirestore.instance
-                                                                  .collection('AboutMe').where("Email",isEqualTo: aboutMeData.get("Email"))
-                                                                  .where("isPPS", isEqualTo: true).get();
-
-                                                              print("count: ${count.size}");
-                                                              int total = count.size + 1;
-                                                              setState(() {
-                                                                widget.duplicateDocument(context, aboutMeData.id, AB_id, "$createdAt ${aboutMeData.get("User_Name")}_PPS(${count.size + 1})");
-                                                                // Navigator.pop(ctx);
-                                                              });
-                                                              // Navigator.pop(ctx);
-                                                              DuplicatePurposetextController.clear();
-                                                            }
-                                                          },
-
-                                                          child: Container(
-                                                            padding: EdgeInsets.all(10),
-                                                            decoration: BoxDecoration(
-                                                              color: Colors.white,
-                                                              border: Border.all(color:primaryColorOfApp, width: 1.0),
-                                                              borderRadius: BorderRadius.circular(10.0),
-                                                            ),
-                                                            child: Row(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                              children: [
-                                                                // Icon(Icons.article,color: Colors.black,size: 30,),
-                                                                Icon(Icons.save_outlined,color: Colors.black,size: 25,),
-                                                                SizedBox(width: 5,),
-
-                                                                Expanded(
-                                                                  child: Text(
-                                                                    // 'Solutions',
-                                                                    'Save to library',
-                                                                    overflow: TextOverflow.ellipsis,
-                                                                    style: GoogleFonts.montserrat(
-                                                                        textStyle:
-                                                                        Theme.of(context).textTheme.titleMedium,
-                                                                        color: Colors.black),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
                                                         ),
+                                                        // Text("(PPS)",style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                        //     color: Colors.black87,
+                                                        //     fontWeight: FontWeight.w300
+                                                        //
+                                                        // ),),
                                                       ],
                                                     ),
                                                   ),
-                                                ],
-                                              ),
-                                            ],
+                                                ),
+                                                Divider(),
+                                                Padding(
+                                                  padding: EdgeInsets.only(left: 10.0,bottom: 10),
+                                                  // child: Text("Here is your master report summarising your findings as a result of your most recent input.",style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                  child: Column(
+                                                    children: [
+                                                      Text("Here is your private report:",style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                          color: Colors.black87,
+                                                          fontWeight: FontWeight.w300
+                                                      ),
+                                                      textAlign: TextAlign.center,overflow: TextOverflow.ellipsis,),
+                                                      Text("",style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                          color: Colors.black87,
+                                                          fontWeight: FontWeight.w300
+
+                                                      ),),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Expanded(
+                                                      child: InkWell(
+                                                        onTap: () async {
+                                                          // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+                                                          //
+                                                          //
+                                                          // print("querySnapshot :${querySnapshot}");
+                                                          // print("querySnapshot :${querySnapshot.docs.length}");
+                                                          //
+                                                          // if (querySnapshot.docs.isNotEmpty) {
+                                                          //   // Get the last document
+                                                          //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                                                          //   print("lastDocument :$lastDocument");
+                                                          ///
+                                                          // showEditAboutMeDialogBox(lastDocument,4);
+                                                          // showReportViewPageDialogBox(lastDocument);
+                                                          ///
+                                                          // About_Me_Label = aboutMeData['About_Me_Label']==null ? "" : aboutMeData['About_Me_Label'];
+                                                          // AboutMeLabeltextController.text = aboutMeData['About_Me_Label']==null ? "" : aboutMeData['About_Me_Label'];
+                                                          // AboutMeDescriptiontextController.text = aboutMeData['AB_Description']==null ? "" : aboutMeData['AB_Description'];
+                                                          // AboutMeUseFulInfotextController.text = aboutMeData['AB_Useful_Info']==null ? "" : aboutMeData['AB_Useful_Info'];
+                                                          // AboutMeDatetextController.text = aboutMeData['AB_Date']==null ? "" : aboutMeData['AB_Date'];
+                                                          // selectedEmail = aboutMeData['Email']==null ? "" : aboutMeData['Email'];
+                                                          // _previewProvider.email = selectedEmail;
+                                                          // searchEmailcontroller.text = aboutMeData['Email']==null ? "" : aboutMeData['Email'];
+                                                          // // _previewProvider.email = selectedEmail;
+                                                          // nameController.text = aboutMeData['User_Name']==null ? "" : aboutMeData['User_Name'];
+                                                          // _previewProvider.name = nameController.text;
+                                                          // employerController.text = aboutMeData['Employer']==null ? "" : aboutMeData['Employer'];
+                                                          // _previewProvider.employer = employerController.text;
+                                                          // divisionOrSectionController.text = aboutMeData['Division_or_Section']==null ? "" : aboutMeData['Division_or_Section'];
+                                                          // _previewProvider.division = divisionOrSectionController.text;
+                                                          // RoleController.text = aboutMeData['Role']==null ? "" : aboutMeData['Role'];
+                                                          // _previewProvider.role = RoleController.text;
+                                                          // LocationController.text = aboutMeData['Location']==null ? "" : aboutMeData['Location'];
+                                                          // _previewProvider.location = LocationController.text;
+                                                          // EmployeeNumberController.text = aboutMeData['Employee_Number']==null ? "" : aboutMeData['Employee_Number'];
+                                                          // _previewProvider.employeeNumber = EmployeeNumberController.text;
+                                                          // LineManagerController.text = aboutMeData['Line_Manager']==null ? "" : aboutMeData['Line_Manager'];
+                                                          // _previewProvider.linemanager = LineManagerController.text;
+                                                          //
+                                                          // mycircumstancesController.text = aboutMeData['My_Circumstance']==null ? "" : aboutMeData['My_Circumstance'];
+                                                          // _previewProvider.mycircumstance = mycircumstancesController.text;
+                                                          // MystrengthsController.text = aboutMeData['My_Strength']==null ? "" : aboutMeData['My_Strength'];
+                                                          // _previewProvider.mystrength = MystrengthsController.text;
+                                                          // myOrganisationController.text = aboutMeData['My_Organisation']==null ? "" : aboutMeData['My_Organisation'];
+                                                          // _previewProvider.myorganization = myOrganisationController.text;
+                                                          // myOrganisation2Controller.text = aboutMeData['My_Challenges_Organisation']==null ? "" : aboutMeData['My_Challenges_Organisation'];
+                                                          // _previewProvider.mychallenge = myOrganisation2Controller.text;
+                                                          ///
+                                                          About_Me_Label = previewProvider.title;
+                                                          // List<dynamic> challengesList = aboutMeData['Challenges'] ?? [];
+                                                          // List<dynamic> solutionsList = aboutMeData['Solutions'] ?? [];
+                                                          //
+                                                          // Iterable<Map<String, dynamic>> challengesIterable = challengesList.map((item) => item as Map<String, dynamic>);
+                                                          // Iterable<Map<String, dynamic>> solutionsIterable = solutionsList.map((item) => item as Map<String, dynamic>);
+                                                          //
+                                                          // List<Map<String, dynamic>> abc = [];
+                                                          // List<Map<String, dynamic>> xyz = [];
+                                                          //
+                                                          // abc.addAll(challengesIterable);
+                                                          // xyz.addAll(solutionsIterable);
+
+                                                          ProgressDialog.show(context, "Previewing", Icons.picture_as_pdf);
+                                                          Uint8List pdfBytes = await makePdf(challengesList, solutionsList );
+                                                          showDialog(
+                                                              context: context,
+                                                              builder: (BuildContext context) {
+                                                                ProgressDialog.hide();
+                                                                return  AlertDialog(
+                                                                    icon: Row(
+                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                      children: [
+                                                                        Text("${About_Me_Label}",
+                                                                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                                                                        ),
+                                                                        IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.close)),
+                                                                      ],
+                                                                    ),
+                                                                    backgroundColor: Colors.white,
+                                                                    content: SizedBox(
+                                                                      width: double.maxFinite,
+                                                                      child: PdfPreview(
+                                                                        maxPageWidth: MediaQuery.of(context).size.width * .6,
+                                                                        allowSharing: false,
+                                                                        canChangeOrientation: false,
+                                                                        canChangePageFormat: false,
+                                                                        canDebug: false,
+                                                                        allowPrinting: false,
+                                                                        pdfFileName: About_Me_Label,
+                                                                        previewPageMargin: EdgeInsets.all(10),
+                                                                        useActions: true,
+                                                                        pdfPreviewPageDecoration: BoxDecoration(color: Colors.white),
+                                                                        build: (format) => pdfBytes,
+                                                                      ),
+                                                                    ));
+                                                              });
+
+                                                          // }
+                                                          // else{
+                                                          //   _navigateToTab(4);
+                                                          //   await showAddAddAboutMeDialogBox();
+                                                          // }
+                                                        },
+                                                        child: Container(
+                                                          padding: EdgeInsets.all(10),
+                                                          decoration: BoxDecoration(
+                                                            color: Colors.white,
+                                                            border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                                            borderRadius: BorderRadius.circular(10.0),
+                                                          ),
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                            children: [
+                                                              // Icon(Icons.article,color: Colors.black,size: 30,),
+                                                              Icon(Icons.picture_as_pdf_outlined,color: Colors.black,size: 25,),
+                                                              SizedBox(width: 5,),
+
+                                                              Expanded(
+                                                                child: Text(
+                                                                  // 'Solutions',
+                                                                  'Private Summary',
+                                                                  overflow: TextOverflow.ellipsis,
+                                                                  style: GoogleFonts.montserrat(
+                                                                      textStyle:
+                                                                      Theme.of(context).textTheme.titleMedium,
+                                                                      color: Colors.black),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Icon(Icons.sync, size: 40),
+                                                    Expanded(
+                                                      child: Column(
+                                                        children: [
+                                                          InkWell(
+                                                            onTap: () async {
+                                                              // QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+                                                              //
+                                                              // // Check if there are any documents
+                                                              //
+                                                              // print("querySnapshot :${querySnapshot}");
+                                                              // print("querySnapshot :${querySnapshot.docs.length}");
+                                                              //
+                                                              // if (querySnapshot.docs.isNotEmpty) {
+                                                              //   // Get the last document
+                                                              //   DocumentSnapshot lastDocument = querySnapshot.docs.first;
+                                                              //   print("lastDocument :$lastDocument");
+                                                              // showEditAboutMeDialogBox(5);
+                                                              ///
+                                                              // showEditAboutMeDialogBox();
+                                                              // }
+                                                              ///
+                                                              // else{
+                                                              //   _navigateToTab(5);
+                                                              //   await showAddAddAboutMeDialogBox();
+                                                              //
+                                                              // }
+
+                                                              toastification.show(context: context,
+                                                                  title: Text('To make changes go back to the corresponding tabs and your report will be automatically updated'),
+                                                                  // autoCloseDuration: Duration(milliseconds: 2500),
+                                                                  alignment: Alignment.center,
+                                                                  backgroundColor: Colors.green,
+                                                                  foregroundColor: Colors.white,
+                                                                  icon: Icon(Icons.check_circle, color: Colors.white,),
+                                                                  animationDuration: Duration(milliseconds: 1000),
+                                                                  showProgressBar: false
+                                                              );
+                                                            },
+                                                            child: Container(
+                                                              padding: EdgeInsets.all(10),
+                                                              decoration: BoxDecoration(
+                                                                color: Colors.white,
+                                                                border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                                                borderRadius: BorderRadius.circular(10.0),
+                                                              ),
+                                                              child: Row(
+                                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                children: [
+                                                                  // Icon(Icons.article,color: Colors.black,size: 30,),
+                                                                  Icon(Icons.create,color: Colors.black,size: 25,),
+                                                                  SizedBox(width: 5,),
+
+                                                                  Expanded(
+                                                                    child: Text(
+                                                                      // 'Solutions',
+                                                                      'Edit',
+                                                                      overflow: TextOverflow.ellipsis,
+                                                                      style: GoogleFonts.montserrat(
+                                                                          textStyle:
+                                                                          Theme.of(context).textTheme.titleMedium,
+                                                                          color: Colors.black),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Icon(Icons.arrow_downward_sharp, size: 40),
+                                                          InkWell(
+                                                            // onTap: () async {
+                                                            //   QuerySnapshot querySnapshots = await FirebaseFirestore.instance
+                                                            //       .collection('AboutMe')
+                                                            //       .orderBy('AB_id', descending: true)
+                                                            //       .limit(1)
+                                                            //       .get();
+                                                            //   final abc =   querySnapshots.docs.first;
+                                                            //   print("abccccc; ${abc['AB_id']}");
+                                                            //   print("abccccc; ${abc['AB_id'].runtimeType}");
+                                                            //   var AB_id = abc['AB_id'] + 1;
+                                                            //
+                                                            //   // await widget.duplicateDocument(context,documentId,AB_id);
+                                                            //   showDuplicateDialogBox(documentId);
+                                                            // },
+                                                            onTap: () async {
+                                                              QuerySnapshot querySnapshots = await FirebaseFirestore.instance
+                                                                  .collection('AboutMe').where("isPPS", isEqualTo: true)
+                                                                  .where('AB_id', isEqualTo: aboutMeData.get("AB_id"))
+                                                                  .limit(1)
+                                                                  .get();
+                                                              // final abc =   querySnapshots.docs.first;
+                                                              // print("abccccc; ${abc['AB_id']}");
+                                                              // print("abccccc; ${abc['AB_id'].runtimeType}");
+                                                              // var AB_id = abc['AB_id'] + 1;
+
+                                                              // await widget.duplicateDocument(context,documentId,AB_id);
+
+                                                              if(querySnapshots.docs.isNotEmpty){
+                                                                print("aboutMeData.get; ${aboutMeData.get("AB_id")}");
+                                                                // showDuplicateDialogBox(aboutMeData.id);
+
+                                                                QuerySnapshot querySnapshots = await FirebaseFirestore.instance
+                                                                    .collection('AboutMe')
+                                                                    .orderBy('AB_id', descending: true)
+                                                                    .limit(1)
+                                                                    .get();
+                                                                final abc = querySnapshots.docs.first;
+                                                                print("abccccc; ${abc['AB_id']}");
+                                                                print("abccccc; ${abc['AB_id'].runtimeType}");
+                                                                var AB_id = abc['AB_id'] + 1;
+                                                                var createdAt = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+                                                                QuerySnapshot count = await FirebaseFirestore.instance
+                                                                    .collection('AboutMe').where("Email",isEqualTo: aboutMeData.get("Email"))
+                                                                    .where("isPPS", isEqualTo: true).get();
+
+                                                                print("count: ${count.size}");
+                                                                int total = count.size + 1;
+                                                                setState(() {
+                                                                  widget.duplicateDocument(context, aboutMeData.id, AB_id, "$createdAt ${aboutMeData.get("User_Name")}_PPS(${count.size + 1})");
+                                                                  // Navigator.pop(ctx);
+                                                                });
+                                                                // Navigator.pop(ctx);
+                                                                DuplicatePurposetextController.clear();
+                                                              }
+                                                            },
+
+                                                            child: Container(
+                                                              padding: EdgeInsets.all(10),
+                                                              decoration: BoxDecoration(
+                                                                color: Colors.white,
+                                                                border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                                                borderRadius: BorderRadius.circular(10.0),
+                                                              ),
+                                                              child: Row(
+                                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                children: [
+                                                                  // Icon(Icons.article,color: Colors.black,size: 30,),
+                                                                  Icon(Icons.save_outlined,color: Colors.black,size: 25,),
+                                                                  SizedBox(width: 5,),
+
+                                                                  Expanded(
+                                                                    child: Text(
+                                                                      // 'Solutions',
+                                                                      'Save to library',
+                                                                      overflow: TextOverflow.ellipsis,
+                                                                      style: GoogleFonts.montserrat(
+                                                                          textStyle:
+                                                                          Theme.of(context).textTheme.titleMedium,
+                                                                          color: Colors.black),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       );
@@ -1934,7 +1956,7 @@ Date
                           Expanded(
                             child: Container(
                               margin: EdgeInsets.all(10),
-                              height: MediaQuery.of(context).size.height * 0.5,
+                              height: MediaQuery.of(context).size.height * 0.4,
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 border: Border.all(color:primaryColorOfApp, width: 1.0),
@@ -1942,115 +1964,369 @@ Date
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 10.0,bottom: 10),
-                                      // child: Text("Here is your master report summarising your findings as a result of your most recent input.",style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                      child: Center(
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 10.0,bottom: 10),
+                                        // child: Text("Here is your master report summarising your findings as a result of your most recent input.",style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                        child: Center(
+                                          child: Column(
+                                            children: [
+                                              Text("Official Submission to ${employerController.text} ",style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                  color: Colors.black87,
+                                                  fontWeight: FontWeight.w300
+                                              ),
+                                                  textAlign: TextAlign.center,overflow: TextOverflow.ellipsis),
+                                              // Text("(OS)",style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                              //     color: Colors.black87,
+                                              //     fontWeight: FontWeight.w300
+                                              //
+                                              // ),),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Divider(),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 10.0,bottom: 10),
+                                        // child: Text("Here is your master report summarising your findings as a result of your most recent input.",style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                        child: Center(
+                                          child: Text("Edit your Personal Private Summary to create your official submission:",style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                              color: Colors.black87,
+                                              fontWeight: FontWeight.w300
+                                          ),
+                                             maxLines: 2, textAlign: TextAlign.center,overflow: TextOverflow.ellipsis),
+                                        ),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            child: InkWell(
+                                              onTap: () async {
+                                                QuerySnapshot querySnapshotss = await FirebaseFirestore.instance
+                                                    .collection('AboutMe')
+                                                    .where('Email', isEqualTo: aboutMeData.get("Email"))
+                                                    .where('isPPS', isEqualTo: false)
+                                                    .where('isOS', isEqualTo: true)
+                                                    .get();
+                                                // final abc =   querySnapshots.docs.first;
+                                                // print("abccccc; ${abc['AB_id']}");
+                                                // print("abccccc; ${abc['AB_id'].runtimeType}");
+                                                // var AB_id = abc['AB_id'] + 1;
+
+                                                // await widget.duplicateDocument(context,documentId,AB_id);
+
+                                                if(querySnapshotss.docs.isEmpty){
+                                                  print("aboutMeData.get; ${aboutMeData.get("AB_id")}");
+                                                  // showDuplicateDialogBox(aboutMeData.id);
+
+                                                  QuerySnapshot querySnapshots = await FirebaseFirestore.instance
+                                                      .collection('AboutMe')
+                                                      .orderBy('AB_id', descending: true)
+                                                      .limit(1)
+                                                      .get();
+                                                  final abc = querySnapshots.docs.first;
+                                                  print("abccccc; ${abc['AB_id']}");
+                                                  print("abccccc; ${abc['AB_id'].runtimeType}");
+                                                  var AB_id = abc['AB_id'] + 1;
+
+                                                  var createdAt = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+                                                  // QuerySnapshot count = await FirebaseFirestore.instance
+                                                  //     .collection('AboutMe').where("Email",isEqualTo: aboutMeData.get("Email"))
+                                                  //     .where("isPPS", isEqualTo: true).get();
+                                                  //
+                                                  // print("count: ${count.size}");
+                                                  // int total = count.size + 1;
+                                                  setState(() {
+                                                    duplicatePPStoOS(context, aboutMeData.id, AB_id, "$createdAt ${aboutMeData.get("User_Name")}_Official Submission.pdf");
+                                                    // Navigator.pop(ctx);
+                                                  });
+                                                  // Navigator.pop(ctx);
+                                                  DuplicatePurposetextController.clear();
+                                                }
+
+                                                else if(querySnapshotss.docs.isNotEmpty){
+                                                  _userAboutMEProvider.editchallengess.clear();
+                                                  _userAboutMEProvider.editsolutionss.clear();
+                                                  challengesList.clear();
+                                                  solutionsList.clear();
+                                                  _previewProvider.PreviewChallengesList.clear();
+                                                  _previewProvider.PreviewSolutionStillNeeded.clear();
+                                                  _previewProvider.PreviewSolutionMyResposibilty.clear();
+                                                  _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
+                                                  _previewProvider.PreviewSolutionNiceToHave.clear();
+                                                  _previewProvider.PreviewSolutionMustHave.clear();
+                                                  print("PPS list Cleared");
+                                                  print("OS List Adding now");
+                                                  _userAboutMEProvider.EditChallengeList(querySnapshotss.docs.first["Challenges"]);
+                                                  _userAboutMEProvider.EditChallengeListadd(challengesList);
+                                                  _userAboutMEProvider.EditChallengeListadd(_previewProvider.PreviewChallengesList);
+                                                  _userAboutMEProvider.EditSolutionList(querySnapshotss.docs.first["Solutions"]);
+                                                  _userAboutMEProvider.EditSolutionListadd(solutionsList);
+                                                  _userAboutMEProvider.EditSolutionProvideradd(_previewProvider.PreviewSolutionMyResposibilty);
+                                                  _userAboutMEProvider.EditSolutionInPlaceadd(_previewProvider.PreviewSolutionStillNeeded,
+                                                      _previewProvider.PreviewSolutionNotNeededAnyMore, _previewProvider.PreviewSolutionNiceToHave, _previewProvider.PreviewSolutionMustHave);
+
+                                                  showEditAboutMeDialogBox(querySnapshotss.docs.first.id);
+                                                }
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.all(10),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                                  borderRadius: BorderRadius.circular(10.0),
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                  children: [
+                                                    // Icon(Icons.article,color: Colors.black,size: 30,),
+                                                    Icon(Icons.edit,color: Colors.black,size: 25,),
+                                                    SizedBox(width: 5,),
+
+                                                    Expanded(
+                                                      child: Text(
+                                                        // 'Solutions',
+                                                        'Edit',
+                                                        overflow: TextOverflow.ellipsis,
+                                                        style: GoogleFonts.montserrat(
+                                                            textStyle:
+                                                            Theme.of(context).textTheme.titleMedium,
+                                                            color: Colors.black),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Icon(Icons.sync, size: 40),
+                                          Expanded(
+                                            child: Column(
+                                              children: [
+                                                InkWell(
+                                                  onTap:() async {
+                                                    QuerySnapshot querySnapshots = await FirebaseFirestore.instance
+                                                        .collection('AboutMe')
+                                                        .where('Email', isEqualTo: aboutMeData.get("Email"))
+                                                        .where('isPPS', isEqualTo: false)
+                                                        .where('isOS', isEqualTo: true)
+                                                        .get();
+
+                                                    if(querySnapshots.docs.isNotEmpty){
+                                                      // showEditAboutMeDialogBox(querySnapshots.docs.first.id);
+
+                                                      var data =   querySnapshots.docs.first;
+
+                                                      var challenges = data['Challenges'];
+                                                      var solutions = data['Solutions'];
+                                                      About_Me_Label = data['About_Me_Label'];
+
+                                                      List<Map<String, dynamic>> solutionsList = [];
+                                                      List<Map<String, dynamic>> challengesList = [];
+
+                                                      // Print the runtimeType for debugging
+                                                      print("Challenges runtimeType: ${challenges.runtimeType}");
+
+                                                      // Check if challenges is a List
+                                                      if (challenges is List<dynamic>) {
+                                                        // Add each challenge to challengesList
+                                                        for (var challenge in challenges) {
+                                                          if (challenge is Map<String, dynamic>) {
+                                                            challengesList.add(challenge);
+                                                          }
+                                                        }
+                                                      }
+
+                                                      if (solutions is List<dynamic>) {
+                                                        // Add each challenge to challengesList
+                                                        for (var challenge in solutions) {
+                                                          if (challenge is Map<String, dynamic>) {
+                                                            solutionsList.add(challenge);
+                                                          }
+                                                        }
+                                                      }
+                                                      // dataList[i]['Challenges'] = challengesList;
+                                                      // dataList[i]['Solutions'] = solutionsList;
+
+                                                      ProgressDialog.show(context, "Previewing", Icons.picture_as_pdf);
+                                                      Uint8List pdfBytes = await makePdf(challengesList, solutionsList);
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (BuildContext context) {
+                                                            ProgressDialog.hide();
+                                                            return  AlertDialog(
+                                                                icon: Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                  children: [
+                                                                    Text("${About_Me_Label}",
+                                                                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                                                                    ),
+                                                                    IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.close)),
+                                                                  ],
+                                                                ),
+                                                                backgroundColor: Colors.white,
+                                                                content: SizedBox(
+                                                                  width: double.maxFinite,
+                                                                  child: PdfPreview(
+                                                                    maxPageWidth: MediaQuery.of(context).size.width * .6,
+                                                                    allowSharing: false,
+                                                                    canChangeOrientation: false,
+                                                                    canChangePageFormat: false,
+                                                                    canDebug: false,
+                                                                    allowPrinting: false,
+                                                                    pdfFileName: About_Me_Label,
+                                                                    previewPageMargin: EdgeInsets.all(10),
+                                                                    useActions: true,
+                                                                    pdfPreviewPageDecoration: BoxDecoration(color: Colors.white),
+                                                                    build: (format) => pdfBytes,
+                                                                  ),
+                                                                ));
+                                                          });
+                                                    }
+
+                                                  },
+                                                  child: Container(
+                                                    padding: EdgeInsets.all(10),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                                      borderRadius: BorderRadius.circular(10.0),
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                      children: [
+                                                        // Icon(Icons.article,color: Colors.black,size: 30,),
+                                                        Icon(Icons.insert_drive_file,color: Colors.black,size: 25,),
+                                                        SizedBox(width: 5,),
+
+                                                        Expanded(
+                                                          child: Text(
+                                                            // 'Solutions',
+                                                            'Preview',
+                                                            overflow: TextOverflow.ellipsis,
+                                                            style: GoogleFonts.montserrat(
+                                                                textStyle:
+                                                                Theme.of(context).textTheme.titleMedium,
+                                                                color: Colors.black),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                                Icon(Icons.arrow_downward_sharp, size: 40),
+                                                InkWell(
+                                                  child: Container(
+                                                    padding: EdgeInsets.all(10),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                                      borderRadius: BorderRadius.circular(10.0),
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                      children: [
+                                                        // Icon(Icons.article,color: Colors.black,size: 30,),
+                                                        Icon(Icons.save_alt,color: Colors.black,size: 25,),
+                                                        SizedBox(width: 5,),
+
+                                                        Expanded(
+                                                          child: Text(
+                                                            // 'Solutions',
+                                                            'Submit',
+                                                            overflow: TextOverflow.ellipsis,
+                                                            style: GoogleFonts.montserrat(
+                                                                textStyle:
+                                                                Theme.of(context).textTheme.titleMedium,
+                                                                color: Colors.black),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.all(10),
+                              height: MediaQuery.of(context).size.height * 0.4,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 10.0,bottom: 10),
+                                        // child: Text("Here is your master report summarising your findings as a result of your most recent input.",style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                        child: Center(
+                                          child: Column(
+                                            children: [
+                                              Text("Different version to share with others",style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                  color: Colors.black87,
+                                                  fontWeight: FontWeight.w300
+                                              ), textAlign: TextAlign.center,overflow: TextOverflow.ellipsis),
+                                              // Text("(Others)",style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                              //     color: Colors.black87,
+                                              //     fontWeight: FontWeight.w300
+                                              //
+                                              // ),),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Divider(),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 10.0,bottom: 10),
+                                        // child: Text("Here is your master report summarising your findings as a result of your most recent input.",style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                         child: Column(
                                           children: [
-                                            Text("Official Submission to ${employerController.text} ",style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                                color: Colors.black87,
-                                                fontWeight: FontWeight.w300
-
-                                            ),),
-                                            // Text("(OS)",style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                            //     color: Colors.black87,
-                                            //     fontWeight: FontWeight.w300
-                                            //
-                                            // ),),
+                                            Center(
+                                              child: Text("Create as many different versions as you wish",style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                  color: Colors.black87,
+                                                  fontWeight: FontWeight.w300
+                                              ),
+                                                  maxLines: 1,   textAlign: TextAlign.center,overflow: TextOverflow.ellipsis),
+                                            ),
+                                            Center(
+                                              child: Text(" ",style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                  color: Colors.black87,
+                                                  fontWeight: FontWeight.w300
+                                              ),
+                                                  maxLines: 1,   textAlign: TextAlign.center,overflow: TextOverflow.ellipsis),
+                                            ),
                                           ],
                                         ),
                                       ),
-                                    ),
-                                    Divider(),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 10.0,bottom: 10),
-                                      // child: Text("Here is your master report summarising your findings as a result of your most recent input.",style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                      child: Text("Edit your personal private summary to create your official submission:",style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                          color: Colors.black87,
-                                          fontWeight: FontWeight.w300
-
-                                      ),),
-                                    ),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                          child: InkWell(
-                                            onTap: () async {
-                                              QuerySnapshot querySnapshotss = await FirebaseFirestore.instance
-                                                  .collection('AboutMe')
-                                                  .where('Email', isEqualTo: aboutMeData.get("Email"))
-                                                  .where('isPPS', isEqualTo: false)
-                                                  .where('isOS', isEqualTo: true)
-                                                  .get();
-                                              // final abc =   querySnapshots.docs.first;
-                                              // print("abccccc; ${abc['AB_id']}");
-                                              // print("abccccc; ${abc['AB_id'].runtimeType}");
-                                              // var AB_id = abc['AB_id'] + 1;
-
-                                              // await widget.duplicateDocument(context,documentId,AB_id);
-
-                                              if(querySnapshotss.docs.isEmpty){
-                                                print("aboutMeData.get; ${aboutMeData.get("AB_id")}");
-                                                // showDuplicateDialogBox(aboutMeData.id);
-
-                                                QuerySnapshot querySnapshots = await FirebaseFirestore.instance
-                                                    .collection('AboutMe')
-                                                    .orderBy('AB_id', descending: true)
-                                                    .limit(1)
-                                                    .get();
-                                                final abc = querySnapshots.docs.first;
-                                                print("abccccc; ${abc['AB_id']}");
-                                                print("abccccc; ${abc['AB_id'].runtimeType}");
-                                                var AB_id = abc['AB_id'] + 1;
-
-                                                var createdAt = DateFormat('yyyy-MM-dd').format(DateTime.now());
-
-                                                // QuerySnapshot count = await FirebaseFirestore.instance
-                                                //     .collection('AboutMe').where("Email",isEqualTo: aboutMeData.get("Email"))
-                                                //     .where("isPPS", isEqualTo: true).get();
-                                                //
-                                                // print("count: ${count.size}");
-                                                // int total = count.size + 1;
-                                                setState(() {
-                                                  duplicatePPStoOS(context, aboutMeData.id, AB_id, "$createdAt ${aboutMeData.get("User_Name")}_Official Submission.pdf");
-                                                  // Navigator.pop(ctx);
-                                                });
-                                                // Navigator.pop(ctx);
-                                                DuplicatePurposetextController.clear();
-                                              }
-
-                                              else if(querySnapshotss.docs.isNotEmpty){
-                                                _userAboutMEProvider.editchallengess.clear();
-                                                _userAboutMEProvider.editsolutionss.clear();
-                                                challengesList.clear();
-                                                solutionsList.clear();
-                                                _previewProvider.PreviewChallengesList.clear();
-                                                _previewProvider.PreviewSolutionStillNeeded.clear();
-                                                _previewProvider.PreviewSolutionMyResposibilty.clear();
-                                                _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
-                                                _previewProvider.PreviewSolutionNiceToHave.clear();
-                                                _previewProvider.PreviewSolutionMustHave.clear();
-                                                print("PPS list Cleared");
-                                                print("OS List Adding now");
-                                                _userAboutMEProvider.EditChallengeList(querySnapshotss.docs.first["Challenges"]);
-                                                _userAboutMEProvider.EditChallengeListadd(challengesList);
-                                                _userAboutMEProvider.EditChallengeListadd(_previewProvider.PreviewChallengesList);
-                                                _userAboutMEProvider.EditSolutionList(querySnapshotss.docs.first["Solutions"]);
-                                                _userAboutMEProvider.EditSolutionListadd(solutionsList);
-                                                _userAboutMEProvider.EditSolutionProvideradd(_previewProvider.PreviewSolutionMyResposibilty);
-                                                _userAboutMEProvider.EditSolutionInPlaceadd(_previewProvider.PreviewSolutionStillNeeded,
-                                                    _previewProvider.PreviewSolutionNotNeededAnyMore, _previewProvider.PreviewSolutionNiceToHave, _previewProvider.PreviewSolutionMustHave);
-
-                                                showEditAboutMeDialogBox(querySnapshotss.docs.first.id);
-                                              }
-                                            },
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Expanded(
                                             child: Container(
                                               padding: EdgeInsets.all(10),
                                               decoration: BoxDecoration(
@@ -2080,94 +2356,11 @@ Date
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        Icon(Icons.sync, size: 40),
-                                        Expanded(
-                                          child: Column(
-                                            children: [
-                                              InkWell(
-                                                onTap:() async {
-                                                  QuerySnapshot querySnapshots = await FirebaseFirestore.instance
-                                                      .collection('AboutMe')
-                                                      .where('Email', isEqualTo: aboutMeData.get("Email"))
-                                                      .where('isPPS', isEqualTo: false)
-                                                      .where('isOS', isEqualTo: true)
-                                                      .get();
-
-                                                  if(querySnapshots.docs.isNotEmpty){
-                                                    // showEditAboutMeDialogBox(querySnapshots.docs.first.id);
-
-                                                    var data =   querySnapshots.docs.first;
-
-                                                    var challenges = data['Challenges'];
-                                                    var solutions = data['Solutions'];
-                                                    About_Me_Label = data['About_Me_Label'];
-
-                                                    List<Map<String, dynamic>> solutionsList = [];
-                                                    List<Map<String, dynamic>> challengesList = [];
-
-                                                    // Print the runtimeType for debugging
-                                                    print("Challenges runtimeType: ${challenges.runtimeType}");
-
-                                                    // Check if challenges is a List
-                                                    if (challenges is List<dynamic>) {
-                                                      // Add each challenge to challengesList
-                                                      for (var challenge in challenges) {
-                                                        if (challenge is Map<String, dynamic>) {
-                                                          challengesList.add(challenge);
-                                                        }
-                                                      }
-                                                    }
-
-                                                    if (solutions is List<dynamic>) {
-                                                      // Add each challenge to challengesList
-                                                      for (var challenge in solutions) {
-                                                        if (challenge is Map<String, dynamic>) {
-                                                          solutionsList.add(challenge);
-                                                        }
-                                                      }
-                                                    }
-                                                    // dataList[i]['Challenges'] = challengesList;
-                                                    // dataList[i]['Solutions'] = solutionsList;
-
-                                                    ProgressDialog.show(context, "Previewing", Icons.picture_as_pdf);
-                                                    Uint8List pdfBytes = await makePdf(challengesList, solutionsList);
-                                                    showDialog(
-                                                        context: context,
-                                                        builder: (BuildContext context) {
-                                                          ProgressDialog.hide();
-                                                          return  AlertDialog(
-                                                              icon: Row(
-                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                children: [
-                                                                  Text("${About_Me_Label}",
-                                                                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-                                                                  ),
-                                                                  IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.close)),
-                                                                ],
-                                                              ),
-                                                              backgroundColor: Colors.white,
-                                                              content: SizedBox(
-                                                                width: double.maxFinite,
-                                                                child: PdfPreview(
-                                                                  maxPageWidth: MediaQuery.of(context).size.width * .6,
-                                                                  allowSharing: false,
-                                                                  canChangeOrientation: false,
-                                                                  canChangePageFormat: false,
-                                                                  canDebug: false,
-                                                                  allowPrinting: false,
-                                                                  pdfFileName: About_Me_Label,
-                                                                  previewPageMargin: EdgeInsets.all(10),
-                                                                  useActions: true,
-                                                                  pdfPreviewPageDecoration: BoxDecoration(color: Colors.white),
-                                                                  build: (format) => pdfBytes,
-                                                                ),
-                                                              ));
-                                                        });
-                                                  }
-
-                                                },
-                                                child: Container(
+                                          Icon(Icons.sync, size: 40),
+                                          Expanded(
+                                            child: Column(
+                                              children: [
+                                                Container(
                                                   padding: EdgeInsets.all(10),
                                                   decoration: BoxDecoration(
                                                     color: Colors.white,
@@ -2195,10 +2388,8 @@ Date
                                                     ],
                                                   ),
                                                 ),
-                                              ),
-                                              Icon(Icons.arrow_downward_sharp, size: 40),
-                                              InkWell(
-                                                child: Container(
+                                                Icon(Icons.arrow_downward_sharp, size: 40),
+                                                Container(
                                                   padding: EdgeInsets.all(10),
                                                   decoration: BoxDecoration(
                                                     color: Colors.white,
@@ -2209,13 +2400,13 @@ Date
                                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                     children: [
                                                       // Icon(Icons.article,color: Colors.black,size: 30,),
-                                                      Icon(Icons.save_alt,color: Colors.black,size: 25,),
+                                                      Icon(Icons.share,color: Colors.black,size: 25,),
                                                       SizedBox(width: 5,),
 
                                                       Expanded(
                                                         child: Text(
                                                           // 'Solutions',
-                                                          'Submit',
+                                                          'Share',
                                                           overflow: TextOverflow.ellipsis,
                                                           style: GoogleFonts.montserrat(
                                                               textStyle:
@@ -2226,163 +2417,13 @@ Date
                                                     ],
                                                   ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          Expanded(
-                            child: Container(
-                              margin: EdgeInsets.all(10),
-                              height: MediaQuery.of(context).size.height * 0.5,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                border: Border.all(color:primaryColorOfApp, width: 1.0),
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 10.0,bottom: 10),
-                                      // child: Text("Here is your master report summarising your findings as a result of your most recent input.",style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                      child: Center(
-                                        child: Column(
-                                          children: [
-                                            Text("Different version to share with others",style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                                color: Colors.black87,
-                                                fontWeight: FontWeight.w300
-
-                                            ),),
-                                            // Text("(Others)",style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                            //     color: Colors.black87,
-                                            //     fontWeight: FontWeight.w300
-                                            //
-                                            // ),),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Divider(),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 10.0,bottom: 10),
-                                      // child: Text("Here is your master report summarising your findings as a result of your most recent input.",style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                      child: Text("Create as many different versions as you wish                             ",style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                          color: Colors.black87,
-                                          fontWeight: FontWeight.w300
-                                      ),),
-                                    ),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            padding: EdgeInsets.all(10),
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              border: Border.all(color:primaryColorOfApp, width: 1.0),
-                                              borderRadius: BorderRadius.circular(10.0),
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                // Icon(Icons.article,color: Colors.black,size: 30,),
-                                                Icon(Icons.edit,color: Colors.black,size: 25,),
-                                                SizedBox(width: 5,),
-
-                                                Expanded(
-                                                  child: Text(
-                                                    // 'Solutions',
-                                                    'Edit',
-                                                    overflow: TextOverflow.ellipsis,
-                                                    style: GoogleFonts.montserrat(
-                                                        textStyle:
-                                                        Theme.of(context).textTheme.titleMedium,
-                                                        color: Colors.black),
-                                                  ),
-                                                ),
                                               ],
                                             ),
                                           ),
-                                        ),
-                                        Icon(Icons.sync, size: 40),
-                                        Expanded(
-                                          child: Column(
-                                            children: [
-                                              Container(
-                                                padding: EdgeInsets.all(10),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  border: Border.all(color:primaryColorOfApp, width: 1.0),
-                                                  borderRadius: BorderRadius.circular(10.0),
-                                                ),
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                  children: [
-                                                    // Icon(Icons.article,color: Colors.black,size: 30,),
-                                                    Icon(Icons.insert_drive_file,color: Colors.black,size: 25,),
-                                                    SizedBox(width: 5,),
-
-                                                    Expanded(
-                                                      child: Text(
-                                                        // 'Solutions',
-                                                        'Preview',
-                                                        overflow: TextOverflow.ellipsis,
-                                                        style: GoogleFonts.montserrat(
-                                                            textStyle:
-                                                            Theme.of(context).textTheme.titleMedium,
-                                                            color: Colors.black),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Icon(Icons.arrow_downward_sharp, size: 40),
-                                              Container(
-                                                padding: EdgeInsets.all(10),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  border: Border.all(color:primaryColorOfApp, width: 1.0),
-                                                  borderRadius: BorderRadius.circular(10.0),
-                                                ),
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                  children: [
-                                                    // Icon(Icons.article,color: Colors.black,size: 30,),
-                                                    Icon(Icons.share,color: Colors.black,size: 25,),
-                                                    SizedBox(width: 5,),
-
-                                                    Expanded(
-                                                      child: Text(
-                                                        // 'Solutions',
-                                                        'Share',
-                                                        overflow: TextOverflow.ellipsis,
-                                                        style: GoogleFonts.montserrat(
-                                                            textStyle:
-                                                            Theme.of(context).textTheme.titleMedium,
-                                                            color: Colors.black),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -2417,6 +2458,7 @@ Date
       ],
     );
   }
+
   Widget MyLibrary(){
     print("inside edit MyLibrary : ${widget.AdminName}");
     return Scaffold(
@@ -5467,10 +5509,13 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                             fontWeight: FontWeight.w400,
                             color: Colors.redAccent),
                         focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
+                            borderSide: BorderSide(color: Colors.orange),
+                            borderRadius: BorderRadius.circular(15)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.orange),
                             borderRadius: BorderRadius.circular(15)),
                         border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black12),
+                            borderSide: BorderSide(color: Colors.orangeAccent),
                             borderRadius: BorderRadius.circular(15)),
                         labelStyle: GoogleFonts.montserrat(
                             textStyle: Theme
@@ -5483,60 +5528,171 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                     ),
                     SizedBox(height: 10,),
 
-                    InkWell(
-                      onTap:() async {
-                        // var defaulttext = "Refine this sentence and give it in proper sentence";
-                        //
-                        // defaulttext = defaulttext +"=" +" ${RefineController.text}";
-                        //
-                        // getChatRefineResponse(defaulttext);
+                    Row(
+                      children: [
+                        InkWell(
+                          onTap:() async {
+                            // var defaulttext = "Refine this sentence and give it in proper sentence";
+                            //
+                            // defaulttext = defaulttext +"=" +" ${RefineController.text}";
+                            //
+                            // getChatRefineResponse(defaulttext);
 
-                        var defaulttext1, defaulttext2;
+                            var defaulttext1, defaulttext2;
 
-                        FirebaseFirestore.instance.collection('ChatGpt-Settings').doc("Prompt").get().then((value) {
-                          defaulttext1 = value['prompt_1'];
-                          defaulttext2 = value['prompt_2'];
+                            ///
 
-                          var defaulttext3 = "$defaulttext1 where [xxxx] = ${RefineController.text}";
+                            // FirebaseFirestore.instance.collection('ChatGpt-Settings').doc("Prompt").get().then((value) {
+                            //   defaulttext1 = value['prompt_1'];
+                            //   defaulttext2 = value['prompt_2'];
+                            //
+                            //   var defaulttext3 = "$defaulttext1 where [xxxx] = ${RefineController.text}";
+                            //
+                            //   print("defaulttext3.text: ${defaulttext3}");
+                            //   print("defaulttext2.text: ${defaulttext2}");
+                            //
+                            //   chatGptChallengesResponse(defaulttext3,defaulttext2);
+                            // });
 
-                          print("defaulttext3.text: ${defaulttext3}");
-                          print("defaulttext2.text: ${defaulttext2}");
+                            if (RefineController.text.isEmpty ||_userAboutMEProvider.combinedResults.isNotEmpty) {
+                              if(RefineController.text.isEmpty){
+                                toastification.show(context: context,
+                                    title: Text('Search box is empty'),
+                                    autoCloseDuration: Duration(milliseconds: 2500),
+                                    alignment: Alignment.center,
+                                    backgroundColor: Colors.red,
+                                    foregroundColor: Colors.white,
+                                    icon: Icon(Icons.error, color: Colors.white,),
+                                    animationDuration: Duration(milliseconds: 1000),
+                                    showProgressBar: false
+                                );
+                              }
+                            else if(_userAboutMEProvider.combinedResults.isNotEmpty){
+                                toastification.show(context: context,
+                                    title: Text('Press clear all to search'),
+                                    autoCloseDuration: Duration(milliseconds: 2500),
+                                    alignment: Alignment.center,
+                                    backgroundColor: Colors.red,
+                                    foregroundColor: Colors.white,
+                                    icon: Icon(Icons.error, color: Colors.white,),
+                                    animationDuration: Duration(milliseconds: 1000),
+                                    showProgressBar: false
+                                );
+                              }
+                              /// here you perform your search
+                            }
+                            else {
+                              _userAboutMEProvider.searchchallenges(RefineController.text.toString());
+                              FirebaseFirestore.instance.collection('ChatGpt-Settings').doc("Prompt").get().then((value) {
 
-                          chatGptChallengesResponse(defaulttext3,defaulttext2);
-                        });
+                                var defaulttext1 = value['prompt_1'];
+                                var defaulttext2 = value['prompt_2'];
+                                var defaulttext3 = "$defaulttext1 where [xxxx] = ${RefineController.text}";
+
+                                print("defaulttext3.text: ${defaulttext3}");
+                                print("defaulttext2.text: ${defaulttext2}");
+
+                                ResponsefromInsightABme(defaulttext3, defaulttext2);
+
+                              });
+                            }
 
 
 
-                      },
-                      child:Container(
-                        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                        // width: MediaQuery.of(context).size.width * .2,
-                        width: MediaQuery.of(context).size.width * .15,
+                          },
+                          child:Container(
+                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                            // width: MediaQuery.of(context).size.width * .2,
+                            width: MediaQuery.of(context).size.width * .15,
 
-                        // height: 60,
-                        decoration: BoxDecoration(
-                          color:Colors.blue ,
-                          border: Border.all(
+                            // height: 60,
+                            decoration: BoxDecoration(
                               color:Colors.blue ,
-                              width: 1.0),
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        child: Center(
-                          // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                          child: Text(
-                            'Search',
-                            style: GoogleFonts.montserrat(
-                              textStyle:
-                              Theme
-                                  .of(context)
-                                  .textTheme
-                                  .titleSmall,
-                              fontWeight: FontWeight.bold,
-                              color:Colors.white ,
+                              border: Border.all(
+                                  color:Colors.blue ,
+                                  width: 1.0),
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            child: Center(
+                              // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                              child: Text(
+                                'Search',
+                                style: GoogleFonts.montserrat(
+                                  textStyle:
+                                  Theme
+                                      .of(context)
+                                      .textTheme
+                                      .titleSmall,
+                                  fontWeight: FontWeight.bold,
+                                  color:Colors.white ,
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                        SizedBox(width: 10,),
+                        InkWell(
+                          onTap:() async {
+                            // var defaulttext = "Refine this sentence and give it in proper sentence";
+                            //
+                            // defaulttext = defaulttext +"=" +" ${RefineController.text}";
+                            //
+                            // getChatRefineResponse(defaulttext);
+
+                            var defaulttext1, defaulttext2;
+
+                            ///
+
+                            // FirebaseFirestore.instance.collection('ChatGpt-Settings').doc("Prompt").get().then((value) {
+                            //   defaulttext1 = value['prompt_1'];
+                            //   defaulttext2 = value['prompt_2'];
+                            //
+                            //   var defaulttext3 = "$defaulttext1 where [xxxx] = ${RefineController.text}";
+                            //
+                            //   print("defaulttext3.text: ${defaulttext3}");
+                            //   print("defaulttext2.text: ${defaulttext2}");
+                            //
+                            //   chatGptChallengesResponse(defaulttext3,defaulttext2);
+                            // });
+
+                            // if (RefineController.text != "") {
+                              /// here you perform your search
+                              _userAboutMEProvider.clearsuggestedChallenges(RefineController);
+                            // }
+
+
+                          },
+                          child:Container(
+                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                            // width: MediaQuery.of(context).size.width * .2,
+                            width: MediaQuery.of(context).size.width * .15,
+
+                            // height: 60,
+                            decoration: BoxDecoration(
+                              color:Colors.blue ,
+                              border: Border.all(
+                                  color:Colors.blue ,
+                                  width: 1.0),
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            child: Center(
+                              // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                              child: Text(
+                                'Clear all',
+                                style: GoogleFonts.montserrat(
+                                  textStyle:
+                                  Theme
+                                      .of(context)
+                                      .textTheme
+                                      .titleSmall,
+                                  fontWeight: FontWeight.bold,
+                                  color:Colors.white ,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
 
                     SizedBox(height: 10,),
@@ -5544,7 +5700,7 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Expanded(
+                        Flexible(
                           flex: 2,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -5583,7 +5739,7 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                 (userAboutMEProvider.combinedResults.isEmpty) ?
                               Container(
                                 // height: 350,
-                                height: MediaQuery.of(context).size.height * .48,
+                                height: MediaQuery.of(context).size.height * .6,//.48,
                                 width: MediaQuery.of(context).size.width ,
                                 child: Center(
                                   child: (userAboutMEProvider.issuggestedloading==false) ?
@@ -5620,19 +5776,19 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black),),),
                                 decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.black),
+                                  border: Border.all(color: Colors.orange),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                               ) : Container(
-                                height: MediaQuery.of(context).size.height * .48,
+                                height: MediaQuery.of(context).size.height * .6,//.48,
                                 // width: MediaQuery.of(context).size.width * .46,
                                 decoration: BoxDecoration(
-                                  border: (userAboutMEProvider.combinedResults.isEmpty) ?  Border.all(color: Colors.black) : Border.all(color: Colors.black),
+                                  border: (userAboutMEProvider.combinedResults.isEmpty) ?  Border.all(color: Colors.orange) : Border.all(color: Colors.orange),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Container(
                                   // width: MediaQuery.of(context).size.width,
-                                  height: MediaQuery.of(context).size.height * .388,
+                                  height: MediaQuery.of(context).size.height * .4,//.388,
                                   child: ListView.builder(
                                     scrollDirection: Axis.vertical,
                                     shrinkWrap: true,
@@ -5641,13 +5797,15 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                       RelatedChallengesdocuments = userAboutMEProvider.combinedResults.toList();
                                       DocumentSnapshot document = RelatedChallengesdocuments[i];
 
-                                      return (userAboutMEProvider.isEditChallengeListAdded[document['id']] == true) ? Container() :  Container(
+                                      return
+                                        // (userAboutMEProvider.isEditChallengeListAdded[document['id']] == true) ? Container() :
+                                        Container(
                                           margin: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                                           padding: EdgeInsets.all(12),
                                           width: 470,
                                           // height: 300,
                                           decoration: BoxDecoration(
-                                            border: Border.all(color: Colors.black26),
+                                            border: Border.all(color: Colors.orangeAccent),
                                             borderRadius: BorderRadius.circular(20),
                                           ),
                                           child: RecommendedChallengesListTile(document, i, RelatedChallengesdocuments)
@@ -5662,7 +5820,7 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
 
                         SizedBox(width: 20,),
 
-                        Expanded(
+                        Flexible(
                           flex: 3,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -5681,12 +5839,12 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                               SizedBox(height: 6,),
                               Consumer<UserAboutMEProvider>(
                                 builder: (context, userAboutMEProvider, _) {
-
+                          
                                   return (userAboutMEProvider.editchallengess.isEmpty) ?
                                   Container(
                                     // height: 350,
-                                    height: MediaQuery.of(context).size.height * .48,
-
+                                    height: MediaQuery.of(context).size.height * .6,//.48,
+                          
                                     child: Center(
                                       child: Text("No Challenges Added Yet",
                                         overflow: TextOverflow.ellipsis,
@@ -5694,16 +5852,16 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black),),),
                                     decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.black),
+                                      border: Border.all(color: Colors.orange),
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                   ) : Container(
                                     // height: 350,
-                                    height: MediaQuery.of(context).size.height * .48,
-                                    // width: MediaQuery.of(context).size.width * .46,
-
+                                    height: MediaQuery.of(context).size.height * .6,//.48,
+                                    width: MediaQuery.of(context).size.width ,
+                          
                                     decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.black26),
+                                      border: Border.all(color: Colors.orangeAccent),
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     // width: MediaQuery.of(context).size.width,
@@ -5720,7 +5878,7 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                           // border: TableBorder.all(color: Colors.black),
                                           columnSpacing: 15,
                                           columns: [
-
+                          
                                             // DataColumn(
                                             //   label: Container(
                                             //     // color: Colors.blue,
@@ -5754,12 +5912,13 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                                 )
                                             ),
                                           ],
+                          
                                           rows: userAboutMEProvider.editchallengess.map((challenge) {
                                             int index = userAboutMEProvider.editchallengess.indexOf(challenge);
                                             // print(jsonString);
                                             return DataRow(
                                               cells: [
-
+                          
                                                 DataCell(
                                                     Container(
                                                       // width: MediaQuery.of(context).size.width * .05,
@@ -5771,7 +5930,7 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                                               color: Colors.black)
                                                       ),
                                                     )),
-
+                          
                                                 DataCell(
                                                     Container(
                                                       // width: MediaQuery.of(context).size.width * .15,
@@ -5829,7 +5988,7 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                                               icon: Icon(Icons.delete, color: Colors.red),
                                                             ),
                                                             // SizedBox(width: 10,),
-
+                          
                                                           ],
                                                         ),
                                                         Text('Confirmed',
@@ -5856,7 +6015,9 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                                             showconfirmChallengeDialogBox(challenge.id, challenge.label,challenge.description, challenge.Source, challenge.Status,challenge.tags,challenge.CreatedBy,
                                                                 challenge.CreatedDate,challenge.ModifiedBy,challenge.ModifiedDate,challenge.OriginalDescription,challenge.Impact,challenge.Final_description,
                                                                 challenge.Category,challenge.Keywords,challenge.PotentialStrengths,challenge.HiddenStrengths,
-                                                                index,userAboutMEProvider.editchallengess,challenge.notes,challenge.attachment);
+                                                                index,userAboutMEProvider.editchallengess,challenge.notes,challenge.attachment,
+                                                              challenge.ImpactToCoworker,challenge.ImpactToEmployee,challenge.NegativeImpactToOrganisation,
+                                                              challenge.RelatedChallengesTag,challenge.SuggestedChallengesTag,);
                                                             print("challenge.isConfirmed: ${challenge.isConfirmed}");
                                                           },
                                                           icon: Icon(Icons.check, color: Colors.green),
@@ -5869,7 +6030,7 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                                           icon: Icon(Icons.delete, color: Colors.red),
                                                         )
                                                         //      :
-
+                          
                                                       ],
                                                     ),
                                                   ),
@@ -5880,7 +6041,7 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                         ),
                                       ),
                                     ),
-
+                          
                                   );
                                 },
                               ),
@@ -6111,10 +6272,13 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                   fontWeight: FontWeight.w400,
                                   color: Colors.redAccent),
                               focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black),
+                                  borderSide: BorderSide(color: Colors.green),
+                                  borderRadius: BorderRadius.circular(15)),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.green),
                                   borderRadius: BorderRadius.circular(15)),
                               border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black12),
+                                  borderSide: BorderSide(color: Colors.green),
                                   borderRadius: BorderRadius.circular(15)),
                               labelStyle: GoogleFonts.montserrat(
                                   textStyle: Theme
@@ -6127,44 +6291,171 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                           ),
                           SizedBox(height: 10,),
 
-                          InkWell(
-                            onTap:() async {
-                              var defaulttext = "Refine this sentence and give it in proper sentence";
+                          // InkWell(
+                          //   onTap:() async {
+                          //     var defaulttext = "Refine this sentence and give it in proper sentence";
+                          //
+                          //     defaulttext = defaulttext +"=" +" ${searchsolutions.text}";
+                          //
+                          //     getsearchSolutionResponse(defaulttext);
+                          //
+                          //   },
+                          //   child:Container(
+                          //     padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                          //     // width: MediaQuery.of(context).size.width * .2,
+                          //     width: MediaQuery.of(context).size.width * .15,
+                          //
+                          //     // height: 60,
+                          //     decoration: BoxDecoration(
+                          //       color:Colors.blue ,
+                          //       border: Border.all(
+                          //           color:Colors.blue ,
+                          //           width: 1.0),
+                          //       borderRadius: BorderRadius.circular(15.0),
+                          //     ),
+                          //     child: Center(
+                          //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                          //       child: Text(
+                          //         'Search',
+                          //         style: GoogleFonts.montserrat(
+                          //           textStyle:
+                          //           Theme
+                          //               .of(context)
+                          //               .textTheme
+                          //               .titleSmall,
+                          //           fontWeight: FontWeight.bold,
+                          //           color:Colors.white ,
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
 
-                              defaulttext = defaulttext +"=" +" ${searchsolutions.text}";
+                          Row(
+                            children: [
+                              InkWell(
+                                onTap:() async {
 
-                              getsearchSolutionResponse(defaulttext);
 
-                            },
-                            child:Container(
-                              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                              // width: MediaQuery.of(context).size.width * .2,
-                              width: MediaQuery.of(context).size.width * .15,
+                                  // if (searchsolutions.text != "") {
+                                  //   /// here you perform your search
+                                  //   _userAboutMEProvider.searchsolutions(searchsolutions.text.toString());
+                                  // }
 
-                              // height: 60,
-                              decoration: BoxDecoration(
-                                color:Colors.blue ,
-                                border: Border.all(
+                                  if (searchsolutions.text.isEmpty ||_userAboutMEProvider.combinedSolutionsResults.isNotEmpty) {
+                                    if(searchsolutions.text.isEmpty){
+                                      toastification.show(context: context,
+                                          title: Text('Search box is empty'),
+                                          autoCloseDuration: Duration(milliseconds: 2500),
+                                          alignment: Alignment.center,
+                                          backgroundColor: Colors.red,
+                                          foregroundColor: Colors.white,
+                                          icon: Icon(Icons.error, color: Colors.white,),
+                                          animationDuration: Duration(milliseconds: 1000),
+                                          showProgressBar: false
+                                      );
+                                    }
+                                    else if(_userAboutMEProvider.combinedSolutionsResults.isNotEmpty){
+                                      toastification.show(context: context,
+                                          title: Text('Press clear all to search'),
+                                          autoCloseDuration: Duration(milliseconds: 2500),
+                                          alignment: Alignment.center,
+                                          backgroundColor: Colors.red,
+                                          foregroundColor: Colors.white,
+                                          icon: Icon(Icons.error, color: Colors.white,),
+                                          animationDuration: Duration(milliseconds: 1000),
+                                          showProgressBar: false
+                                      );
+                                    }
+                                    /// here you perform your search
+                                  }
+                                  else {
+                                    _userAboutMEProvider.searchsolutions(searchsolutions.text.toString());
+                                    FirebaseFirestore.instance.collection('ChatGpt-Settings').doc("Prompt").get().then((value) {
+
+                                      var defaulttext1 = value['prompt_1'];
+                                      var defaulttext2 = value['prompt_2'];
+                                      var defaulttext3 = "$defaulttext1 where [xxxx] = ${searchsolutions.text}";
+
+                                      print("defaulttext3.text: ${defaulttext3}");
+                                      print("defaulttext2.text: ${defaulttext2}");
+
+                                      ResponsefromInsightABme(defaulttext3, defaulttext2);
+
+                                    });
+                                  }
+
+
+                                },
+                                child:Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                                  // width: MediaQuery.of(context).size.width * .2,
+                                  width: MediaQuery.of(context).size.width * .15,
+
+                                  // height: 60,
+                                  decoration: BoxDecoration(
                                     color:Colors.blue ,
-                                    width: 1.0),
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              child: Center(
-                                // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                child: Text(
-                                  'Search',
-                                  style: GoogleFonts.montserrat(
-                                    textStyle:
-                                    Theme
-                                        .of(context)
-                                        .textTheme
-                                        .titleSmall,
-                                    fontWeight: FontWeight.bold,
-                                    color:Colors.white ,
+                                    border: Border.all(
+                                        color:Colors.blue ,
+                                        width: 1.0),
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  child: Center(
+                                    // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                    child: Text(
+                                      'Search',
+                                      style: GoogleFonts.montserrat(
+                                        textStyle:
+                                        Theme
+                                            .of(context)
+                                            .textTheme
+                                            .titleSmall,
+                                        fontWeight: FontWeight.bold,
+                                        color:Colors.white ,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
+                              SizedBox(width: 10,),
+                              InkWell(
+                                onTap:() async {
+
+                                  _userAboutMEProvider.clearsuggestedsolutions(searchsolutions);
+
+
+                                },
+                                child:Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                                  // width: MediaQuery.of(context).size.width * .2,
+                                  width: MediaQuery.of(context).size.width * .15,
+
+                                  // height: 60,
+                                  decoration: BoxDecoration(
+                                    color:Colors.blue ,
+                                    border: Border.all(
+                                        color:Colors.blue ,
+                                        width: 1.0),
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  child: Center(
+                                    // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                    child: Text(
+                                      'Clear all',
+                                      style: GoogleFonts.montserrat(
+                                        textStyle:
+                                        Theme
+                                            .of(context)
+                                            .textTheme
+                                            .titleSmall,
+                                        fontWeight: FontWeight.bold,
+                                        color:Colors.white ,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
 
                           SizedBox(height: 10,),
@@ -6191,17 +6482,44 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                     (userAboutMEProvider.combinedSolutionsResults.isEmpty) ?
                                     Container(
                                       // height: 350,
-                                      height: MediaQuery.of(context).size.height * .6,
+                                      height: MediaQuery.of(context).size.height * .6,//.48,
                                       width: MediaQuery.of(context).size.width ,
-
                                       child: Center(
-                                        child: Text("No Suggestions Yet",
+                                        child: (userAboutMEProvider.isLoadingMore==false) ?
+                                        TextAnimatorSequence(
+                                          children: [
+                                            TextAnimator('Loading...',
+                                                incomingEffect: WidgetTransitionEffects.incomingScaleDown(),
+                                                atRestEffect: WidgetRestingEffects.bounce(),
+                                                outgoingEffect: WidgetTransitionEffects.outgoingScaleUp(),
+                                                style: GoogleFonts.montserrat(textStyle: const TextStyle(fontWeight: FontWeight.w900, fontSize: 20))),
+                                            TextAnimator('Suggested solutions...',
+                                                incomingEffect: WidgetTransitionEffects.incomingSlideInFromLeft(),
+                                                atRestEffect: WidgetRestingEffects.bounce(),
+                                                outgoingEffect: WidgetTransitionEffects.outgoingSlideOutToBottom(),
+                                                style: GoogleFonts.montserrat(textStyle: const TextStyle(fontWeight: FontWeight.w900, fontSize: 20))),
+                                            TextAnimator('wait...',
+                                                incomingEffect: WidgetTransitionEffects(blur: const Offset(2, 2), duration: const Duration(milliseconds: 600)),
+                                                atRestEffect: WidgetRestingEffects.wave(),
+                                                outgoingEffect: WidgetTransitionEffects(blur: const Offset(2, 2), duration: const Duration(milliseconds: 600)),
+                                                style: GoogleFonts.montserrat(textStyle: const TextStyle(fontWeight: FontWeight.w900, fontSize: 20))),
+                                          ],
+                                          tapToProceed: true,
+                                          loop: true,
+                                          transitionTime: const Duration(seconds: 4),
+                                        )
+                                        // TextAnimator("loading",
+                                        //   atRestEffect: WidgetRestingEffects.wave(
+                                        //       curve: Curves.slowMiddle
+                                        //   ),
+                                        // )
+                                            : Text("No Suggestions Yet",
                                           overflow: TextOverflow.ellipsis,
                                           style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.headlineLarge,
                                               fontWeight: FontWeight.bold,
                                               color: Colors.black),),),
                                       decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.black),
+                                        border: Border.all(color: Colors.orange),
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                     ) :
@@ -6209,7 +6527,7 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                       height: MediaQuery.of(context).size.height * .6,
                                       // width: MediaQuery.of(context).size.width * .46,
                                       decoration: BoxDecoration(
-                                        border: (userAboutMEProvider.combinedSolutionsResults.isEmpty) ?  Border.all(color: Colors.black) : Border.all(color: Colors.black),
+                                        border: (userAboutMEProvider.combinedSolutionsResults.isEmpty) ?  Border.all(color: Colors.green) : Border.all(color: Colors.green),
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: Container(
@@ -6241,7 +6559,7 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                                   width: 470,
                                                   // height: 300,
                                                   decoration: BoxDecoration(
-                                                    border: Border.all(color: Colors.black26),
+                                                    border: Border.all(color: Colors.green),
                                                     borderRadius: BorderRadius.circular(20),
                                                   ),
                                                   child: RecommendedSolutionsListTile(document, i, RelatedSolutionsdocuments)
@@ -6286,17 +6604,17 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                               fontWeight: FontWeight.bold,
                                               color: Colors.black),),),
                                           decoration: BoxDecoration(
-                                            border: Border.all(color: Colors.black),
+                                            border: Border.all(color: Colors.green),
                                             borderRadius: BorderRadius.circular(20),
                                           ),
                                         ) : Container(
                                           height: MediaQuery.of(context).size.height * .6,
                                           // width: MediaQuery.of(context).size.width * .46,
                                           decoration: BoxDecoration(
-                                            border: Border.all(color: Colors.black),
+                                            border: Border.all(color: Colors.green),
                                             borderRadius: BorderRadius.circular(20),
                                           ),
-                                          // width: MediaQuery.of(context).size.width,
+                                          width: MediaQuery.of(context).size.width,
                                           child:SingleChildScrollView(
                                             // scrollDirection: Axis.horizontal,
                                             child: SingleChildScrollView(
@@ -6331,8 +6649,9 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                                   ),
                                                   DataColumn(
                                                       label: Container(
-                                                        // width: 140,
-                                                          child: Text('Confirm/Cancel')
+                                                          width: MediaQuery.of(context).size. width * .1,
+                                                          // color: Colors.grey,
+                                                          child: Center(child: Text('Confirm/Cancel'))
                                                       )
                                                   ),
 
@@ -6394,11 +6713,14 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                                           // height: 100,
                                                           // margin: EdgeInsets.all(5),
                                                           // width: 140,
+                                                          width: MediaQuery.of(context).size. width * .1,
                                                           child: (solution.isConfirmed==true) ?
                                                           Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
                                                             children: [
                                                               Row(
-                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                mainAxisAlignment: MainAxisAlignment.center,
                                                                 crossAxisAlignment: CrossAxisAlignment.center,
                                                                 children: [
                                                                   IconButton(
@@ -6445,18 +6767,22 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
 
                                                                 ],
                                                               ),
-                                                              Text('Confirmed',
-                                                                style: TextStyle(color: Colors.green),
+                                                              Center(
+                                                                child: Text('Confirmed',
+                                                                  style: TextStyle(color: Colors.green),
+                                                                ),
                                                               ),
-                                                              Text('${(userAboutMEProvider.newprovider[solution.id] == "Request of my employer") ? userAboutMEProvider.newInplace[solution.id] : userAboutMEProvider.newprovider[solution.id]}',
-                                                                style: TextStyle(color: Colors.red,fontSize: 10),
+                                                              Center(
+                                                                child: Text('${(userAboutMEProvider.newprovider[solution.id] == "Request of my employer") ? userAboutMEProvider.newInplace[solution.id] : userAboutMEProvider.newprovider[solution.id]}',
+                                                                  style: TextStyle(color: Colors.red,fontSize: 10),
+                                                                ),
                                                               ),
                                                             ],
                                                           )
                                                               :
                                                           Row(
-                                                            mainAxisAlignment: MainAxisAlignment.start,
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
                                                             children: [
                                                               IconButton(
                                                                 onPressed: () {
@@ -6469,7 +6795,8 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                                                 onPressed: () {
                                                                   showconfirmSolutionsDialogBox(solution.id, solution.label,solution.description, solution.Source, solution.Status,solution.tags,solution.CreatedBy,
                                                                       solution.CreatedDate,solution.ModifiedBy,solution.ModifiedDate,solution.OriginalDescription,solution.Impact,solution.Final_description,
-                                                                      solution.Category,solution.Keywords,"","", index,userAboutMEProvider.editsolutionss,solution.notes,solution.attachment,solution.InPlace,solution.Provider);
+                                                                      solution.Category,solution.Keywords,"","", index,userAboutMEProvider.editsolutionss,solution.notes,solution.attachment,solution.InPlace,solution.Provider,
+                                                                      solution.Help,solution.PositiveImpactstoEmployee,solution.PositiveImpactstoOrganisation,solution.RelatedSolutionsTags,solution.SuggestedChallengesTags);
                                                                   print("solution.isConfirmed: ${solution.isConfirmed}");
                                                                 },
                                                                 icon: Icon(Icons.check, color: Colors.green),
@@ -18439,7 +18766,8 @@ Thank you for being open to understanding me better and for considering my reque
   }
 
   void showconfirmChallengeDialogBox(Id,label,description,source,ChallengeStatus,tags,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,OriginalDescription,
-      Impact,Final_description,Category ,Keywords ,PotentialStrengths, HiddenStrengths, index, listname, Notes,Attachment){
+      Impact,Final_description,Category ,Keywords ,PotentialStrengths, HiddenStrengths, index, listname, Notes,Attachment,
+      ImpactToCoworker,ImpactToEmployee,NegativeImpactToOrganisation,RelatedChallengesTag, SuggestedChallengesTag){
 
     print("CreatedDate: $CreatedDate");
 
@@ -18577,12 +18905,17 @@ Thank you for being open to understanding me better and for considering my reque
                                   'Source': source,
                                   'Challenge Status': ChallengeStatus,
                                   'tags': tags,
+                                  'Related_challenges_tags': RelatedChallengesTag,
+                                  'Suggested_solutions_tags': SuggestedChallengesTag,
                                   'Created By': CreatedBy,
                                   'Created Date': createdDate,
                                   'Modified By': ModifiedBy,
                                   'Modified Date': ModifiedDate,
                                   'Original Description': OriginalDescription,
                                   'Impact': Impact,
+                                  'Impacts_to_Coworkers': ImpactToCoworker,
+                                  'Impacts_to_employee': ImpactToEmployee,
+                                  'Negative_impacts_to_organisation': NegativeImpactToOrganisation,
                                   'Final_description': Final_description,
                                   'Category': Category,
                                   'Keywords': Keywords,
@@ -19317,7 +19650,8 @@ Thank you for being open to understanding me better and for considering my reque
   }
 
   void showconfirmSolutionsDialogBox(Id,label,description,source,ChallengeStatus,tags,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,OriginalDescription,
-      Impact,Final_description,Category ,Keywords ,PotentialStrengths, HiddenStrengths, index, listname,Notes,Attachment, InPlace, Provider){
+      Impact,Final_description,Category ,Keywords ,PotentialStrengths, HiddenStrengths, index, listname,Notes,Attachment, InPlace, Provider,
+      Help,PositiveImpactstoEmployee,PositiveImpactstoOrganisation,RelatedSolutionsTags,SuggestedChallengesTags){
 
     // DateTime dateTime = CreatedDate.toDate();
     //
@@ -19471,6 +19805,11 @@ Thank you for being open to understanding me better and for considering my reque
                                     'Final_description': Final_description,
                                     'Category': Category,
                                     'Keywords': Keywords,
+                                    'Helps': Help,
+                                    'Positive_impacts_to_employee': PositiveImpactstoEmployee,
+                                    'Positive_impacts_to_organisation': PositiveImpactstoOrganisation,
+                                    'Related_solution_tags': RelatedSolutionsTags,
+                                    'Suggested_challenges_tags': SuggestedChallengesTags,
                                     'Potential Strengths': PotentialStrengths,
                                     'Hidden Strengths': HiddenStrengths,
                                     'AboutMe_Notes': NotesController.text,
@@ -20677,7 +21016,11 @@ Thank you for being open to understanding me better and for considering my reque
                 builder: (c,userAboutMEProvider, _){
                   if(userAboutMEProvider.editpreviewname != null || userAboutMEProvider.editpreviewDescription != null ||userAboutMEProvider.editpreviewFinalDescription != null ||
                       userAboutMEProvider.editpreviewId != null ||userAboutMEProvider.editpreviewImpact != null ||userAboutMEProvider.editpreviewKeywordssss.isNotEmpty ||
-                      userAboutMEProvider.editpreviewtags.isNotEmpty || userAboutMEProvider.editpreview !=null ){
+                      userAboutMEProvider.editpreviewtags.isNotEmpty || userAboutMEProvider.editpreview !=null ||
+                      userAboutMEProvider.editpreviewImpactToCoworker !=null || userAboutMEProvider.editpreviewImpactToEmployee !=null ||
+                      userAboutMEProvider.editpreviewNegativeImpactToOrganisation !=null || userAboutMEProvider.editpreviewRelatedChallengesTag.isNotEmpty ||
+                      userAboutMEProvider.editpreviewSuggestedChallengesTag.isNotEmpty
+                  ){
                     Label = userAboutMEProvider.editpreviewname;
                     Description = userAboutMEProvider.editpreviewDescription;
                     FinalDescription = userAboutMEProvider.editpreviewFinalDescription;
@@ -20686,18 +21029,20 @@ Thank you for being open to understanding me better and for considering my reque
                     keywords = userAboutMEProvider.editpreviewKeywordssss;
                     tags = userAboutMEProvider.editpreviewtags;
                     document = userAboutMEProvider.editpreview;
+                    ImpactToCoworker = userAboutMEProvider.editpreviewImpactToCoworker;
+                    ImpactToEmployee = userAboutMEProvider.editpreviewImpactToEmployee;
+                    NegativeImpactToOrganisation = userAboutMEProvider.editpreviewNegativeImpactToOrganisation;
+                    RelatedChallengesTag = userAboutMEProvider.editpreviewRelatedChallengesTag;
+                    SuggestedChallengesTag = userAboutMEProvider.editpreviewSuggestedChallengesTag;
                   }
                   _challengesProvider.addkeywordsList(keywords);
                   _challengesProvider.addProviderEditTagsList(tags);
 
                   return AlertDialog(
-                      insetPadding: EdgeInsets.symmetric(horizontal: MediaQuery
-                          .of(context)
-                          .size
-                          .width * 0.08, vertical: MediaQuery
-                          .of(context)
-                          .size
-                          .height * 0.04),
+                      insetPadding: EdgeInsets.symmetric(
+                          horizontal: MediaQuery.of(context).size.width * 0.08,
+                          vertical: MediaQuery.of(context).size.height * 0.04
+                      ),
                       icon: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -20710,7 +21055,12 @@ Thank you for being open to understanding me better and for considering my reque
                                 userAboutMEProvider.editpreviewImpact = null;
                                 userAboutMEProvider.editpreviewKeywordssss.clear();
                                 userAboutMEProvider.editpreviewtags.clear();
+                                userAboutMEProvider.editpreviewRelatedChallengesTag.clear();
+                                userAboutMEProvider.editpreviewSuggestedChallengesTag.clear();
                                 userAboutMEProvider.editpreview = null;
+                                userAboutMEProvider.editpreviewImpactToCoworker = null;
+                                userAboutMEProvider.editpreviewImpactToEmployee = null;
+                                userAboutMEProvider.editpreviewNegativeImpactToOrganisation = null;
                                 userAboutMEProvider.editborderColor = false;
                                 Navigator.pop(context);
                               },
@@ -20720,9 +21070,11 @@ Thank you for being open to understanding me better and for considering my reque
                       iconPadding: EdgeInsets.only(top: 8, right: 16),
                       content:   SizedBox(
                         width: double.maxFinite,
+                        // height: double.maxFinite,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Flexible(
                                 flex: 2,
@@ -20820,8 +21172,8 @@ Thank you for being open to understanding me better and for considering my reque
                                           SizedBox(height: 10,),
 
                                           (Impact==""|| Impact==null) ? Container() :  Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            crossAxisAlignment: CrossAxisAlignment.end,
                                             children: [
                                               // Text("Impact: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
                                               ///
@@ -20831,6 +21183,7 @@ Thank you for being open to understanding me better and for considering my reque
                                               //     fontSize: 20,
                                               //     color: Colors.grey),
                                               //   maxLines: null,)),
+                                              Image.asset("assets/images/circumstance.png", height: 45,width: 45),
 
                                               Flexible(
                                                 child: BubbleSpecialThree(
@@ -20839,9 +21192,9 @@ Thank you for being open to understanding me better and for considering my reque
                                                   tail: true,
                                                   isSender: false,
                                                   textStyle: GoogleFonts.montserrat(
-                                                      fontWeight: FontWeight.w500,
+                                                      // fontWeight: FontWeight.w500,
                                                       fontStyle: FontStyle.italic,
-                                                      fontSize: 20,
+                                                      fontSize: 16,
                                                       color: Colors.black),
                                                 ),
                                               ),
@@ -20865,7 +21218,108 @@ Thank you for being open to understanding me better and for considering my reque
 
                                           SizedBox(height: 10,),
 
+                                          (ImpactToEmployee==""|| ImpactToEmployee==null) ? Container() :  Row(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            children: [
+                                              // Text("Impact: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                                              ///
+                                              // Flexible(child: Text(Impact,  style: GoogleFonts.montserrat(
+                                              //     fontWeight: FontWeight.w500,
+                                              //     fontStyle: FontStyle.italic,
+                                              //     fontSize: 20,
+                                              //     color: Colors.grey),
+                                              //   maxLines: null,)),
+                                              Image.asset("assets/images/sad.png", height: 45,width: 45),
 
+                                              Flexible(
+                                                child: BubbleSpecialThree(
+                                                  text: ImpactToEmployee,
+                                                  color: userAboutMEProvider.editborderColor==false ? Colors.orange : Colors.green,
+                                                  tail: true,
+                                                  isSender: false,
+                                                  textStyle: GoogleFonts.montserrat(
+                                                      // fontWeight: FontWeight.w500,
+                                                      fontStyle: FontStyle.italic,
+                                                      fontSize: 16,
+                                                      color: Colors.black),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+
+                                          SizedBox(height: 10,),
+
+                                          (NegativeImpactToOrganisation==""|| NegativeImpactToOrganisation==null) ? Container() :  Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            children: [
+                                              // Text("Impact: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                                              ///
+                                              // Flexible(child: Text(Impact,  style: GoogleFonts.montserrat(
+                                              //     fontWeight: FontWeight.w500,
+                                              //     fontStyle: FontStyle.italic,
+                                              //     fontSize: 20,
+                                              //     color: Colors.grey),
+                                              //   maxLines: null,)),
+                                              Image.asset("assets/images/request2.png", height: 45,width: 45),
+
+                                              SizedBox(width: 10,),
+
+                                              Flexible(
+                                                child: Container(
+                                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                    decoration: BoxDecoration(
+                                                    color: Colors.blue,
+                                                    borderRadius:BorderRadius.circular(10),
+                                                  ),
+                                                  child: Text(NegativeImpactToOrganisation,style: GoogleFonts.montserrat(
+                                                    // fontWeight: FontWeight.w600,
+                                                      fontSize: 16,
+                                                      color: Colors.black),
+                                                    maxLines: null,)
+                                                )
+                                              ),
+                                            ],
+                                          ),
+
+
+                                          SizedBox(height: 10,),
+
+                                          (ImpactToCoworker==""|| ImpactToCoworker==null) ? Container() :  Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            children: [
+                                              // Text("Impact: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                                              ///
+                                              // Flexible(child: Text(Impact,  style: GoogleFonts.montserrat(
+                                              //     fontWeight: FontWeight.w500,
+                                              //     fontStyle: FontStyle.italic,
+                                              //     fontSize: 20,
+                                              //     color: Colors.grey),
+                                              //   maxLines: null,)),
+                                              Image.asset("assets/images/request2.png", height: 45,width: 45),
+
+                                              SizedBox(width: 10,),
+
+                                              Flexible(
+                                                  child: Container(
+                                                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.blue,
+                                                        borderRadius:BorderRadius.circular(10),
+                                                      ),
+                                                      child: Text(ImpactToCoworker,style: GoogleFonts.montserrat(
+                                                        // fontWeight: FontWeight.w600,
+                                                          fontSize: 16,
+                                                          color: Colors.black),
+                                                        maxLines: null,)
+                                                  )
+                                              ),
+                                            ],
+                                          ),
+
+                                          SizedBox(height: 10,),
 
 
                                           (_challengesProvider.keywords==""|| _challengesProvider.keywords==null||_challengesProvider.keywords.isEmpty) ? Container() :
@@ -20890,13 +21344,13 @@ Thank you for being open to understanding me better and for considering my reque
                                                             print("addKeywordProvider.keywords: ${addKeywordProvider.keywords}");
                                                             return InkWell(
                                                               onTap: (){
-                                                                if(_tabController.index == 3){
+                                                                if(_tabController.index == 4){
                                                                   searchChallengescontroller.text = item;
                                                                   _challengesProvider.loadDataForPageSearchFilter(item);
                                                                   // Navigator.pop(context);
                                                                   showChallengesSelector();
                                                                 }
-                                                                if(_tabController.index == 4){
+                                                                if(_tabController.index == 5){
                                                                   searchbyCatcontroller.text = item;
                                                                   _addKeywordProvider.loadDataForPageSearchFilter(searchbyCatcontroller.text.toString());
                                                                   // Navigator.pop(context);
@@ -20955,13 +21409,13 @@ Thank you for being open to understanding me better and for considering my reque
                                                           children: addKeywordProvider.ProviderEditTags.map((item){
                                                             return InkWell(
                                                               onTap: (){
-                                                                if(_tabController.index == 3){
+                                                                if(_tabController.index == 4){
                                                                   searchChallengescontroller.text = item;
                                                                   _challengesProvider.loadDataForPageSearchFilter(item);
                                                                   // Navigator.pop(context);
                                                                   showChallengesSelector();
                                                                 }
-                                                                if(_tabController.index == 4){
+                                                                if(_tabController.index == 5){
                                                                   searchbyCatcontroller.text = item;
                                                                   _addKeywordProvider.loadDataForPageSearchFilter(searchbyCatcontroller.text.toString());
                                                                   // Navigator.pop(context);
@@ -21005,7 +21459,7 @@ Thank you for being open to understanding me better and for considering my reque
                                           Container(
                                             height: 170 ,
                                             child: FutureBuilder(
-                                              future: getRelatedChallenges(RelatedChallengesTag, keywords),
+                                              future: getRelatedChallenges(tags, keywords),
                                               builder: (context, snapshot) {
                                                 if (snapshot.connectionState == ConnectionState.waiting) {
                                                   return Container(
@@ -21139,7 +21593,12 @@ Thank you for being open to understanding me better and for considering my reque
                                                                                             challengesData['id'],
                                                                                             isTrueOrFalse,
                                                                                             challengesData,
-                                                                                          false
+                                                                                          false,
+                                                                                          challengesData['Impacts_to_Coworkers'],
+                                                                                          challengesData['Impacts_to_employee'],
+                                                                                          challengesData['Negative_impacts_to_organisation'],
+                                                                                          challengesData['Related_challenges_tags'],
+                                                                                          challengesData['Suggested_solutions_tags'],
                                                                                         );
                                                                                       },
                                                                                       icon: Icon(Icons.visibility, color: Colors.blue,)
@@ -21272,7 +21731,7 @@ Thank you for being open to understanding me better and for considering my reque
                                           height: 170 ,
                                           width: MediaQuery.of(context).size.width,
                                           child: FutureBuilder(
-                                            future: getRelatedSolutions(SuggestedChallengesTag, keywords),
+                                            future: getRelatedSolutions(tags, keywords),
                                             builder: (context, snapshot) {
                                               if (snapshot.connectionState == ConnectionState.waiting) {
                                                 return Container(
@@ -21781,7 +22240,10 @@ Thank you for being open to understanding me better and for considering my reque
                 builder: (c,userAboutMEProvider, _){
                   if(userAboutMEProvider.editpreviewname != null || userAboutMEProvider.editpreviewDescription != null ||userAboutMEProvider.editpreviewFinalDescription != null ||
                       userAboutMEProvider.editpreviewId != null ||userAboutMEProvider.editpreviewImpact != null ||userAboutMEProvider.editpreviewKeywordssss.isNotEmpty ||
-                      userAboutMEProvider.editpreviewtags.isNotEmpty || userAboutMEProvider.editpreview !=null ){
+                      userAboutMEProvider.editpreviewtags.isNotEmpty || userAboutMEProvider.editpreview !=null ||
+                  userAboutMEProvider.editpreviewImpactToCoworker !=null || userAboutMEProvider.editpreviewImpactToEmployee !=null ||
+                  userAboutMEProvider.editpreviewNegativeImpactToOrganisation !=null || userAboutMEProvider.editpreviewRelatedChallengesTag.isNotEmpty ||
+                  userAboutMEProvider.editpreviewSuggestedChallengesTag.isNotEmpty){
                     Label = userAboutMEProvider.editpreviewname;
                     Description = userAboutMEProvider.editpreviewDescription;
                     FinalDescription = userAboutMEProvider.editpreviewFinalDescription;
@@ -21790,6 +22252,12 @@ Thank you for being open to understanding me better and for considering my reque
                     keywords = userAboutMEProvider.editpreviewKeywordssss;
                     tags = userAboutMEProvider.editpreviewtags;
                     document = userAboutMEProvider.editpreview;
+                    Help = userAboutMEProvider.editpreviewImpactToCoworker;
+                    PositiveImpactstoEmployee = userAboutMEProvider.editpreviewImpactToEmployee;
+                    PositiveImpactstoOrganisation = userAboutMEProvider.editpreviewNegativeImpactToOrganisation;
+                    RelatedSolutionsTags = userAboutMEProvider.editpreviewRelatedChallengesTag;
+                    SuggestedChallengesTags = userAboutMEProvider.editpreviewSuggestedChallengesTag;
+
                   }
                   _challengesProvider.addkeywordsList(keywords);
                   _challengesProvider.addProviderEditTagsList(tags);
@@ -21827,6 +22295,7 @@ Thank you for being open to understanding me better and for considering my reque
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Flexible(
                                 flex: 2,
@@ -21935,6 +22404,8 @@ Thank you for being open to understanding me better and for considering my reque
                                               //     fontSize: 20,
                                               //     color: Colors.grey),
                                               //   maxLines: null,)),
+                                              Image.asset("assets/images/circumstance.png", height: 45,width: 45),
+
                                               Flexible(
                                                 child: BubbleSpecialThree(
                                                   text: Impact,
@@ -21942,9 +22413,9 @@ Thank you for being open to understanding me better and for considering my reque
                                                   tail: true,
                                                   isSender: false,
                                                   textStyle: GoogleFonts.montserrat(
-                                                      fontWeight: FontWeight.w500,
+                                                      // fontWeight: FontWeight.w500,
                                                       fontStyle: FontStyle.italic,
-                                                      fontSize: 20,
+                                                      fontSize: 16,
                                                       color: Colors.black),
                                                 ),
                                               )
@@ -21984,7 +22455,7 @@ Thank you for being open to understanding me better and for considering my reque
                                           SizedBox(height: 10,),
                                           (PositiveImpactstoEmployee==""|| PositiveImpactstoEmployee==null) ? Container() :  Row(
                                               mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.end,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
                                               children: [
                                                 // Text("Impact: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
                                                 ///
@@ -21994,19 +22465,23 @@ Thank you for being open to understanding me better and for considering my reque
                                                 //     fontSize: 20,
                                                 //     color: Colors.grey),
                                                 //   maxLines: null,)),
-                                                Icon(Icons.person),
+                                                Image.asset("assets/images/request1.png", height: 45,width: 45),
+
+                                                SizedBox(width: 10,),
+
                                                 Flexible(
-                                                  child: BubbleSpecialThree(
-                                                    text: PositiveImpactstoEmployee,
-                                                    color: userAboutMEProvider.editborderColor==false ? Colors.green : Colors.orange,
-                                                    tail: true,
-                                                    isSender: false,
-                                                    textStyle: GoogleFonts.montserrat(
-                                                        fontWeight: FontWeight.w500,
-                                                        fontStyle: FontStyle.italic,
-                                                        fontSize: 20,
-                                                        color: Colors.black),
-                                                  ),
+                                                    child: Container(
+                                                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                        decoration: BoxDecoration(
+                                                          color: Colors.blue,
+                                                          borderRadius:BorderRadius.circular(10),
+                                                        ),
+                                                        child: Text(PositiveImpactstoEmployee,style: GoogleFonts.montserrat(
+                                                          // fontWeight: FontWeight.w600,
+                                                            fontSize: 16,
+                                                            color: Colors.black),
+                                                          maxLines: null,)
+                                                    )
                                                 )
                                               ]
                                           ),
@@ -22025,19 +22500,22 @@ Thank you for being open to understanding me better and for considering my reque
                                                 //     fontSize: 20,
                                                 //     color: Colors.grey),
                                                 //   maxLines: null,)),
-                                                Icon(Icons.account_balance),
+                                                Image.asset("assets/images/request2.png", height: 45,width: 45),
+
+                                                SizedBox(width: 10,),
                                                 Flexible(
-                                                  child: BubbleSpecialThree(
-                                                    text: PositiveImpactstoOrganisation,
-                                                    color: userAboutMEProvider.editborderColor==false ? Colors.green : Colors.orange,
-                                                    tail: true,
-                                                    isSender: false,
-                                                    textStyle: GoogleFonts.montserrat(
-                                                        fontWeight: FontWeight.w500,
-                                                        fontStyle: FontStyle.italic,
-                                                        fontSize: 20,
-                                                        color: Colors.black),
-                                                  ),
+                                                    child: Container(
+                                                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                        decoration: BoxDecoration(
+                                                          color: Colors.blue,
+                                                          borderRadius:BorderRadius.circular(10),
+                                                        ),
+                                                        child: Text(PositiveImpactstoOrganisation,style: GoogleFonts.montserrat(
+                                                          // fontWeight: FontWeight.w600,
+                                                            fontSize: 16,
+                                                            color: Colors.black),
+                                                          maxLines: null,)
+                                                    )
                                                 )
                                               ]
                                           ),
@@ -22068,13 +22546,13 @@ Thank you for being open to understanding me better and for considering my reque
                                                             print("addKeywordProvider.keywords: ${addKeywordProvider.keywords}");
                                                             return InkWell(
                                                               onTap: (){
-                                                                if(_tabController.index == 2){
+                                                                if(_tabController.index == 4){
                                                                   searchChallengescontroller.text = item;
                                                                   _challengesProvider.loadDataForPageSearchFilter(item);
                                                                   // Navigator.pop(context);
                                                                   showChallengesSelector();
                                                                 }
-                                                                if(_tabController.index == 3){
+                                                                if(_tabController.index == 5){
                                                                   searchbyCatcontroller.text = item;
                                                                   _addKeywordProvider.loadDataForPageSearchFilter(searchbyCatcontroller.text.toString());
                                                                   // Navigator.pop(context);
@@ -22321,7 +22799,12 @@ Thank you for being open to understanding me better and for considering my reque
                                                                                             solutionData['id'],
                                                                                             isTrueOrFalse,
                                                                                             solutionData,
-                                                                                          false
+                                                                                          false,
+                                                                                          solutionData['Helps'],
+                                                                                          solutionData['Positive_impacts_to_employee'],
+                                                                                          solutionData['Positive_impacts_to_organisation'],
+                                                                                          solutionData['Related_solution_tags'],
+                                                                                          solutionData['Suggested_challenges_tags'],
                                                                                         );
                                                                                       },
 
