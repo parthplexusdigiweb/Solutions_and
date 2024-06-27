@@ -255,7 +255,7 @@ Date
   Future<DocumentSnapshot> getFirstDraftDocument() async {
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AboutMe')
-          .where('AB_Status', isEqualTo: 'main')
+          .where('AB_Status', isEqualTo: "main")
           .where("Email", isEqualTo: widget.AdminName)
           .orderBy('AB_id', descending: true)
           .limit(1).get();
@@ -264,10 +264,10 @@ Date
         print("querySnapshot.docs getFirstDraftDocument: ${querySnapshot.docs.length}");
         return querySnapshot.docs.first;
       } else {
-        throw Exception("No draft document found");
+        throw "No docs found, logout and relogin to this portal";
       }
     } catch (e) {
-      throw Exception("Error getting first draft document: $e");
+      throw e;
     }
   }
 
@@ -10861,6 +10861,7 @@ Date
 
   Future<void> duplicateDocument(context,documentId, int AB_id,Purpose_of_report) async {
     try {
+      ProgressDialog.show(context, "Saving", Icons.save);
       CollectionReference collectionReference = FirebaseFirestore.instance.collection('AboutMe');
 
       DocumentSnapshot documentSnapshot = await collectionReference.doc(documentId).get();
@@ -10872,7 +10873,7 @@ Date
       var createdAt = DateFormat('yyyy-MM-dd, HH:mm:ss').format(DateTime.now());
 
       data['AB_id'] = AB_id; // Update with the new value you want
-      data['AB_Status'] = "Draft"; // Update with the new value you want
+      data['AB_Status'] = "-"; // Update with the new value you want
       data['Purpose_of_report'] = Purpose_of_report; // Update with the new value you want
       data['About_Me_Label'] = Purpose_of_report;
       data['Report_sent_to'] = []; // Update with the new value you want
@@ -10890,7 +10891,7 @@ Date
 
       print('duplicatedDocumentSnapshot: ${duplicatedDocumentSnapshot.id}');
       print('duplicatedData: ${duplicatedData}');
-
+      ProgressDialog.hide();
 
       // await showUserLogedInEditAboutMeDialogBox(duplicatedDocumentSnapshot, 0);
 

@@ -1816,7 +1816,8 @@ Date
                                                                   foregroundColor: Colors.white,
                                                                   icon: Icon(Icons.check_circle, color: Colors.white,),
                                                                   animationDuration: Duration(milliseconds: 1000),
-                                                                  showProgressBar: false
+                                                                  showProgressBar: false,
+                                                                closeButtonShowType: CloseButtonShowType.always
                                                               );
                                                             },
                                                             child: Container(
@@ -1894,12 +1895,21 @@ Date
 
                                                                 QuerySnapshot count = await FirebaseFirestore.instance
                                                                     .collection('AboutMe').where("Email",isEqualTo: aboutMeData.get("Email"))
-                                                                    .where("isPPS", isEqualTo: true).get();
+                                                                    .where("isPPS", isEqualTo: true)
+                                                                    .where("AB_Status", isNotEqualTo: "main")
+                                                                    .get();
 
                                                                 print("count: ${count.size}");
+                                                                String name = "";
+                                                                if(count.size==0){
+                                                                  name = "$createdAt ${aboutMeData.get("User_Name")}_Personal Private Summary.pdf";
+                                                                }
+                                                                else{
+                                                                  name = "$createdAt ${aboutMeData.get("User_Name")}_Personal Private Summary(${count.size + 1}).pdf";
+                                                                }
                                                                 int total = count.size + 1;
                                                                 setState(() {
-                                                                  widget.duplicateDocument(context, aboutMeData.id, AB_id, "$createdAt ${aboutMeData.get("User_Name")}_PPS(${count.size + 1})");
+                                                                  widget.duplicateDocument(context, aboutMeData.id, AB_id, name);
                                                                   // Navigator.pop(ctx);
                                                                 });
                                                                 // Navigator.pop(ctx);
@@ -2879,7 +2889,7 @@ Date
           children: [
             Container(
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height *.9,
+                height: MediaQuery.of(context).size.height * .9,
 
                 padding: EdgeInsets.all(20),
                 margin: EdgeInsets.all(20),
@@ -3017,30 +3027,26 @@ Date
                           //
                           Container(
                             // color: Colors.red,
-                            width: MediaQuery.of(context).size.width * 0.22,
-                            child: Center(
-                                child: Text('Filename',style: Theme.of(context).textTheme.titleMedium)
-                            ),
+                            width: MediaQuery.of(context).size.width * 0.35,
+                            child: Text('Filename',style: Theme.of(context).textTheme.titleMedium),
                           ),
                           SizedBox(width: 4,),
 
-                          Container(
-                            // color: Colors.green,
-
-                            width: MediaQuery.of(context).size.width * 0.15,
-                            child: Center(
-                                child: Text('Date saved',style: Theme.of(context).textTheme.titleMedium)
-                            ),
-                          ),
-                          SizedBox(width: 4,),
+                          // Container(
+                          //   // color: Colors.green,
+                          //
+                          //   width: MediaQuery.of(context).size.width * 0.15,
+                          //   child: Center(
+                          //       child: Text('Date saved',style: Theme.of(context).textTheme.titleMedium)
+                          //   ),
+                          // ),
+                          // SizedBox(width: 4,),
 
                           Container(
                             // color: Colors.red,
 
                             width: MediaQuery.of(context).size.width * 0.13,
-                            child: Center(
-                                child: Text('Status',style: Theme.of(context).textTheme.titleMedium)
-                            ),
+                            child: Center(child: Text('Status',style: Theme.of(context).textTheme.titleMedium)),
                           ),
                           SizedBox(width: 4,),
 
@@ -3053,27 +3059,27 @@ Date
                           //   ),
                           // ),
                           // SizedBox(width: 4,),
-
-                          Container(
-                            // color: Colors.red,
-
-                            width: MediaQuery.of(context).size.width * 0.178,
-                            child: Center(
-                                child: Text('Sent to',style: Theme.of(context).textTheme.titleMedium)
-                            ),
-                          ),
-                          SizedBox(width: 4,),
-
-                          Container(
-                            // color: Colors.green,
-
-                            width: MediaQuery.of(context).size.width * 0.12,
-                            child: Center(
-                                child: Text('Date sent',style: Theme.of(context).textTheme.titleMedium)
-                            ),
-                          ),
-                          SizedBox(width: 4,),
-
+///
+//                           Container(
+//                             // color: Colors.red,
+//
+//                             width: MediaQuery.of(context).size.width * 0.178,
+//                             child: Center(
+//                                 child: Text('Sent to',style: Theme.of(context).textTheme.titleMedium)
+//                             ),
+//                           ),
+//                           SizedBox(width: 4,),
+//
+//                           Container(
+//                             // color: Colors.green,
+//
+//                             width: MediaQuery.of(context).size.width * 0.12,
+//                             child: Center(
+//                                 child: Text('Date sent',style: Theme.of(context).textTheme.titleMedium)
+//                             ),
+//                           ),
+//                           SizedBox(width: 4,),
+///
 
                           //
                           // Container(
@@ -3141,6 +3147,9 @@ Date
 
                             dataList = snapshot.data!.docs.toList();
 
+                            if(dataList.isEmpty){
+                              return Center(child: Text("No docs Availabele"));
+                            }
                             print("snapshot.data! dataList: ${snapshot.data!.docs.first.id}");
                             // documentId = snapshot.data!.docs.first.id;
                             ///
@@ -3182,7 +3191,7 @@ Date
                                     sentDate2 = dataList[i]['Report_sent_to'].length > 1 ? dataList[i]['Report_sent_to'][1]["datetime"] ?? "" : "";
 
 
-                                    return Column(
+                                    return (dataList[i]["AB_Status"]=="main" && dataList[i]["About_Me_Label"]=="PPS") ? SizedBox() : Column(
                                       children: [
                                         Container(
                                           padding: EdgeInsets.all(10),
@@ -3226,15 +3235,17 @@ Date
                                               Container(
                                                 // color: Colors.cyan,
 
-                                                  width: MediaQuery.of(context).size.width * 0.22,
-                                                  child: Center(child: Text(dataList[i]['About_Me_Label'].toString(),style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
+                                                  width: MediaQuery.of(context).size.width * 0.35,
+                                                  child: Text(dataList[i]['About_Me_Label'].toString(),style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis)),
 
 
-                                              Container(
-                                                // color: Colors.lime,
+                                              // Container(
+                                              //   // color: Colors.lime,
+                                              //
+                                              //     width: MediaQuery.of(context).size.width * 0.15,
+                                              //     child: Center(child: Text(dataList[i]['Created_Date'].toString(),style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
 
-                                                  width: MediaQuery.of(context).size.width * 0.15,
-                                                  child: Center(child: Text(dataList[i]['Created_Date'].toString(),style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
+
                                               Container(
                                                 // color: Colors.cyan,
 
@@ -3246,51 +3257,51 @@ Date
                                               //
                                               //     width: MediaQuery.of(context).size.width * 0.08,
                                               //     child: Center(child: Text(dataList[i]['Purpose'].toString(),style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
-
-                                              Column(
-                                                children: [
-                                                  Container(
-                                                    // color: Colors.cyan,
-
-                                                      width: MediaQuery.of(context).size.width * 0.178,
-                                                      child: Center(child: Text( sentTo == "" && email == "" ? "_" : "$sentTo: $email",style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
-
-                                                  Column(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: dataList[i]['Report_sent_to_cc'].map<Widget>((recipient) {
-                                                      final name = recipient['name'];
-                                                      final email = recipient['email'];
-                                                      final sentTo = name.isNotEmpty ? name : email;
-
-                                                      return Container(
-                                                        // color: Colors.lime,
-
-                                                        width: MediaQuery.of(context).size.width * 0.178,
-                                                        child: Center(
-                                                          child: Text(sentTo.isNotEmpty ? "$sentTo: $email" : "",
-                                                            style: Theme.of(context).textTheme.titleMedium,
-                                                            overflow: TextOverflow.ellipsis,
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }).toList(),
-                                                  ),
-
-                                                ],
-                                              ),
-
-
-                                              Container(
-                                                // color: Colors.cyan,
-
-                                                  width: MediaQuery.of(context).size.width * 0.12,
-                                                  child: Center(child: Text(sentDate == "" ? "_" : "$sentDate",style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
-
+///
+//                                               Column(
+//                                                 children: [
+//                                                   Container(
+//                                                     // color: Colors.cyan,
+//
+//                                                       width: MediaQuery.of(context).size.width * 0.178,
+//                                                       child: Center(child: Text( sentTo == "" && email == "" ? "_" : "$sentTo: $email",style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
+//
+//                                                   Column(
+//                                                     mainAxisAlignment: MainAxisAlignment.start,
+//                                                     crossAxisAlignment: CrossAxisAlignment.start,
+//                                                     children: dataList[i]['Report_sent_to_cc'].map<Widget>((recipient) {
+//                                                       final name = recipient['name'];
+//                                                       final email = recipient['email'];
+//                                                       final sentTo = name.isNotEmpty ? name : email;
+//
+//                                                       return Container(
+//                                                         // color: Colors.lime,
+//
+//                                                         width: MediaQuery.of(context).size.width * 0.178,
+//                                                         child: Center(
+//                                                           child: Text(sentTo.isNotEmpty ? "$sentTo: $email" : "",
+//                                                             style: Theme.of(context).textTheme.titleMedium,
+//                                                             overflow: TextOverflow.ellipsis,
+//                                                           ),
+//                                                         ),
+//                                                       );
+//                                                     }).toList(),
+//                                                   ),
+//
+//                                                 ],
+//                                               ),
+//
+//
+//                                               Container(
+//                                                 // color: Colors.cyan,
+//
+//                                                   width: MediaQuery.of(context).size.width * 0.12,
+//                                                   child: Center(child: Text(sentDate == "" ? "_" : "$sentDate",style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
+///
                                               Container(
                                                   width: MediaQuery.of(context).size.width * 0.1,
                                                   // color: Colors.lime,
-                                                  child:(dataList[i]['AB_Status'].toString()!="main") ? Center(child: Row(
+                                                  child:Center(child: Row(
                                                     mainAxisAlignment: MainAxisAlignment.center,
                                                     children: [
 //                                                       IconButton(
@@ -3401,7 +3412,7 @@ Date
                                                           },
                                                           icon: Icon(Icons.edit_note,)),
 
-                                                      if(dataList[i]['AB_Status'].toString()!="main")
+                                                      if(dataList[i]['AB_Status'].toString()!="-")
                                                       IconButton(
                                                           iconSize: 25,
                                                           color: primaryColorOfApp,
@@ -3419,7 +3430,7 @@ Date
                                                       // SizedBox(width: 20,),
                                                     ],
                                                   ),
-                                                  ) : SizedBox()
+                                                  )
                                               ),
                                             ],
                                           ),
@@ -3464,8 +3475,9 @@ Date
   Widget MyLibraryScreen(){
     return Center(
       child: Container(
+        margin: EdgeInsets.all(10),
         width: MediaQuery.of(context).size.width ,
-        height: MediaQuery.of(context).size.height * 0.2,
+        height: MediaQuery.of(context).size.height * 0.3,
         child: Card(
           color: Colors.white,
           child: Center(
@@ -3602,7 +3614,7 @@ Date
                                     Expanded(
                                       child: Text(
                                         // 'Solutions',
-                                        'Medical and personal document',
+                                        'Medical and personal documents',
                                         overflow: TextOverflow.ellipsis,
                                         style: GoogleFonts.montserrat(
                                             textStyle:
@@ -5583,18 +5595,18 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                             }
                             else {
                               _userAboutMEProvider.searchchallenges(RefineController.text.toString());
-                              FirebaseFirestore.instance.collection('ChatGpt-Settings').doc("Prompt").get().then((value) {
-
-                                var defaulttext1 = value['prompt_1'];
-                                var defaulttext2 = value['prompt_2'];
-                                var defaulttext3 = "$defaulttext1 where [xxxx] = ${RefineController.text}";
-
-                                print("defaulttext3.text: ${defaulttext3}");
-                                print("defaulttext2.text: ${defaulttext2}");
-
-                                ResponsefromInsightABme(defaulttext3, defaulttext2);
-
-                              });
+                              // FirebaseFirestore.instance.collection('ChatGpt-Settings').doc("Prompt").get().then((value) {
+                              //
+                              //   var defaulttext1 = value['prompt_1'];
+                              //   var defaulttext2 = value['prompt_2'];
+                              //   var defaulttext3 = "$defaulttext1 where [xxxx] = ${RefineController.text}";
+                              //
+                              //   print("defaulttext3.text: ${defaulttext3}");
+                              //   print("defaulttext2.text: ${defaulttext2}");
+                              //
+                              //   ResponsefromInsightABme(defaulttext3, defaulttext2);
+                              //
+                              // });
                             }
 
 
@@ -6371,18 +6383,18 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                   }
                                   else {
                                     _userAboutMEProvider.searchsolutions(searchsolutions.text.toString());
-                                    FirebaseFirestore.instance.collection('ChatGpt-Settings').doc("Prompt").get().then((value) {
-
-                                      var defaulttext1 = value['prompt_1'];
-                                      var defaulttext2 = value['prompt_2'];
-                                      var defaulttext3 = "$defaulttext1 where [xxxx] = ${searchsolutions.text}";
-
-                                      print("defaulttext3.text: ${defaulttext3}");
-                                      print("defaulttext2.text: ${defaulttext2}");
-
-                                      ResponsefromInsightABme(defaulttext3, defaulttext2);
-
-                                    });
+                                    // FirebaseFirestore.instance.collection('ChatGpt-Settings').doc("Prompt").get().then((value) {
+                                    //
+                                    //   var defaulttext1 = value['prompt_1'];
+                                    //   var defaulttext2 = value['prompt_2'];
+                                    //   var defaulttext3 = "$defaulttext1 where [xxxx] = ${searchsolutions.text}";
+                                    //
+                                    //   print("defaulttext3.text: ${defaulttext3}");
+                                    //   print("defaulttext2.text: ${defaulttext2}");
+                                    //
+                                    //   ResponsefromInsightABme(defaulttext3, defaulttext2);
+                                    //
+                                    // });
                                   }
 
 
@@ -6519,7 +6531,7 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                               fontWeight: FontWeight.bold,
                                               color: Colors.black),),),
                                       decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.orange),
+                                        border: Border.all(color: Colors.green),
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                     ) :

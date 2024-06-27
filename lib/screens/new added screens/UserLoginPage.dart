@@ -270,16 +270,22 @@ class _UserLoginPageState extends State<UserLoginPage> {
                           //     });
                         }
                         else {
+                          print("inside else:");
                           QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Users').
                           where('email', isEqualTo: loginTextEditingcontroller.text.trim()).get();
                           if (querySnapshot.docs.isNotEmpty) {
+
+                            print("inside querySnapshot: ${querySnapshot.docs.first.get("email")}");
+
                             ProgressDialog.show(context, "Logining in\n${loginTextEditingcontroller.text}", Icons.ice_skating);
 
                             QuerySnapshot newquerySnapshot = await FirebaseFirestore.instance.collection('Users').where('email', isEqualTo: loginTextEditingcontroller.text).where('isPPS', isEqualTo: false).limit(1).get();
 
-                            if(newquerySnapshot.docs.isNotEmpty){
+                            // if(newquerySnapshot.docs.isNotEmpty){
 
                               var userData = newquerySnapshot.docs.first;
+
+                              print("inside user: $userData");
 
                               QuerySnapshot AboutMequerySnapshot = await FirebaseFirestore.instance.collection('AboutMe').orderBy('AB_id', descending: true).limit(1).get();
                               var createdAt = DateFormat('yyyy-MM-dd, HH:mm').format(DateTime.now());
@@ -305,6 +311,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                                 'Line_Manager': userData['Line_Manager'],
                                 'isPPS': true,
                                 'isOS': false,
+                                // 'About_Me_Label': "${DateFormat('yyyy-MM-dd').format(DateTime.now())} ${userData['UserName']}_Personal Private Summary.pdf",
                                 'About_Me_Label': "PPS",
                                 'Purpose_of_report': "PPS",
                                 'Purpose': "Others" ,
@@ -335,8 +342,11 @@ class _UserLoginPageState extends State<UserLoginPage> {
                               var userdocs = await newquerySnapshot.docs.first.id;
                               await ApiRepository().updateUserDetail({"isPPS": true},userdocs);
                              var documentId = await ApiRepository().createAboutMe(AboutMEDatas);
-                            }
+                            // }
+                            ///
                             bool isLoginSuccessful = await ApiRepository().sendLoginMail(loginTextEditingcontroller.text);
+                            // bool isLoginSuccessful = true;
+                            ///
                             // bool isLoginSuccessful = true;
                             // isloggedIn = true;
                             ProgressDialog.hide();

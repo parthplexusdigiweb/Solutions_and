@@ -431,7 +431,6 @@ class UserAboutMEProvider with ChangeNotifier{
     return combinedSolutionsResults.toList();
   }
 
-
   Future<List<DocumentSnapshot>> getSuggestedSolutions(List<dynamic> tags) async {
     // Assuming your Firestore collection is named "solutions"
     CollectionReference solutionsCollection = FirebaseFirestore.instance.collection('Thrivers');
@@ -2108,18 +2107,30 @@ class UserAboutMEProvider with ChangeNotifier{
       List<String> keywordsList = [];
       if (search.isNotEmpty) {
         // Remove "- " from the string and replace newlines with spaces
-        String refinedString = search.replaceAll("- ", "").replaceAll("\n", " ");
+        String refinedString = search.replaceAll("- ", "").replaceAll("\n", " ").replaceAll(",", " ");
 
+        List<String> stopWords = [
+          "and", "is", "if", "all", "the", "a", "an", "of", "to", "in", "that", "it", "with", "as", "for", "on", "at", "by", "this", "from", "or", "but", "not", "be", "are", "was", "were", "been", "being", "have", "has", "had", "do", "does", "did", "doing", "will", "would", "can", "could", "should", "shall", "may", "might", "must", "about", "above", "after", "again", "against", "among", "because", "before", "between", "during", "into", "through", "under", "over", "up", "down", "out", "off", "then", "than", "once", "here", "there", "when", "where", "why", "how"
+        ];
         // Split the string into words
         List<String> words = refinedString.split(RegExp(r'\s+'));
 
         // Remove any empty strings that may result from splitting
-        words.removeWhere((word) => word.isEmpty);
+
+        // words.removeWhere((word) => word.isEmpty);
+
+        Set<String> uniqueWords = {};
+        words.forEach((word) {
+          String lowerCaseWord = word.toLowerCase();
+          if (lowerCaseWord.isNotEmpty && !stopWords.contains(lowerCaseWord)) {
+            uniqueWords.add(lowerCaseWord);
+          }
+        });
 
         // Check if the string has more than 2 words
-        if (words.length > 1) {
-          print("inside words.length: ${words.length}");
-          keywordsList.addAll(words);
+        if (uniqueWords.length > 1) {
+          print("inside words.length: ${uniqueWords.length}");
+          keywordsList.addAll(uniqueWords);
         } else {
           print("inside refinedString: ${refinedString}");
           keywordsList.add(refinedString);
@@ -2136,38 +2147,72 @@ class UserAboutMEProvider with ChangeNotifier{
       //   challengesdocuments.clear();
 
       docssssss?.map((e) => print("$e"));
-      final dc = docssssss?.where((element) {
-        var name = element.get("Label").toLowerCase();
-        var description = element.get("Description").toLowerCase();
-        var tags = element.get('tags').toString().toLowerCase();
-        var category = element.get('Keywords').toString().toLowerCase();
 
-        // Check if selectAllAny is "All"
-        // if (selectAllAny == "All") {
-        // return name.contains(search.toLowerCase()) ||
-        //     description.contains(search.toLowerCase()) ||
-        //     tags.contains(search.toLowerCase()) ||
-        //     category.contains(search.toLowerCase());
-        // } else {
-        //   // Otherwise, search for individual words
-          return keywordsList.any((keyword) =>
-          name.contains(keyword.toLowerCase()) ||
-              description.contains(keyword.toLowerCase())
-              // ||
-              // tags.contains(keyword.toLowerCase()) ||
-              // category.contains(keyword.toLowerCase())
-          );
-        // }
-      }).toList();
-      // combinedResults.addAll(dc!);
-      // if(combinedResults.isNotEmpty){
-      //   combinedResults.addAll(dc!);
-      // }
-      // else
-        combinedResults = Set.from(dc!);
+      // final dc = docssssss?.where((element) {
+      //   var name = element.get("Label").toLowerCase();
+      //   var description = element.get("Description").toLowerCase();
+      //   var tags = element.get('tags').toString().toLowerCase();
+      //   var category = element.get('Keywords').toString().toLowerCase();
+      //
+      //   // Check if selectAllAny is "All"
+      //   // if (selectAllAny == "All") {
+      //   // return name.contains(search.toLowerCase()) ||
+      //   //     description.contains(search.toLowerCase()) ||
+      //   //     tags.contains(search.toLowerCase()) ||
+      //   //     category.contains(search.toLowerCase());
+      //   // } else {
+      //   //   // Otherwise, search for individual words
+      //     return keywordsList.any((keyword) =>
+      //     name.contains(keyword.toLowerCase()) ||
+      //         description.contains(keyword.toLowerCase())
+      //         // ||
+      //         // tags.contains(keyword.toLowerCase()) ||
+      //         // category.contains(keyword.toLowerCase())
+      //     );
+      //   // }
+      // }).toList();
+      // // combinedResults.addAll(dc!);
+      // // if(combinedResults.isNotEmpty){
+      // //   combinedResults.addAll(dc!);
+      // // }
+      // // else
+      //   combinedResults = Set.from(dc!);
 
 
       // Notify listeners after a delay to ensure the UI is updated
+
+      final labelMatches = docssssss
+          ?.where((element) {
+        var name = element['Label'].toString().toLowerCase();
+        return keywordsList.any((keyword) => name.contains(keyword.toLowerCase()));
+      })
+          .toList();
+
+      // Filter elements that match keywords in Description but are not in labelMatches
+      final descriptionMatches = docssssss
+          ?.where((element) {
+        var description = element['Description'].toString().toLowerCase();
+        // Ensure element is not already in labelMatches
+        var name = element['Label'].toString().toLowerCase();
+        bool? isInLabelMatches = labelMatches?.any((e) => e['Label'] == element['Label']);
+        return !isInLabelMatches! && keywordsList.any((keyword) => description.contains(keyword.toLowerCase()));
+      })
+          .toList();
+
+      final tagsMatches = docssssss
+          ?.where((element) {
+        var tags = element.get('tags').toString().toLowerCase();
+        var name = element.get('Label').toString().toLowerCase();
+        var description = element.get('Description').toString().toLowerCase();
+        bool? isInLabelMatches = labelMatches?.any((e) => e.get('Label') == element.get('Label'));
+        bool? isInDescriptionMatches = descriptionMatches?.any((e) => e.get('Label') == element.get('Label'));
+        return !isInLabelMatches! && !isInDescriptionMatches! && keywordsList.any((keyword) => tags.contains(keyword.toLowerCase()));
+      })
+          .toList();
+
+      // Combine results, ensuring elements from labelMatches come first
+      combinedResults = {...?labelMatches, ...?descriptionMatches, ...?tagsMatches,};
+
       Future.delayed(Duration(seconds: 1), () {
         issuggestedloading = false;
         var lengthOfdocument = combinedResults.length;
@@ -2206,18 +2251,30 @@ class UserAboutMEProvider with ChangeNotifier{
       List<String> keywordsList = [];
       if (search.isNotEmpty) {
         // Remove "- " from the string and replace newlines with spaces
-        String refinedString = search.replaceAll("- ", "").replaceAll("\n", " ");
+        String refinedString = search.replaceAll("- ", "").replaceAll("\n", " ").replaceAll(",", " ");
 
+        List<String> stopWords = [
+          "and", "is", "if", "all", "the", "a", "an", "of", "to", "in", "that", "it", "with", "as", "for", "on", "at", "by", "this", "from", "or", "but", "not", "be", "are", "was", "were", "been", "being", "have", "has", "had", "do", "does", "did", "doing", "will", "would", "can", "could", "should", "shall", "may", "might", "must", "about", "above", "after", "again", "against", "among", "because", "before", "between", "during", "into", "through", "under", "over", "up", "down", "out", "off", "then", "than", "once", "here", "there", "when", "where", "why", "how"
+        ];
         // Split the string into words
         List<String> words = refinedString.split(RegExp(r'\s+'));
 
         // Remove any empty strings that may result from splitting
-        words.removeWhere((word) => word.isEmpty);
+        // words.removeWhere((word) => word.isEmpty);
 
+        // words = words.where((word) => word.isNotEmpty && !stopWords.contains(word.toLowerCase())).toList();
+
+        Set<String> uniqueWords = {};
+        words.forEach((word) {
+          String lowerCaseWord = word.toLowerCase();
+          if (lowerCaseWord.isNotEmpty && !stopWords.contains(lowerCaseWord)) {
+            uniqueWords.add(lowerCaseWord);
+          }
+        });
         // Check if the string has more than 2 words
-        if (words.length > 1) {
-          print("inside words.length: ${words.length}");
-          keywordsList.addAll(words);
+        if (uniqueWords.length > 1) {
+          print("inside words.length: ${uniqueWords.length}");
+          keywordsList.addAll(uniqueWords);
         } else {
           print("inside refinedString: ${refinedString}");
           keywordsList.add(refinedString);
@@ -2234,31 +2291,65 @@ class UserAboutMEProvider with ChangeNotifier{
       //   challengesdocuments.clear();
 
       docssssss?.map((e) => print("$e"));
-      final dc = docssssss?.where((element) {
-        var name = element.get("Label").toLowerCase();
-        var description = element.get("Description").toLowerCase();
-        var tags = element.get('tags').toString().toLowerCase();
-        var category = element.get('Keywords').toString().toLowerCase();
 
-        // Check if selectAllAny is "All"
-        // if (selectAllAny == "All") {
-        // return name.contains(search.toLowerCase()) ||
-        //     description.contains(search.toLowerCase()) ||
-        //     tags.contains(search.toLowerCase()) ||
-        //     category.contains(search.toLowerCase());
-        // } else {
-        //   // Otherwise, search for individual words
-          return keywordsList.any((keyword) =>
-          name.contains(keyword.toLowerCase()) ||
-              description.contains(keyword.toLowerCase())
-              // ||
-              // tags.contains(keyword.toLowerCase()) ||
-              // category.contains(keyword.toLowerCase())
-          );
-        // }
-      }).toList();
-      // combinedResults.addAll(dc!);
-      combinedSolutionsResults = Set.from(dc!);
+      // final dc = docssssss?.where((element) {
+      //   var name = element.get("Label").toLowerCase();
+      //   var description = element.get("Description").toLowerCase();
+      //   var tags = element.get('tags').toString().toLowerCase();
+      //   var category = element.get('Keywords').toString().toLowerCase();
+      //
+      //   // Check if selectAllAny is "All"
+      //   // if (selectAllAny == "All") {
+      //   // return name.contains(search.toLowerCase()) ||
+      //   //     description.contains(search.toLowerCase()) ||
+      //   //     tags.contains(search.toLowerCase()) ||
+      //   //     category.contains(search.toLowerCase());
+      //   // } else {
+      //   //   // Otherwise, search for individual words
+      //     return keywordsList.any((keyword) =>
+      //     name.contains(keyword.toLowerCase()) ||
+      //         description.contains(keyword.toLowerCase())
+      //         // ||
+      //         // tags.contains(keyword.toLowerCase()) ||
+      //         // category.contains(keyword.toLowerCase())
+      //     );
+      //   // }
+      // }).toList();
+      //
+      // // combinedResults.addAll(dc!);
+      // combinedSolutionsResults = Set.from(dc!);
+
+      final labelMatches = docssssss
+          ?.where((element) {
+        var name = element['Label'].toString().toLowerCase();
+        return keywordsList.any((keyword) => name.contains(keyword.toLowerCase()));
+      })
+          .toList();
+
+      // Filter elements that match keywords in Description but are not in labelMatches
+      final descriptionMatches = docssssss
+          ?.where((element) {
+        var description = element['Description'].toString().toLowerCase();
+        // Ensure element is not already in labelMatches
+        var name = element['Label'].toString().toLowerCase();
+        bool? isInLabelMatches = labelMatches?.any((e) => e['Label'] == element['Label']);
+        return !isInLabelMatches! && keywordsList.any((keyword) => description.contains(keyword.toLowerCase()));
+      })
+          .toList();
+
+      final tagsMatches = docssssss
+          ?.where((element) {
+        var tags = element.get('tags').toString().toLowerCase();
+        var name = element.get('Label').toString().toLowerCase();
+        var description = element.get('Description').toString().toLowerCase();
+        bool? isInLabelMatches = labelMatches?.any((e) => e.get('Label') == element.get('Label'));
+        bool? isInDescriptionMatches = descriptionMatches?.any((e) => e.get('Label') == element.get('Label'));
+        return !isInLabelMatches! && !isInDescriptionMatches! && keywordsList.any((keyword) => tags.contains(keyword.toLowerCase()));
+      })
+          .toList();
+
+      // Combine results, ensuring elements from labelMatches come first
+       combinedSolutionsResults = {...?labelMatches, ...?descriptionMatches, ...?tagsMatches,};
 
 
       // Notify listeners after a delay to ensure the UI is updated

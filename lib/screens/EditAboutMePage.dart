@@ -2033,7 +2033,9 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                             var userdocs = await userData.docs.first.id;
                                                             ProgressDialog.show(context, "Deleting report",Icons.person);
                                                             await ApiRepository().DeleteSectionPreset(dataList[i].reference);
-                                                            await ApiRepository().updateUserDetail({"isPPS": false},userdocs);
+                                                            if(dataList[i]["AB_Status"]=="main"){
+                                                              await ApiRepository().updateUserDetail({"isPPS": false},userdocs);
+                                                            }
                                                             setState(() {});
                                                             // _addKeywordProvider.loadDataForPage(1);
                                                             // _addKeywordProvider.setFirstpageNo();
