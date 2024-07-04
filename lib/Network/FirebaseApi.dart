@@ -606,7 +606,7 @@ class ApiRepository{
 
 
   Future<void> sendEmailWithAttachment(context, email1,name1,email2,name2,filebytes,filename,
-  {List<String> ccEmails = const [], List<String> ccNames = const []}
+  { List<Map<String, dynamic>>  ccEmails = const [], }
       ) async {
     String apiUrl = 'https://api.brevo.com/sendEmail'; // Example API endpoint, replace with actual endpoint
 
@@ -624,12 +624,7 @@ class ApiRepository{
         'to' :[{ "email": email1, "name": name1 },
           // { "email": email2 == "" ? email1 : email2, "name": name2 == "" ? name1 : name2 }
         ],
-        'cc': List.generate(
-            ccEmails.length,
-                (index) => {
-              "email": ccEmails[index],
-              "name": ccNames.length > index ? ccNames[index] : "",
-            }),
+        'cc': ccEmails,
         'attachment': [{
           "content": filebytes,
           "name": filename
@@ -665,7 +660,7 @@ class ApiRepository{
           'api-key': BREVO_API_KEY_FROM_BACKEND /// this is the main api key for mail clear before push
 
         },
-        body: (ccEmails.isEmpty || ccNames.isEmpty) ? body2 : body1,
+        body: (ccEmails.isEmpty) ? body2 : body1,
       );
 
       if (response.statusCode == 200 ||response.statusCode == 201) {

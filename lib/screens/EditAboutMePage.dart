@@ -8077,7 +8077,6 @@ Thank you for being open to understanding me better and for considering my reque
                                 base64EncodedData,
                                 filename,
                               ccEmails: previewProvider.ccEmails,
-                              ccNames: previewProvider.ccNames,
                             );
 
                             await downloadAboutMePdf(challengesList,solutionsList);

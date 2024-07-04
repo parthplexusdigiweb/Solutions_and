@@ -21,10 +21,11 @@ class UserAboutMEProvider with ChangeNotifier{
   List<SolutionModel> selectedSolutions = [];
   List<SolutionModel> solutionss = [];
   List<SolutionModel> editsolutionss = [];
-
-  List<ChallengesModel> selectedChallenges = [];
   List<ChallengesModel> challengess = [];
   List<ChallengesModel> editchallengess = [];
+  List<ChallengesModel> selectedChallenges = [];
+
+
 
   var selectedPriorityValues;
 
@@ -337,7 +338,8 @@ class UserAboutMEProvider with ChangeNotifier{
     if(tags.isNotEmpty){
       print("inside getTagsfromInsightABme => tags: $tags");
       QuerySnapshot tagsQuery = await solutionsCollection
-          .where('tags', arrayContainsAny: tags).orderBy("Label")
+          // .where('tags', arrayContainsAny: tags).orderBy("Label")
+          .where('Related_challenges_tags', arrayContainsAny: tags).orderBy("Label")
       // .limit(100)
           .get();
 
@@ -388,7 +390,8 @@ class UserAboutMEProvider with ChangeNotifier{
     if(tags.isNotEmpty){
       print("inside getSolutionsTagsfromInsightABme => tags: $tags");
       QuerySnapshot tagsQuery = await solutionsCollection
-          .where('tags', arrayContainsAny: tags).orderBy("Label")
+          // .where('tags', arrayContainsAny: tags).orderBy("Label")
+          .where('Related_solution_tags', arrayContainsAny: tags).orderBy("Label")
       // .limit(100)
           .get();
 
@@ -524,32 +527,35 @@ class UserAboutMEProvider with ChangeNotifier{
       print("search tagChunk: $tagChunk");
 
       QuerySnapshot tagsQuery = await solutionsCollection
-          .where('tags', arrayContainsAny: tagChunk)
+          // .where('tags', arrayContainsAny: tagChunk)
+          .where('Related_solution_tags', arrayContainsAny: tagChunk)
           // .limit(10)
           .get();
       allQueries.add(tagsQuery);
     }
 
-    for (var keywordChunk in keywordChunks) {
-
-
-      print("search keywordChunk: $keywordChunk");
-
-      QuerySnapshot keywordsQuery = await solutionsCollection
-          .where('Keywords', arrayContainsAny: keywordChunk)
-          // .limit(10)
-          .get();
-      allQueries.add(keywordsQuery);
-    }
+    // for (var keywordChunk in keywordChunks) {
+    //
+    //
+    //   print("search keywordChunk: $keywordChunk");
+    //
+    //   QuerySnapshot keywordsQuery = await solutionsCollection
+    //       .where('Keywords', arrayContainsAny: keywordChunk)
+    //       // .limit(10)
+    //       .get();
+    //   allQueries.add(keywordsQuery);
+    // }
 
     // Combine the results from all queries
     // List<DocumentSnapshot> combinedResults = [];
     for (var query in allQueries) {
-      combinedSolutionsResults.addAll(query.docs);
+      combinedSolutionsResults= Set.from(query.docs);
     }
 
     // Remove duplicates if necessary
     combinedSolutionsResults = combinedSolutionsResults.toSet();
+
+    notifyListeners();
 
     print("getRelatedSolutions: ${combinedSolutionsResults}");
     print("getRelatedSolutions: ${combinedSolutionsResults.length}");

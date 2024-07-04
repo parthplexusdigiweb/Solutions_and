@@ -41,6 +41,8 @@ class _UserLogedInEditAboutMEScreenState extends State<UserLogedInEditAboutMEScr
 
   late TabController _tabController;
 
+
+
   late PageController pageNo;
 
   late final AddKeywordProvider _addKeywordProvider;
@@ -71,7 +73,6 @@ class _UserLogedInEditAboutMEScreenState extends State<UserLogedInEditAboutMEScr
   TextEditingController AboutMeUseFulInfotextController = TextEditingController();
   TextEditingController SendNametextController = TextEditingController();
   TextEditingController CopySendNametextController = TextEditingController();
-  TextEditingController SendEmailtextController = TextEditingController();
   TextEditingController CopySendEmailtextController = TextEditingController();
   TextEditingController RefineController = TextEditingController();
   TextEditingController searchsolutions = TextEditingController();
@@ -135,7 +136,9 @@ Date
   List<String> emailList = [];
 
   List<Map<String, dynamic>> solutionsList = [];
+  List<Map<String, dynamic>> solutionsListForOs = [];
   List<Map<String, dynamic>> challengesList = [];
+  List<Map<String, dynamic>> challengesListForOs = [];
 
   bool isInitialTyping = true;
   var documentId;
@@ -225,46 +228,46 @@ Date
       About_Me_Label = widget.aboutMeData["About_Me_Label"];
 
       AboutMeLabeltextController.text = widget.aboutMeData['About_Me_Label']==null ? "" : widget.aboutMeData['About_Me_Label'];
-      _previewProvider.title = AboutMeLabeltextController.text;
+      // _previewProvider.title = AboutMeLabeltextController.text;
 
       mycircumstancesController.text = widget.aboutMeData['My_Circumstance']==null ? "" : widget.aboutMeData['My_Circumstance'];
-      _previewProvider.mycircumstance = mycircumstancesController.text;
+      // _previewProvider.mycircumstance = mycircumstancesController.text;
 
       MystrengthsController.text = widget.aboutMeData['My_Strength']==null ? "" : widget.aboutMeData['My_Strength'];
-      _previewProvider.mystrength = MystrengthsController.text;
+      // _previewProvider.mystrength = MystrengthsController.text;
 
       myOrganisationController.text = widget.aboutMeData['My_Organisation']==null ? "" : widget.aboutMeData['My_Organisation'];
-      _previewProvider.myorganization =  myOrganisationController.text;
+      // _previewProvider.myorganization =  myOrganisationController.text;
 
       myOrganisation2Controller.text = widget.aboutMeData['My_Challenges_Organisation']==null ? "" : widget.aboutMeData['My_Challenges_Organisation'];
-      _previewProvider.mychallenge = myOrganisation2Controller.text;
+      // _previewProvider.mychallenge = myOrganisation2Controller.text;
 
       // AB_Status = widget.aboutMeData['AB_Status']==null ? "" : widget.aboutMeData['AB_Status'];
 
       selectedEmail = widget.aboutMeData['Email']==null ? "" : widget.aboutMeData['Email'];
-      _previewProvider.email = selectedEmail;
+      // _previewProvider.email = selectedEmail;
       searchEmailcontroller.text = widget.aboutMeData['Email']==null ? "" : widget.aboutMeData['Email'];
       // _previewProvider.email = selectedEmail;
       nameController.text = widget.aboutMeData['User_Name']==null ? "" : widget.aboutMeData['User_Name'];
-      _previewProvider.name = nameController.text;
+      // _previewProvider.name = nameController.text;
       employerController.text = widget.aboutMeData['Employer']==null ? "" : widget.aboutMeData['Employer'];
       _previewProvider.employer = employerController.text;
       print("_previewProvider.employer: ${_previewProvider.employer}");
       print("widget.aboutMeData['Employer']: ${widget.aboutMeData['Employer']}");
 
       divisionOrSectionController.text = widget.aboutMeData['Division_or_Section']==null ? "" : widget.aboutMeData['Division_or_Section'];
-      _previewProvider.division = divisionOrSectionController.text;
+      // _previewProvider.division = divisionOrSectionController.text;
       RoleController.text = widget.aboutMeData['Role']==null ? "" : widget.aboutMeData['Role'];
-      _previewProvider.role = RoleController.text;
+      // _previewProvider.role = RoleController.text;
       LocationController.text = widget.aboutMeData['Location']==null ? "" : widget.aboutMeData['Location'];
-      _previewProvider.location = LocationController.text;
+      // _previewProvider.location = LocationController.text;
       EmployeeNumberController.text = widget.aboutMeData['Employee_Number']==null ? "" : widget.aboutMeData['Employee_Number'];
-      _previewProvider.employeeNumber = EmployeeNumberController.text;
+      // _previewProvider.employeeNumber = EmployeeNumberController.text;
       LineManagerController.text = widget.aboutMeData['Line_Manager']==null ? "" : widget.aboutMeData['Line_Manager'];
-      _previewProvider.linemanager = LineManagerController.text;
+      // _previewProvider.linemanager = LineManagerController.text;
 
       AboutMeLabeltextController.text = widget.aboutMeData['About_Me_Label']==null ? "" : widget.aboutMeData['About_Me_Label'];
-      _previewProvider.title = AboutMeLabeltextController.text;
+      // _previewProvider.title = AboutMeLabeltextController.text;
 
       // DateTime date = DateTime.now();
       // final DateFormat formatter = DateFormat('dd MMMM yyyy');
@@ -275,8 +278,8 @@ Date
       AboutMeUseFulInfotextController.text = widget.aboutMeData['AB_Useful_Info']==null ? "" : widget.aboutMeData['AB_Useful_Info'];
       AboutMeDescriptiontextController.text = widget.aboutMeData['AB_Description']==null ? "" : widget.aboutMeData['AB_Description'];
 
-      _previewProvider.PurposeOfReporttextController.text = widget.aboutMeData['Purpose_of_report']==null ? "" : widget.aboutMeData['Purpose_of_report'];
-      _previewProvider.isOfficial = widget.aboutMeData['Purpose']==null ? "" : widget.aboutMeData['Purpose'];
+      // _previewProvider.PurposeOfReporttextController.text = widget.aboutMeData['Purpose_of_report']==null ? "" : widget.aboutMeData['Purpose_of_report'];
+      // _previewProvider.isOfficial = widget.aboutMeData['Purpose']==null ? "" : widget.aboutMeData['Purpose'];
 
       // _controller.formatSelection(Attribute.ul);
       print("Entered editpageffffff");
@@ -418,7 +421,7 @@ Date
 
       data['AB_id'] = AB_id; // Update with the new value you want
       data['AB_Status'] = "Draft"; // Update with the new value you want
-      data['Purpose_of_report'] = Purpose_of_report; // Update with the new value you want
+      data['Purpose_of_report'] = ""; // Update with the new value you want
       data['About_Me_Label'] = Purpose_of_report;
       data['isPPS'] = false;
       data['isOS'] = true;
@@ -614,7 +617,7 @@ Date
           print("calling chat gpt search ResponsefromInsightABme challenges");
           ResponsefromInsightABme(defaulttext3, defaulttext2);
         }
-        else if(_userAboutMEProvider.combinedSolutionsResults.isEmpty && _tabController.index == 5){
+        else if(_userAboutMEProvider.combinedSolutionsResults.isEmpty && _tabController.index == 5 && challengesList.isEmpty){
            print("calling chat gpt search ResponsefromInsightABme solution");
            ResponsefromInsightABme(defaulttext3, defaulttext2);
          }
@@ -625,7 +628,6 @@ Date
     }
 
   savingMyChallenges() async {
-    await _userAboutMEProvider.getRelatedSolutions(generatedsolutionstags, generatedsolutionscategory);
 
 
     Map<String, dynamic> AboutMEDatas = {
@@ -636,6 +638,17 @@ Date
 
     String solutionJson = json.encode(AboutMEDatas);
     print("solutionJson: $solutionJson");
+
+    for(var i in challengesList){
+      print("challengesList Challenges ${i['tags']}");
+      generatedsolutionstags.addAll(i['tags']);
+
+      print("challengesList generatedsolutionstags.length ${generatedsolutionstags.length}");
+      print("challengesList generatedsolutionstags ${generatedsolutionstags}");
+
+    }
+
+    await _userAboutMEProvider.getRelatedSolutions(generatedsolutionstags, generatedsolutionscategory);
 
     // ProgressDialog.show(context, "Saving", Icons.save);
     await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
@@ -1696,7 +1709,7 @@ Date
                                                           // myOrganisation2Controller.text = aboutMeData['My_Challenges_Organisation']==null ? "" : aboutMeData['My_Challenges_Organisation'];
                                                           // _previewProvider.mychallenge = myOrganisation2Controller.text;
                                                           ///
-                                                          About_Me_Label = previewProvider.title;
+                                                          // About_Me_Label = previewProvider.title;
                                                           // List<dynamic> challengesList = aboutMeData['Challenges'] ?? [];
                                                           // List<dynamic> solutionsList = aboutMeData['Solutions'] ?? [];
                                                           //
@@ -1709,6 +1722,7 @@ Date
                                                           // abc.addAll(challengesIterable);
                                                           // xyz.addAll(solutionsIterable);
 
+                                                          About_Me_Label = widget.aboutMeData['About_Me_Label'];
                                                           ProgressDialog.show(context, "Previewing", Icons.picture_as_pdf);
                                                           Uint8List pdfBytes = await makePdf(challengesList, solutionsList );
                                                           showDialog(
@@ -1722,7 +1736,19 @@ Date
                                                                         Text("${About_Me_Label}",
                                                                           style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
                                                                         ),
-                                                                        IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.close)),
+                                                                        Row(
+                                                                          children: [
+                                                                            IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.share)),
+                                                                            SizedBox(width:10),
+                                                                            IconButton(onPressed: (){
+                                                                              downloadAboutMePdf(challengesList,solutionsList);
+                                                                            }, icon: Icon(Icons.download)),
+                                                                            SizedBox(width:10),
+                                                                            IconButton(onPressed: (){
+                                                                              About_Me_Label = "";
+                                                                              Navigator.pop(context);}, icon: Icon(Icons.close)),
+                                                                          ],
+                                                                        ),
                                                                       ],
                                                                     ),
                                                                     backgroundColor: Colors.white,
@@ -2022,6 +2048,7 @@ Date
                                                     .collection('AboutMe')
                                                     .where('Email', isEqualTo: aboutMeData.get("Email"))
                                                     .where('isPPS', isEqualTo: false)
+                                                    .where('AB_Status', isNotEqualTo: "Submitted")
                                                     .where('isOS', isEqualTo: true)
                                                     .get();
                                                 // final abc =   querySnapshots.docs.first;
@@ -2047,14 +2074,25 @@ Date
 
                                                   var createdAt = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
-                                                  // QuerySnapshot count = await FirebaseFirestore.instance
-                                                  //     .collection('AboutMe').where("Email",isEqualTo: aboutMeData.get("Email"))
-                                                  //     .where("isPPS", isEqualTo: true).get();
-                                                  //
-                                                  // print("count: ${count.size}");
-                                                  // int total = count.size + 1;
+                                                  QuerySnapshot count =  await FirebaseFirestore.instance
+                                                      .collection('AboutMe')
+                                                      .where('Email', isEqualTo: aboutMeData.get("Email"))
+                                                      .where('isPPS', isEqualTo: false)
+                                                      .where('isOS', isEqualTo: true)
+                                                      .get();
+
+                                                  print("count: ${count.size}");
+                                                  int total = count.size + 1;
+
+                                                  String name = "";
+                                                  if(count.size==0){
+                                                    name = "$createdAt ${aboutMeData.get("User_Name")}_Official Submission.pdf";
+                                                  }
+                                                  else{
+                                                    name = "$createdAt ${aboutMeData.get("User_Name")}_Official Submission(${count.size + 1}).pdf";
+                                                  }
                                                   setState(() {
-                                                    duplicatePPStoOS(context, aboutMeData.id, AB_id, "$createdAt ${aboutMeData.get("User_Name")}_Official Submission.pdf");
+                                                    duplicatePPStoOS(context, aboutMeData.id, AB_id, name);
                                                     // Navigator.pop(ctx);
                                                   });
                                                   // Navigator.pop(ctx);
@@ -2062,10 +2100,10 @@ Date
                                                 }
 
                                                 else if(querySnapshotss.docs.isNotEmpty){
-                                                  _userAboutMEProvider.editchallengess.clear();
-                                                  _userAboutMEProvider.editsolutionss.clear();
-                                                  challengesList.clear();
-                                                  solutionsList.clear();
+                                                  _previewProvider.OSeditchallengess.clear();
+                                                  _previewProvider.OSeditsolutions.clear();
+                                                  challengesListForOs.clear();
+                                                  solutionsListForOs.clear();
                                                   _previewProvider.PreviewChallengesList.clear();
                                                   _previewProvider.PreviewSolutionStillNeeded.clear();
                                                   _previewProvider.PreviewSolutionMyResposibilty.clear();
@@ -2074,16 +2112,18 @@ Date
                                                   _previewProvider.PreviewSolutionMustHave.clear();
                                                   print("PPS list Cleared");
                                                   print("OS List Adding now");
-                                                  _userAboutMEProvider.EditChallengeList(querySnapshotss.docs.first["Challenges"]);
-                                                  _userAboutMEProvider.EditChallengeListadd(challengesList);
-                                                  _userAboutMEProvider.EditChallengeListadd(_previewProvider.PreviewChallengesList);
-                                                  _userAboutMEProvider.EditSolutionList(querySnapshotss.docs.first["Solutions"]);
-                                                  _userAboutMEProvider.EditSolutionListadd(solutionsList);
-                                                  _userAboutMEProvider.EditSolutionProvideradd(_previewProvider.PreviewSolutionMyResposibilty);
-                                                  _userAboutMEProvider.EditSolutionInPlaceadd(_previewProvider.PreviewSolutionStillNeeded,
+                                                  _previewProvider.OSEditChallengeList(querySnapshotss.docs.first["Challenges"]);
+                                                  _previewProvider.OSEditChallengeListadd(challengesListForOs);
+                                                  _previewProvider.OSEditChallengeListadd(_previewProvider.PreviewChallengesList);
+                                                  _previewProvider.OSEditSolutionList(querySnapshotss.docs.first["Solutions"]);
+                                                  _previewProvider.OSEditSolutionListadd(solutionsListForOs);
+                                                  _previewProvider.OSEditSolutionProvideradd(_previewProvider.PreviewSolutionMyResposibilty);
+                                                  _previewProvider.OSEditSolutionInPlaceadd(_previewProvider.PreviewSolutionStillNeeded,
                                                       _previewProvider.PreviewSolutionNotNeededAnyMore, _previewProvider.PreviewSolutionNiceToHave, _previewProvider.PreviewSolutionMustHave);
 
-                                                  showEditAboutMeDialogBox(querySnapshotss.docs.first.id);
+
+                                                 await showEditOSDialogBox(querySnapshotss.docs.first);
+                                                 await _previewProvider.getDataForOs(querySnapshotss.docs.first);
                                                 }
                                               },
                                               child: Container(
@@ -2122,51 +2162,78 @@ Date
                                               children: [
                                                 InkWell(
                                                   onTap:() async {
-                                                    QuerySnapshot querySnapshots = await FirebaseFirestore.instance
+                                                    QuerySnapshot querySnapshotss = await FirebaseFirestore.instance
                                                         .collection('AboutMe')
                                                         .where('Email', isEqualTo: aboutMeData.get("Email"))
                                                         .where('isPPS', isEqualTo: false)
+                                                        .where('AB_Status', isNotEqualTo: "Submitted")
                                                         .where('isOS', isEqualTo: true)
                                                         .get();
 
-                                                    if(querySnapshots.docs.isNotEmpty){
+                                                    if(querySnapshotss.docs.isNotEmpty){
                                                       // showEditAboutMeDialogBox(querySnapshots.docs.first.id);
 
-                                                      var data =   querySnapshots.docs.first;
-
-                                                      var challenges = data['Challenges'];
-                                                      var solutions = data['Solutions'];
-                                                      About_Me_Label = data['About_Me_Label'];
-
-                                                      List<Map<String, dynamic>> solutionsList = [];
-                                                      List<Map<String, dynamic>> challengesList = [];
-
-                                                      // Print the runtimeType for debugging
-                                                      print("Challenges runtimeType: ${challenges.runtimeType}");
-
-                                                      // Check if challenges is a List
-                                                      if (challenges is List<dynamic>) {
-                                                        // Add each challenge to challengesList
-                                                        for (var challenge in challenges) {
-                                                          if (challenge is Map<String, dynamic>) {
-                                                            challengesList.add(challenge);
-                                                          }
-                                                        }
-                                                      }
-
-                                                      if (solutions is List<dynamic>) {
-                                                        // Add each challenge to challengesList
-                                                        for (var challenge in solutions) {
-                                                          if (challenge is Map<String, dynamic>) {
-                                                            solutionsList.add(challenge);
-                                                          }
-                                                        }
-                                                      }
+                                                      // var data =   querySnapshots.docs.first;
+                                                      //
+                                                      // var challenges = data['Challenges'];
+                                                      // var solutions = data['Solutions'];
+                                                      // About_Me_Label = data['About_Me_Label'];
+                                                      //
+                                                      // List<Map<String, dynamic>> solutionsList = [];
+                                                      // List<Map<String, dynamic>> challengesList = [];
+                                                      //
+                                                      // // Print the runtimeType for debugging
+                                                      // print("Challenges runtimeType: ${challenges.runtimeType}");
+                                                      //
+                                                      // // Check if challenges is a List
+                                                      // if (challenges is List<dynamic>) {
+                                                      //   // Add each challenge to challengesList
+                                                      //   for (var challenge in challenges) {
+                                                      //     if (challenge is Map<String, dynamic>) {
+                                                      //       challengesList.add(challenge);
+                                                      //     }
+                                                      //   }
+                                                      // }
+                                                      //
+                                                      // if (solutions is List<dynamic>) {
+                                                      //   // Add each challenge to challengesList
+                                                      //   for (var challenge in solutions) {
+                                                      //     if (challenge is Map<String, dynamic>) {
+                                                      //       solutionsList.add(challenge);
+                                                      //     }
+                                                      //   }
+                                                      // }
                                                       // dataList[i]['Challenges'] = challengesList;
                                                       // dataList[i]['Solutions'] = solutionsList;
 
+                                                      _previewProvider.OSeditchallengess.clear();
+                                                      _previewProvider.OSeditsolutions.clear();
+                                                      challengesListForOs.clear();
+                                                      solutionsListForOs.clear();
+                                                      _previewProvider.PreviewChallengesList.clear();
+                                                      _previewProvider.PreviewSolutionStillNeeded.clear();
+                                                      _previewProvider.PreviewSolutionMyResposibilty.clear();
+                                                      _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
+                                                      _previewProvider.PreviewSolutionNiceToHave.clear();
+                                                      _previewProvider.PreviewSolutionMustHave.clear();
+                                                      print("PPS list Cleared");
+                                                      print("OS List Adding now");
+                                                      _previewProvider.OSEditChallengeList(querySnapshotss.docs.first["Challenges"]);
+                                                      _previewProvider.OSEditChallengeListadd(challengesListForOs);
+                                                      _previewProvider.OSEditChallengeListadd(_previewProvider.PreviewChallengesList);
+                                                      _previewProvider.OSEditSolutionList(querySnapshotss.docs.first["Solutions"]);
+                                                      _previewProvider.OSEditSolutionListadd(solutionsListForOs);
+                                                      _previewProvider.OSEditSolutionProvideradd(_previewProvider.PreviewSolutionMyResposibilty);
+                                                      _previewProvider.OSEditSolutionInPlaceadd(_previewProvider.PreviewSolutionStillNeeded,
+                                                          _previewProvider.PreviewSolutionNotNeededAnyMore, _previewProvider.PreviewSolutionNiceToHave, _previewProvider.PreviewSolutionMustHave);
+
+
+                                                      // await showEditAboutMeDialogBox(querySnapshotss.docs.first.id);
+                                                      await _previewProvider.getDataForOs(querySnapshotss.docs.first);
+                                                      About_Me_Label = querySnapshotss.docs.first["About_Me_Label"];
+
                                                       ProgressDialog.show(context, "Previewing", Icons.picture_as_pdf);
-                                                      Uint8List pdfBytes = await makePdf(challengesList, solutionsList);
+                                                      Uint8List pdfBytes = await _previewProvider.OSPdf(challengesListForOs, solutionsListForOs);
                                                       showDialog(
                                                           context: context,
                                                           builder: (BuildContext context) {
@@ -2178,7 +2245,19 @@ Date
                                                                     Text("${About_Me_Label}",
                                                                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
                                                                     ),
-                                                                    IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.close)),
+                                                                    Row(
+                                                                      children: [
+                                                                        IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.share)),
+                                                                        SizedBox(width:10),
+                                                                        IconButton(onPressed: (){
+                                                                          downloadOSPdf(challengesListForOs,solutionsListForOs);
+                                                                        }, icon: Icon(Icons.download)),
+                                                                        SizedBox(width:10),
+                                                                        IconButton(onPressed: (){
+                                                                          About_Me_Label = "";
+                                                                          Navigator.pop(context);}, icon: Icon(Icons.close)),
+                                                                      ],
+                                                                    ),
                                                                   ],
                                                                 ),
                                                                 backgroundColor: Colors.white,
@@ -2199,6 +2278,18 @@ Date
                                                                   ),
                                                                 ));
                                                           });
+                                                    }
+                                                    else{
+                                                      toastification.show(context: context,
+                                                          title: Text('Already submitted. Create New one'),
+                                                          autoCloseDuration: Duration(milliseconds: 2500),
+                                                          alignment: Alignment.center,
+                                                          backgroundColor: Colors.green,
+                                                          foregroundColor: Colors.white,
+                                                          icon: Icon(Icons.check_circle, color: Colors.white,),
+                                                          animationDuration: Duration(milliseconds: 1000),
+                                                          showProgressBar: false
+                                                      );
                                                     }
 
                                                   },
@@ -2232,36 +2323,195 @@ Date
                                                   ),
                                                 ),
                                                 Icon(Icons.arrow_downward_sharp, size: 40),
-                                                InkWell(
-                                                  child: Container(
-                                                    padding: EdgeInsets.all(10),
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      border: Border.all(color:primaryColorOfApp, width: 1.0),
-                                                      borderRadius: BorderRadius.circular(10.0),
-                                                    ),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                      children: [
-                                                        // Icon(Icons.article,color: Colors.black,size: 30,),
-                                                        Icon(Icons.save_alt,color: Colors.black,size: 25,),
-                                                        SizedBox(width: 5,),
+                                                Consumer<PreviewProvider>(
+                                                    builder: (c,previewProvider, _) {
+                                                      print("previewProvider.employer : ${previewProvider.employer}");
+                                                      return InkWell(
+                                                        onTap: () async {
+                                                          var createdAt = DateFormat(
+                                                              'yyyy-MM-dd, hh:mm').format(
+                                                              DateTime.now());
 
-                                                        Expanded(
-                                                          child: Text(
-                                                            // 'Solutions',
-                                                            'Submit',
-                                                            overflow: TextOverflow.ellipsis,
-                                                            style: GoogleFonts.montserrat(
-                                                                textStyle:
-                                                                Theme.of(context).textTheme.titleMedium,
-                                                                color: Colors.black),
+                                                          var formattedDate = DateFormat(
+                                                              'dd MMMM yyyy, HH:mm a').format(
+                                                              DateTime.now());
+
+                                                          QuerySnapshot querySnapshotss = await FirebaseFirestore.instance
+                                                              .collection('AboutMe')
+                                                              .where('Email', isEqualTo: aboutMeData.get("Email"))
+                                                              .where('isPPS', isEqualTo: false)
+                                                              .where('AB_Status', isNotEqualTo: "Submitted")
+                                                              .where('isOS', isEqualTo: true)
+                                                              .get();
+
+                                                         if(querySnapshotss.docs.isNotEmpty){
+                                                           Map<String, dynamic> AboutMEDatas = {
+                                                             'AB_Status': "Submitted",
+                                                           };
+
+                                                           // String solutionJson = json.encode(AboutMEDatas);
+                                                           // print(solutionJson);
+
+
+                                                           ProgressDialog.show(context, "Submiting", Icons.send);
+                                                           await ApiRepository().updateAboutMe(AboutMEDatas, querySnapshotss.docs.first.id);
+
+                                                           _previewProvider.OSeditchallengess.clear();
+                                                           _previewProvider.OSeditsolutions.clear();
+                                                           challengesListForOs.clear();
+                                                           solutionsListForOs.clear();
+                                                           _previewProvider.PreviewChallengesList.clear();
+                                                           _previewProvider.PreviewSolutionStillNeeded.clear();
+                                                           _previewProvider.PreviewSolutionMyResposibilty.clear();
+                                                           _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
+                                                           _previewProvider.PreviewSolutionNiceToHave.clear();
+                                                           _previewProvider.PreviewSolutionMustHave.clear();
+                                                           print("PPS list Cleared");
+                                                           print("OS List Adding now");
+                                                           _previewProvider.OSEditChallengeList(querySnapshotss.docs.first["Challenges"]);
+                                                           _previewProvider.OSEditChallengeListadd(challengesListForOs);
+                                                           _previewProvider.OSEditChallengeListadd(_previewProvider.PreviewChallengesList);
+                                                           _previewProvider.OSEditSolutionList(querySnapshotss.docs.first["Solutions"]);
+                                                           _previewProvider.OSEditSolutionListadd(solutionsListForOs);
+                                                           _previewProvider.OSEditSolutionProvideradd(_previewProvider.PreviewSolutionMyResposibilty);
+                                                           _previewProvider.OSEditSolutionInPlaceadd(_previewProvider.PreviewSolutionStillNeeded,
+                                                               _previewProvider.PreviewSolutionNotNeededAnyMore, _previewProvider.PreviewSolutionNiceToHave, _previewProvider.PreviewSolutionMustHave);
+
+
+
+                                                           await _previewProvider.getDataForOs(querySnapshotss.docs.first);
+                                                           About_Me_Label = querySnapshotss.docs.first["About_Me_Label"];
+
+                                                           final Uint8List pdfBytes = await previewProvider.OSPdf(challengesListForOs, solutionsListForOs);
+                                                           String base64EncodedData = base64.encode(pdfBytes);
+                                                           String filename = "${About_Me_Label}.pdf";
+                                                           print("sendMailPopUp chunks: ${base64EncodedData}");
+                                                           print("sendMailPopUp filename: ${ filename}");
+                                                           await ApiRepository().sendEmailWithAttachment(
+                                                             context,
+                                                             previewProvider.SendEmailtextController.text,
+                                                             previewProvider.SendNametextController.text,
+                                                             CopySendEmailtextController.text,
+                                                             CopySendNametextController.text,
+                                                             base64EncodedData,
+                                                             filename,
+                                                             ccEmails: previewProvider.ccEmails,
+                                                           );
+
+                                                           await downloadOSPdf(challengesListForOs, solutionsListForOs);
+
+                                                           print(previewProvider.SendEmailtextController.text);
+                                                           print(CopySendEmailtextController.text);
+                                                           print(previewProvider.SendNametextController.text);
+                                                           print(CopySendNametextController.text);
+
+                                                           ProgressDialog.hide();
+                                                           toastification.show(context: context,
+                                                               title: Text('Submitted'),
+                                                               autoCloseDuration: Duration(milliseconds: 2500),
+                                                               alignment: Alignment.center,
+                                                               backgroundColor: Colors.green,
+                                                               foregroundColor: Colors.white,
+                                                               icon: Icon(Icons.check_circle, color: Colors.white,),
+                                                               animationDuration: Duration(milliseconds: 1000),
+                                                               showProgressBar: false
+                                                           );
+                                                         }
+                                                         else{
+                                                           toastification.show(context: context,
+                                                               title: Text('Already submitted. Create New one'),
+                                                               autoCloseDuration: Duration(milliseconds: 2500),
+                                                               alignment: Alignment.center,
+                                                               backgroundColor: Colors.green,
+                                                               foregroundColor: Colors.white,
+                                                               icon: Icon(Icons.check_circle, color: Colors.white,),
+                                                               animationDuration: Duration(milliseconds: 1000),
+                                                               showProgressBar: false
+                                                           );
+                                                         }
+
+                                                          // sendMailPopUp(challengesList,solutionsList);
+
+                                                          // downloadAboutMePdf(challengesList,solutionsList);
+                                                          ///
+                                                          // selectedEmail = null;
+                                                          // nameController.clear();
+                                                          // searchEmailcontroller.clear();
+                                                          // employerController.clear();
+                                                          // divisionOrSectionController.clear();
+                                                          // RoleController.clear();
+                                                          // LocationController.clear();
+                                                          // EmployeeNumberController.clear();
+                                                          // LineManagerController.clear();
+                                                          // mycircumstancesController.clear();
+                                                          // MystrengthsController.clear();
+                                                          // mycircumstancesController.clear();
+                                                          // AboutMeLabeltextController.clear();
+                                                          // RefineController.clear();
+                                                          // solutionsList.clear();
+                                                          // _userAboutMEProvider.solutionss.clear();
+                                                          // _userAboutMEProvider.challengess.clear();
+                                                          // _userAboutMEProvider.combinedSolutionsResults.clear();
+                                                          // _userAboutMEProvider.combinedResults.clear();
+                                                          // previewProvider.email=null;
+                                                          // previewProvider.name=null;
+                                                          // previewProvider.employer=null;
+                                                          // previewProvider.division=null;
+                                                          // previewProvider.role=null;
+                                                          // previewProvider.location=null;
+                                                          // previewProvider.employeeNumber=null ;
+                                                          // previewProvider.linemanager=null;
+                                                          // previewProvider.title=null;
+                                                          // previewProvider.mycircumstance=null;
+                                                          // previewProvider.mystrength=null ;
+                                                          // previewProvider.myorganization=null ;
+                                                          // previewProvider.mychallenge=null ;
+                                                          // previewProvider.PreviewChallengesList.clear();
+                                                          // previewProvider.PreviewSolutionList.clear();
+                                                          // // _navigateToTab(0);
+                                                          // // Navigator.pop(context);
+                                                          // setState(() {
+                                                          //   page.jumpToPage(1);
+                                                          // });
+
+                                                        },
+                                                        child: Container(
+                                                          padding: EdgeInsets.all(10),
+                                                          decoration: BoxDecoration(
+                                                            color: Colors.white,
+                                                            border: Border.all(
+                                                                color: primaryColorOfApp,
+                                                                width: 1.0),
+                                                            borderRadius: BorderRadius.circular(
+                                                                10.0),
+                                                          ),
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                            children: [
+                                                              // Icon(Icons.article,color: Colors.black,size: 30,),
+                                                              Icon(Icons.save_alt,
+                                                                color: Colors.black, size: 25,),
+                                                              SizedBox(width: 5,),
+
+                                                              Expanded(
+                                                                child: Text(
+                                                                  // 'Solutions',
+                                                                  'Submit',
+                                                                  overflow: TextOverflow.ellipsis,
+                                                                  style: GoogleFonts.montserrat(
+                                                                      textStyle:
+                                                                      Theme
+                                                                          .of(context)
+                                                                          .textTheme
+                                                                          .titleMedium,
+                                                                      color: Colors.black),
+                                                                ),
+                                                              ),
+                                                            ],
                                                           ),
                                                         ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
+                                                      );
+                                                    })
                                               ],
                                             ),
                                           ),
@@ -3331,44 +3581,78 @@ Date
                                                           onPressed: () async {
                                                             // widget.showReportViewPageDialogBox(dataList[i]);
 
-                                                            print("Challenges runtimeType: ${dataList[i]['Challenges'].runtimeType}");
-                                                            print("Challenges: ${dataList[i]['Challenges']}");
-                                                            print("Solutions runtimeType: ${dataList[i]['Solutions'].runtimeType}");
-                                                            print("Solutions: ${dataList[i]['Solutions']}");
+                                                            ProgressDialog.show(context, "Previewing", Icons.picture_as_pdf);
 
-                                                            var challenges = dataList[i]['Challenges'];
-                                                            var solutions = dataList[i]['Solutions'];
-                                                             About_Me_Label = dataList[i]['About_Me_Label'];
+                                                            var pdfBytes;
 
-                                                            List<Map<String, dynamic>> solutionsList = [];
-                                                            List<Map<String, dynamic>> challengesList = [];
-
-                                                            // Print the runtimeType for debugging
-                                                            print("Challenges runtimeType: ${challenges.runtimeType}");
-
-                                                            // Check if challenges is a List
-                                                            if (challenges is List<dynamic>) {
-                                                              // Add each challenge to challengesList
-                                                              for (var challenge in challenges) {
-                                                                if (challenge is Map<String, dynamic>) {
-                                                                  challengesList.add(challenge);
-                                                                }
-                                                              }
-                                                            }
-
-                                                            if (solutions is List<dynamic>) {
-                                                              // Add each challenge to challengesList
-                                                              for (var challenge in solutions) {
-                                                                if (challenge is Map<String, dynamic>) {
-                                                                  solutionsList.add(challenge);
-                                                                }
-                                                              }
-                                                            }
                                                             // dataList[i]['Challenges'] = challengesList;
                                                             // dataList[i]['Solutions'] = solutionsList;
 
-                                                            ProgressDialog.show(context, "Previewing", Icons.picture_as_pdf);
-                                                            Uint8List pdfBytes = await makePdf(challengesList, solutionsList);
+                                                            if(dataList[i]['isPPS']==true || dataList[i]['isOS']==false){
+
+                                                              print("Challenges runtimeType: ${dataList[i]['Challenges'].runtimeType}");
+                                                              print("Challenges: ${dataList[i]['Challenges']}");
+                                                              print("Solutions runtimeType: ${dataList[i]['Solutions'].runtimeType}");
+                                                              print("Solutions: ${dataList[i]['Solutions']}");
+
+                                                              var challenges = dataList[i]['Challenges'];
+                                                              var solutions = dataList[i]['Solutions'];
+                                                              About_Me_Label = dataList[i]['About_Me_Label'];
+
+                                                              List<Map<String, dynamic>> solutionsList = [];
+                                                              List<Map<String, dynamic>> challengesList = [];
+
+                                                              // Print the runtimeType for debugging
+                                                              print("Challenges runtimeType: ${challenges.runtimeType}");
+
+                                                              // Check if challenges is a List
+                                                              if (challenges is List<dynamic>) {
+                                                                // Add each challenge to challengesList
+                                                                for (var challenge in challenges) {
+                                                                  if (challenge is Map<String, dynamic>) {
+                                                                    challengesList.add(challenge);
+                                                                  }
+                                                                }
+                                                              }
+
+                                                              if (solutions is List<dynamic>) {
+                                                                // Add each challenge to challengesList
+                                                                for (var challenge in solutions) {
+                                                                  if (challenge is Map<String, dynamic>) {
+                                                                    solutionsList.add(challenge);
+                                                                  }
+                                                                }
+                                                              }
+                                                               pdfBytes = await makePdf(challengesList, solutionsList);
+                                                            }
+                                                            else if(dataList[i]['isOS']==true || dataList[i]['isPPS']==false){
+                                                              _previewProvider.OSeditchallengess.clear();
+                                                              _previewProvider.OSeditsolutions.clear();
+                                                              challengesListForOs.clear();
+                                                              solutionsListForOs.clear();
+                                                              _previewProvider.PreviewChallengesList.clear();
+                                                              _previewProvider.PreviewSolutionStillNeeded.clear();
+                                                              _previewProvider.PreviewSolutionMyResposibilty.clear();
+                                                              _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
+                                                              _previewProvider.PreviewSolutionNiceToHave.clear();
+                                                              _previewProvider.PreviewSolutionMustHave.clear();
+                                                              print("PPS list Cleared");
+                                                              print("OS List Adding now");
+                                                              _previewProvider.OSEditChallengeList(dataList[i]["Challenges"]);
+                                                              _previewProvider.OSEditChallengeListadd(challengesListForOs);
+                                                              _previewProvider.OSEditChallengeListadd(_previewProvider.PreviewChallengesList);
+                                                              _previewProvider.OSEditSolutionList(dataList[i]["Solutions"]);
+                                                              _previewProvider.OSEditSolutionListadd(solutionsListForOs);
+                                                              _previewProvider.OSEditSolutionProvideradd(_previewProvider.PreviewSolutionMyResposibilty);
+                                                              _previewProvider.OSEditSolutionInPlaceadd(_previewProvider.PreviewSolutionStillNeeded,
+                                                                  _previewProvider.PreviewSolutionNotNeededAnyMore, _previewProvider.PreviewSolutionNiceToHave, _previewProvider.PreviewSolutionMustHave);
+
+                                                              await _previewProvider.getDataForOs(dataList[i]);
+                                                              About_Me_Label = dataList[i]["About_Me_Label"];
+                                                              pdfBytes = await _previewProvider.OSPdf(challengesListForOs, solutionsListForOs);
+                                                            }
+                                                            ProgressDialog.hide();
+
                                                             showDialog(
                                                                 context: context,
                                                                 builder: (BuildContext context) {
@@ -3408,11 +3692,141 @@ Date
                                                           iconSize: 25,
                                                           color: primaryColorOfApp,
                                                           onPressed: () async {
+
+                                                            // AboutMeLabeltextController.clear();
+                                                            // mycircumstancesController.clear();
+                                                            // MystrengthsController.clear();
+                                                            // myOrganisationController.clear();
+                                                            // myOrganisation2Controller.clear();
+                                                            // selectedEmail = null;
+                                                            // searchEmailcontroller.clear();
+                                                            // nameController.clear();
+                                                            // employerController.clear();
+                                                            // divisionOrSectionController.clear();
+                                                            // RoleController.clear();
+                                                            // LocationController.clear();
+                                                            // EmployeeNumberController.clear();
+                                                            // LineManagerController.clear();
+                                                            // AboutMeLabeltextController.clear();
+                                                            // AboutMeDatetextController.clear();
+                                                            // AboutMeUseFulInfotextController.clear();
+                                                            // AboutMeDescriptiontextController.clear();
+//
+
+                                                            Map<String, dynamic> AboutMEDatas = {
+                                                              // 'AB_id': ids,
+                                                              'Email': dataList[i]['Email'],
+                                                              'User_Name': dataList[i]['User_Name'],
+                                                              'Employer': dataList[i]['Employer'],
+                                                              'Division_or_Section': dataList[i]['Division_or_Section'],
+                                                              'Role': dataList[i]['Role'],
+                                                              'Location': dataList[i]['Location'],
+                                                              'Employee_Number': dataList[i]['Employee_Number'],
+                                                              'Line_Manager': dataList[i]['Line_Manager'],
+                                                              'isPPS': true,
+                                                              'isOS': false,
+                                                              // 'About_Me_Label': "${DateFormat('yyyy-MM-dd').format(DateTime.now())} ${userData['UserName']}_Personal Private Summary.pdf",
+                                                              'About_Me_Label': "PPS",
+                                                              'Purpose_of_report': dataList[i]['Purpose_of_report'],
+                                                              'Purpose': "Others" ,
+                                                              'AB_Description' : dataList[i]['AB_Description'],
+                                                              // 'AB_Date' : DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                                                              'AB_Useful_Info' : "",
+                                                              'AB_Attachment' : "",
+                                                              'AB_Status' : "main",
+                                                              'My_Circumstance': dataList[i]['My_Circumstance'],
+                                                              'My_Strength': dataList[i]['My_Strength'],
+                                                              'My_Organisation': dataList[i]['My_Organisation'],
+                                                              'My_Challenges_Organisation': dataList[i]['My_Challenges_Organisation'],
+                                                              'Solutions': dataList[i]['Solutions'],
+                                                              'Challenges': dataList[i]['Challenges'],
+                                                              "Created_By": dataList[i]['User_Name'],
+                                                              "Created_Date": DateFormat('yyyy-MM-dd, HH:mm:ss').format(DateTime.now()),
+                                                              "Modified_By": dataList[i]['User_Name'],
+                                                              "Modified_Date": DateFormat('yyyy-MM-dd, HH:mm:ss').format(DateTime.now()),
+                                                              "Report_sent_to": dataList[i]['Report_sent_to'],
+                                                              "Report_sent_to_cc": dataList[i]['Report_sent_to_cc'],
+                                                              // Add other fields as needed
+                                                            };
+
+                                                            QuerySnapshot querySnapshots = await  FirebaseFirestore.instance.collection('AboutMe')
+                                                                .where("Email", isEqualTo: widget.AdminName)
+                                                                .where("isPPS", isEqualTo: true)
+                                                                .where("AB_Status", isEqualTo: "main")
+                                                                .limit(1).get();
+
+                                                            if(querySnapshots.docs.isNotEmpty){
+                                                              print("Make current calling");
+                                                              ProgressDialog.show(context, "Make current",Icons.update);
+                                                              // setState(() async {
+                                                                await ApiRepository().updateAboutMe(AboutMEDatas, querySnapshots.docs.first.id);
+                                                                widget.refreshPage();
+                                                              // });
+
+
+                                                              AboutMeLabeltextController.clear();
+                                                              mycircumstancesController.clear();
+                                                              MystrengthsController.clear();
+                                                              myOrganisationController.clear();
+                                                              myOrganisation2Controller.clear();
+                                                              selectedEmail = null;
+                                                              searchEmailcontroller.clear();
+                                                              nameController.clear();
+                                                              employerController.clear();
+                                                              divisionOrSectionController.clear();
+                                                              RoleController.clear();
+                                                              LocationController.clear();
+                                                              EmployeeNumberController.clear();
+                                                              LineManagerController.clear();
+                                                              AboutMeLabeltextController.clear();
+                                                              AboutMeDatetextController.clear();
+                                                              AboutMeUseFulInfotextController.clear();
+                                                              AboutMeDescriptiontextController.clear();
+
+                                                              _userAboutMEProvider.editchallengess.clear();
+                                                              _userAboutMEProvider.editsolutionss.clear();
+                                                              challengesList.clear();
+                                                              solutionsList.clear();
+                                                              _previewProvider.PreviewChallengesList.clear();
+                                                              _previewProvider.PreviewSolutionStillNeeded.clear();
+                                                              _previewProvider.PreviewSolutionMyResposibilty.clear();
+                                                              _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
+                                                              _previewProvider.PreviewSolutionNiceToHave.clear();
+                                                              _previewProvider.PreviewSolutionMustHave.clear();
+                                                              print("PPS list Cleared");
+                                                              print("OS List Adding now");
+                                                              _userAboutMEProvider.EditChallengeList(dataList[i]["Challenges"]);
+                                                              _userAboutMEProvider.EditChallengeListadd(challengesList);
+                                                              _userAboutMEProvider.EditChallengeListadd(_previewProvider.PreviewChallengesList);
+                                                              _userAboutMEProvider.EditSolutionList(dataList[i]["Solutions"]);
+                                                              _userAboutMEProvider.EditSolutionListadd(solutionsList);
+                                                              _userAboutMEProvider.EditSolutionProvideradd(_previewProvider.PreviewSolutionMyResposibilty);
+                                                              _userAboutMEProvider.EditSolutionInPlaceadd(_previewProvider.PreviewSolutionStillNeeded,
+                                                                  _previewProvider.PreviewSolutionNotNeededAnyMore, _previewProvider.PreviewSolutionNiceToHave, _previewProvider.PreviewSolutionMustHave);
+
+                                                                  nameController.text = dataList[i]["User_Name"];
+                                                                  employerController.text = dataList[i]["Employer"];
+                                                                  divisionOrSectionController.text = dataList[i]["Division_or_Section"];
+                                                                  RoleController.text = dataList[i]["Role"];
+                                                                  LocationController.text = dataList[i]["Location"];
+                                                                  EmployeeNumberController.text = dataList[i]["Employee_Number"];
+                                                                  LineManagerController.text = dataList[i]["Line_Manager"];
+                                                                  AboutMeLabeltextController.text = dataList[i]["About_Me_Label"];
+                                                                  mycircumstancesController.text = dataList[i]["My_Circumstance"];
+                                                                  MystrengthsController.text = dataList[i]["My_Strength"];
+                                                                  myOrganisationController.text = dataList[i]["My_Organisation"];
+                                                                  myOrganisation2Controller.text = dataList[i]["My_Challenges_Organisation"];
+                                                                  AboutMeDescriptiontextController.text = dataList[i]["AB_Description"];
+                                                                  selectedEmail = dataList[i]["Email"];
+                                                                  searchEmailcontroller.text = dataList[i]["Email"];
+                                                              About_Me_Label = dataList[i]["About_Me_Label"];
+                                                              ProgressDialog.hide();
+                                                            }
                                                             // widget.showReportViewPageDialogBox(dataList[i]);
                                                           },
                                                           icon: Icon(Icons.edit_note,)),
 
-                                                      if(dataList[i]['AB_Status'].toString()!="-")
+                                                      (dataList[i]['AB_Status'].toString()!="-") ?
                                                       IconButton(
                                                           iconSize: 25,
                                                           color: primaryColorOfApp,
@@ -3426,8 +3840,8 @@ Date
                                                             // _addKeywordProvider.setFirstpageNo();
                                                             ProgressDialog.hide();
                                                           },
-                                                          icon: Icon(Icons.delete,)),
-                                                      // SizedBox(width: 20,),
+                                                          icon: Icon(Icons.delete,)) :
+                                                      SizedBox(width: 40,),
                                                     ],
                                                   ),
                                                   )
@@ -3677,7 +4091,8 @@ Date
     );
   }
 
-  void showEditAboutMeDialogBox(aboutMeData){
+
+   showEditOSDialogBox(aboutMeData){
     print("showEditAboutMeDialogBox aboutMeData: $aboutMeData");
     showDialog(
         context: context,
@@ -3742,16 +4157,21 @@ Date
                         // _previewProvider.mystrength=null ;
                         // _previewProvider.myorganization=null ;
                         // _previewProvider.mychallenge=null ;
-                        // _previewProvider.PreviewChallengesList.clear();
-                        // _previewProvider.PreviewSolutionList.clear();
-                        // _previewProvider.PreviewSolutionMyResposibilty.clear();
-                        // _previewProvider.PreviewSolutionStillNeeded.clear();
-                        // _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
-                        // _previewProvider.PreviewSolutionNiceToHave.clear();
-                        // _previewProvider.PreviewSolutionMustHave.clear();
+                        _previewProvider.PreviewChallengesList.clear();
+                        _previewProvider.PreviewSolutionList.clear();
+                        _previewProvider.PreviewSolutionMyResposibilty.clear();
+                        _previewProvider.PreviewSolutionStillNeeded.clear();
+                        _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
+                        _previewProvider.PreviewSolutionNiceToHave.clear();
+                        _previewProvider.PreviewSolutionMustHave.clear();
+                        _previewProvider.OSeditchallengess.clear();
+                        _previewProvider.OSeditsolutions.clear();
+                        challengesListForOs.clear();
+                        solutionsListForOs.clear();
                         // widget.refreshPage();
                         // Navigator.pop(context);
                         // widget.page.jumpToPage(1);
+
                         widget.refreshPage();
                         Navigator.pop(context);
                       },
@@ -5988,7 +6408,9 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                                               onPressed: () {
                                                                 showEditconfirmChallengeDialogBox(challenge.id, challenge.label,challenge.description, challenge.Source, challenge.Status,challenge.tags,challenge.CreatedBy,
                                                                     challenge.CreatedDate,challenge.ModifiedBy,challenge.ModifiedDate,challenge.OriginalDescription,challenge.Impact,challenge.Final_description,
-                                                                    challenge.Category,challenge.Keywords,challenge.PotentialStrengths,challenge.HiddenStrengths, index,userAboutMEProvider.editchallengess,challenge.notes,);
+                                                                    challenge.Category,challenge.Keywords,challenge.PotentialStrengths,challenge.HiddenStrengths, index,userAboutMEProvider.editchallengess,challenge.notes,challenge.attachment,
+                                                                  challenge.ImpactToCoworker,challenge.ImpactToEmployee,challenge.NegativeImpactToOrganisation,
+                                                                  challenge.RelatedChallengesTag,challenge.SuggestedChallengesTag,);
                                                                 print("challenge.isConfirmed: ${challenge.isConfirmed}");
                                                               },
                                                               icon: Icon(Icons.edit, color: Colors.green),
@@ -6122,6 +6544,7 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                               'Challenges': challengesList,
 
                             };
+
 
                             String solutionJson = json.encode(AboutMEDatas);
                             print("solutionJson: $solutionJson");
@@ -6746,7 +7169,8 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                                                     onPressed: () {
                                                                       showEditconfirmSolutionsDialogBox(solution.id, solution.label,solution.description, solution.Source, solution.Status,solution.tags,solution.CreatedBy,
                                                                           solution.CreatedDate,solution.ModifiedBy,solution.ModifiedDate,solution.OriginalDescription,solution.Impact,solution.Final_description,
-                                                                          solution.Category,solution.Keywords,"","",userAboutMEProvider.editsolutionss,solution.notes,solution.Provider,solution.InPlace);
+                                                                          solution.Category,solution.Keywords,"","",userAboutMEProvider.editsolutionss,solution.notes,solution.Provider,solution.InPlace,
+                                                                          solution.attachment,solution.Help,solution.PositiveImpactstoEmployee,solution.PositiveImpactstoOrganisation,solution.RelatedSolutionsTags,solution.SuggestedChallengesTags);
                                                                       print("solution.InPlace: ${solution.InPlace}");
                                                                       print("solution.Provider: ${solution.Provider}");
                                                                     },
@@ -7002,2967 +7426,24 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
     );
   }
 
-  ///
-  // Widget PreviewPage(aboutMeData){
-  //   // List<dynamic> challengesData = aboutMeData['Challenges'];
-  //   // for (var challengeData in challengesData) {
-  //   //   if (challengeData is Map<String, dynamic>) {
-  //   //     _previewProvider.PreviewChallengesList.add(challengeData);
-  //   //   }
-  //   // }
-  //   return Consumer<PreviewProvider>(
-  //       builder: (c,previewProvider, _){
-  //
-  //         return  Container(
-  //           height: MediaQuery
-  //               .of(context)
-  //               .size
-  //               .height,
-  //           child: SingleChildScrollView(
-  //             child: Column(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               children: [
-  //                 SizedBox(height: 5,),
-  //                 // Padding(
-  //                 //   padding: const EdgeInsets.only(left: 20.0),
-  //                 //   child: Row(
-  //                 //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                 //     children: [
-  //                 //       Text("5. Preview",
-  //                 //           style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-  //                 //               fontSize: 30,
-  //                 //               color: Colors.black)),
-  //                 //       InkWell(
-  //                 //         onTap: (){
-  //                 //           downloadAboutMePdf(challengesList,solutionsList);
-  //                 //         },
-  //                 //         child:Container(
-  //                 //           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-  //                 //           width: MediaQuery.of(context).size.width * .15,
-  //                 //           decoration: BoxDecoration(
-  //                 //             color:Colors.blue ,
-  //                 //             border: Border.all(
-  //                 //                 color:Colors.blue ,
-  //                 //                 width: 1.0),
-  //                 //             borderRadius: BorderRadius.circular(15.0),
-  //                 //           ),
-  //                 //           child: Center(
-  //                 //             child: Text(
-  //                 //               'Download Pdf',
-  //                 //               style: GoogleFonts.montserrat(
-  //                 //                 textStyle:
-  //                 //                 Theme
-  //                 //                     .of(context)
-  //                 //                     .textTheme
-  //                 //                     .titleSmall,
-  //                 //                 fontWeight: FontWeight.bold,
-  //                 //                 color:Colors.white ,
-  //                 //               ),
-  //                 //             ),
-  //                 //           ),
-  //                 //         ),
-  //                 //       )
-  //                 //     ],
-  //                 //   ),
-  //                 // ),
-  //                 // SizedBox(height: 20,),
-  //                 Padding(
-  //                   padding: const EdgeInsets.symmetric(
-  //                       vertical: 10.0, horizontal: 5),
-  //                   child: Row(
-  //                     mainAxisAlignment: MainAxisAlignment.start,
-  //                     children: [
-  //                       // Text("Title: ",
-  //                       //     style: GoogleFonts.montserrat(textStyle: Theme
-  //                       //         .of(context)
-  //                       //         .textTheme
-  //                       //         .titleMedium,)),
-  //                       // Text("${previewProvider.title==null ? "" : previewProvider.title}",
-  //                       //     style: GoogleFonts.montserrat(textStyle: Theme
-  //                       //         .of(context)
-  //                       //         .textTheme
-  //                       //         .bodyLarge,fontWeight: FontWeight.w700)),
-  //
-  //                       Text("Report Title: ", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
-  //
-  //                       Flexible(
-  //                         child: Container(
-  //                           height: 40,
-  //                           width: MediaQuery.of(context).size.width * .25,
-  //                           child: TextField(
-  //                             controller: AboutMeLabeltextController,
-  //                             onChanged: (value) {
-  //                               _previewProvider.updatetitle(value);
-  //                             },
-  //                             style: GoogleFonts.montserrat(
-  //                                 textStyle: Theme
-  //                                     .of(context)
-  //                                     .textTheme
-  //                                     .bodyLarge,
-  //                                 fontWeight: FontWeight.w400,
-  //                                 color: Colors.black),
-  //                             decoration: InputDecoration(
-  //                               contentPadding: EdgeInsets.all(10),
-  //                               // labelText: "Name",
-  //                               hintText: "About Me Title",
-  //                               errorStyle: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.bodyLarge,
-  //                                   fontWeight: FontWeight.w400,
-  //                                   color: Colors.redAccent),
-  //                               focusedBorder: OutlineInputBorder(
-  //                                   borderSide: BorderSide(color: Colors.black),
-  //                                   borderRadius: BorderRadius.circular(15)),
-  //                               border: OutlineInputBorder(
-  //                                   borderSide: BorderSide(color: Colors.black12),
-  //                                   borderRadius: BorderRadius.circular(15)),
-  //                               labelStyle: GoogleFonts.montserrat(
-  //                                   textStyle: Theme
-  //                                       .of(context)
-  //                                       .textTheme
-  //                                       .bodyLarge,
-  //                                   fontWeight: FontWeight.w400,
-  //                                   color: Colors.black),
-  //                             ),
-  //                           ),
-  //                         ),
-  //                       ),
-  //
-  //                       SizedBox(width: 10,),
-  //
-  //                       InkWell(
-  //                         onTap: () async {
-  //                           // sideMenu.changePage(2);
-  //                           // page.jumpToPage(1);
-  //                         },
-  //                         child: Container(
-  //                           // margin: EdgeInsets.all(10),
-  //                           padding: EdgeInsets.all(5),
-  //                           height: 40,
-  //                           width: MediaQuery.of(context).size.width * 0.15,
-  //                           decoration: BoxDecoration(
-  //                             // color: Colors.white,
-  //                             border: Border.all(color:primaryColorOfApp, width: 1.0),
-  //                             borderRadius: BorderRadius.circular(10.0),
-  //                           ),
-  //                           child: Row(
-  //                             mainAxisAlignment: MainAxisAlignment.center,
-  //                             crossAxisAlignment: CrossAxisAlignment.center,
-  //                             children: [
-  //                               Icon(Icons.insert_drive_file,color: Colors.black,size: 20,),
-  //                               SizedBox(width: 5,),
-  //                               Expanded(
-  //                                 child: Text(
-  //                                   // 'Thrivers',
-  //                                   'For Someone Else',
-  //                                   overflow: TextOverflow.ellipsis,
-  //                                   style: GoogleFonts.montserrat(
-  //                                       textStyle:
-  //                                       Theme.of(context).textTheme.bodySmall,
-  //                                       color: Colors.black),
-  //                                 ),
-  //                               ),
-  //                             ],
-  //                           ),
-  //                         ),
-  //
-  //                       ),
-  //
-  //                     ],
-  //                   ),
-  //                 ),
-  //                 Divider(color: Colors.black26,),
-  //
-  //                 Padding(
-  //                   padding: const EdgeInsets.symmetric(
-  //                       vertical: 10.0, horizontal: 5),
-  //                   child: TextField(
-  //                     controller: AboutMeDescriptiontextController,
-  //                     onChanged: (value) {
-  //                       // _previewProvider.updatetitle(value);
-  //                     },
-  //                     style: GoogleFonts.montserrat(
-  //                         textStyle: Theme.of(context).textTheme.bodySmall,
-  //                         fontWeight: FontWeight.w400,
-  //                         color: Colors.black),
-  //                     decoration: InputDecoration(
-  //                       hintText: "Description",
-  //                       focusedBorder: OutlineInputBorder(
-  //                           borderSide: BorderSide(color: Colors.black),
-  //                           borderRadius: BorderRadius.circular(10)),
-  //                       border: OutlineInputBorder(
-  //                           borderSide: BorderSide(color: Colors.black12),
-  //                           borderRadius: BorderRadius.circular(10)),
-  //                     ),
-  //                   ),
-  //                 ),
-  //
-  //                 Container(
-  //                   child: Column(
-  //                     crossAxisAlignment: CrossAxisAlignment.start,
-  //
-  //                     children: [
-  //
-  //                       Padding(
-  //                         padding: const EdgeInsets.symmetric(
-  //                             vertical: 10.0, horizontal: 5),
-  //                         child: Text("Personal Info",
-  //                             style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-  //                                 fontSize: 20,
-  //                                 color: Colors.black)),
-  //                       ),
-  //
-  //                       Padding(
-  //                         padding: const EdgeInsets.symmetric(
-  //                             vertical: 10.0, horizontal: 5),
-  //                         child: Row(
-  //                           mainAxisAlignment: MainAxisAlignment.start,
-  //                           children: [
-  //                             Text("1. Email: ",
-  //                                 style: GoogleFonts.montserrat(textStyle: Theme
-  //                                     .of(context)
-  //                                     .textTheme
-  //                                     .titleMedium,)),
-  //                             Text("${previewProvider.email==null ? "" : previewProvider.email}",
-  //                                 style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.bodyLarge,fontWeight: FontWeight.w700)),
-  //                           ],
-  //                         ),
-  //                       ),
-  //                       Padding(
-  //                         padding: const EdgeInsets.symmetric(
-  //                             vertical: 10.0, horizontal: 5),
-  //                         child: Row(
-  //                           mainAxisAlignment: MainAxisAlignment.start,
-  //                           children: [
-  //                             Text("2. Name: ",
-  //                                 style: GoogleFonts.montserrat(textStyle: Theme
-  //                                     .of(context)
-  //                                     .textTheme
-  //                                     .titleMedium,)),
-  //                             Text("${previewProvider.name==null ? "" : previewProvider.name}",
-  //                                 style: GoogleFonts.montserrat(textStyle: Theme
-  //                                     .of(context)
-  //                                     .textTheme
-  //                                     .bodyLarge,fontWeight: FontWeight.w700)),
-  //                           ],
-  //                         ),
-  //                       ),
-  //                       Padding(
-  //                         padding: const EdgeInsets.symmetric(
-  //                             vertical: 10.0, horizontal: 5),
-  //                         child: Row(
-  //                           mainAxisAlignment: MainAxisAlignment.start,
-  //                           children: [
-  //                             Text("3. Employer: ",
-  //                                 style: GoogleFonts.montserrat(textStyle: Theme
-  //                                     .of(context)
-  //                                     .textTheme
-  //                                     .titleMedium,)),
-  //                             Text("${previewProvider.employer==null ? "" : previewProvider.employer}",
-  //                                 style: GoogleFonts.montserrat(textStyle: Theme
-  //                                     .of(context)
-  //                                     .textTheme
-  //                                     .bodyLarge,fontWeight: FontWeight.w700)),
-  //                           ],
-  //                         ),
-  //                       ),
-  //                       Padding(
-  //                         padding: const EdgeInsets.symmetric(
-  //                             vertical: 10.0, horizontal: 5),
-  //                         child: Row(
-  //                           mainAxisAlignment: MainAxisAlignment.start,
-  //                           children: [
-  //                             Text("4. Division or section: ",
-  //                                 style: GoogleFonts.montserrat(textStyle: Theme
-  //                                     .of(context)
-  //                                     .textTheme
-  //                                     .titleMedium,)),
-  //                             Text("${previewProvider.division==null ? "" : previewProvider.division}",
-  //                                 style: GoogleFonts.montserrat(textStyle: Theme
-  //                                     .of(context)
-  //                                     .textTheme
-  //                                     .bodyLarge,fontWeight: FontWeight.w700)),
-  //                           ],
-  //                         ),
-  //                       ),
-  //                       Padding(
-  //                         padding: const EdgeInsets.symmetric(
-  //                             vertical: 10.0, horizontal: 5),
-  //                         child: Row(
-  //                           mainAxisAlignment: MainAxisAlignment.start,
-  //
-  //                           children: [
-  //                             Text("5. Role: ",
-  //                                 style: GoogleFonts.montserrat(textStyle: Theme
-  //                                     .of(context)
-  //                                     .textTheme
-  //                                     .titleMedium,)),
-  //                             Text("${previewProvider.role==null ? "" : previewProvider.role}",
-  //                                 style: GoogleFonts.montserrat(textStyle: Theme
-  //                                     .of(context)
-  //                                     .textTheme
-  //                                     .bodyLarge,fontWeight: FontWeight.w700)),
-  //                           ],
-  //                         ),
-  //                       ),
-  //                       Padding(
-  //                         padding: const EdgeInsets.symmetric(
-  //                             vertical: 10.0, horizontal: 5),
-  //                         child: Row(
-  //                           mainAxisAlignment: MainAxisAlignment.start,
-  //
-  //                           children: [
-  //                             Text("6. Location: ",
-  //                                 style: GoogleFonts.montserrat(textStyle: Theme
-  //                                     .of(context)
-  //                                     .textTheme
-  //                                     .titleMedium,)),
-  //                             Text("${previewProvider.location==null ? "" : previewProvider.location}",
-  //                                 style: GoogleFonts.montserrat(textStyle: Theme
-  //                                     .of(context)
-  //                                     .textTheme
-  //                                     .bodyLarge,fontWeight: FontWeight.w700)),
-  //                           ],
-  //                         ),
-  //                       ),
-  //                       Padding(
-  //                         padding: const EdgeInsets.symmetric(
-  //                             vertical: 10.0, horizontal: 5),
-  //                         child: Row(
-  //                           mainAxisAlignment: MainAxisAlignment.start,
-  //                           children: [
-  //                             Text("7. Employee number: ",
-  //                                 style: GoogleFonts.montserrat(textStyle: Theme
-  //                                     .of(context)
-  //                                     .textTheme
-  //                                     .titleMedium,)),
-  //                             Text("${previewProvider.employeeNumber==null ? "" : previewProvider.employeeNumber}",
-  //                                 style: GoogleFonts.montserrat(textStyle: Theme
-  //                                     .of(context)
-  //                                     .textTheme
-  //                                     .bodyLarge,fontWeight: FontWeight.w700)),
-  //                           ],
-  //                         ),
-  //                       ),
-  //                       Padding(
-  //                         padding: const EdgeInsets.symmetric(
-  //                             vertical: 10.0, horizontal: 5),
-  //                         child: Row(
-  //                           mainAxisAlignment: MainAxisAlignment.start,
-  //                           children: [
-  //                             Text("8. Line manager:",
-  //                                 style: GoogleFonts.montserrat(textStyle: Theme
-  //                                     .of(context)
-  //                                     .textTheme
-  //                                     .titleMedium,)),
-  //                             Text("${previewProvider.linemanager==null ? "" : previewProvider.linemanager}",
-  //                                 style: GoogleFonts.montserrat(textStyle: Theme
-  //                                     .of(context)
-  //                                     .textTheme
-  //                                     .bodyLarge,fontWeight: FontWeight.w700)),
-  //                           ],
-  //                         ),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 ),
-  //
-  //                 Container(
-  //                   child: Column(
-  //                     crossAxisAlignment: CrossAxisAlignment.start,
-  //
-  //                     children: [
-  //                       Padding(
-  //                         padding: const EdgeInsets.symmetric(
-  //                             vertical: 10.0, horizontal: 5),
-  //                         child: Text("Insight about me",
-  //                             style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-  //                                 fontSize: 20,
-  //                                 color: Colors.black)),
-  //                       ),
-  //                       // Padding(
-  //                       //   padding: const EdgeInsets.symmetric(
-  //                       //       vertical: 10.0, horizontal: 5),
-  //                       //   child: Row(
-  //                       //     mainAxisAlignment: MainAxisAlignment.start,
-  //                       //     children: [
-  //                       //       Text("Title: ",
-  //                       //           style: GoogleFonts.montserrat(textStyle: Theme
-  //                       //               .of(context)
-  //                       //               .textTheme
-  //                       //               .titleMedium,)),
-  //                       //       Text("${previewProvider.title==null ? "" : previewProvider.title}",
-  //                       //           style: GoogleFonts.montserrat(textStyle: Theme
-  //                       //               .of(context)
-  //                       //               .textTheme
-  //                       //               .bodyLarge,fontWeight: FontWeight.w700)),
-  //                       //     ],
-  //                       //   ),
-  //                       // ),
-  //
-  //
-  //                       Padding(
-  //                         padding: const EdgeInsets.symmetric(
-  //                             vertical: 10.0, horizontal: 5),
-  //                         child: Text("1. About Me and My circumstances: ",
-  //                             style: GoogleFonts.montserrat(textStyle: Theme
-  //                                 .of(context)
-  //                                 .textTheme
-  //                                 .titleMedium,)),
-  //                       ),
-  //                       Padding(
-  //                         padding: const EdgeInsets.symmetric(
-  //                             horizontal: 5),
-  //                         child: Text("${previewProvider.mycircumstance==null ? "" : previewProvider.mycircumstance}",
-  //                             style: GoogleFonts.montserrat(textStyle: Theme
-  //                                 .of(context)
-  //                                 .textTheme
-  //                                 .bodyLarge,fontWeight: FontWeight.w700)),
-  //                       ),
-  //                       Padding(
-  //                         padding: const EdgeInsets.symmetric(
-  //                             vertical: 10.0, horizontal: 5),
-  //                         child: Text("2. My strengths that I want to have the opportunity to use in my role: ",
-  //                             style: GoogleFonts.montserrat(textStyle: Theme
-  //                                 .of(context)
-  //                                 .textTheme
-  //                                 .titleMedium,)),
-  //                       ),
-  //                       Padding(
-  //                         padding: const EdgeInsets.symmetric(
-  //                             horizontal: 5),
-  //                         child: Text("${previewProvider.mystrength==null ? "" : previewProvider.mystrength}",
-  //                             style: GoogleFonts.montserrat(textStyle: Theme
-  //                                 .of(context)
-  //                                 .textTheme
-  //                                 .bodyLarge,fontWeight: FontWeight.w700)),
-  //
-  //                       ),
-  //                       Padding(
-  //                         padding: const EdgeInsets.symmetric(
-  //                             vertical: 10.0, horizontal: 5),
-  //                         child: Text("3. What I value about [my organisation] and workplace environment that helps me perform to my best: ",
-  //                             style: GoogleFonts.montserrat(textStyle: Theme
-  //                                 .of(context)
-  //                                 .textTheme
-  //                                 .titleMedium,)),
-  //                       ),
-  //                       Padding(
-  //                         padding: const EdgeInsets.symmetric(
-  //                             horizontal: 5),
-  //                         child: Text("${previewProvider.myorganization==null ? "" : previewProvider.myorganization}",
-  //                             style: GoogleFonts.montserrat(textStyle: Theme
-  //                                 .of(context)
-  //                                 .textTheme
-  //                                 .bodyLarge,fontWeight: FontWeight.w700)),
-  //
-  //                       ),
-  //                       Padding(
-  //                         padding: const EdgeInsets.symmetric(
-  //                             vertical: 10.0, horizontal: 5),
-  //                         child: Text("4. What I find challenging about [My Organisation] and the workplace environment that makes it harder for me to perform my best: ",
-  //                             style: GoogleFonts.montserrat(textStyle: Theme
-  //                                 .of(context)
-  //                                 .textTheme
-  //                                 .titleMedium,)),
-  //                       ),
-  //                       Padding(
-  //                         padding: const EdgeInsets.symmetric(
-  //                             horizontal: 5),
-  //                         child: Text("${previewProvider.mychallenge==null ? "" : previewProvider.mychallenge}",
-  //                             style: GoogleFonts.montserrat(textStyle: Theme
-  //                                 .of(context)
-  //                                 .textTheme
-  //                                 .bodyLarge,fontWeight: FontWeight.w700)),
-  //
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 ),
-  //
-  //                 Container(
-  //                   child: Column(
-  //                     crossAxisAlignment: CrossAxisAlignment.start,
-  //                     children: [
-  //                       Padding(
-  //                         padding: const EdgeInsets.symmetric(
-  //                             vertical: 10.0, horizontal: 5),
-  //                         child: Text("Challenges",
-  //                             style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-  //                                 fontSize: 20,
-  //                                 color: Colors.black)),
-  //                       ),
-  //                       Consumer<PreviewProvider>(
-  //                         builder: (context, previewProvider, _) {
-  //                           // solutions = userAboutMEProvider.getSelectedSolutions();
-  //                           print("PreviewChallengesList : ${previewProvider.PreviewChallengesList}");
-  //
-  //
-  //                           return Container(
-  //                             // height: MediaQuery.of(context).size.height * .6,
-  //                             width: MediaQuery.of(context).size.width ,
-  //                             decoration: BoxDecoration(
-  //                               border: Border.all(color: Colors.black26),
-  //                               borderRadius: BorderRadius.circular(20),
-  //                             ),
-  //                             // width: MediaQuery.of(context).size.width,
-  //                             child:SingleChildScrollView(
-  //                               child: DataTable(
-  //                                 dataRowMaxHeight:60 ,
-  //                                 headingTextStyle: GoogleFonts.montserrat(
-  //                                     textStyle: Theme.of(context).textTheme.titleMedium,
-  //                                     fontWeight: FontWeight.w500,
-  //                                     color: Colors.black),
-  //                                 columnSpacing: 15,
-  //                                 columns: [
-  //                                   DataColumn(
-  //                                     label: Container(
-  //                                       // color: Colors.blue,
-  //                                       // width: 60,
-  //                                       child: Text('Id',textAlign: TextAlign.center,),
-  //                                     ),
-  //
-  //                                   ),
-  //                                   DataColumn(
-  //                                     label: Container(
-  //                                       // width: 180,
-  //                                       child: Text('Label',),
-  //                                     ),
-  //                                   ),
-  //                                   DataColumn(
-  //                                     label: Text('Impact',),
-  //                                   ),
-  //                                   DataColumn(
-  //                                     label: Container(
-  //                                       // width: 400,
-  //                                         child: Text('Description')
-  //                                     ),
-  //                                   ),
-  //                                   DataColumn(
-  //                                     label: Container(
-  //                                       // width: 400,
-  //                                         child: Text('Impact on me')
-  //                                     ),
-  //                                   ),
-  //                                   DataColumn(
-  //                                     label: Container(
-  //                                       // width: 400,
-  //                                         child: Text('Attachment')
-  //                                     ),
-  //                                   ),
-  //
-  //
-  //                                 ],
-  //
-  //                                 rows: previewProvider.PreviewChallengesList.map((solution) {
-  //                                   int index = previewProvider.PreviewChallengesList.indexOf(solution);
-  //
-  //
-  //                                   // print(jsonString);
-  //
-  //
-  //                                   return DataRow(
-  //                                     cells: [
-  //                                       DataCell(
-  //                                           Container(
-  //                                             // width: 60,
-  //                                               child: Text("CH0${solution['id']}.", style: GoogleFonts.montserrat(
-  //                                                 // child: Text("${index + 1}.", style: GoogleFonts.montserrat(
-  //                                                   textStyle: Theme.of(context).textTheme.bodySmall,
-  //                                                   fontWeight: FontWeight.w600,
-  //                                                   color: Colors.black),))),
-  //                                       DataCell(
-  //                                           Container(
-  //                                             // width: 180,
-  //                                               child: Text(solution['Label'],
-  //                                                   overflow: TextOverflow.ellipsis,maxLines: 2,
-  //                                                   style: GoogleFonts.montserrat(
-  //                                                       textStyle: Theme.of(context).textTheme.bodySmall,
-  //                                                       fontWeight: FontWeight.w600,
-  //                                                       color: Colors.black)
-  //                                               ))),
-  //                                       DataCell(
-  //                                           Container(
-  //                                             // width: 400,
-  //                                               child: Text(solution['Impact'],
-  //                                                   overflow: TextOverflow.ellipsis,maxLines: 2,
-  //                                                   style: GoogleFonts.montserrat(
-  //                                                       textStyle: Theme.of(context).textTheme.bodySmall,
-  //                                                       fontWeight: FontWeight.w600,
-  //                                                       color: Colors.black)
-  //                                               ))),
-  //                                       DataCell(
-  //                                           Container(
-  //                                             // width: 400,
-  //                                               child: Text(solution['Final_description'],
-  //                                                   overflow: TextOverflow.ellipsis,maxLines: 2,
-  //                                                   style: GoogleFonts.montserrat(
-  //                                                       textStyle: Theme.of(context).textTheme.bodySmall,
-  //                                                       fontWeight: FontWeight.w600,
-  //                                                       color: Colors.black)
-  //                                               ))),
-  //
-  //                                       DataCell(
-  //                                           Container(
-  //                                             // width: 400,
-  //                                               child: Text(solution['Impact_on_me'],
-  //                                                   overflow: TextOverflow.ellipsis,maxLines: 2,
-  //                                                   style: GoogleFonts.montserrat(
-  //                                                       textStyle: Theme.of(context).textTheme.bodySmall,
-  //                                                       fontWeight: FontWeight.w600,
-  //                                                       color: Colors.black)
-  //                                               ))),
-  //
-  //                                       DataCell(
-  //                                           Container(
-  //                                             // width: 400,
-  //                                               child: Text(solution['Attachment'],
-  //                                                   overflow: TextOverflow.ellipsis,maxLines: 2,
-  //                                                   style: GoogleFonts.montserrat(
-  //                                                       textStyle: Theme.of(context).textTheme.bodySmall,
-  //                                                       fontWeight: FontWeight.w600,
-  //                                                       color: Colors.black)
-  //                                               ))),
-  //
-  //                                       // DataCell(
-  //                                       //   Container(
-  //                                       //     // height: 100,
-  //                                       //     margin: EdgeInsets.all(5),
-  //                                       //     width: 140,
-  //                                       //     child: Center(
-  //                                       //       child: TextField(
-  //                                       //         maxLines: 4,
-  //                                       //         controller: TextEditingController(text: solution.notes),
-  //                                       //         onChanged: (value) {
-  //                                       //         },
-  //                                       //         style: GoogleFonts.montserrat(
-  //                                       //             textStyle: Theme
-  //                                       //                 .of(context)
-  //                                       //                 .textTheme
-  //                                       //                 .bodySmall,
-  //                                       //             fontWeight: FontWeight.w400,
-  //                                       //             color: Colors.black),
-  //                                       //         decoration: InputDecoration(
-  //                                       //           contentPadding: EdgeInsets.all(10),
-  //                                       //           // labelText: "Name",
-  //                                       //           hintText: "Notes",
-  //                                       //           errorStyle: GoogleFonts.montserrat(
-  //                                       //               textStyle: Theme
-  //                                       //                   .of(context)
-  //                                       //                   .textTheme
-  //                                       //                   .bodyLarge,
-  //                                       //               fontWeight: FontWeight.w400,
-  //                                       //               color: Colors.redAccent),
-  //                                       //           focusedBorder: OutlineInputBorder(
-  //                                       //               borderSide: BorderSide(color: Colors.black),
-  //                                       //               borderRadius: BorderRadius.circular(5)),
-  //                                       //           border: OutlineInputBorder(
-  //                                       //               borderSide: BorderSide(color: Colors.black12),
-  //                                       //               borderRadius: BorderRadius.circular(5)),
-  //                                       //           labelStyle: GoogleFonts.montserrat(
-  //                                       //               textStyle: Theme
-  //                                       //                   .of(context)
-  //                                       //                   .textTheme
-  //                                       //                   .bodyLarge,
-  //                                       //               fontWeight: FontWeight.w400,
-  //                                       //               color: Colors.black),
-  //                                       //         ),
-  //                                       //       ),
-  //                                       //     ),
-  //                                       //   ),), // Empty cell for Notes
-  //
-  //                                       // DataCell(
-  //                                       //     Container(
-  //                                       //       child: IconButton(
-  //                                       //         onPressed: (){
-  //                                       //
-  //                                       //         },
-  //                                       //         icon: Icon(Icons.add),
-  //                                       //       ),
-  //                                       //     )),  // Empty cell for Attachments
-  //                                       // DataCell(
-  //                                       //   Container(
-  //                                       //     width: 120,
-  //                                       //     child: DropdownButton(
-  //                                       //       style: TextStyle(fontSize: 12,overflow: TextOverflow.ellipsis),
-  //                                       //       // value: selectedProvider,
-  //                                       //       value: selectedProviderValues[index],
-  //                                       //       onChanged: (newValue) {
-  //                                       //         // userAboutMEProvider.updatevalue(selectedProviderValues[index], newValue.toString());
-  //                                       //         setState(() {
-  //                                       //           // selectedProvider = newValue.toString();
-  //                                       //           selectedProviderValues[index] = newValue.toString();
-  //                                       //         });
-  //                                       //       },
-  //                                       //       items: provider.map((option) {
-  //                                       //         return DropdownMenuItem(
-  //                                       //           value: option,
-  //                                       //           child: Text(option, overflow: TextOverflow.ellipsis,maxLines: 2,),
-  //                                       //         );
-  //                                       //       }).toList(),
-  //                                       //     ),
-  //                                       //   ),
-  //                                       // ),  // Empty cell for Provider
-  //                                       // DataCell(
-  //                                       //   Container(
-  //                                       //     width: 60,
-  //                                       //     child: DropdownButton(
-  //                                       //       style: TextStyle(fontSize: 12,overflow: TextOverflow.ellipsis),
-  //                                       //       value: selectedInPlaceValues[index],
-  //                                       //       // value: selectedInPlace,
-  //                                       //       onChanged: (newValue) {
-  //                                       //         setState(() {
-  //                                       //           selectedInPlaceValues[index] = newValue.toString();
-  //                                       //           // selectedInPlace = newValue.toString();
-  //                                       //         });
-  //                                       //       },
-  //                                       //       items: InPlace.map((option) {
-  //                                       //         return DropdownMenuItem(
-  //                                       //           value: option,
-  //                                       //           child: Text(option),
-  //                                       //         );
-  //                                       //       }).toList(),
-  //                                       //     ),
-  //                                       //   ),
-  //                                       // ),  // Empty cell for In Place
-  //                                       // DataCell(
-  //                                       //   Container(
-  //                                       //     width: 140,
-  //                                       //     // child:  DropdownButton(
-  //                                       //     //   style: TextStyle(fontSize: 12,overflow: TextOverflow.ellipsis),
-  //                                       //     //   value: selectedPriorityValues[index],
-  //                                       //     //   // value: selectedPriority,
-  //                                       //     //   onChanged: (newValue) {
-  //                                       //     //     setState(() {
-  //                                       //     //       selectedPriorityValues[index] = newValue.toString();
-  //                                       //     //
-  //                                       //     //       print("$index: ${selectedPriorityValues[index]} ");
-  //                                       //     //       // selectedPriority = newValue.toString();
-  //                                       //     //     });
-  //                                       //     //   },
-  //                                       //     //   items: Priority.map((option) {
-  //                                       //     //     return DropdownMenuItem(
-  //                                       //     //       value: option,
-  //                                       //     //       child: Text(option, overflow: TextOverflow.ellipsis,),
-  //                                       //     //     );
-  //                                       //     //   }).toList(),
-  //                                       //     // ),
-  //                                       //     child:  DropdownButtonFormField(
-  //                                       //       style: TextStyle(fontSize: 12,overflow: TextOverflow.ellipsis),
-  //                                       //       decoration: InputDecoration(
-  //                                       //
-  //                                       //         hintText: 'Priority',
-  //                                       //       ),
-  //                                       //       value: userAboutMEProvider.selectedPriorityValues[index],
-  //                                       //       onChanged: (newValue) {
-  //                                       //         userAboutMEProvider.updateSelectedPriorityValues(index, newValue);
-  //                                       //         print('priority ${index} and ${userAboutMEProvider.selectedPriorityValues}');
-  //                                       //       },
-  //                                       //       icon: Icon(Icons.keyboard_arrow_down_outlined,size: 20,),
-  //                                       //       items: selectedPriorityValues.map<DropdownMenuItem<String>>((String value) {
-  //                                       //         // String displayedText = value;
-  //                                       //         // if (displayedText.length > 5) {
-  //                                       //         //   // Limit the displayed text to 10 characters and add ellipsis
-  //                                       //         //   displayedText = displayedText.substring(0, 5) + '..';
-  //                                       //         // }
-  //                                       //         return DropdownMenuItem<String>(
-  //                                       //           value: value,
-  //                                       //           child: Text(value, overflow: TextOverflow.ellipsis,),
-  //                                       //         );
-  //                                       //       }).toList(),
-  //                                       //     ),
-  //                                       //   ),
-  //                                       // ),  // Empty cell for Priority
-  //
-  //                                     ],
-  //                                   );
-  //                                 }).toList(),
-  //                               ),
-  //                             ),
-  //
-  //                           );
-  //                         },
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 ),
-  //
-  //                 Container(
-  //                   child: Column(
-  //                     crossAxisAlignment: CrossAxisAlignment.start,
-  //
-  //                     children: [
-  //                       Padding(
-  //                         padding: const EdgeInsets.symmetric(
-  //                             vertical: 10.0, horizontal: 5),
-  //                         child: Text("Solutions",
-  //                             style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-  //                                 fontSize: 20,
-  //                                 color: Colors.black)),
-  //                       ),
-  //                       Consumer<PreviewProvider>(
-  //                         builder: (context, previewProvider, _) {
-  //                           print("PreviewSolutionList : ${previewProvider.PreviewSolutionList}");
-  //
-  //
-  //                           return Container(
-  //                             // height: 350,
-  //                             // height: MediaQuery.of(context).size.height * .48,
-  //                             width: MediaQuery.of(context).size.width,
-  //
-  //                             decoration: BoxDecoration(
-  //                               border: Border.all(color: Colors.black26),
-  //                               borderRadius: BorderRadius.circular(20),
-  //                             ),
-  //                             // width: MediaQuery.of(context).size.width,
-  //                             child:SingleChildScrollView(
-  //                               child: DataTable(
-  //                                 dataRowMaxHeight:60 ,
-  //                                 headingTextStyle: GoogleFonts.montserrat(
-  //                                     textStyle: Theme.of(context).textTheme.titleMedium,
-  //                                     fontWeight: FontWeight.w500,
-  //                                     color: Colors.black),
-  //                                 // border: TableBorder.all(color: Colors.black),
-  //                                 columnSpacing: 15,
-  //                                 columns: [
-  //
-  //                                   DataColumn(
-  //                                     label: Container(
-  //                                       // color: Colors.blue,
-  //                                       // width: 60,
-  //                                       child: Text('Id',textAlign: TextAlign.center,),
-  //                                     ),
-  //
-  //                                   ),
-  //                                   DataColumn(
-  //                                     label: Container(
-  //                                       // width: 180,
-  //                                       child: Text('label',),
-  //                                     ),
-  //                                   ),
-  //                                   DataColumn(
-  //                                     label: Container(
-  //                                       // width: 250,
-  //                                       child: Text('Impact',),
-  //                                     ),
-  //                                   ),
-  //                                   DataColumn(
-  //                                     label: Container(
-  //                                       // width: 400,
-  //                                         child: Text('Description')
-  //                                     ),
-  //                                   ),
-  //                                   DataColumn(
-  //                                     label: Flexible(child: Text('Provider')),
-  //                                   ),
-  //                                   DataColumn(
-  //                                     label: Flexible(child: Text('In Place')),
-  //                                   ),
-  //                                   DataColumn(
-  //                                     label: Flexible(child: Text('Attachment')),
-  //                                   ),
-  //                                 ],
-  //                                 rows: previewProvider.PreviewSolutionList.map((challenge) {
-  //                                   int index = previewProvider.PreviewSolutionList.indexOf(challenge);
-  //                                   // print(jsonString);
-  //                                   return DataRow(
-  //                                     cells: [
-  //                                       DataCell(
-  //                                           Container(
-  //                                             // width: 60,
-  //                                             //   child: Text("${index + 1}.", style: GoogleFonts.montserrat(
-  //                                               child: Text("SH0${challenge['id']}.", style: GoogleFonts.montserrat(
-  //                                                   textStyle: Theme.of(context).textTheme.bodySmall,
-  //                                                   fontWeight: FontWeight.w600,
-  //                                                   color: Colors.black),))
-  //                                       ),
-  //                                       DataCell(
-  //                                           Container(
-  //                                             child: Text(challenge['Label'],
-  //                                                 overflow: TextOverflow.ellipsis,maxLines: 2,
-  //                                                 style: GoogleFonts.montserrat(
-  //                                                     textStyle: Theme.of(context).textTheme.bodySmall,
-  //                                                     fontWeight: FontWeight.w600,
-  //                                                     color: Colors.black)
-  //                                             ),
-  //                                           )),
-  //                                       DataCell(
-  //                                           Container(
-  //                                             // width: 250,
-  //                                               child: Text(challenge["Impact"],
-  //                                                   overflow: TextOverflow.ellipsis,maxLines: 2,
-  //                                                   style: GoogleFonts.montserrat(
-  //                                                       textStyle: Theme.of(context).textTheme.bodySmall,
-  //                                                       fontWeight: FontWeight.w600,
-  //                                                       color: Colors.black)
-  //                                               ))),
-  //                                       DataCell(
-  //                                           Container(
-  //                                             // width: 400,
-  //                                               child: Text(challenge['Final_description'],
-  //                                                   overflow: TextOverflow.ellipsis,maxLines: 2,
-  //                                                   style: GoogleFonts.montserrat(
-  //                                                       textStyle: Theme.of(context).textTheme.bodySmall,
-  //                                                       fontWeight: FontWeight.w600,
-  //                                                       color: Colors.black)
-  //                                               ))),
-  //                                       DataCell(
-  //                                           Container(
-  //                                             // width: 400,
-  //                                               child: Text(challenge['Provider']==null ? "" : challenge['Provider'],
-  //                                                   overflow: TextOverflow.ellipsis,maxLines: 2,
-  //                                                   style: GoogleFonts.montserrat(
-  //                                                       textStyle: Theme.of(context).textTheme.bodySmall,
-  //                                                       fontWeight: FontWeight.w600,
-  //                                                       color: Colors.black)
-  //                                               ))),
-  //                                       DataCell(
-  //                                           Container(
-  //                                             // width: 400,
-  //                                               child: Text(challenge['InPlace']==null ? "" : challenge['InPlace'],
-  //                                                   overflow: TextOverflow.ellipsis,maxLines: 2,
-  //                                                   style: GoogleFonts.montserrat(
-  //                                                       textStyle: Theme.of(context).textTheme.bodySmall,
-  //                                                       fontWeight: FontWeight.w600,
-  //                                                       color: Colors.black)
-  //                                               ))),
-  //                                       DataCell(
-  //                                           Container(
-  //                                             // width: 400,
-  //                                               child: Text(challenge['Attachment']==null ? "" : challenge['Attachment'],
-  //                                                   overflow: TextOverflow.ellipsis,maxLines: 2,
-  //                                                   style: GoogleFonts.montserrat(
-  //                                                       textStyle: Theme.of(context).textTheme.bodySmall,
-  //                                                       fontWeight: FontWeight.w600,
-  //                                                       color: Colors.black)
-  //                                               ))),
-  //                                     ],
-  //                                   );
-  //                                 }).toList(),
-  //                               ),
-  //                             ),
-  //
-  //                           );
-  //                         },
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 ),
-  //
-  //                 Padding(
-  //                   padding: const EdgeInsets.symmetric(
-  //                       vertical: 15.0, horizontal: 5),
-  //                   child: TextField(
-  //                     controller: AboutMeUseFulInfotextController,
-  //                     onChanged: (value) {
-  //                       _previewProvider.updatetitle(value);
-  //                     },
-  //                     style: GoogleFonts.montserrat(
-  //                         textStyle: Theme.of(context).textTheme.bodySmall,
-  //                         fontWeight: FontWeight.w400,
-  //                         color: Colors.black),
-  //                     decoration: InputDecoration(
-  //                       hintText: "Links/Document/Product Info",
-  //                       focusedBorder: OutlineInputBorder(
-  //                           borderSide: BorderSide(color: Colors.black),
-  //                           borderRadius: BorderRadius.circular(10)),
-  //                       border: OutlineInputBorder(
-  //                           borderSide: BorderSide(color: Colors.black12),
-  //                           borderRadius: BorderRadius.circular(10)),
-  //                     ),
-  //                   ),
-  //                 ),
-  //
-  //
-  //                 Row(
-  //                   children: [
-  //                     Padding(
-  //                       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-  //                       child: Text("Attachments :", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
-  //                     ),
-  //                     SizedBox(width: 10,),
-  //
-  //                     InkWell(
-  //                       onTap: (){
-  //                         // _userAboutMEProvider.pickFiles();
-  //                       },
-  //                       child: Container(
-  //                         // padding: EdgeInsets.all(20),
-  //                         child: Center(child: Icon(Icons.add, size: 30, color: Colors.white,)),
-  //                         width: 30,
-  //                         height: 30,
-  //                         decoration: BoxDecoration(
-  //                           color: Colors.blue,
-  //                           borderRadius: BorderRadius.circular(50),
-  //                         ),
-  //                       ),
-  //                     )
-  //                   ],
-  //                 ),
-  //                 Padding(
-  //                   padding: const EdgeInsets.all(8.0),
-  //                   child: Text("${_userAboutMEProvider.aadhar==null ? "" : _userAboutMEProvider.aadhar}", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
-  //                   // child: Text("document.pdf", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
-  //                 ),
-  //
-  //                 SizedBox(height: 10,),
-  //
-  //                 Row(
-  //                   mainAxisAlignment: MainAxisAlignment.end,
-  //                   children: [
-  //                     InkWell(
-  //                       onTap: () async {
-  //                         var createdAt = DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now());
-  //
-  //                         Map<String, dynamic> AboutMEDatas = {
-  //                           'About_Me_Label': AboutMeLabeltextController.text,
-  //                           'AB_Status' : "Complete",
-  //                           'AB_Description' : AboutMeDescriptiontextController.text,
-  //                           'AB_Useful_Info' : AboutMeUseFulInfotextController.text,
-  //                           'AB_Attachment' : "",
-  //                         };
-  //
-  //
-  //                         String solutionJson = json.encode(AboutMEDatas);
-  //                         print(solutionJson);
-  //
-  //                         ProgressDialog.show(context, "Completing", Icons.save);
-  //                         await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
-  //                         ProgressDialog.hide();
-  //                         sendMailPopUp(challengesList,solutionsList);
-  //                         // selectedEmail = null;
-  //                         // nameController.clear();
-  //                         // searchEmailcontroller.clear();
-  //                         // employerController.clear();
-  //                         // divisionOrSectionController.clear();
-  //                         // RoleController.clear();
-  //                         // LocationController.clear();
-  //                         // EmployeeNumberController.clear();
-  //                         // LineManagerController.clear();
-  //                         // mycircumstancesController.clear();
-  //                         // MystrengthsController.clear();
-  //                         // mycircumstancesController.clear();
-  //                         // AboutMeLabeltextController.clear();
-  //                         // RefineController.clear();
-  //                         // solutionsList.clear();
-  //                         // _userAboutMEProvider.solutionss.clear();
-  //                         // _userAboutMEProvider.editsolutionss.clear();
-  //                         // _userAboutMEProvider.challengess.clear();
-  //                         // _userAboutMEProvider.editchallengess.clear();
-  //                         // _userAboutMEProvider.combinedSolutionsResults.clear();
-  //                         // _userAboutMEProvider.combinedResults.clear();
-  //                         // previewProvider.email=null;
-  //                         // previewProvider.name=null;
-  //                         // previewProvider.employer=null;
-  //                         // previewProvider.division=null;
-  //                         // previewProvider.role=null;
-  //                         // previewProvider.location=null;
-  //                         // previewProvider.employeeNumber=null ;
-  //                         // previewProvider.linemanager=null;
-  //                         // previewProvider.title=null;
-  //                         // previewProvider.mycircumstance=null;
-  //                         // previewProvider.mystrength=null ;
-  //                         // previewProvider.myorganization=null ;
-  //                         // previewProvider.mychallenge=null ;
-  //                         // previewProvider.PreviewChallengesList.clear();
-  //                         // previewProvider.PreviewSolutionList.clear();
-  //                         // // _navigateToTab(0);
-  //                         // widget.refreshPage();
-  //                         // // Navigator.pop(context);
-  //                         // setState(() {
-  //                         //   widget.page.jumpToPage(1);
-  //                         // });
-  //                       },
-  //                       child:Container(
-  //                         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-  //                         width: MediaQuery.of(context).size.width * .15,
-  //                         decoration: BoxDecoration(
-  //                           color:Colors.blue ,
-  //                           border: Border.all(
-  //                               color:Colors.blue ,
-  //                               width: 1.0),
-  //                           borderRadius: BorderRadius.circular(15.0),
-  //                         ),
-  //                         child: Center(
-  //                           child: Text(
-  //                             'Complete and send',
-  //                             style: GoogleFonts.montserrat(
-  //                               textStyle:
-  //                               Theme
-  //                                   .of(context)
-  //                                   .textTheme
-  //                                   .titleSmall,
-  //                               fontWeight: FontWeight.bold,
-  //                               color:Colors.white ,
-  //                             ),
-  //                           ),
-  //                         ),
-  //                       ),
-  //                     ),
-  //                   ],
-  //                 )
-  //               ],
-  //             ),
-  //           ),
-  //         );
-  //       });
-  // }
 
-  /// backup previwpage
 
-  Widget PreviewPages(aboutMeData){
-    return Consumer<PreviewProvider>(
-        builder: (c,previewProvider, _){
 
-          String message = """
-Dear ${employerController.text},
-
-Thank you for recognising that our organisation performs better, and we achieve more together, when each of us feels safe and open to share what we need to be our best in the roles we are asked and agree to perform. This communication sets out what I think it would be helpful for you to know about me and includes what I believe helps me thrive, so that I can perform to my best, both for me and for ${employerController.text}.
-
-In relation to performing to my very best, both to help me and ${employerController.text} to achieve the best we can, on the next two pages I have set out:
-• information that I think it is helpful for me to share with my Team Leader and team colleagues, and
-• actions and adjustments that I’ve identified can help me perform to my best in my role for ${employerController.text}.
-
-Next steps:
-I will arrange to have a meeting with my ${LineManagerController.text} to discuss my requests in person. This request includes accommodations that I view as reasonable adjustments under the Equality Act 2010.
-
-Thank you for being open to understanding me better and for considering my requests.
-
-Signed
-Date
-""";
-
-          AboutMeDescriptiontextController.text.isEmpty ? AboutMeDescriptiontextController.text = message : "";
-
-
-          // AboutMeLabeltextController.text = "${nameController.text} - draft communication to ${employerController.text}";
-
-          return  Container(
-            height: MediaQuery
-                .of(context)
-                .size
-                .height,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 5,),
-                  // SizedBox(height: 20,),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    // crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-
-                      Container(
-                        width: MediaQuery.of(context).size.width * .12,
-                        child: Text("Purpose of report:   ", style: GoogleFonts.lato(
-                            textStyle: Theme.of(context).textTheme.titleMedium,
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.bold
-                        )),
-                      ),
-
-                      Flexible(
-                        child: Container(
-                          height: 40,
-                          width: MediaQuery.of(context).size.width * .25,
-                          child: TextField(
-                            controller: previewProvider.PurposeOfReporttextController,
-                            onChanged: (value) {
-                              // _previewProvider.updatetitle(value);
-                              AboutMeLabeltextController.text = previewProvider.PurposeOfReporttextController.text.length > 50
-                                  ? previewProvider.PurposeOfReporttextController.text.substring(0, 50)
-                                  : previewProvider.PurposeOfReporttextController.text;
-                            },
-                            style: GoogleFonts.lato(
-                                textStyle: Theme.of(context).textTheme.bodySmall,
-                                fontStyle: FontStyle.italic,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black),
-                            decoration: InputDecoration(
-                              hintText: "My discussion with ...." ,
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black),
-                                  borderRadius: BorderRadius.circular(10)),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black12),
-                                  borderRadius: BorderRadius.circular(10)),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(width: 20,),
-
-                      InkWell(
-                        onTap: (){
-                          previewProvider.updatePurposeofReport(LineManagerController.text);
-                          AboutMeLabeltextController.text = previewProvider.PurposeOfReporttextController.text.length > 50
-                              ? previewProvider.PurposeOfReporttextController.text.substring(0, 50)
-                              : previewProvider.PurposeOfReporttextController.text;
-                          previewProvider.purpose("Official");
-
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                          // width: MediaQuery.of(context).size.width * .15,
-                          decoration: BoxDecoration(
-                            color:Colors.blue ,
-                            border: Border.all(
-                                color:Colors.blue ,
-                                width: 1.0),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Center(
-                            child:Text(
-                              'Official communication to my employer',
-                              style: GoogleFonts.montserrat(
-                                textStyle:
-                                Theme
-                                    .of(context)
-                                    .textTheme
-                                    .titleSmall,
-                                fontWeight: FontWeight.bold,
-                                color:Colors.white ,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(width: 10,),
-
-                      InkWell(
-                        onTap: (){
-                          previewProvider.updateOtherCommuniation(nameController.text,LineManagerController.text);
-                          AboutMeLabeltextController.text = previewProvider.PurposeOfReporttextController.text.length > 50
-                              ? previewProvider.PurposeOfReporttextController.text.substring(0, 50)
-                              : previewProvider.PurposeOfReporttextController.text;
-                          previewProvider.purpose("Others");
-
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                          // width: MediaQuery.of(context).size.width * .15,
-                          decoration: BoxDecoration(
-                            color:Colors.blue ,
-                            border: Border.all(
-                                color:Colors.blue ,
-                                width: 1.0),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Center(
-                            child:Text(
-                              'Other communication',
-                              style: GoogleFonts.montserrat(
-                                textStyle:
-                                Theme
-                                    .of(context)
-                                    .textTheme
-                                    .titleSmall,
-                                fontWeight: FontWeight.bold,
-                                color:Colors.white ,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      // SizedBox(width: 10,),
-                      //
-                      // InkWell(
-                      //   onTap: () async {
-                      //     // sideMenu.changePage(2);
-                      //     // page.jumpToPage(1);
-                      //   },
-                      //   child: Container(
-                      //     // margin: EdgeInsets.all(10),
-                      //     padding: EdgeInsets.all(5),
-                      //     height: 40,
-                      //     width: MediaQuery.of(context).size.width * 0.15,
-                      //     decoration: BoxDecoration(
-                      //       // color: Colors.white,
-                      //       border: Border.all(color:primaryColorOfApp, width: 1.0),
-                      //       borderRadius: BorderRadius.circular(10.0),
-                      //     ),
-                      //     child: Row(
-                      //       mainAxisAlignment: MainAxisAlignment.center,
-                      //       crossAxisAlignment: CrossAxisAlignment.center,
-                      //       children: [
-                      //         Icon(Icons.insert_drive_file,color: Colors.black,size: 20,),
-                      //         SizedBox(width: 5,),
-                      //         Expanded(
-                      //           child: Text(
-                      //             // 'Thrivers',
-                      //             'For Someone Else',
-                      //             overflow: TextOverflow.ellipsis,
-                      //             style: GoogleFonts.montserrat(
-                      //                 textStyle:
-                      //                 Theme.of(context).textTheme.bodySmall,
-                      //                 color: Colors.black),
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      //
-                      // ),
-
-                    ],
-                  ),
-
-                  // Divider(color: Colors.black26,),
-
-
-                  SizedBox(height: 5,),
-
-                  Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * .12,
-                              child: Text("Date:   ",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleMedium,fontWeight: FontWeight.w700)),
-                            ),
-                            Flexible(
-                              flex: 1,
-                              child: Container(
-                                height: 40,
-                                width: MediaQuery.of(context).size.width * .19,
-                                child: TextField(
-                                  controller: AboutMeDatetextController,
-                                  style: GoogleFonts.lato(
-                                      textStyle: Theme.of(context).textTheme.bodyLarge,
-                                      color: Colors.black),
-                                  decoration: InputDecoration(
-                                    hintText: "" ,
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(10)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black12),
-                                        borderRadius: BorderRadius.circular(10)),
-                                  ),
-                                ),
-                              ),
-
-                            ),
-                          ],
-                        ),
-
-                        SizedBox(height: 15,),
-
-                        Text("Input email addresses of any colleagues to whom you want to send this report: ",style: GoogleFonts.lato(
-                            textStyle: Theme.of(context).textTheme.titleMedium, color: Colors.red,fontWeight: FontWeight.w500
-                        ),),
-
-                        Row(
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * .12,
-                              child: Text("To: ",style: GoogleFonts.lato(
-                                  textStyle:
-                                  Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleMedium,
-                                  fontWeight: FontWeight.w700
-                              ),),
-                            ),
-                            Expanded(
-                              child:Container(
-                                height: 40,
-                                width: MediaQuery.of(context).size.width * .19,
-                                child: TextField(
-                                  controller: previewProvider.SendNametextController,
-
-                                  style: GoogleFonts.lato(
-                                      textStyle: Theme.of(context).textTheme.bodySmall,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black),
-                                  decoration: InputDecoration(
-                                    hintText: "Name",
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(10)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black12),
-                                        borderRadius: BorderRadius.circular(10)),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 5,),
-
-                            Expanded(
-                              child: Container(
-                                height: 40,
-                                width: MediaQuery.of(context).size.width * .19,
-                                child: TextField(
-                                  controller: SendEmailtextController,
-                                  style: GoogleFonts.lato(
-                                      textStyle: Theme.of(context).textTheme.bodySmall,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black),
-                                  decoration: InputDecoration(
-                                    hintText: "Email",
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(10)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black12),
-                                        borderRadius: BorderRadius.circular(10)),
-                                  ),
-                                ),
-                              ),
-                            ),
-
-                            SizedBox(width: 5,),
-
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              margin: EdgeInsets.all(11),
-                              width:  MediaQuery.of(context).size.width * .05,),
-
-
-
-                          ],
-                        ),
-                        SizedBox(height: 5,),
-
-                        Column(
-                          children: List.generate(
-                            previewProvider.ccEmails.length,
-                                (index) {
-                              return Row(
-                                children: [
-                                  Container(
-                                    width: MediaQuery.of(context).size.width * .12,
-                                    child: Text(
-                                      "Cc: ",
-                                      style: GoogleFonts.lato(
-                                          textStyle: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium,
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Text(
-                                        '${index + 1}. ${previewProvider.ccNames[index]}, <${previewProvider.ccEmails[index]}>'),
-                                  ),
-                                  // SizedBox(width: 50,),
-                                  Flexible(
-                                    flex: 2,
-                                    child: InkWell(
-                                      child: Text("remove",style: TextStyle(color: Colors.red)),
-                                      onTap: () =>
-                                          previewProvider.removeCCRecipient(index),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
-                        ),
-
-                        Row(
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.12,
-                              child: Text("Cc: ",style: GoogleFonts.lato(
-                                  textStyle:
-                                  Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleMedium,
-                                  fontWeight: FontWeight.w700
-                              ),),
-                            ),
-
-
-                            Expanded(
-                              child: Container(
-                                height: 40,
-                                width: MediaQuery.of(context).size.width * .19,
-                                child: TextField(
-                                  controller: CopySendNametextController,
-
-                                  style: GoogleFonts.lato(
-                                      textStyle: Theme.of(context).textTheme.bodySmall,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black),
-                                  decoration: InputDecoration(
-                                    hintText: "Name",
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(10)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black12),
-                                        borderRadius: BorderRadius.circular(10)),
-                                  ),
-                                ),
-                              ),
-                            ),
-
-                            SizedBox(width: 5,),
-
-                            Expanded(
-                              child: Container(
-                                height: 40,
-                                width: MediaQuery.of(context).size.width * .19,
-                                child: TextField(
-                                  controller: CopySendEmailtextController,
-                                  style: GoogleFonts.lato(
-                                      textStyle: Theme.of(context).textTheme.bodySmall,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black),
-                                  decoration: InputDecoration(
-                                    hintText: "Email",
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(10)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black12),
-                                        borderRadius: BorderRadius.circular(10)),
-                                  ),
-                                ),
-                              ),
-                            ),
-
-                            SizedBox(width: 5,),
-
-                            InkWell(
-                              onTap: () {
-                                previewProvider.addCCRecipient(
-                                    CopySendEmailtextController.text,
-                                    CopySendNametextController.text);
-                                CopySendEmailtextController.clear();
-                                CopySendNametextController.clear();
-                              },
-                              child: Container(
-                                  width: MediaQuery.of(context).size.width * 0.05,
-                                  padding: EdgeInsets.all(10),
-                                  margin: EdgeInsets.all(11),
-                                  decoration: BoxDecoration(
-                                      color: Colors.blue,
-                                      borderRadius: BorderRadius.circular(10)
-                                  ),
-                                  child: Text('Add',
-                                    textAlign: TextAlign.center,style: GoogleFonts.montserrat(
-                                        textStyle: Theme.of(context).textTheme.titleSmall,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white),
-                                  )
-                              ),
-                            ),
-
-                          ],
-                        ),
-
-
-                        SizedBox(height: 10,),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * .12,
-                              child: Text("Name: ",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleMedium,fontWeight: FontWeight.w700)),
-                            ),
-                            Expanded(
-                              flex: 5,
-                              child: Text("${previewProvider.name==null ? "" : previewProvider.name}",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .bodyLarge,)),
-                            ),
-                          ],
-                        ),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * .12,
-                              child: Text("Role: ",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleMedium,fontWeight: FontWeight.w700)),
-                            ),
-                            Expanded(
-                              flex: 5,
-                              child: Text("${previewProvider.role==null ? "" : previewProvider.role}",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .bodyLarge,)),
-                            ),
-                          ],
-                        ),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * .12,
-                              child: Text("Location: ",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleMedium,fontWeight: FontWeight.w700)),
-                            ),
-                            Expanded(
-                              flex: 5,
-                              child: Text("${previewProvider.location==null ? "" : previewProvider.location}",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .bodyLarge,)),
-                            ),
-                          ],
-                        ),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * .12,
-                              child: Text("Employee number: ",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleMedium,fontWeight: FontWeight.w700)),
-                            ),
-                            Expanded(
-                              flex: 5,
-                              child: Text("${previewProvider.employeeNumber==null ? "" : previewProvider.employeeNumber}",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .bodyLarge,)),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * .12,
-                              child: Text("Team Leader:",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleMedium,fontWeight: FontWeight.w700)),
-                            ),
-                            Expanded(
-                              flex: 5,
-                              child: Text("${previewProvider.linemanager==null ? "" : previewProvider.linemanager}",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .bodyLarge,)),
-                            ),
-                          ],
-                        ),
-
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(height: 15,),
-
-                  Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Text("Performing to my best in my role for ${employerController.text}: ",
-                        style: GoogleFonts.lato(fontWeight: FontWeight.bold,
-                            // fontSize: 20,
-                            color: Colors.blue)),
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: TextField(
-                      controller: AboutMeDescriptiontextController,
-                      onChanged: (value) {
-                        // _previewProvider.updatetitle(value);
-                      },
-                      maxLines: 18,
-                      style: GoogleFonts.lato(
-                          textStyle: Theme.of(context).textTheme.bodyMedium,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black),
-                      decoration: InputDecoration(
-                        hintText: "$message",
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                            borderRadius: BorderRadius.circular(10)),
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black12),
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(height: 10,),
-
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    // padding: EdgeInsets.all(8),
-                    margin: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      border: Border.all(color:Colors.black,),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 5),
-                          child: Text("To perform to my best in my role, I’d like to share this information about me:",
-                              style: GoogleFonts.lato(fontWeight: FontWeight.bold,
-                                  // fontSize: 20,
-                                  color: Colors.blue)),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 5),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text("Me and my circumstances: ",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleMedium,
-                                      decoration: TextDecoration.underline
-                                  )),
-                              SizedBox(width: 50,),
-                              IconButton(
-                                  onPressed: (){
-                                    editmeandmycircumstances(aboutMeData);
-                                  },
-                                  icon: Icon(
-                                      Icons.edit
-                                  ))
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 5,),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 5),
-                          child: Text("${previewProvider.mycircumstance==null ? "" : previewProvider.mycircumstance}",
-                              style: GoogleFonts.lato(textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodyMedium,fontWeight: FontWeight.w600
-                              )),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 5),
-                          child: Row(
-                            children: [
-                              Text("My strengths that I want to have the opportunity to use in my role: ",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleMedium,
-                                      decoration: TextDecoration.underline
-                                  )),
-                              SizedBox(width: 50,),
-                              IconButton(
-                                  onPressed: (){
-                                    editmystrength(aboutMeData);
-                                  },
-                                  icon: Icon(
-                                      Icons.edit
-                                  ))
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 5,),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 5),
-                          child: Text("${previewProvider.mystrength==null ? "" : previewProvider.mystrength}",
-                              style: GoogleFonts.lato(textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodyMedium,fontWeight: FontWeight.w600
-                              )),
-
-                        ),
-
-
-                        Container(
-
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric( vertical: 10.0,horizontal: 5),
-                                child: Text("Things I find challenging in life that make it harder for me to perform my best:",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleMedium,
-                                      decoration: TextDecoration.underline
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 5,),
-
-                              Consumer<PreviewProvider>(
-                                builder: (context, previewProvider, _) {
-                                  return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: previewProvider.PreviewChallengesList.map((solution) {
-                                      int index = previewProvider.PreviewChallengesList.indexOf(solution);
-
-                                      return Padding(
-                                        padding: EdgeInsets.only(bottom: 20.0),
-                                        child: Row(
-                                          children: [
-                                            Flexible(
-                                              child: RichText(
-                                                maxLines: 4,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                        text: ' •  ',
-                                                        style:TextStyle(fontSize: 20)
-                                                    ),
-                                                    TextSpan(
-                                                        text: '${solution['Label']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,fontWeight: FontWeight.bold,)
-                                                    ),
-                                                    TextSpan(
-                                                        text: ' - ${solution['Final_description']}\n',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .bodyMedium,fontWeight: FontWeight.w400
-                                                        )
-                                                    ),
-                                                    TextSpan(
-                                                        text: '  ${solution['Impact_on_me']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,color: Colors.grey,)
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(width: 50,),
-                                            Row(
-                                              children: [
-                                                IconButton(
-                                                  icon: Icon(Icons.edit),
-                                                  onPressed: (){
-                                                    showEditconfirmChallengeDialogBox(solution['id'], solution['Label'] , solution['Description'],
-                                                        solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
-                                                        solution['Created Date'], solution['Modified By'], solution['Modified Date'],
-                                                        solution['Original Description'], solution['Impact'], solution['Final_description'],
-                                                        solution['Category'], solution['Keywords'], solution['Potential Strengths'],
-                                                        solution['Hidden Strengths'], index, solution, solution['Impact_on_me']);
-                                                  },
-                                                ),
-                                                IconButton(
-                                                  icon: Icon(Icons.delete),
-                                                  onPressed: (){
-                                                    _userAboutMEProvider.removeEditConfirmChallenge(index,solution['id'],challengesList,_previewProvider.PreviewChallengesList);
-                                                  },
-                                                )
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      );
-                                    }).toList(),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 5),
-                          child: Row(
-                            children: [
-                              Text("What I value about ${employerController.text} and workplace environment that helps me perform to my best: ",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleMedium,
-                                      decoration: TextDecoration.underline
-                                  )),
-                              SizedBox(width: 50,),
-                              IconButton(
-                                  onPressed: (){editmyorganization(aboutMeData);},
-                                  icon: Icon(
-                                      Icons.edit
-                                  ))
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 5,),
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 5),
-                          child: Text("${previewProvider.myorganization==null ? "" : previewProvider.myorganization}",
-                              style: GoogleFonts.lato(textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodyMedium,fontWeight: FontWeight.w600
-                              )),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 5),
-                          child: Row(
-                            children: [
-                              Text("What I find challenging about ${employerController.text} and the workplace environment that makes it harder for me to perform my best: ",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleMedium,
-                                      decoration: TextDecoration.underline
-                                  )),
-                              SizedBox(width: 50,),
-                              IconButton(
-                                  onPressed: (){editmychallenges(aboutMeData);},
-                                  icon: Icon(
-                                      Icons.edit
-                                  ))
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 5,),
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 5),
-                          child: Text("${previewProvider.mychallenge==null ? "" : previewProvider.mychallenge}",
-                              style: GoogleFonts.lato(textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodyMedium,fontWeight: FontWeight.w600
-                              )),
-
-                        ),
-
-                        SizedBox(height: 10,),
-
-                      ],
-                    ),
-                  ),
-
-                  Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 5),
-                          child: Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${employerController.text}:",
-                              style: GoogleFonts.lato(fontWeight: FontWeight.bold,
-                                  // fontSize: 20,
-                                  color: Colors.blue)),
-                        ),
-
-                        _previewProvider.PreviewSolutionMyResposibilty.isNotEmpty ?
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10.0, horizontal: 5),
-                                child: Text("Personal Responsibility",
-                                  style: GoogleFonts.lato(
-                                      fontWeight: FontWeight.bold,
-                                      // fontSize: 20,
-                                      color: Colors.black,
-                                      decoration: TextDecoration.underline
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10.0, horizontal: 5),
-                                child: Text("Things I already or will do to help myself: ",
-                                    style: GoogleFonts.lato(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .titleMedium
-                                    )),
-                              ),
-                              Consumer<PreviewProvider>(
-                                builder: (context, previewProvider, _) {
-                                  return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: previewProvider.PreviewSolutionMyResposibilty.map((solution) {
-
-                                      return Padding(
-                                        padding: EdgeInsets.only(bottom: 20.0),
-                                        child: Row(
-                                          children: [
-                                            Flexible(
-                                              child: RichText(
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                        text: ' •  ',
-                                                        style: TextStyle(fontSize: 20)
-                                                    ),
-                                                    TextSpan(
-                                                        text: '${solution['Label']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,fontWeight: FontWeight.bold,)
-                                                    ),
-                                                    TextSpan(
-                                                        text: ' - ${solution['Final_description']}\n',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .bodyMedium,fontWeight: FontWeight.w400
-                                                        )
-                                                    ),
-                                                    TextSpan(
-                                                      text: '  ${solution['AboutMe_Notes']}',
-                                                      style: GoogleFonts.lato(
-                                                        textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,color: Colors.grey,),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(width: 50,),
-                                            Row(
-                                              children: [
-                                                IconButton(
-                                                  icon: Icon(Icons.edit),
-                                                  onPressed: (){
-                                                    showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
-                                                        solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
-                                                        solution['Created Date'], solution['Modified By'], solution['Modified Date'],
-                                                        solution['Original Description'], solution['Impact'], solution['Final_description'],
-                                                        solution['Category'], solution['Keywords'], solution['Potential Strengths'],
-                                                        solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],
-                                                        solution['InPlace']);
-                                                  },
-                                                ),
-                                                IconButton(
-                                                  icon: Icon(Icons.delete),
-                                                  onPressed: (){
-                                                    _userAboutMEProvider.removeEditConfirmSolution(solution["id"],solutionsList,
-                                                      _previewProvider.PreviewSolutionMyResposibilty,
-                                                      _previewProvider.PreviewSolutionStillNeeded,
-                                                      _previewProvider.PreviewSolutionNotNeededAnyMore,
-                                                      _previewProvider.PreviewSolutionNiceToHave,
-                                                      _previewProvider.PreviewSolutionMustHave,
-                                                    );
-                                                  },
-                                                )
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      );
-                                    }).toList(),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ) : Container(),
-
-                        (_previewProvider.PreviewSolutionNotNeededAnyMore.isNotEmpty ||
-                            _previewProvider.PreviewSolutionMustHave.isNotEmpty ||
-                            _previewProvider.PreviewSolutionNiceToHave.isNotEmpty ||
-                            _previewProvider.PreviewSolutionStillNeeded.isNotEmpty ) ?
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 5),
-                          child: Text("Requests of ${employerController.text}",
-                              style: GoogleFonts.lato(
-                                  fontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.underline,
-                                  // fontSize: 20,
-                                  color: Colors.black)),
-                        ) : Container(),
-
-                        _previewProvider.PreviewSolutionStillNeeded.isNotEmpty ?
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10.0, horizontal: 5),
-                                child: Text("${employerController.text} already provides the following assistance to me, which I’d like to continue to receive: ",
-                                    style: GoogleFonts.lato(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .titleMedium
-                                    )),
-                              ),
-                              Consumer<PreviewProvider> (
-                                builder: (context, previewProvider, _) {
-                                  return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: previewProvider.PreviewSolutionStillNeeded.map((solution) {
-                                      return Padding(
-                                        padding: EdgeInsets.only(bottom: 20.0),
-                                        child: Row(
-                                          children: [
-                                            Flexible(
-                                              child: RichText(
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                        text: ' •  ',
-                                                        style: TextStyle(fontSize: 20)
-                                                    ),
-                                                    TextSpan(
-                                                        text: '${solution['Label']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,fontWeight: FontWeight.bold,)
-                                                    ),
-                                                    TextSpan(
-                                                        text: ' - ${solution['Final_description']}\n',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .bodyMedium,fontWeight: FontWeight.w400
-                                                        )
-                                                    ),
-                                                    TextSpan(
-                                                        text: '  ${solution['AboutMe_Notes']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,color: Colors.grey,)
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(width: 50,),
-                                            Row(
-                                              children: [
-                                                IconButton(
-                                                  icon: Icon(Icons.edit),
-                                                  onPressed: (){
-                                                    showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
-                                                        solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
-                                                        solution['Created Date'], solution['Modified By'], solution['Modified Date'],
-                                                        solution['Original Description'], solution['Impact'], solution['Final_description'],
-                                                        solution['Category'], solution['Keywords'], solution['Potential Strengths'],
-                                                        solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']);
-                                                  },
-                                                ),
-                                                IconButton(
-                                                  icon: Icon(Icons.delete),
-                                                  onPressed: (){
-                                                    _userAboutMEProvider.removeEditConfirmSolution(solution["id"],solutionsList,
-                                                      _previewProvider.PreviewSolutionMyResposibilty,
-                                                      _previewProvider.PreviewSolutionStillNeeded,
-                                                      _previewProvider.PreviewSolutionNotNeededAnyMore,
-                                                      _previewProvider.PreviewSolutionNiceToHave,
-                                                      _previewProvider.PreviewSolutionMustHave,
-                                                    );
-                                                  },
-                                                )
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      );
-                                    }).toList(),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ) : Container(),
-
-                        _previewProvider.PreviewSolutionMustHave.isNotEmpty ?
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10.0, horizontal: 5),
-                                child: Text("I’m asking ${employerController.text} to start providing for me:",
-                                    style: GoogleFonts.lato(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .titleMedium
-                                    )),
-                              ),
-                              Consumer<PreviewProvider>(
-                                builder: (context, previewProvider, _) {
-                                  return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: previewProvider.PreviewSolutionMustHave.map((solution) {
-                                      return Padding(
-                                        padding: EdgeInsets.only(bottom: 20.0),
-                                        child: Row(
-                                          children: [
-                                            Flexible(
-                                              child: RichText(
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                        text: ' •  ',
-                                                        style: TextStyle(fontSize: 20)
-                                                    ),
-                                                    TextSpan(
-                                                        text: '${solution['Label']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,fontWeight: FontWeight.bold,)
-                                                    ),
-                                                    TextSpan(
-                                                        text: ' - ${solution['Final_description']}\n',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .bodyMedium,fontWeight: FontWeight.w400
-                                                        )
-                                                    ),
-                                                    TextSpan(
-                                                        text: '  ${solution['AboutMe_Notes']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,color: Colors.grey,)
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(width: 50,),
-                                            Row(
-                                              children: [
-                                                IconButton(
-                                                  icon: Icon(Icons.edit),
-                                                  onPressed: (){
-                                                    showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
-                                                        solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
-                                                        solution['Created Date'], solution['Modified By'], solution['Modified Date'],
-                                                        solution['Original Description'], solution['Impact'], solution['Final_description'],
-                                                        solution['Category'], solution['Keywords'], solution['Potential Strengths'],
-                                                        solution['Hidden Strengths'],solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']);
-                                                  },
-                                                ),
-                                                IconButton(
-                                                  icon: Icon(Icons.delete),
-                                                  onPressed: (){
-                                                    _userAboutMEProvider.removeEditConfirmSolution(solution["id"],solutionsList,
-                                                      _previewProvider.PreviewSolutionMyResposibilty,
-                                                      _previewProvider.PreviewSolutionStillNeeded,
-                                                      _previewProvider.PreviewSolutionNotNeededAnyMore,
-                                                      _previewProvider.PreviewSolutionNiceToHave,
-                                                      _previewProvider.PreviewSolutionMustHave,
-                                                    );
-                                                  },
-                                                )
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      );
-                                    }).toList(),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ) : Container(),
-
-                        _previewProvider.PreviewSolutionNiceToHave.isNotEmpty ?
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10.0, horizontal: 5),
-                                child: Text("I’m asking  ${employerController.text} to start providing for me but they are not essential: ",
-                                    style: GoogleFonts.lato(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .titleMedium
-                                    )),
-                              ),
-                              Consumer<PreviewProvider>(
-                                builder: (context, previewProvider, _) {
-                                  return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: previewProvider.PreviewSolutionNiceToHave.map((solution) {
-                                      return Padding(
-                                        padding: EdgeInsets.only(bottom: 20.0),
-                                        child: Row(
-                                          children: [
-                                            Flexible(
-                                              child: RichText(
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                        text: ' •  ',
-                                                        style: TextStyle(fontSize: 20)
-                                                    ),
-                                                    TextSpan(
-                                                        text: '${solution['Label']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,fontWeight: FontWeight.bold,)
-                                                    ),
-                                                    TextSpan(
-                                                        text: ' - ${solution['Final_description']}\n',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .bodyMedium,fontWeight: FontWeight.w400
-                                                        )
-                                                    ),
-                                                    TextSpan(
-                                                        text: '  ${solution['AboutMe_Notes']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,color: Colors.grey,)
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(width: 50,),
-                                            Row(
-                                              children: [
-                                                IconButton(
-                                                  icon: Icon(Icons.edit),
-                                                  onPressed: (){
-                                                    showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
-                                                        solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
-                                                        solution['Created Date'], solution['Modified By'], solution['Modified Date'],
-                                                        solution['Original Description'], solution['Impact'], solution['Final_description'],
-                                                        solution['Category'], solution['Keywords'], solution['Potential Strengths'],
-                                                        solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']);
-                                                  },
-                                                ),
-                                                IconButton(
-                                                  icon: Icon(Icons.delete),
-                                                  onPressed: (){
-                                                    _userAboutMEProvider.removeEditConfirmSolution(solution["id"],solutionsList,
-                                                      _previewProvider.PreviewSolutionMyResposibilty,
-                                                      _previewProvider.PreviewSolutionStillNeeded,
-                                                      _previewProvider.PreviewSolutionNotNeededAnyMore,
-                                                      _previewProvider.PreviewSolutionNiceToHave,
-                                                      _previewProvider.PreviewSolutionMustHave,
-                                                    );
-                                                  },
-                                                )
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      );
-                                    }).toList(),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ) : Container(),
-
-                        _previewProvider.PreviewSolutionNotNeededAnyMore .isNotEmpty ?
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10.0, horizontal: 5),
-                                child: Text("${employerController.text} already provides for me but are not needed anymore: ",
-                                    style: GoogleFonts.lato(
-                                        textStyle: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .titleMedium
-                                    )),
-                              ),
-                              Consumer<PreviewProvider>(
-                                builder: (context, previewProvider, _) {
-                                  return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: previewProvider.PreviewSolutionNotNeededAnyMore.map((solution) {
-                                      return Padding(
-                                        padding: EdgeInsets.only(bottom: 20.0),
-                                        child: Row(
-                                          children: [
-                                            Flexible(
-                                              child: RichText(
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                        text: ' •  ',
-                                                        style: TextStyle(fontSize: 20)
-                                                    ),
-                                                    TextSpan(
-                                                        text: '${solution['Label']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,fontWeight: FontWeight.bold,)
-                                                    ),
-                                                    TextSpan(
-                                                        text: ' - ${solution['Final_description']}\n',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .bodyMedium,fontWeight: FontWeight.w400
-                                                        )
-                                                    ),
-                                                    TextSpan(
-                                                        text: '  ${solution['AboutMe_Notes']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,color: Colors.grey,)
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(width: 50,),
-                                            Row(
-                                              children: [
-                                                IconButton(
-                                                  icon: Icon(Icons.edit),
-                                                  onPressed: (){
-                                                    showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
-                                                        solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
-                                                        solution['Created Date'], solution['Modified By'], solution['Modified Date'],
-                                                        solution['Original Description'], solution['Impact'], solution['Final_description'],
-                                                        solution['Category'], solution['Keywords'], solution['Potential Strengths'],
-                                                        solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']);
-                                                  },
-                                                ),
-                                                IconButton(
-                                                  icon: Icon(Icons.delete),
-                                                  onPressed: (){
-                                                    _userAboutMEProvider.removeEditConfirmSolution(solution["id"],solutionsList,
-                                                      _previewProvider.PreviewSolutionMyResposibilty,
-                                                      _previewProvider.PreviewSolutionStillNeeded,
-                                                      _previewProvider.PreviewSolutionNotNeededAnyMore,
-                                                      _previewProvider.PreviewSolutionNiceToHave,
-                                                      _previewProvider.PreviewSolutionMustHave,
-                                                    );
-                                                  },
-                                                )
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      );
-                                    }).toList(),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ) : Container(),
-
-                        SizedBox(height: 5,),
-                      ],
-                    ),
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 15.0, horizontal: 5),
-                    child: TextField(
-                      controller: AboutMeUseFulInfotextController,
-                      onChanged: (value) {
-                        _previewProvider.updatetitle(value);
-                      },
-                      style: GoogleFonts.lato(
-                          textStyle: Theme.of(context).textTheme.bodySmall,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black),
-                      decoration: InputDecoration(
-                        hintText: "Links/Document/Product Info",
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                            borderRadius: BorderRadius.circular(10)),
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black12),
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
-                    ),
-                  ),
-
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                        child: Text("Attachments :", style: GoogleFonts.lato(textStyle: Theme.of(context).textTheme.titleSmall,)),
-                      ),
-                      SizedBox(width: 10,),
-
-                      // InkWell(
-                      //   onTap: (){
-                      //     // _userAboutMEProvider.pickFiles();
-                      //   },
-                      //   child: Container(
-                      //     // padding: EdgeInsets.all(20),
-                      //     child: Center(child: Icon(Icons.add, size: 30, color: Colors.white,)),
-                      //     width: 30,
-                      //     height: 30,
-                      //     decoration: BoxDecoration(
-                      //       color: Colors.blue,
-                      //       borderRadius: BorderRadius.circular(50),
-                      //     ),
-                      //   ),
-                      // ),
-                      IconButton(onPressed: (){},
-                        icon: Container(
-                          // padding: EdgeInsets.all(20),
-                          child: Center(child: Icon(Icons.add, size: 30, color: Colors.white,)),
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                        ),
-                        tooltip: "Medicals and Personals",
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("${_userAboutMEProvider.aadhar==null ? "" : _userAboutMEProvider.aadhar}", style: GoogleFonts.lato(textStyle: Theme.of(context).textTheme.titleSmall,)),
-                    // child: Text("document.pdf", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
-                  ),
-
-                  // Row(
-                  //   mainAxisSize: MainAxisSize.min,
-                  //   mainAxisAlignment: MainAxisAlignment.start,
-                  //   // crossAxisAlignment: CrossAxisAlignment.start,
-                  //   children: [
-                  //
-                  //     Container(
-                  //       width: MediaQuery.of(context).size.width * .12,
-                  //       child: Text("Report file name:   ", style: GoogleFonts.lato(
-                  //           textStyle: Theme.of(context).textTheme.titleMedium,
-                  //           fontStyle: FontStyle.italic,
-                  //           fontWeight: FontWeight.bold
-                  //       )),
-                  //     ),
-                  //
-                  //     Flexible(
-                  //       child: Container(
-                  //         height: 40,
-                  //         width: MediaQuery.of(context).size.width * .25,
-                  //         child: TextField(
-                  //           controller: AboutMeLabeltextController,
-                  //           onChanged: (value) {
-                  //             _previewProvider.updatetitle(value);
-                  //           },
-                  //           style: GoogleFonts.lato(
-                  //               textStyle: Theme.of(context).textTheme.bodySmall,
-                  //               fontStyle: FontStyle.italic,
-                  //               fontWeight: FontWeight.w400,
-                  //               color: Colors.black),
-                  //           decoration: InputDecoration(
-                  //             hintText: "My discussion with ...." ,
-                  //             focusedBorder: OutlineInputBorder(
-                  //                 borderSide: BorderSide(color: Colors.black),
-                  //                 borderRadius: BorderRadius.circular(10)),
-                  //             border: OutlineInputBorder(
-                  //                 borderSide: BorderSide(color: Colors.black12),
-                  //                 borderRadius: BorderRadius.circular(10)),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //
-                  //     // SizedBox(width: 10,),
-                  //     //
-                  //     // InkWell(
-                  //     //   onTap: () async {
-                  //     //     // sideMenu.changePage(2);
-                  //     //     // page.jumpToPage(1);
-                  //     //   },
-                  //     //   child: Container(
-                  //     //     // margin: EdgeInsets.all(10),
-                  //     //     padding: EdgeInsets.all(5),
-                  //     //     height: 40,
-                  //     //     width: MediaQuery.of(context).size.width * 0.15,
-                  //     //     decoration: BoxDecoration(
-                  //     //       // color: Colors.white,
-                  //     //       border: Border.all(color:primaryColorOfApp, width: 1.0),
-                  //     //       borderRadius: BorderRadius.circular(10.0),
-                  //     //     ),
-                  //     //     child: Row(
-                  //     //       mainAxisAlignment: MainAxisAlignment.center,
-                  //     //       crossAxisAlignment: CrossAxisAlignment.center,
-                  //     //       children: [
-                  //     //         Icon(Icons.insert_drive_file,color: Colors.black,size: 20,),
-                  //     //         SizedBox(width: 5,),
-                  //     //         Expanded(
-                  //     //           child: Text(
-                  //     //             // 'Thrivers',
-                  //     //             'For Someone Else',
-                  //     //             overflow: TextOverflow.ellipsis,
-                  //     //             style: GoogleFonts.montserrat(
-                  //     //                 textStyle:
-                  //     //                 Theme.of(context).textTheme.bodySmall,
-                  //     //                 color: Colors.black),
-                  //     //           ),
-                  //     //         ),
-                  //     //       ],
-                  //     //     ),
-                  //     //   ),
-                  //     //
-                  //     // ),
-                  //
-                  //   ],
-                  // ),
-
-                  SizedBox(height: 10,),
-
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-
-                        InkWell(
-                          onTap: () async {
-
-                            var createdAt = DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now());
-
-                            Map<String, dynamic> AboutMEDatas = {
-                              'About_Me_Label': AboutMeLabeltextController.text,
-                              'Purpose_of_report': _previewProvider.PurposeOfReporttextController.text,
-                              'Purpose': _previewProvider.isOfficial,
-                              'AB_Description' : AboutMeDescriptiontextController.text,
-                              'AB_Date' : AboutMeDatetextController.text,
-                              'AB_Useful_Info' : AboutMeUseFulInfotextController.text,
-                              'AB_Attachment' : "",
-                              'Solutions': solutionsList,
-                              'Challenges': challengesList,
-                            };
-
-                            String solutionJson = json.encode(AboutMEDatas);
-                            print("About_Me_Label: ${AboutMEDatas['About_Me_Label']}");
-
-                            ProgressDialog.show(context, "Completing", Icons.save);
-                            await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
-
-                            // downloadAboutMePdf(challengesList,solutionsList);
-
-                            widget.refreshPage();
-
-                            ProgressDialog.hide();
-
-                            // sendMailPopUp(challengesList,solutionsList);
-
-                            // selectedEmail = null;
-                            // nameController.clear();
-                            // searchEmailcontroller.clear();
-                            // employerController.clear();
-                            // divisionOrSectionController.clear();
-                            // RoleController.clear();
-                            // LocationController.clear();
-                            // EmployeeNumberController.clear();
-                            // LineManagerController.clear();
-                            // mycircumstancesController.clear();
-                            // MystrengthsController.clear();
-                            // mycircumstancesController.clear();
-                            // AboutMeLabeltextController.clear();
-                            // RefineController.clear();
-                            // solutionsList.clear();
-                            // _userAboutMEProvider.solutionss.clear();
-                            // _userAboutMEProvider.challengess.clear();
-                            // _userAboutMEProvider.combinedSolutionsResults.clear();
-                            // _userAboutMEProvider.combinedResults.clear();
-                            // previewProvider.email=null;
-                            // previewProvider.name=null;
-                            // previewProvider.employer=null;
-                            // previewProvider.division=null;
-                            // previewProvider.role=null;
-                            // previewProvider.location=null;
-                            // previewProvider.employeeNumber=null ;
-                            // previewProvider.linemanager=null;
-                            // previewProvider.title=null;
-                            // previewProvider.mycircumstance=null;
-                            // previewProvider.mystrength=null ;
-                            // previewProvider.myorganization=null ;
-                            // previewProvider.mychallenge=null ;
-                            // previewProvider.PreviewChallengesList.clear();
-                            // previewProvider.PreviewSolutionList.clear();
-                            // // _navigateToTab(0);
-                            // // Navigator.pop(context);
-                            // setState(() {
-                            //   page.jumpToPage(1);
-                            // });
-
-                          },
-                          child:Container(
-                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                            width: MediaQuery.of(context).size.width * .15,
-                            decoration: BoxDecoration(
-                              color:Colors.blue ,
-                              border: Border.all(
-                                  color:Colors.blue ,
-                                  width: 1.0),
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            child: Center(
-                              child:Text(
-                                'Save',
-                                style: GoogleFonts.montserrat(
-                                  textStyle:
-                                  Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleSmall,
-                                  fontWeight: FontWeight.bold,
-                                  color:Colors.white ,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 10,),
-
-                        InkWell(
-                          onTap: () async {
-
-                            var createdAt = DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now());
-
-                            var formattedDate = DateFormat('dd MMMM yyyy, HH:mm a').format(DateTime.now());
-
-
-                            Map<String, dynamic> AboutMEDatas = {
-                              'About_Me_Label': AboutMeLabeltextController.text,
-                              'AB_Status' : "Complete and Sent",
-                              'AB_Description' : AboutMeDescriptiontextController.text,
-                              'AB_Useful_Info' : AboutMeUseFulInfotextController.text,
-                              'Purpose_of_report': _previewProvider.PurposeOfReporttextController.text,
-                              'Purpose': _previewProvider.isOfficial,
-                              'AB_Date' : AboutMeDatetextController.text,
-                              'AB_Attachment' : "",
-                              'Solutions': solutionsList,
-                              'Challenges': challengesList,
-                              'Report_sent_to' : [{'name':  previewProvider.SendNametextController.text, 'email': SendEmailtextController.text, 'datetime': formattedDate}],
-                              'Report_sent_to_cc' : List.generate(
-                                previewProvider.ccEmails.length,
-                                    (index) => {
-                                  'name': previewProvider.ccNames[index],
-                                  'email': previewProvider.ccEmails[index],
-                                  'datetime': formattedDate, // Format datetime
-                                },
-                              ),
-
-                            };
-
-                            String solutionJson = json.encode(AboutMEDatas);
-                            print(solutionJson);
-
-                            ProgressDialog.show(context, "Completing", Icons.save);
-                            await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
-
-                            final Uint8List pdfBytes = await makePdf(challengesList,solutionsList);
-                            String base64EncodedData = base64.encode(pdfBytes);
-                            String filename = "${About_Me_Label}.pdf";
-                            print("sendMailPopUp chunks: ${base64EncodedData}");
-                            print("sendMailPopUp filename: ${ filename}");
-                            await ApiRepository().sendEmailWithAttachment(
-                              context,
-                              SendEmailtextController.text,
-                              previewProvider.SendNametextController.text,
-                              CopySendEmailtextController.text,
-                              CopySendNametextController.text,
-                              base64EncodedData,
-                              filename,
-                              ccEmails: previewProvider.ccEmails,
-                              ccNames: previewProvider.ccNames,
-                            );
-
-                            await downloadAboutMePdf(challengesList,solutionsList);
-
-                            print(SendEmailtextController.text);
-                            print(CopySendEmailtextController.text);
-                            print(previewProvider.SendNametextController.text);
-                            print(CopySendNametextController.text);
-
-
-                            setState(() {
-                              Navigator.pop(context);
-                            });
-
-                            ProgressDialog.hide();
-
-                            // sendMailPopUp(challengesList,solutionsList);
-
-                            // downloadAboutMePdf(challengesList,solutionsList);
-                            ///
-                            // selectedEmail = null;
-                            // nameController.clear();
-                            // searchEmailcontroller.clear();
-                            // employerController.clear();
-                            // divisionOrSectionController.clear();
-                            // RoleController.clear();
-                            // LocationController.clear();
-                            // EmployeeNumberController.clear();
-                            // LineManagerController.clear();
-                            // mycircumstancesController.clear();
-                            // MystrengthsController.clear();
-                            // mycircumstancesController.clear();
-                            // AboutMeLabeltextController.clear();
-                            // RefineController.clear();
-                            // solutionsList.clear();
-                            // _userAboutMEProvider.solutionss.clear();
-                            // _userAboutMEProvider.challengess.clear();
-                            // _userAboutMEProvider.combinedSolutionsResults.clear();
-                            // _userAboutMEProvider.combinedResults.clear();
-                            // previewProvider.email=null;
-                            // previewProvider.name=null;
-                            // previewProvider.employer=null;
-                            // previewProvider.division=null;
-                            // previewProvider.role=null;
-                            // previewProvider.location=null;
-                            // previewProvider.employeeNumber=null ;
-                            // previewProvider.linemanager=null;
-                            // previewProvider.title=null;
-                            // previewProvider.mycircumstance=null;
-                            // previewProvider.mystrength=null ;
-                            // previewProvider.myorganization=null ;
-                            // previewProvider.mychallenge=null ;
-                            // previewProvider.PreviewChallengesList.clear();
-                            // previewProvider.PreviewSolutionList.clear();
-                            // // _navigateToTab(0);
-                            // // Navigator.pop(context);
-                            // setState(() {
-                            //   page.jumpToPage(1);
-                            // });
-
-                          },
-                          child:Container(
-                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                            width: MediaQuery.of(context).size.width * .15,
-                            decoration: BoxDecoration(
-                              color:Colors.blue ,
-                              border: Border.all(
-                                  color:Colors.blue ,
-                                  width: 1.0),
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            child: Center(
-                              child:Text(
-                                'Complete and Send',
-                                style: GoogleFonts.montserrat(
-                                  textStyle:
-                                  Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleSmall,
-                                  fontWeight: FontWeight.bold,
-                                  color:Colors.white ,
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
+  
   Widget PreviewPage(aboutMeData){
     return Consumer<PreviewProvider>(
         builder: (c,previewProvider, _){
 
           String message = """
-Thank you to ${employerController.text}....
+Thank you to ${previewProvider.editemployer}....
 
 … for recognising that our organisation performs better, and we achieve more together,when each of us feels safe and open to share what we need in order to be our best in the roles we are asked and agree to perform.
 
-This document sets out what I think it would be helpful for you to know about me and includes information about what I believe helps me to thrive, so that I can perform to my  best, both for me and for ${employerController.text}.
+This document sets out what I think it would be helpful for you to know about me and includes information about what I believe helps me to thrive, so that I can perform to my  best, both for me and for ${previewProvider.editemployer}.
 
 Next steps
 
-I will arrange a meeting with my [you]/[occupational health]/[${LineManagerController.text}] to discuss myrequests in person, and to ascertain which are possible for me to action personally and which ${employerController.text} is able to provide for me. My requests include workplaceaccommodations that I view as reasonable adjustments under the Equality Act 2010.
+I will arrange a meeting with my [you]/[occupational health]/[${previewProvider.linemanager}] to discuss myrequests in person, and to ascertain which are possible for me to action personally and which ${previewProvider.editemployer} is able to provide for me. My requests include workplaceaccommodations that I view as reasonable adjustments under the Equality Act 2010.
 
 Thank you for being open to understanding me better and for considering my requests.
 
@@ -9985,9 +7466,9 @@ Thank you for being open to understanding me better and for considering my reque
                   Container(
                     padding: EdgeInsets.all(5),
                     width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black),
-                    ),
+                    // decoration: BoxDecoration(
+                    //   border: Border.all(color: Colors.black),
+                    // ),
                     child: Text("Performing to my best in my role for ${employerController.text} ",
                         style: GoogleFonts.lato(fontWeight: FontWeight.bold,
                             fontSize: 24,
@@ -10000,111 +7481,114 @@ Thank you for being open to understanding me better and for considering my reque
                     height: 45 ,
                     // margin: EdgeInsets.all(5),
                     // width: MediaQuery.of(context).size.width * .25,
-                    child: TextField(
-                      controller: previewProvider.PurposeOfReporttextController,
-                      onChanged: (value) {
-                        // _previewProvider.updatetitle(value);
-                        AboutMeLabeltextController.text = previewProvider.PurposeOfReporttextController.text.length > 50
-                            ? previewProvider.PurposeOfReporttextController.text.substring(0, 50)
-                            : previewProvider.PurposeOfReporttextController.text;
-                      },
-                      style: GoogleFonts.lato(
-                          textStyle: Theme.of(context).textTheme.bodySmall,
-                          fontStyle: FontStyle.italic,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24,
-                          color: Colors.blue),
-                      decoration: InputDecoration(
-                        hintText: "My discussion with ...." ,
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                            borderRadius: BorderRadius.circular(10)),
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black12),
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: TextField(
+                            controller: previewProvider.PurposeOfReporttextController,
+                            onChanged: (value) {
+                              // _previewProvider.updatetitle(value);
+                              // AboutMeLabeltextController.text = previewProvider.PurposeOfReporttextController.text.length > 50
+                              //     ? previewProvider.PurposeOfReporttextController.text.substring(0, 50)
+                              //     : previewProvider.PurposeOfReporttextController.text;
+                            },
+                            style: GoogleFonts.lato(
+                                textStyle: Theme.of(context).textTheme.bodySmall,
+                                fontStyle: FontStyle.italic,
+                                // fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                ),
+                            decoration: InputDecoration(
+                              hintText: "My discussion with ...." ,
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(10)),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black12),
+                                  borderRadius: BorderRadius.circular(10)),
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(width: 10,),
+
+                        InkWell(
+                          onTap: (){
+                            previewProvider.updatePurposeofReport(LineManagerController.text);
+                            AboutMeLabeltextController.text = previewProvider.PurposeOfReporttextController.text.length > 50
+                                ? previewProvider.PurposeOfReporttextController.text.substring(0, 50)
+                                : previewProvider.PurposeOfReporttextController.text;
+                            previewProvider.purpose("Official");
+
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                            // width: MediaQuery.of(context).size.width * .15,
+                            decoration: BoxDecoration(
+                              color:Colors.blue ,
+                              border: Border.all(
+                                  color:Colors.blue ,
+                                  width: 1.0),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: Center(
+                              child:Text(
+                                'Official communication to my employer',
+                                style: GoogleFonts.montserrat(
+                                  textStyle:
+                                  Theme
+                                      .of(context)
+                                      .textTheme
+                                      .titleSmall,
+                                  fontWeight: FontWeight.bold,
+                                  color:Colors.white ,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(width: 10,),
+
+                        InkWell(
+                          onTap: (){
+                            previewProvider.updateOtherCommuniation(nameController.text,LineManagerController.text);
+                            AboutMeLabeltextController.text = previewProvider.PurposeOfReporttextController.text.length > 50
+                                ? previewProvider.PurposeOfReporttextController.text.substring(0, 50)
+                                : previewProvider.PurposeOfReporttextController.text;
+                            previewProvider.purpose("Others");
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                            // width: MediaQuery.of(context).size.width * .15,
+                            decoration: BoxDecoration(
+                              color:Colors.blue ,
+                              border: Border.all(
+                                  color:Colors.blue ,
+                                  width: 1.0),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: Center(
+                              child:Text(
+                                'Other communication',
+                                style: GoogleFonts.montserrat(
+                                  textStyle:
+                                  Theme
+                                      .of(context)
+                                      .textTheme
+                                      .titleSmall,
+                                  fontWeight: FontWeight.bold,
+                                  color:Colors.white ,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
 
-                  SizedBox(height: 10,),
 
-
-                  Row(
-                    children: [
-                      InkWell(
-                        onTap: (){
-                          previewProvider.updatePurposeofReport(LineManagerController.text);
-                          AboutMeLabeltextController.text = previewProvider.PurposeOfReporttextController.text.length > 50
-                              ? previewProvider.PurposeOfReporttextController.text.substring(0, 50)
-                              : previewProvider.PurposeOfReporttextController.text;
-                          previewProvider.purpose("Official");
-
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                          // width: MediaQuery.of(context).size.width * .15,
-                          decoration: BoxDecoration(
-                            color:Colors.blue ,
-                            border: Border.all(
-                                color:Colors.blue ,
-                                width: 1.0),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Center(
-                            child:Text(
-                              'Official communication to my employer',
-                              style: GoogleFonts.montserrat(
-                                textStyle:
-                                Theme
-                                    .of(context)
-                                    .textTheme
-                                    .titleSmall,
-                                fontWeight: FontWeight.bold,
-                                color:Colors.white ,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(width: 10,),
-
-                      InkWell(
-                        onTap: (){
-                          previewProvider.updateOtherCommuniation(nameController.text,LineManagerController.text);
-                          AboutMeLabeltextController.text = previewProvider.PurposeOfReporttextController.text.length > 50
-                              ? previewProvider.PurposeOfReporttextController.text.substring(0, 50)
-                              : previewProvider.PurposeOfReporttextController.text;
-                          previewProvider.purpose("Others");
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                          // width: MediaQuery.of(context).size.width * .15,
-                          decoration: BoxDecoration(
-                            color:Colors.blue ,
-                            border: Border.all(
-                                color:Colors.blue ,
-                                width: 1.0),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Center(
-                            child:Text(
-                              'Other communication',
-                              style: GoogleFonts.montserrat(
-                                textStyle:
-                                Theme
-                                    .of(context)
-                                    .textTheme
-                                    .titleSmall,
-                                fontWeight: FontWeight.bold,
-                                color:Colors.white ,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
 
                   // Row(
                   //   mainAxisSize: MainAxisSize.min,
@@ -10269,7 +7753,7 @@ Thank you for being open to understanding me better and for considering my reque
                   //
                   //   ],
                   // ),
-
+///
 
                   SizedBox(height: 15,),
 
@@ -10277,42 +7761,42 @@ Thank you for being open to understanding me better and for considering my reque
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * .12,
-                              child: Text("Date:   ",
-                                  style: GoogleFonts.lato(textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .titleMedium,fontWeight: FontWeight.w700)),
-                            ),
-                            Flexible(
-                              flex: 1,
-                              child: Container(
-                                height: 40,
-                                width: MediaQuery.of(context).size.width * .19,
-                                child: TextField(
-                                  controller: AboutMeDatetextController,
-                                  style: GoogleFonts.lato(
-                                      textStyle: Theme.of(context).textTheme.bodyLarge,
-                                      color: Colors.black),
-                                  decoration: InputDecoration(
-                                    hintText: "" ,
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(10)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black12),
-                                        borderRadius: BorderRadius.circular(10)),
-                                  ),
-                                ),
-                              ),
-
-                            ),
-                          ],
-                        ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.start,
+                        //   children: [
+                        //     Container(
+                        //       width: MediaQuery.of(context).size.width * .12,
+                        //       child: Text("Date:   ",
+                        //           style: GoogleFonts.lato(textStyle: Theme
+                        //               .of(context)
+                        //               .textTheme
+                        //               .titleMedium,fontWeight: FontWeight.w700)),
+                        //     ),
+                        //     Flexible(
+                        //       flex: 1,
+                        //       child: Container(
+                        //         height: 40,
+                        //         width: MediaQuery.of(context).size.width * .19,
+                        //         child: TextField(
+                        //           controller: AboutMeDatetextController,
+                        //           style: GoogleFonts.lato(
+                        //               textStyle: Theme.of(context).textTheme.bodyLarge,
+                        //               color: Colors.black),
+                        //           decoration: InputDecoration(
+                        //             hintText: "" ,
+                        //             focusedBorder: OutlineInputBorder(
+                        //                 borderSide: BorderSide(color: Colors.black),
+                        //                 borderRadius: BorderRadius.circular(10)),
+                        //             border: OutlineInputBorder(
+                        //                 borderSide: BorderSide(color: Colors.black12),
+                        //                 borderRadius: BorderRadius.circular(10)),
+                        //           ),
+                        //         ),
+                        //       ),
+                        //
+                        //     ),
+                        //   ],
+                        // ),
 
                         SizedBox(height: 15,),
 
@@ -10363,7 +7847,7 @@ Thank you for being open to understanding me better and for considering my reque
                                 height: 40,
                                 width: MediaQuery.of(context).size.width * .19,
                                 child: TextField(
-                                  controller: SendEmailtextController,
+                                  controller: previewProvider.SendEmailtextController,
                                   style: GoogleFonts.lato(
                                       textStyle: Theme.of(context).textTheme.bodySmall,
                                       fontWeight: FontWeight.w400,
@@ -10397,8 +7881,11 @@ Thank you for being open to understanding me better and for considering my reque
                         Column(
                           children: List.generate(
                             previewProvider.ccEmails.length,
+
                                 (index) {
-                              return Row(
+                                  final recipient = previewProvider.ccEmails[index];
+
+                                  return Row(
                                 children: [
                                   Container(
                                     width: MediaQuery.of(context).size.width * .12,
@@ -10414,7 +7901,7 @@ Thank you for being open to understanding me better and for considering my reque
                                   Expanded(
                                     flex: 3,
                                     child: Text(
-                                        '${index + 1}. ${previewProvider.ccNames[index]}, <${previewProvider.ccEmails[index]}>'),
+                                        '${index + 1}. ${recipient['name']}, <${recipient['email']}>'),
                                   ),
                                   // SizedBox(width: 50,),
                                   Flexible(
@@ -10554,11 +8041,11 @@ Thank you for being open to understanding me better and for considering my reque
                         SizedBox(height: 10,),
 
                         Container(
-                          padding: EdgeInsets.all(5),
+                          // padding: EdgeInsets.all(5),
                           width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black),
-                          ),
+                          // decoration: BoxDecoration(
+                          //   border: Border.all(color: Colors.black),
+                          // ),
                           child: Text("My basic data",
                               style: GoogleFonts.lato(fontWeight: FontWeight.bold,
                                   fontSize: 24,
@@ -10695,18 +8182,18 @@ Thank you for being open to understanding me better and for considering my reque
                   SizedBox(height: 10,),
 
                   Container(
-                    padding: EdgeInsets.all(5),
+                    // padding: EdgeInsets.all(5),
                     width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black),
-                    ),
+                    // decoration: BoxDecoration(
+                    //   border: Border.all(color: Colors.black),
+                    // ),
                     child: Text("About me",
                         style: GoogleFonts.lato(fontWeight: FontWeight.bold,
                             fontSize: 24,
                             color: Colors.blue)),
                   ),
 
-                  SizedBox(height: 10,),
+                  // SizedBox(height: 10,),
 
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -10721,74 +8208,97 @@ Thank you for being open to understanding me better and for considering my reque
                       //           color: Colors.blue)),
                       // ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 5),
+                        padding: const EdgeInsets.symmetric(vertical: 5.0,),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("Me and my circumstances: ",
-                                style: GoogleFonts.lato(textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .titleMedium,
-                                  color: Colors.blue,
-                                  // decoration: TextDecoration.underline
-                                )),
-                            SizedBox(width: 50,),
-                            IconButton(
-                                onPressed: (){
-                                  editmeandmycircumstances(aboutMeData);
-                                },
-                                icon: Icon(
-                                    Icons.edit
-                                ))
+                            Flexible(
+                              child: Text("Me and my circumstances: ",
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.lato(textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .titleMedium,
+                                    color: Colors.blue,
+                                    // decoration: TextDecoration.underline
+                                  )),
+                            ),
+                            // SizedBox(width: 50,),
+                            Container(
+                              child: Row(
+                                children: [
+                                  IconButton(
+                                      onPressed: (){
+                                        editmeandmycircumstances(aboutMeData.id);
+                                      },
+                                      icon: Icon(
+                                          Icons.edit
+                                      )),
+                                  SizedBox(width: 70,),
+
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                      SizedBox(height: 5,),
+                      // SizedBox(height: 5,),
                       Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 5),
+                        padding: EdgeInsets.all(8),
                         child: Text("${previewProvider.mycircumstance==null ? "" : previewProvider.mycircumstance}",
                             style: GoogleFonts.lato(textStyle: Theme
                                 .of(context)
                                 .textTheme
-                                .bodyMedium,fontWeight: FontWeight.w600
+                                .bodyMedium,
+                                // fontWeight: FontWeight.w600
                             )),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 5),
+                            vertical: 5.0,),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("My strengths that I want to have the opportunity to use in my role: ",
-                                style: GoogleFonts.lato(textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .titleMedium,
-                                  color: Colors.blue,
-                                  // decoration: TextDecoration.underline
-                                )),
+                            Flexible(
+                              child: Text("My strengths that I want to have the opportunity to use in my role: ",
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.lato(textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .titleMedium,
+                                    color: Colors.blue,
+                                    // decoration: TextDecoration.underline
+                                  )),
+                            ),
                             SizedBox(width: 50,),
-                            IconButton(
-                                onPressed: (){
-                                  editmystrength(aboutMeData);
-                                },
-                                icon: Icon(
-                                    Icons.edit
-                                ))
+                            Container(
+                              child: Row(
+                                children: [
+                                  IconButton(
+                                      onPressed: (){
+                                        editmystrength(aboutMeData.id);
+                                      },
+                                      icon: Icon(
+                                          Icons.edit
+                                      )),
+                                  SizedBox(width: 70,),
+                                ],
+                              ),
+                            )
                           ],
                         ),
                       ),
-                      SizedBox(height: 5,),
+                      // SizedBox(height: 5,),
                       Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 5),
+                        padding: const EdgeInsets.all(8),
                         child: Text("${previewProvider.mystrength==null ? "" : previewProvider.mystrength}",
                             style: GoogleFonts.lato(textStyle: Theme
                                 .of(context)
                                 .textTheme
-                                .bodyMedium,fontWeight: FontWeight.w600,
+                                .bodyMedium,
+                              // fontWeight: FontWeight.w600,
 
                             )),
 
@@ -10801,8 +8311,10 @@ Thank you for being open to understanding me better and for considering my reque
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.symmetric( vertical: 10.0,horizontal: 5),
+                              padding: const EdgeInsets.symmetric( vertical: 5.0,),
                               child: Text("Things I find challenging in life that make it harder for me to perform my best:",
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.lato(textStyle: Theme
                                     .of(context)
                                     .textTheme
@@ -10821,74 +8333,167 @@ Thank you for being open to understanding me better and for considering my reque
                                   children: previewProvider.PreviewChallengesList.map((solution) {
                                     int index = previewProvider.PreviewChallengesList.indexOf(solution);
 
-                                    return Padding(
-                                      padding: EdgeInsets.only(bottom: 20.0),
-                                      child: Row(
-                                        children: [
-                                          Flexible(
-                                            child: RichText(
-                                              maxLines: 4,
-                                              text: TextSpan(
+                                    return  Padding(
+                                      padding: EdgeInsets.only(bottom: 10.0, right: 20),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(8),
+                                        child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '• ',
+                                              style: GoogleFonts.lato(textStyle: Theme
+                                                  .of(context)
+                                                  .textTheme
+                                                  .bodyMedium,),
+                                            ),
+                                            // SizedBox(width: 2),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  TextSpan(
-                                                      text: ' •  ',
-                                                      style:TextStyle(fontSize: 20)
-                                                  ),
-                                                  TextSpan(
-                                                      text: '${solution['Label']}',
-                                                      style: GoogleFonts.lato(textStyle: Theme
-                                                          .of(context)
-                                                          .textTheme
-                                                          .titleMedium,fontWeight: FontWeight.bold,)
-                                                  ),
-                                                  TextSpan(
-                                                      text: ' - ${solution['Final_description']}\n',
-                                                      style: GoogleFonts.lato(textStyle: Theme
-                                                          .of(context)
-                                                          .textTheme
-                                                          .bodyMedium,fontWeight: FontWeight.w400
-                                                      )
-                                                  ),
-                                                  TextSpan(
-                                                      text: '  ${solution['Impact_on_me']}',
-                                                      style: GoogleFonts.lato(textStyle: Theme
-                                                          .of(context)
-                                                          .textTheme
-                                                          .titleMedium,color: Colors.grey,)
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: RichText(
+                                                          maxLines: 2,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          text: TextSpan(
+                                                            children: [
+                                                              TextSpan(
+                                                                text: '${solution['Label']}',
+                                                                style: GoogleFonts.lato(textStyle: Theme
+                                                                    .of(context)
+                                                                    .textTheme
+                                                                    .titleMedium,fontWeight: FontWeight.bold,),
+                                                              ),
+                                                              TextSpan(
+                                                                text: ' - ${solution['Final_description']}\n',
+                                                                style: GoogleFonts.lato(textStyle: Theme
+                                                                    .of(context)
+                                                                    .textTheme
+                                                                    .titleMedium,),
+                                                              ),
+                                                              TextSpan(
+                                                                text: '${solution['Impact_on_me']}',
+                                                                style: GoogleFonts.lato(
+                                                                  textStyle: Theme
+                                                                      .of(context)
+                                                                      .textTheme
+                                                                      .titleMedium,color: Colors.grey,),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      Consumer<PreviewProvider>(
+                                                          builder: (context, previewProvider, _) {
+                                                            return Row(
+                                                              children: [
+                                                                IconButton(
+                                                                  icon: Icon(Icons.edit),
+                                                                  onPressed: (){
+                                                                    OSEditChallengeDialogBox(solution['id'], solution['Label'] , solution['Description'],
+                                                                        solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
+                                                                        solution['Created Date'], solution['Modified By'], solution['Modified Date'],
+                                                                        solution['Original Description'], solution['Impact'], solution['Final_description'],
+                                                                        solution['Category'], solution['Keywords'], solution['Potential Strengths'],
+                                                                        solution['Hidden Strengths'], index, solution, solution['Impact_on_me'],solution['Attachment'],
+                                                                      solution['Impacts_to_Coworkers'],solution['Impacts_to_employee'],
+                                                                      solution['Negative_impacts_to_organisation'],solution['Related_challenges_tags'],
+                                                                      solution['Suggested_solutions_tags'],);
+                                                                  },
+                                                                ),
+                                                                IconButton(
+                                                                  icon: Icon(Icons.delete),
+                                                                  onPressed: (){
+                                                                    print("solution['id']: ${solution['id']}");
+                                                                    _previewProvider.removeOSConfirmChallenge(index,solution['id'],challengesListForOs,previewProvider.PreviewChallengesList);
+                                                                  },
+                                                                )
+
+                                                              ],
+                                                            );
+                                                          })
+                                                    ],
                                                   ),
                                                 ],
                                               ),
                                             ),
-                                          ),
-                                          SizedBox(width: 50,),
-                                          Consumer<PreviewProvider>(
-                                              builder: (context, previewProvider, _) {
-                                                return Row(
-                                                  children: [
-                                                    IconButton(
-                                                      icon: Icon(Icons.edit),
-                                                      onPressed: (){
-                                                        showEditconfirmChallengeDialogBox(solution['id'], solution['Label'] , solution['Description'],
-                                                            solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
-                                                            solution['Created Date'], solution['Modified By'], solution['Modified Date'],
-                                                            solution['Original Description'], solution['Impact'], solution['Final_description'],
-                                                            solution['Category'], solution['Keywords'], solution['Potential Strengths'],
-                                                            solution['Hidden Strengths'], index, solution, solution['Impact_on_me']);
-                                                      },
-                                                    ),
-                                                    IconButton(
-                                                      icon: Icon(Icons.delete),
-                                                      onPressed: (){
-                                                        print("solution['id']: ${solution['id']}");
-                                                        userAboutMEProvider.removeEditConfirmChallenge(index,solution['id'],challengesList,previewProvider.PreviewChallengesList);
-                                                      },
-                                                    )
-                                                  ],
-                                                );
-                                              })
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     );
+                                    //   Padding(
+                                    //   padding: EdgeInsets.only(bottom: 20.0),
+                                    //   child: Row(
+                                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    //     children: [
+                                    //       Flexible(
+                                    //         child: RichText(
+                                    //           maxLines: 4,
+                                    //           text: TextSpan(
+                                    //             children: [
+                                    //               TextSpan(
+                                    //                   text: ' •  ',
+                                    //                   style:TextStyle(fontSize: 20)
+                                    //               ),
+                                    //               TextSpan(
+                                    //                   text: '${solution['Label']}',
+                                    //                   style: GoogleFonts.lato(textStyle: Theme
+                                    //                       .of(context)
+                                    //                       .textTheme
+                                    //                       .titleMedium,fontWeight: FontWeight.bold,)
+                                    //               ),
+                                    //               TextSpan(
+                                    //                   text: ' - ${solution['Final_description']}\n',
+                                    //                   style: GoogleFonts.lato(textStyle: Theme
+                                    //                       .of(context)
+                                    //                       .textTheme
+                                    //                       .bodyMedium,fontWeight: FontWeight.w400
+                                    //                   )
+                                    //               ),
+                                    //               TextSpan(
+                                    //                   text: '  ${solution['Impact_on_me']}',
+                                    //                   style: GoogleFonts.lato(textStyle: Theme
+                                    //                       .of(context)
+                                    //                       .textTheme
+                                    //                       .titleMedium,color: Colors.grey,)
+                                    //               ),
+                                    //             ],
+                                    //           ),
+                                    //         ),
+                                    //       ),
+                                    //       SizedBox(width: 50,),
+                                    //       Consumer<PreviewProvider>(
+                                    //           builder: (context, previewProvider, _) {
+                                    //             return Row(
+                                    //               children: [
+                                    //                 IconButton(
+                                    //                   icon: Icon(Icons.edit),
+                                    //                   onPressed: (){
+                                    //                     showEditconfirmChallengeDialogBox(solution['id'], solution['Label'] , solution['Description'],
+                                    //                         solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
+                                    //                         solution['Created Date'], solution['Modified By'], solution['Modified Date'],
+                                    //                         solution['Original Description'], solution['Impact'], solution['Final_description'],
+                                    //                         solution['Category'], solution['Keywords'], solution['Potential Strengths'],
+                                    //                         solution['Hidden Strengths'], index, solution, solution['Impact_on_me']);
+                                    //                   },
+                                    //                 ),
+                                    //                 IconButton(
+                                    //                   icon: Icon(Icons.delete),
+                                    //                   onPressed: (){
+                                    //                     print("solution['id']: ${solution['id']}");
+                                    //                     userAboutMEProvider.removeEditConfirmChallenge(index,solution['id'],challengesList,previewProvider.PreviewChallengesList);
+                                    //                   },
+                                    //                 )
+                                    //               ],
+                                    //             );
+                                    //           })
+                                    //     ],
+                                    //   ),
+                                    // );
                                   }).toList(),
                                 );
                               },
@@ -10900,70 +8505,94 @@ Thank you for being open to understanding me better and for considering my reque
 
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 5),
+                          vertical: 5.0,),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("What I value about ${employerController.text} and workplace environment that helps me perform to my best: ",
-                                style: GoogleFonts.lato(textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .titleMedium,
-                                  color: Colors.blue,
-                                  // decoration: TextDecoration.underline
-                                )),
+                            Flexible(
+                              child: Text("What I value about ${employerController.text} and workplace environment that helps me perform to my best: ",
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: GoogleFonts.lato(textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .titleMedium,
+                                    color: Colors.blue,
+                                    // decoration: TextDecoration.underline
+                                  )),
+                            ),
                             SizedBox(width: 50,),
-                            IconButton(
-                                onPressed: (){editmyorganization(aboutMeData);},
-                                icon: Icon(
-                                    Icons.edit
-                                ))
+                            Container(
+                              child: Row(
+                                children: [
+                                  IconButton(
+                                      onPressed: (){editmyorganization(aboutMeData.id);},
+                                      icon: Icon(
+                                          Icons.edit
+                                      )),
+                                  SizedBox(width: 70,),
+                                ],
+                              ),
+                            )
                           ],
                         ),
                       ),
-                      SizedBox(height: 5,),
+                      // SizedBox(height: 5,),
 
                       Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 5),
+                        padding: const EdgeInsets.all(8),
                         child: Text("${previewProvider.myorganization==null ? "" : previewProvider.myorganization}",
                             style: GoogleFonts.lato(textStyle: Theme
                                 .of(context)
                                 .textTheme
-                                .bodyMedium,fontWeight: FontWeight.w600
+                                .bodyMedium,
+                                // fontWeight: FontWeight.w600
                             )),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 5),
+                            vertical: 5.0,),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("What I find challenging about ${employerController.text} and the workplace environment that makes it harder for me to perform my best: ",
-                                style: GoogleFonts.lato(textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .titleMedium,
-                                  color: Colors.blue,
-                                  // decoration: TextDecoration.underline
-                                )),
+                            Flexible(
+                              child: Text("What I find challenging about ${employerController.text} and the workplace environment that makes it harder for me to perform my best: ",
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: GoogleFonts.lato(textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .titleMedium,
+                                    color: Colors.blue,
+                                    // decoration: TextDecoration.underline
+                                  )),
+                            ),
                             SizedBox(width: 50,),
-                            IconButton(
-                                onPressed: (){editmychallenges(aboutMeData);},
-                                icon: Icon(
-                                    Icons.edit
-                                ))
+                            Container(
+                              child: Row(
+                                children: [
+                                  IconButton(
+                                      onPressed: (){editmychallenges(aboutMeData.id);},
+                                      icon: Icon(
+                                          Icons.edit
+                                      )),
+                                  SizedBox(width: 70,),
+                                ],
+                              ),
+                            )
                           ],
                         ),
                       ),
-                      SizedBox(height: 5,),
+                      // SizedBox(height: 5,),
 
                       Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 5),
+                        padding: EdgeInsets.all(8),
                         child: Text("${previewProvider.mychallenge==null ? "" : previewProvider.mychallenge}",
                             style: GoogleFonts.lato(textStyle: Theme
                                 .of(context)
                                 .textTheme
-                                .bodyMedium,fontWeight: FontWeight.w600
+                                .bodyMedium,
+                                // fontWeight: FontWeight.w600
                             )),
 
                       ),
@@ -10982,9 +8611,9 @@ Thank you for being open to understanding me better and for considering my reque
                         Container(
                           padding: EdgeInsets.all(5),
                           width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black),
-                          ),
+                          // decoration: BoxDecoration(
+                          //   border: Border.all(color: Colors.black),
+                          // ),
                           child: Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${employerController.text}:",
                               style: GoogleFonts.lato(fontWeight: FontWeight.bold,
                                   fontSize: 24,
@@ -11037,81 +8666,176 @@ Thank you for being open to understanding me better and for considering my reque
 
                                       print("PreviewSolutionMyResposibilty: ${previewProvider.PreviewSolutionMyResposibilty}");
                                       return Padding(
-                                        padding: EdgeInsets.only(bottom: 20.0),
-                                        child: Row(
-                                          children: [
-                                            Flexible(
-                                              child: RichText(
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                text: TextSpan(
+                                        padding: EdgeInsets.only(bottom: 10.0, right: 20),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(8),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '• ',
+                                                style: GoogleFonts.lato(textStyle: Theme
+                                                    .of(context)
+                                                    .textTheme
+                                                    .bodyMedium,),
+                                              ),
+                                              // SizedBox(width: 4),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    TextSpan(
-                                                        text: ' •  ',
-                                                        style: TextStyle(fontSize: 20)
-                                                    ),
-                                                    TextSpan(
-                                                        text: '${solution['Label']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,fontWeight: FontWeight.bold,)
-                                                    ),
-                                                    TextSpan(
-                                                        text: ' - ${solution['Final_description']}\n',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .bodyMedium,fontWeight: FontWeight.w400
-                                                        )
-                                                    ),
-                                                    TextSpan(
-                                                      text: '  ${solution['AboutMe_Notes']}',
-                                                      style: GoogleFonts.lato(
-                                                        textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,color: Colors.grey,),
+                                                    Row(
+                                                      children: [
+                                                        Expanded(
+                                                          child: RichText(
+                                                            maxLines: 2,
+                                                            overflow: TextOverflow.ellipsis,
+                                                            text: TextSpan(
+                                                              children: [
+                                                                TextSpan(
+                                                                  text: '${solution['Label']}',
+                                                                  style: GoogleFonts.lato(textStyle: Theme
+                                                                      .of(context)
+                                                                      .textTheme
+                                                                      .titleMedium,fontWeight: FontWeight.bold,),
+                                                                ),
+                                                                TextSpan(
+                                                                  text: ' - ${solution['Final_description']}\n',
+                                                                  style: GoogleFonts.lato(textStyle: Theme
+                                                                      .of(context)
+                                                                      .textTheme
+                                                                      .titleMedium,),
+                                                                ),
+                                                                TextSpan(
+                                                                  text: '${solution['AboutMe_Notes']}',
+                                                                  style: GoogleFonts.lato(
+                                                                    textStyle: Theme
+                                                                        .of(context)
+                                                                        .textTheme
+                                                                        .titleMedium,color: Colors.grey,),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+
+                                                        Consumer<PreviewProvider>(
+                                                            builder: (context, previewProvider, _) {
+                                                              return  Row(
+                                                                children: [
+                                                                  IconButton(
+                                                                    icon: Icon(Icons.edit),
+                                                                    onPressed: (){
+                                                                      OSEditconfirmSolutionsBox(solution['id'], solution['Label'] , solution['Description'],
+                                                                          solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
+                                                                          solution['Created Date'], solution['Modified By'], solution['Modified Date'],
+                                                                          solution['Original Description'], solution['Impact'], solution['Final_description'],
+                                                                          solution['Category'], solution['Keywords'], solution['Potential Strengths'],
+                                                                          solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],
+                                                                          solution['InPlace'],solution['Attachment'],solution['Helps'],solution['Positive_impacts_to_employee'],
+                                                                        solution['Positive_impacts_to_organisation'],solution['Related_solution_tags'],solution['Suggested_challenges_tags'],);
+                                                                    },
+                                                                  ),
+                                                                  IconButton(
+                                                                    icon: Icon(Icons.delete),
+                                                                    onPressed: (){
+                                                                      _previewProvider.removeOSConfirmSolution(solution["id"],solutionsListForOs,
+                                                                        previewProvider.PreviewSolutionMyResposibilty,
+                                                                        previewProvider.PreviewSolutionStillNeeded,
+                                                                        previewProvider.PreviewSolutionNotNeededAnyMore,
+                                                                        previewProvider.PreviewSolutionNiceToHave,
+                                                                        previewProvider.PreviewSolutionMustHave,
+                                                                      );
+                                                                    },
+                                                                  )
+                                                                ],
+                                                              ); }),
+                                                      ],
                                                     ),
                                                   ],
                                                 ),
                                               ),
-                                            ),
-                                            SizedBox(width: 50,),
-
-                                            Consumer<PreviewProvider>(
-                                                builder: (context, previewProvider, _) {
-                                                  return  Row(
-                                                    children: [
-                                                      IconButton(
-                                                        icon: Icon(Icons.edit),
-                                                        onPressed: (){
-                                                          showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
-                                                              solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
-                                                              solution['Created Date'], solution['Modified By'], solution['Modified Date'],
-                                                              solution['Original Description'], solution['Impact'], solution['Final_description'],
-                                                              solution['Category'], solution['Keywords'], solution['Potential Strengths'],
-                                                              solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],
-                                                              solution['InPlace']);
-                                                        },
-                                                      ),
-                                                      IconButton(
-                                                        icon: Icon(Icons.delete),
-                                                        onPressed: (){
-                                                          userAboutMEProvider.removeEditConfirmSolution(solution["id"],solutionsList,
-                                                            previewProvider.PreviewSolutionMyResposibilty,
-                                                            previewProvider.PreviewSolutionStillNeeded,
-                                                            previewProvider.PreviewSolutionNotNeededAnyMore,
-                                                            previewProvider.PreviewSolutionNiceToHave,
-                                                            previewProvider.PreviewSolutionMustHave,
-                                                          );
-                                                        },
-                                                      )
-                                                    ],
-                                                  ); }),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       );
+
+                                      // Padding(
+                                      //   padding: EdgeInsets.only(bottom: 20.0),
+                                      //   child: Row(
+                                      //     children: [
+                                      //       Flexible(
+                                      //         child: RichText(
+                                      //           maxLines: 2,
+                                      //           overflow: TextOverflow.ellipsis,
+                                      //           text: TextSpan(
+                                      //             children: [
+                                      //               TextSpan(
+                                      //                   text: ' •  ',
+                                      //                   style: TextStyle(fontSize: 20)
+                                      //               ),
+                                      //               TextSpan(
+                                      //                   text: '${solution['Label']}',
+                                      //                   style: GoogleFonts.lato(textStyle: Theme
+                                      //                       .of(context)
+                                      //                       .textTheme
+                                      //                       .titleMedium,fontWeight: FontWeight.bold,)
+                                      //               ),
+                                      //               TextSpan(
+                                      //                   text: ' - ${solution['Final_description']}\n',
+                                      //                   style: GoogleFonts.lato(textStyle: Theme
+                                      //                       .of(context)
+                                      //                       .textTheme
+                                      //                       .bodyMedium,fontWeight: FontWeight.w400
+                                      //                   )
+                                      //               ),
+                                      //               TextSpan(
+                                      //                 text: '  ${solution['AboutMe_Notes']}',
+                                      //                 style: GoogleFonts.lato(
+                                      //                   textStyle: Theme
+                                      //                       .of(context)
+                                      //                       .textTheme
+                                      //                       .titleMedium,color: Colors.grey,),
+                                      //               ),
+                                      //             ],
+                                      //           ),
+                                      //         ),
+                                      //       ),
+                                      //       SizedBox(width: 50,),
+                                      //
+                                      //       Consumer<PreviewProvider>(
+                                      //           builder: (context, previewProvider, _) {
+                                      //             return  Row(
+                                      //               children: [
+                                      //                 IconButton(
+                                      //                   icon: Icon(Icons.edit),
+                                      //                   onPressed: (){
+                                      //                     showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
+                                      //                         solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
+                                      //                         solution['Created Date'], solution['Modified By'], solution['Modified Date'],
+                                      //                         solution['Original Description'], solution['Impact'], solution['Final_description'],
+                                      //                         solution['Category'], solution['Keywords'], solution['Potential Strengths'],
+                                      //                         solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],
+                                      //                         solution['InPlace']);
+                                      //                   },
+                                      //                 ),
+                                      //                 IconButton(
+                                      //                   icon: Icon(Icons.delete),
+                                      //                   onPressed: (){
+                                      //                     _previewProvider.removeOSConfirmSolution(solution["id"],solutionsList,
+                                      //                       previewProvider.PreviewSolutionMyResposibilty,
+                                      //                       previewProvider.PreviewSolutionStillNeeded,
+                                      //                       previewProvider.PreviewSolutionNotNeededAnyMore,
+                                      //                       previewProvider.PreviewSolutionNiceToHave,
+                                      //                       previewProvider.PreviewSolutionMustHave,
+                                      //                     );
+                                      //                   },
+                                      //                 )
+                                      //               ],
+                                      //             ); }),
+                                      //     ],
+                                      //   ),
+                                      // );
                                     }).toList(),
                                   );
                                 },
@@ -11158,79 +8882,174 @@ Thank you for being open to understanding me better and for considering my reque
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: previewProvider.PreviewSolutionStillNeeded.map((solution) {
                                       return Padding(
-                                        padding: EdgeInsets.only(bottom: 20.0),
-                                        child: Row(
-                                          children: [
-                                            Flexible(
-                                              child: RichText(
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                text: TextSpan(
+                                        padding: EdgeInsets.only(bottom: 10.0, right: 20),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(8),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '• ',
+                                                style: GoogleFonts.lato(textStyle: Theme
+                                                    .of(context)
+                                                    .textTheme
+                                                    .bodyMedium,),
+                                              ),
+                                              // SizedBox(width: 4),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    TextSpan(
-                                                        text: ' •  ',
-                                                        style: TextStyle(fontSize: 20)
-                                                    ),
-                                                    TextSpan(
-                                                        text: '${solution['Label']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,fontWeight: FontWeight.bold,)
-                                                    ),
-                                                    TextSpan(
-                                                        text: ' - ${solution['Final_description']}\n',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .bodyMedium,fontWeight: FontWeight.w400
-                                                        )
-                                                    ),
-                                                    TextSpan(
-                                                        text: '  ${solution['AboutMe_Notes']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,color: Colors.grey,)
+                                                    Row(
+                                                      children: [
+                                                        Expanded(
+                                                          child: RichText(
+                                                            maxLines: 2,
+                                                            overflow: TextOverflow.ellipsis,
+                                                            text: TextSpan(
+                                                              children: [
+                                                                TextSpan(
+                                                                  text: '${solution['Label']}',
+                                                                  style: GoogleFonts.lato(textStyle: Theme
+                                                                      .of(context)
+                                                                      .textTheme
+                                                                      .titleMedium,fontWeight: FontWeight.bold,),
+                                                                ),
+                                                                TextSpan(
+                                                                  text: ' - ${solution['Final_description']}\n',
+                                                                  style: GoogleFonts.lato(textStyle: Theme
+                                                                      .of(context)
+                                                                      .textTheme
+                                                                      .titleMedium,),
+                                                                ),
+                                                                TextSpan(
+                                                                  text: '${solution['AboutMe_Notes']}',
+                                                                  style: GoogleFonts.lato(
+                                                                    textStyle: Theme
+                                                                        .of(context)
+                                                                        .textTheme
+                                                                        .titleMedium,color: Colors.grey,),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+
+                                                        Consumer<PreviewProvider> (
+                                                            builder: (context, previewProvider, _) {
+                                                              return   Row(
+                                                                children: [
+                                                                  IconButton(
+                                                                    icon: Icon(Icons.edit),
+                                                                    onPressed: (){
+                                                                      OSEditconfirmSolutionsBox(solution['id'], solution['Label'] , solution['Description'],
+                                                                          solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
+                                                                          solution['Created Date'], solution['Modified By'], solution['Modified Date'],
+                                                                          solution['Original Description'], solution['Impact'], solution['Final_description'],
+                                                                          solution['Category'], solution['Keywords'], solution['Potential Strengths'],
+                                                                          solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace'],
+                                                                        solution['Attachment'],solution['Helps'],solution['Positive_impacts_to_employee'],
+                                                                        solution['Positive_impacts_to_organisation'],solution['Related_solution_tags'],solution['Suggested_challenges_tags'],);
+                                                                    },
+                                                                  ),
+                                                                  IconButton(
+                                                                    icon: Icon(Icons.delete),
+                                                                    onPressed: (){
+                                                                      _previewProvider.removeOSConfirmSolution(solution["id"],solutionsListForOs,
+                                                                        previewProvider.PreviewSolutionMyResposibilty,
+                                                                        previewProvider.PreviewSolutionStillNeeded,
+                                                                        previewProvider.PreviewSolutionNotNeededAnyMore,
+                                                                        previewProvider.PreviewSolutionNiceToHave,
+                                                                        previewProvider.PreviewSolutionMustHave,
+                                                                      );
+                                                                    },
+                                                                  )
+                                                                ],
+                                                              );
+                                                            }),
+                                                      ],
                                                     ),
                                                   ],
                                                 ),
                                               ),
-                                            ),
-                                            SizedBox(width: 50,),
-                                            Consumer<PreviewProvider> (
-                                                builder: (context, previewProvider, _) {
-                                                  return   Row(
-                                                    children: [
-                                                      IconButton(
-                                                        icon: Icon(Icons.edit),
-                                                        onPressed: (){
-                                                          showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
-                                                              solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
-                                                              solution['Created Date'], solution['Modified By'], solution['Modified Date'],
-                                                              solution['Original Description'], solution['Impact'], solution['Final_description'],
-                                                              solution['Category'], solution['Keywords'], solution['Potential Strengths'],
-                                                              solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']);
-                                                        },
-                                                      ),
-                                                      IconButton(
-                                                        icon: Icon(Icons.delete),
-                                                        onPressed: (){
-                                                          userAboutMEProvider.removeEditConfirmSolution(solution["id"],solutionsList,
-                                                            previewProvider.PreviewSolutionMyResposibilty,
-                                                            previewProvider.PreviewSolutionStillNeeded,
-                                                            previewProvider.PreviewSolutionNotNeededAnyMore,
-                                                            previewProvider.PreviewSolutionNiceToHave,
-                                                            previewProvider.PreviewSolutionMustHave,
-                                                          );
-                                                        },
-                                                      )
-                                                    ],
-                                                  );
-                                                }),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       );
+                                      //   Padding(
+                                      //   padding: EdgeInsets.only(bottom: 20.0),
+                                      //   child: Row(
+                                      //     children: [
+                                      //       Flexible(
+                                      //         child: RichText(
+                                      //           maxLines: 2,
+                                      //           overflow: TextOverflow.ellipsis,
+                                      //           text: TextSpan(
+                                      //             children: [
+                                      //               TextSpan(
+                                      //                   text: ' •  ',
+                                      //                   style: TextStyle(fontSize: 20)
+                                      //               ),
+                                      //               TextSpan(
+                                      //                   text: '${solution['Label']}',
+                                      //                   style: GoogleFonts.lato(textStyle: Theme
+                                      //                       .of(context)
+                                      //                       .textTheme
+                                      //                       .titleMedium,fontWeight: FontWeight.bold,)
+                                      //               ),
+                                      //               TextSpan(
+                                      //                   text: ' - ${solution['Final_description']}\n',
+                                      //                   style: GoogleFonts.lato(textStyle: Theme
+                                      //                       .of(context)
+                                      //                       .textTheme
+                                      //                       .bodyMedium,fontWeight: FontWeight.w400
+                                      //                   )
+                                      //               ),
+                                      //               TextSpan(
+                                      //                   text: '  ${solution['AboutMe_Notes']}',
+                                      //                   style: GoogleFonts.lato(textStyle: Theme
+                                      //                       .of(context)
+                                      //                       .textTheme
+                                      //                       .titleMedium,color: Colors.grey,)
+                                      //               ),
+                                      //             ],
+                                      //           ),
+                                      //         ),
+                                      //       ),
+                                      //       SizedBox(width: 50,),
+                                      //       Consumer<PreviewProvider> (
+                                      //           builder: (context, previewProvider, _) {
+                                      //             return   Row(
+                                      //               children: [
+                                      //                 IconButton(
+                                      //                   icon: Icon(Icons.edit),
+                                      //                   onPressed: (){
+                                      //                     showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
+                                      //                         solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
+                                      //                         solution['Created Date'], solution['Modified By'], solution['Modified Date'],
+                                      //                         solution['Original Description'], solution['Impact'], solution['Final_description'],
+                                      //                         solution['Category'], solution['Keywords'], solution['Potential Strengths'],
+                                      //                         solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']);
+                                      //                   },
+                                      //                 ),
+                                      //                 IconButton(
+                                      //                   icon: Icon(Icons.delete),
+                                      //                   onPressed: (){
+                                      //                     _previewProvider.removeOSConfirmSolution(solution["id"],solutionsList,
+                                      //                       previewProvider.PreviewSolutionMyResposibilty,
+                                      //                       previewProvider.PreviewSolutionStillNeeded,
+                                      //                       previewProvider.PreviewSolutionNotNeededAnyMore,
+                                      //                       previewProvider.PreviewSolutionNiceToHave,
+                                      //                       previewProvider.PreviewSolutionMustHave,
+                                      //                     );
+                                      //                   },
+                                      //                 )
+                                      //               ],
+                                      //             );
+                                      //           }),
+                                      //     ],
+                                      //   ),
+                                      // );
                                     }).toList(),
                                   );
                                 },
@@ -11262,79 +9081,174 @@ Thank you for being open to understanding me better and for considering my reque
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: previewProvider.PreviewSolutionMustHave.map((solution) {
                                       return Padding(
-                                        padding: EdgeInsets.only(bottom: 20.0),
-                                        child: Row(
-                                          children: [
-                                            Flexible(
-                                              child: RichText(
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                text: TextSpan(
+                                        padding: EdgeInsets.only(bottom: 10.0, right: 20),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(8),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '• ',
+                                                style: GoogleFonts.lato(textStyle: Theme
+                                                    .of(context)
+                                                    .textTheme
+                                                    .bodyMedium,),
+                                              ),
+                                              // SizedBox(width: 4),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    TextSpan(
-                                                        text: ' •  ',
-                                                        style: TextStyle(fontSize: 20)
-                                                    ),
-                                                    TextSpan(
-                                                        text: '${solution['Label']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,fontWeight: FontWeight.bold,)
-                                                    ),
-                                                    TextSpan(
-                                                        text: ' - ${solution['Final_description']}\n',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .bodyMedium,fontWeight: FontWeight.w400
-                                                        )
-                                                    ),
-                                                    TextSpan(
-                                                        text: '  ${solution['AboutMe_Notes']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,color: Colors.grey,)
+                                                    Row(
+                                                      children: [
+                                                        Expanded(
+                                                          child: RichText(
+                                                            maxLines: 2,
+                                                            overflow: TextOverflow.ellipsis,
+                                                            text: TextSpan(
+                                                              children: [
+                                                                TextSpan(
+                                                                  text: '${solution['Label']}',
+                                                                  style: GoogleFonts.lato(textStyle: Theme
+                                                                      .of(context)
+                                                                      .textTheme
+                                                                      .titleMedium,fontWeight: FontWeight.bold,),
+                                                                ),
+                                                                TextSpan(
+                                                                  text: ' - ${solution['Final_description']}\n',
+                                                                  style: GoogleFonts.lato(textStyle: Theme
+                                                                      .of(context)
+                                                                      .textTheme
+                                                                      .titleMedium,),
+                                                                ),
+                                                                TextSpan(
+                                                                  text: '${solution['AboutMe_Notes']}',
+                                                                  style: GoogleFonts.lato(
+                                                                    textStyle: Theme
+                                                                        .of(context)
+                                                                        .textTheme
+                                                                        .titleMedium,color: Colors.grey,),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+
+                                                        Consumer<PreviewProvider>(
+                                                            builder: (context, previewProvider, _) {
+                                                              return  Row(
+                                                                children: [
+                                                                  IconButton(
+                                                                    icon: Icon(Icons.edit),
+                                                                    onPressed: (){
+                                                                      OSEditconfirmSolutionsBox(solution['id'], solution['Label'] , solution['Description'],
+                                                                          solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
+                                                                          solution['Created Date'], solution['Modified By'], solution['Modified Date'],
+                                                                          solution['Original Description'], solution['Impact'], solution['Final_description'],
+                                                                          solution['Category'], solution['Keywords'], solution['Potential Strengths'],
+                                                                          solution['Hidden Strengths'],solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']
+                                                                        ,solution['Attachment'],solution['Helps'],solution['Positive_impacts_to_employee'],
+                                                                        solution['Positive_impacts_to_organisation'],solution['Related_solution_tags'],solution['Suggested_challenges_tags'],);
+                                                                    },
+                                                                  ),
+                                                                  IconButton(
+                                                                    icon: Icon(Icons.delete),
+                                                                    onPressed: (){
+                                                                      _previewProvider.removeOSConfirmSolution(solution["id"],solutionsListForOs,
+                                                                        previewProvider.PreviewSolutionMyResposibilty,
+                                                                        previewProvider.PreviewSolutionStillNeeded,
+                                                                        previewProvider.PreviewSolutionNotNeededAnyMore,
+                                                                        previewProvider.PreviewSolutionNiceToHave,
+                                                                        previewProvider.PreviewSolutionMustHave,
+                                                                      );
+                                                                    },
+                                                                  )
+                                                                ],
+                                                              );
+                                                            }),
+                                                      ],
                                                     ),
                                                   ],
                                                 ),
                                               ),
-                                            ),
-                                            SizedBox(width: 50,),
-                                            Consumer<PreviewProvider>(
-                                                builder: (context, previewProvider, _) {
-                                                  return  Row(
-                                                    children: [
-                                                      IconButton(
-                                                        icon: Icon(Icons.edit),
-                                                        onPressed: (){
-                                                          showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
-                                                              solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
-                                                              solution['Created Date'], solution['Modified By'], solution['Modified Date'],
-                                                              solution['Original Description'], solution['Impact'], solution['Final_description'],
-                                                              solution['Category'], solution['Keywords'], solution['Potential Strengths'],
-                                                              solution['Hidden Strengths'],solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']);
-                                                        },
-                                                      ),
-                                                      IconButton(
-                                                        icon: Icon(Icons.delete),
-                                                        onPressed: (){
-                                                          userAboutMEProvider.removeEditConfirmSolution(solution["id"],solutionsList,
-                                                            previewProvider.PreviewSolutionMyResposibilty,
-                                                            previewProvider.PreviewSolutionStillNeeded,
-                                                            previewProvider.PreviewSolutionNotNeededAnyMore,
-                                                            previewProvider.PreviewSolutionNiceToHave,
-                                                            previewProvider.PreviewSolutionMustHave,
-                                                          );
-                                                        },
-                                                      )
-                                                    ],
-                                                  );
-                                                }),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       );
+                                      //   Padding(
+                                      //   padding: EdgeInsets.only(bottom: 20.0),
+                                      //   child: Row(
+                                      //     children: [
+                                      //       Flexible(
+                                      //         child: RichText(
+                                      //           maxLines: 2,
+                                      //           overflow: TextOverflow.ellipsis,
+                                      //           text: TextSpan(
+                                      //             children: [
+                                      //               TextSpan(
+                                      //                   text: ' •  ',
+                                      //                   style: TextStyle(fontSize: 20)
+                                      //               ),
+                                      //               TextSpan(
+                                      //                   text: '${solution['Label']}',
+                                      //                   style: GoogleFonts.lato(textStyle: Theme
+                                      //                       .of(context)
+                                      //                       .textTheme
+                                      //                       .titleMedium,fontWeight: FontWeight.bold,)
+                                      //               ),
+                                      //               TextSpan(
+                                      //                   text: ' - ${solution['Final_description']}\n',
+                                      //                   style: GoogleFonts.lato(textStyle: Theme
+                                      //                       .of(context)
+                                      //                       .textTheme
+                                      //                       .bodyMedium,fontWeight: FontWeight.w400
+                                      //                   )
+                                      //               ),
+                                      //               TextSpan(
+                                      //                   text: '  ${solution['AboutMe_Notes']}',
+                                      //                   style: GoogleFonts.lato(textStyle: Theme
+                                      //                       .of(context)
+                                      //                       .textTheme
+                                      //                       .titleMedium,color: Colors.grey,)
+                                      //               ),
+                                      //             ],
+                                      //           ),
+                                      //         ),
+                                      //       ),
+                                      //       SizedBox(width: 50,),
+                                      //       Consumer<PreviewProvider>(
+                                      //           builder: (context, previewProvider, _) {
+                                      //             return  Row(
+                                      //               children: [
+                                      //                 IconButton(
+                                      //                   icon: Icon(Icons.edit),
+                                      //                   onPressed: (){
+                                      //                     showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
+                                      //                         solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
+                                      //                         solution['Created Date'], solution['Modified By'], solution['Modified Date'],
+                                      //                         solution['Original Description'], solution['Impact'], solution['Final_description'],
+                                      //                         solution['Category'], solution['Keywords'], solution['Potential Strengths'],
+                                      //                         solution['Hidden Strengths'],solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']);
+                                      //                   },
+                                      //                 ),
+                                      //                 IconButton(
+                                      //                   icon: Icon(Icons.delete),
+                                      //                   onPressed: (){
+                                      //                     _previewProvider.removeOSConfirmSolution(solution["id"],solutionsList,
+                                      //                       previewProvider.PreviewSolutionMyResposibilty,
+                                      //                       previewProvider.PreviewSolutionStillNeeded,
+                                      //                       previewProvider.PreviewSolutionNotNeededAnyMore,
+                                      //                       previewProvider.PreviewSolutionNiceToHave,
+                                      //                       previewProvider.PreviewSolutionMustHave,
+                                      //                     );
+                                      //                   },
+                                      //                 )
+                                      //               ],
+                                      //             );
+                                      //           }),
+                                      //     ],
+                                      //   ),
+                                      // );
                                     }).toList(),
                                   );
                                 },
@@ -11365,79 +9279,173 @@ Thank you for being open to understanding me better and for considering my reque
                                   return Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: previewProvider.PreviewSolutionNiceToHave.map((solution) {
-                                      return Padding(
-                                        padding: EdgeInsets.only(bottom: 20.0),
-                                        child: Row(
-                                          children: [
-                                            Flexible(
-                                              child: RichText(
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                text: TextSpan(
+                                      return  Padding(
+                                        padding: EdgeInsets.only(bottom: 10.0, right: 20),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(8),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '• ',
+                                                style: GoogleFonts.lato(textStyle: Theme
+                                                    .of(context)
+                                                    .textTheme
+                                                    .bodyMedium,),
+                                              ),
+                                              // SizedBox(width: 4),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    TextSpan(
-                                                        text: ' •  ',
-                                                        style: TextStyle(fontSize: 20)
-                                                    ),
-                                                    TextSpan(
-                                                        text: '${solution['Label']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,fontWeight: FontWeight.bold,)
-                                                    ),
-                                                    TextSpan(
-                                                        text: ' - ${solution['Final_description']}\n',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .bodyMedium,fontWeight: FontWeight.w400
-                                                        )
-                                                    ),
-                                                    TextSpan(
-                                                        text: '  ${solution['AboutMe_Notes']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,color: Colors.grey,)
+                                                    Row(
+                                                      children: [
+                                                        Expanded(
+                                                          child: RichText(
+                                                            maxLines: 2,
+                                                            overflow: TextOverflow.ellipsis,
+                                                            text: TextSpan(
+                                                              children: [
+                                                                TextSpan(
+                                                                  text: '${solution['Label']}',
+                                                                  style: GoogleFonts.lato(textStyle: Theme
+                                                                      .of(context)
+                                                                      .textTheme
+                                                                      .titleMedium,fontWeight: FontWeight.bold,),
+                                                                ),
+                                                                TextSpan(
+                                                                  text: ' - ${solution['Final_description']}\n',
+                                                                  style: GoogleFonts.lato(textStyle: Theme
+                                                                      .of(context)
+                                                                      .textTheme
+                                                                      .titleMedium,),
+                                                                ),
+                                                                TextSpan(
+                                                                  text: '${solution['AboutMe_Notes']}',
+                                                                  style: GoogleFonts.lato(
+                                                                    textStyle: Theme
+                                                                        .of(context)
+                                                                        .textTheme
+                                                                        .titleMedium,color: Colors.grey,),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+
+                                                        Consumer<PreviewProvider>(
+                                                            builder: (context, previewProvider, _) {
+                                                              return Row(
+                                                                children: [
+                                                                  IconButton(
+                                                                    icon: Icon(Icons.edit),
+                                                                    onPressed: (){
+                                                                      OSEditconfirmSolutionsBox(solution['id'], solution['Label'] , solution['Description'],
+                                                                          solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
+                                                                          solution['Created Date'], solution['Modified By'], solution['Modified Date'],
+                                                                          solution['Original Description'], solution['Impact'], solution['Final_description'],
+                                                                          solution['Category'], solution['Keywords'], solution['Potential Strengths'],
+                                                                          solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace'],
+                                                                        solution['Attachment'],solution['Helps'],solution['Positive_impacts_to_employee'],
+                                                                        solution['Positive_impacts_to_organisation'],solution['Related_solution_tags'],solution['Suggested_challenges_tags'],);
+                                                                    },
+                                                                  ),
+                                                                  IconButton(
+                                                                    icon: Icon(Icons.delete),
+                                                                    onPressed: (){
+                                                                      _previewProvider.removeOSConfirmSolution(solution["id"],solutionsListForOs,
+                                                                        previewProvider.PreviewSolutionMyResposibilty,
+                                                                        previewProvider.PreviewSolutionStillNeeded,
+                                                                        previewProvider.PreviewSolutionNotNeededAnyMore,
+                                                                        previewProvider.PreviewSolutionNiceToHave,
+                                                                        previewProvider.PreviewSolutionMustHave,
+                                                                      );
+                                                                    },
+                                                                  )
+                                                                ],
+                                                              );}),
+                                                      ],
                                                     ),
                                                   ],
                                                 ),
                                               ),
-                                            ),
-                                            SizedBox(width: 50,),
-                                            Consumer<PreviewProvider>(
-                                                builder: (context, previewProvider, _) {
-                                                  return Row(
-                                                    children: [
-                                                      IconButton(
-                                                        icon: Icon(Icons.edit),
-                                                        onPressed: (){
-                                                          showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
-                                                              solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
-                                                              solution['Created Date'], solution['Modified By'], solution['Modified Date'],
-                                                              solution['Original Description'], solution['Impact'], solution['Final_description'],
-                                                              solution['Category'], solution['Keywords'], solution['Potential Strengths'],
-                                                              solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']);
-                                                        },
-                                                      ),
-                                                      IconButton(
-                                                        icon: Icon(Icons.delete),
-                                                        onPressed: (){
-                                                          userAboutMEProvider.removeEditConfirmSolution(solution["id"],solutionsList,
-                                                            previewProvider.PreviewSolutionMyResposibilty,
-                                                            previewProvider.PreviewSolutionStillNeeded,
-                                                            previewProvider.PreviewSolutionNotNeededAnyMore,
-                                                            previewProvider.PreviewSolutionNiceToHave,
-                                                            previewProvider.PreviewSolutionMustHave,
-                                                          );
-                                                        },
-                                                      )
-                                                    ],
-                                                  );}),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       );
+                                      //   Padding(
+                                      //   padding: EdgeInsets.only(bottom: 20.0),
+                                      //   child: Row(
+                                      //     children: [
+                                      //       Flexible(
+                                      //         child: RichText(
+                                      //           maxLines: 2,
+                                      //           overflow: TextOverflow.ellipsis,
+                                      //           text: TextSpan(
+                                      //             children: [
+                                      //               TextSpan(
+                                      //                   text: ' •  ',
+                                      //                   style: TextStyle(fontSize: 20)
+                                      //               ),
+                                      //               TextSpan(
+                                      //                   text: '${solution['Label']}',
+                                      //                   style: GoogleFonts.lato(textStyle: Theme
+                                      //                       .of(context)
+                                      //                       .textTheme
+                                      //                       .titleMedium,fontWeight: FontWeight.bold,)
+                                      //               ),
+                                      //               TextSpan(
+                                      //                   text: ' - ${solution['Final_description']}\n',
+                                      //                   style: GoogleFonts.lato(textStyle: Theme
+                                      //                       .of(context)
+                                      //                       .textTheme
+                                      //                       .bodyMedium,fontWeight: FontWeight.w400
+                                      //                   )
+                                      //               ),
+                                      //               TextSpan(
+                                      //                   text: '  ${solution['AboutMe_Notes']}',
+                                      //                   style: GoogleFonts.lato(textStyle: Theme
+                                      //                       .of(context)
+                                      //                       .textTheme
+                                      //                       .titleMedium,color: Colors.grey,)
+                                      //               ),
+                                      //             ],
+                                      //           ),
+                                      //         ),
+                                      //       ),
+                                      //       SizedBox(width: 50,),
+                                      //       Consumer<PreviewProvider>(
+                                      //           builder: (context, previewProvider, _) {
+                                      //             return Row(
+                                      //               children: [
+                                      //                 IconButton(
+                                      //                   icon: Icon(Icons.edit),
+                                      //                   onPressed: (){
+                                      //                     showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
+                                      //                         solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
+                                      //                         solution['Created Date'], solution['Modified By'], solution['Modified Date'],
+                                      //                         solution['Original Description'], solution['Impact'], solution['Final_description'],
+                                      //                         solution['Category'], solution['Keywords'], solution['Potential Strengths'],
+                                      //                         solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']);
+                                      //                   },
+                                      //                 ),
+                                      //                 IconButton(
+                                      //                   icon: Icon(Icons.delete),
+                                      //                   onPressed: (){
+                                      //                     _previewProvider.removeOSConfirmSolution(solution["id"],solutionsList,
+                                      //                       previewProvider.PreviewSolutionMyResposibilty,
+                                      //                       previewProvider.PreviewSolutionStillNeeded,
+                                      //                       previewProvider.PreviewSolutionNotNeededAnyMore,
+                                      //                       previewProvider.PreviewSolutionNiceToHave,
+                                      //                       previewProvider.PreviewSolutionMustHave,
+                                      //                     );
+                                      //                   },
+                                      //                 )
+                                      //               ],
+                                      //             );}),
+                                      //     ],
+                                      //   ),
+                                      // );
                                     }).toList(),
                                   );
                                 },
@@ -11468,80 +9476,176 @@ Thank you for being open to understanding me better and for considering my reque
                                   return  Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: previewProvider.PreviewSolutionNotNeededAnyMore.map((solution) {
-                                      return Padding(
-                                        padding: EdgeInsets.only(bottom: 20.0),
-                                        child: Row(
-                                          children: [
-                                            Flexible(
-                                              child: RichText(
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                text: TextSpan(
+                                      return  Padding(
+                                        padding: EdgeInsets.only(bottom: 10.0, right: 20),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(8),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '• ',
+                                                style: GoogleFonts.lato(textStyle: Theme
+                                                    .of(context)
+                                                    .textTheme
+                                                    .bodyMedium,
+                                                  ),
+                                              ),
+                                              // SizedBox(width: 4),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    TextSpan(
-                                                        text: ' •  ',
-                                                        style: TextStyle(fontSize: 20)
-                                                    ),
-                                                    TextSpan(
-                                                        text: '${solution['Label']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,fontWeight: FontWeight.bold,)
-                                                    ),
-                                                    TextSpan(
-                                                        text: ' - ${solution['Final_description']}\n',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .bodyMedium,fontWeight: FontWeight.w400
-                                                        )
-                                                    ),
-                                                    TextSpan(
-                                                        text: '  ${solution['AboutMe_Notes']}',
-                                                        style: GoogleFonts.lato(textStyle: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .titleMedium,color: Colors.grey,)
+                                                    Row(
+                                                      children: [
+                                                        Expanded(
+                                                          child: RichText(
+                                                            maxLines: 2,
+                                                            overflow: TextOverflow.ellipsis,
+                                                            text: TextSpan(
+                                                              children: [
+                                                                TextSpan(
+                                                                  text: '${solution['Label']}',
+                                                                  style: GoogleFonts.lato(textStyle: Theme
+                                                                      .of(context)
+                                                                      .textTheme
+                                                                      .titleMedium,fontWeight: FontWeight.bold,),
+                                                                ),
+                                                                TextSpan(
+                                                                  text: ' - ${solution['Final_description']}\n',
+                                                                  style: GoogleFonts.lato(textStyle: Theme
+                                                                      .of(context)
+                                                                      .textTheme
+                                                                      .titleMedium,),
+                                                                ),
+                                                                TextSpan(
+                                                                  text: '${solution['AboutMe_Notes']}',
+                                                                  style: GoogleFonts.lato(
+                                                                    textStyle: Theme
+                                                                        .of(context)
+                                                                        .textTheme
+                                                                        .titleMedium,color: Colors.grey,),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+
+                                                        Consumer<PreviewProvider>(
+                                                            builder: (context, previewProvider, _) {
+                                                              return Row(
+                                                                children: [
+                                                                  IconButton(
+                                                                    icon: Icon(Icons.edit),
+                                                                    onPressed: (){
+                                                                      OSEditconfirmSolutionsBox(solution['id'], solution['Label'] , solution['Description'],
+                                                                          solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
+                                                                          solution['Created Date'], solution['Modified By'], solution['Modified Date'],
+                                                                          solution['Original Description'], solution['Impact'], solution['Final_description'],
+                                                                          solution['Category'], solution['Keywords'], solution['Potential Strengths'],
+                                                                          solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace'],
+                                                                        solution['Attachment'],solution['Helps'],solution['Positive_impacts_to_employee'],
+                                                                        solution['Positive_impacts_to_organisation'],solution['Related_solution_tags'],solution['Suggested_challenges_tags'],);
+                                                                    },
+                                                                  ),
+                                                                  IconButton(
+                                                                    icon: Icon(Icons.delete),
+                                                                    onPressed: (){
+                                                                      _previewProvider.removeOSConfirmSolution(solution["id"],solutionsListForOs,
+                                                                        previewProvider.PreviewSolutionMyResposibilty,
+                                                                        previewProvider.PreviewSolutionStillNeeded,
+                                                                        previewProvider.PreviewSolutionNotNeededAnyMore,
+                                                                        previewProvider.PreviewSolutionNiceToHave,
+                                                                        previewProvider.PreviewSolutionMustHave,
+                                                                      );
+                                                                    },
+                                                                  )
+                                                                ],
+                                                              );
+                                                            }),
+                                                      ],
                                                     ),
                                                   ],
                                                 ),
                                               ),
-                                            ),
-                                            SizedBox(width: 50,),
-                                            Consumer<PreviewProvider>(
-                                                builder: (context, previewProvider, _) {
-                                                  return Row(
-                                                    children: [
-                                                      IconButton(
-                                                        icon: Icon(Icons.edit),
-                                                        onPressed: (){
-                                                          showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
-                                                              solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
-                                                              solution['Created Date'], solution['Modified By'], solution['Modified Date'],
-                                                              solution['Original Description'], solution['Impact'], solution['Final_description'],
-                                                              solution['Category'], solution['Keywords'], solution['Potential Strengths'],
-                                                              solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']);
-                                                        },
-                                                      ),
-                                                      IconButton(
-                                                        icon: Icon(Icons.delete),
-                                                        onPressed: (){
-                                                          userAboutMEProvider.removeEditConfirmSolution(solution["id"],solutionsList,
-                                                            previewProvider.PreviewSolutionMyResposibilty,
-                                                            previewProvider.PreviewSolutionStillNeeded,
-                                                            previewProvider.PreviewSolutionNotNeededAnyMore,
-                                                            previewProvider.PreviewSolutionNiceToHave,
-                                                            previewProvider.PreviewSolutionMustHave,
-                                                          );
-                                                        },
-                                                      )
-                                                    ],
-                                                  );
-                                                }),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       );
+                                      //   Padding(
+                                      //   padding: EdgeInsets.only(bottom: 20.0),
+                                      //   child: Row(
+                                      //     children: [
+                                      //       Flexible(
+                                      //         child: RichText(
+                                      //           maxLines: 2,
+                                      //           overflow: TextOverflow.ellipsis,
+                                      //           text: TextSpan(
+                                      //             children: [
+                                      //               TextSpan(
+                                      //                   text: ' •  ',
+                                      //                   style: TextStyle(fontSize: 20)
+                                      //               ),
+                                      //               TextSpan(
+                                      //                   text: '${solution['Label']}',
+                                      //                   style: GoogleFonts.lato(textStyle: Theme
+                                      //                       .of(context)
+                                      //                       .textTheme
+                                      //                       .titleMedium,fontWeight: FontWeight.bold,)
+                                      //               ),
+                                      //               TextSpan(
+                                      //                   text: ' - ${solution['Final_description']}\n',
+                                      //                   style: GoogleFonts.lato(textStyle: Theme
+                                      //                       .of(context)
+                                      //                       .textTheme
+                                      //                       .bodyMedium,fontWeight: FontWeight.w400
+                                      //                   )
+                                      //               ),
+                                      //               TextSpan(
+                                      //                   text: '  ${solution['AboutMe_Notes']}',
+                                      //                   style: GoogleFonts.lato(textStyle: Theme
+                                      //                       .of(context)
+                                      //                       .textTheme
+                                      //                       .titleMedium,color: Colors.grey,)
+                                      //               ),
+                                      //             ],
+                                      //           ),
+                                      //         ),
+                                      //       ),
+                                      //       SizedBox(width: 50,),
+                                      //       Consumer<PreviewProvider>(
+                                      //           builder: (context, previewProvider, _) {
+                                      //             return Row(
+                                      //               children: [
+                                      //                 IconButton(
+                                      //                   icon: Icon(Icons.edit),
+                                      //                   onPressed: (){
+                                      //                     showEditconfirmSolutionsDialogBox(solution['id'], solution['Label'] , solution['Description'],
+                                      //                         solution['Source'], solution['Challenge Status'], solution['tags'], solution['Created By'],
+                                      //                         solution['Created Date'], solution['Modified By'], solution['Modified Date'],
+                                      //                         solution['Original Description'], solution['Impact'], solution['Final_description'],
+                                      //                         solution['Category'], solution['Keywords'], solution['Potential Strengths'],
+                                      //                         solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']);
+                                      //                   },
+                                      //                 ),
+                                      //                 IconButton(
+                                      //                   icon: Icon(Icons.delete),
+                                      //                   onPressed: (){
+                                      //                     _previewProvider.removeOSConfirmSolution(solution["id"],solutionsList,
+                                      //                       previewProvider.PreviewSolutionMyResposibilty,
+                                      //                       previewProvider.PreviewSolutionStillNeeded,
+                                      //                       previewProvider.PreviewSolutionNotNeededAnyMore,
+                                      //                       previewProvider.PreviewSolutionNiceToHave,
+                                      //                       previewProvider.PreviewSolutionMustHave,
+                                      //                     );
+                                      //                   },
+                                      //                 )
+                                      //               ],
+                                      //             );
+                                      //           }),
+                                      //     ],
+                                      //   ),
+                                      // );
                                     }).toList(),
                                   );
                                 },
@@ -11722,22 +9826,24 @@ Thank you for being open to understanding me better and for considering my reque
                             var createdAt = DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now());
 
                             Map<String, dynamic> AboutMEDatas = {
-                              'About_Me_Label': AboutMeLabeltextController.text,
-                              'Purpose_of_report': _previewProvider.PurposeOfReporttextController.text,
+                              'About_Me_Label': previewProvider.title,
+                              'Purpose_of_report': previewProvider.PurposeOfReporttextController.text,
                               'Purpose': _previewProvider.isOfficial,
                               'AB_Description' : AboutMeDescriptiontextController.text,
                               'AB_Date' : AboutMeDatetextController.text,
                               'AB_Useful_Info' : AboutMeUseFulInfotextController.text,
                               'AB_Attachment' : "",
-                              'Solutions': solutionsList,
-                              'Challenges': challengesList,
+                              'Solutions': solutionsListForOs,
+                              'Challenges': challengesListForOs,
+                            'Report_sent_to' : [{'name':  previewProvider.SendNametextController.text, 'email': previewProvider.SendEmailtextController.text, 'datetime': formattedDate}],
+                            'Report_sent_to_cc' : previewProvider.ccEmails,
                             };
 
                             String solutionJson = json.encode(AboutMEDatas);
                             print("About_Me_Label: ${AboutMEDatas['About_Me_Label']}");
 
                             ProgressDialog.show(context, "Completing", Icons.save);
-                            await ApiRepository().updateAboutMe(AboutMEDatas,aboutMeData);
+                            await ApiRepository().updateAboutMe(AboutMEDatas,aboutMeData.id);
 
                             // downloadAboutMePdf(challengesList,solutionsList);
 
@@ -11817,117 +9923,156 @@ Thank you for being open to understanding me better and for considering my reque
                         SizedBox(width: 10,),
 
                         InkWell(
-                          onTap: () async {
-
-                            var createdAt = DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now());
-
-                            var formattedDate = DateFormat('dd MMMM yyyy, HH:mm a').format(DateTime.now());
-
+                          onTap:() async {
 
                             Map<String, dynamic> AboutMEDatas = {
-                              'About_Me_Label': AboutMeLabeltextController.text,
-                              'AB_Status' : "Complete and Sent",
-                              'AB_Description' : AboutMeDescriptiontextController.text,
-                              'AB_Useful_Info' : AboutMeUseFulInfotextController.text,
-                              'Purpose_of_report': _previewProvider.PurposeOfReporttextController.text,
+                              'About_Me_Label': previewProvider.title,
+                              'Purpose_of_report': previewProvider.PurposeOfReporttextController.text,
                               'Purpose': _previewProvider.isOfficial,
+                              'AB_Description' : AboutMeDescriptiontextController.text,
                               'AB_Date' : AboutMeDatetextController.text,
+                              'AB_Useful_Info' : AboutMeUseFulInfotextController.text,
                               'AB_Attachment' : "",
-                              'Solutions': solutionsList,
-                              'Challenges': challengesList,
-                              'Report_sent_to' : [{'name':  previewProvider.SendNametextController.text, 'email': SendEmailtextController.text, 'datetime': formattedDate}],
-                              'Report_sent_to_cc' : List.generate(
-                                previewProvider.ccEmails.length,
-                                    (index) => {
-                                  'name': previewProvider.ccNames[index],
-                                  'email': previewProvider.ccEmails[index],
-                                  'datetime': formattedDate, // Format datetime
-                                },
-                              ),
-
+                              'Solutions': solutionsListForOs,
+                              'Challenges': challengesListForOs,
+                              'Report_sent_to' : [{'name':  previewProvider.SendNametextController.text, 'email': previewProvider.SendEmailtextController.text, 'datetime': formattedDate}],
+                              'Report_sent_to_cc' : previewProvider.ccEmails,
                             };
 
-                            // String solutionJson = json.encode(AboutMEDatas);
-                            // print(solutionJson);
+                            String solutionJson = json.encode(AboutMEDatas);
+                            print("About_Me_Label dfdffgf: ${AboutMEDatas['About_Me_Label']}");
 
-                            ProgressDialog.show(context, "Completing", Icons.save);
-                            await ApiRepository().updateAboutMe(AboutMEDatas,aboutMeData);
+                            await ApiRepository().updateAboutMe(AboutMEDatas,aboutMeData.id);
 
-                            final Uint8List pdfBytes = await makePdf(challengesList,solutionsList);
-                            String base64EncodedData = base64.encode(pdfBytes);
-                            String filename = "${About_Me_Label}.pdf";
-                            print("sendMailPopUp chunks: ${base64EncodedData}");
-                            print("sendMailPopUp filename: ${ filename}");
-                            await ApiRepository().sendEmailWithAttachment(
-                              context,
-                              SendEmailtextController.text,
-                              previewProvider.SendNametextController.text,
-                              CopySendEmailtextController.text,
-                              CopySendNametextController.text,
-                              base64EncodedData,
-                              filename,
-                              ccEmails: previewProvider.ccEmails,
-                              ccNames: previewProvider.ccNames,
-                            );
+                            widget.refreshPage();
 
-                            await downloadAboutMePdf(challengesList,solutionsList);
+                            // QuerySnapshot querySnapshotss = await FirebaseFirestore.instance
+                            //     .collection('AboutMe')
+                            //     .where('Email', isEqualTo: aboutMeData.get("Email"))
+                            //     .where('isPPS', isEqualTo: false)
+                            //     .where('isOS', isEqualTo: true)
+                            //     .get();
 
-                            print(SendEmailtextController.text);
-                            print(CopySendEmailtextController.text);
-                            print(previewProvider.SendNametextController.text);
-                            print(CopySendNametextController.text);
+                              // showEditAboutMeDialogBox(querySnapshots.docs.first.id);
+
+                              // var data =   querySnapshots.docs.first;
+                              //
+                              // var challenges = data['Challenges'];
+                              // var solutions = data['Solutions'];
+                              // About_Me_Label = data['About_Me_Label'];
+                              //
+                              // List<Map<String, dynamic>> solutionsList = [];
+                              // List<Map<String, dynamic>> challengesList = [];
+                              //
+                              // // Print the runtimeType for debugging
+                              // print("Challenges runtimeType: ${challenges.runtimeType}");
+                              //
+                              // // Check if challenges is a List
+                              // if (challenges is List<dynamic>) {
+                              //   // Add each challenge to challengesList
+                              //   for (var challenge in challenges) {
+                              //     if (challenge is Map<String, dynamic>) {
+                              //       challengesList.add(challenge);
+                              //     }
+                              //   }
+                              // }
+                              //
+                              // if (solutions is List<dynamic>) {
+                              //   // Add each challenge to challengesList
+                              //   for (var challenge in solutions) {
+                              //     if (challenge is Map<String, dynamic>) {
+                              //       solutionsList.add(challenge);
+                              //     }
+                              //   }
+                              // }
+                              // dataList[i]['Challenges'] = challengesList;
+                              // dataList[i]['Solutions'] = solutionsList;
 
 
-                            setState(() {
-                              Navigator.pop(context);
-                            });
+                            DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('AboutMe').doc(aboutMeData.id).get();
 
-                            ProgressDialog.hide();
+                            if (documentSnapshot.exists) {
+                              Map<String, dynamic>? data = documentSnapshot.data() as Map<String, dynamic>?;
+                              print('Document data: $data');
+                              print('Document data: ${data?["About_Me_Label"]}');
 
-                            // sendMailPopUp(challengesList,solutionsList);
+                              print("aboutMeData.exist");
 
-                            // downloadAboutMePdf(challengesList,solutionsList);
-                            ///
-                            // selectedEmail = null;
-                            // nameController.clear();
-                            // searchEmailcontroller.clear();
-                            // employerController.clear();
-                            // divisionOrSectionController.clear();
-                            // RoleController.clear();
-                            // LocationController.clear();
-                            // EmployeeNumberController.clear();
-                            // LineManagerController.clear();
-                            // mycircumstancesController.clear();
-                            // MystrengthsController.clear();
-                            // mycircumstancesController.clear();
-                            // AboutMeLabeltextController.clear();
-                            // RefineController.clear();
-                            // solutionsList.clear();
-                            // _userAboutMEProvider.solutionss.clear();
-                            // _userAboutMEProvider.challengess.clear();
-                            // _userAboutMEProvider.combinedSolutionsResults.clear();
-                            // _userAboutMEProvider.combinedResults.clear();
-                            // previewProvider.email=null;
-                            // previewProvider.name=null;
-                            // previewProvider.employer=null;
-                            // previewProvider.division=null;
-                            // previewProvider.role=null;
-                            // previewProvider.location=null;
-                            // previewProvider.employeeNumber=null ;
-                            // previewProvider.linemanager=null;
-                            // previewProvider.title=null;
-                            // previewProvider.mycircumstance=null;
-                            // previewProvider.mystrength=null ;
-                            // previewProvider.myorganization=null ;
-                            // previewProvider.mychallenge=null ;
-                            // previewProvider.PreviewChallengesList.clear();
-                            // previewProvider.PreviewSolutionList.clear();
-                            // // _navigateToTab(0);
-                            // // Navigator.pop(context);
-                            // setState(() {
-                            //   page.jumpToPage(1);
-                            // });
+                              _previewProvider.OSeditchallengess.clear();
+                              _previewProvider.OSeditsolutions.clear();
+                              challengesListForOs.clear();
+                              solutionsListForOs.clear();
+                              _previewProvider.PreviewChallengesList.clear();
+                              _previewProvider.PreviewSolutionStillNeeded.clear();
+                              _previewProvider.PreviewSolutionMyResposibilty.clear();
+                              _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
+                              _previewProvider.PreviewSolutionNiceToHave.clear();
+                              _previewProvider.PreviewSolutionMustHave.clear();
+                              print("PPS list Cleared");
+                              print("OS List Adding now");
+                              _previewProvider.OSEditChallengeList(data?["Challenges"]);
+                              _previewProvider.OSEditChallengeListadd(challengesListForOs);
+                              _previewProvider.OSEditChallengeListadd(_previewProvider.PreviewChallengesList);
+                              _previewProvider.OSEditSolutionList(data?["Solutions"]);
+                              _previewProvider.OSEditSolutionListadd(solutionsListForOs);
+                              _previewProvider.OSEditSolutionProvideradd(_previewProvider.PreviewSolutionMyResposibilty);
+                              _previewProvider.OSEditSolutionInPlaceadd(_previewProvider.PreviewSolutionStillNeeded,
+                                  _previewProvider.PreviewSolutionNotNeededAnyMore, _previewProvider.PreviewSolutionNiceToHave, _previewProvider.PreviewSolutionMustHave);
 
+
+                              // await showEditAboutMeDialogBox(querySnapshotss.id);
+                              await _previewProvider.getDataForOs(data);
+                              About_Me_Label = data?["About_Me_Label"];
+
+                              ProgressDialog.show(context, "Previewing", Icons.picture_as_pdf);
+                              Uint8List pdfBytes = await _previewProvider.OSPdf(challengesListForOs, solutionsListForOs);
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    ProgressDialog.hide();
+                                    return  AlertDialog(
+                                        icon: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text("${About_Me_Label}",
+                                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                                            ),
+                                            Row(
+                                              children: [
+                                                IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.share)),
+                                                SizedBox(width:10),
+                                                IconButton(onPressed: (){
+                                                  downloadOSPdf(challengesListForOs,solutionsListForOs);
+                                                }, icon: Icon(Icons.download)),
+                                                SizedBox(width:10),
+                                                IconButton(onPressed: (){
+                                                  About_Me_Label = "";
+                                                  Navigator.pop(context);}, icon: Icon(Icons.close)),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        backgroundColor: Colors.white,
+                                        content: SizedBox(
+                                          width: double.maxFinite,
+                                          child: PdfPreview(
+                                            maxPageWidth: MediaQuery.of(context).size.width * .6,
+                                            allowSharing: false,
+                                            canChangeOrientation: false,
+                                            canChangePageFormat: false,
+                                            canDebug: false,
+                                            allowPrinting: false,
+                                            pdfFileName: About_Me_Label,
+                                            previewPageMargin: EdgeInsets.all(10),
+                                            useActions: true,
+                                            pdfPreviewPageDecoration: BoxDecoration(color: Colors.white),
+                                            build: (format) => pdfBytes,
+                                          ),
+                                        ));
+                                  });
+                            } else {
+                              print('Document does not exist');
+                            }
                           },
                           child:Container(
                             padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
@@ -11941,7 +10086,7 @@ Thank you for being open to understanding me better and for considering my reque
                             ),
                             child: Center(
                               child:Text(
-                                'Complete and Send',
+                                'Preview',
                                 style: GoogleFonts.montserrat(
                                   textStyle:
                                   Theme
@@ -11954,7 +10099,124 @@ Thank you for being open to understanding me better and for considering my reque
                               ),
                             ),
                           ),
-                        )
+                        ),
+
+                        // InkWell(
+                        //   onTap: () async {
+                        //
+                        //     var createdAt = DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now());
+                        //
+                        //     var formattedDate = DateFormat('dd MMMM yyyy, HH:mm a').format(DateTime.now());
+                        //
+                        //
+                        //     Map<String, dynamic> AboutMEDatas = {
+                        //       'AB_Status' : "Submitted",
+                        //     };
+                        //
+                        //     // String solutionJson = json.encode(AboutMEDatas);
+                        //     // print(solutionJson);
+                        //
+                        //     ProgressDialog.show(context, "Submiting", Icons.send);
+                        //     await ApiRepository().updateAboutMe(AboutMEDatas,aboutMeData);
+                        //
+                        //     final Uint8List pdfBytes = await previewProvider.OSPdf(challengesListForOs,solutionsListForOs);
+                        //     String base64EncodedData = base64.encode(pdfBytes);
+                        //     String filename = "${About_Me_Label}.pdf";
+                        //     print("sendMailPopUp chunks: ${base64EncodedData}");
+                        //     print("sendMailPopUp filename: ${ filename}");
+                        //     await ApiRepository().sendEmailWithAttachment(
+                        //       context,
+                        //       previewProvider.SendEmailtextController.text,
+                        //       previewProvider.SendNametextController.text,
+                        //       CopySendEmailtextController.text,
+                        //       CopySendNametextController.text,
+                        //       base64EncodedData,
+                        //       filename,
+                        //       ccEmails: previewProvider.ccEmails,
+                        //     );
+                        //
+                        //     await downloadOSPdf(challengesListForOs,solutionsListForOs);
+                        //
+                        //     print(previewProvider.SendEmailtextController.text);
+                        //     print(CopySendEmailtextController.text);
+                        //     print(previewProvider.SendNametextController.text);
+                        //     print(CopySendNametextController.text);
+                        //
+                        //
+                        //
+                        //     ProgressDialog.hide();
+                        //
+                        //     // sendMailPopUp(challengesList,solutionsList);
+                        //
+                        //     // downloadAboutMePdf(challengesList,solutionsList);
+                        //     ///
+                        //     // selectedEmail = null;
+                        //     // nameController.clear();
+                        //     // searchEmailcontroller.clear();
+                        //     // employerController.clear();
+                        //     // divisionOrSectionController.clear();
+                        //     // RoleController.clear();
+                        //     // LocationController.clear();
+                        //     // EmployeeNumberController.clear();
+                        //     // LineManagerController.clear();
+                        //     // mycircumstancesController.clear();
+                        //     // MystrengthsController.clear();
+                        //     // mycircumstancesController.clear();
+                        //     // AboutMeLabeltextController.clear();
+                        //     // RefineController.clear();
+                        //     // solutionsList.clear();
+                        //     // _userAboutMEProvider.solutionss.clear();
+                        //     // _userAboutMEProvider.challengess.clear();
+                        //     // _userAboutMEProvider.combinedSolutionsResults.clear();
+                        //     // _userAboutMEProvider.combinedResults.clear();
+                        //     // previewProvider.email=null;
+                        //     // previewProvider.name=null;
+                        //     // previewProvider.employer=null;
+                        //     // previewProvider.division=null;
+                        //     // previewProvider.role=null;
+                        //     // previewProvider.location=null;
+                        //     // previewProvider.employeeNumber=null ;
+                        //     // previewProvider.linemanager=null;
+                        //     // previewProvider.title=null;
+                        //     // previewProvider.mycircumstance=null;
+                        //     // previewProvider.mystrength=null ;
+                        //     // previewProvider.myorganization=null ;
+                        //     // previewProvider.mychallenge=null ;
+                        //     // previewProvider.PreviewChallengesList.clear();
+                        //     // previewProvider.PreviewSolutionList.clear();
+                        //     // // _navigateToTab(0);
+                        //     // // Navigator.pop(context);
+                        //     // setState(() {
+                        //     //   page.jumpToPage(1);
+                        //     // });
+                        //
+                        //   },
+                        //   child:Container(
+                        //     padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                        //     width: MediaQuery.of(context).size.width * .15,
+                        //     decoration: BoxDecoration(
+                        //       color:Colors.blue ,
+                        //       border: Border.all(
+                        //           color:Colors.blue ,
+                        //           width: 1.0),
+                        //       borderRadius: BorderRadius.circular(15.0),
+                        //     ),
+                        //     child: Center(
+                        //       child:Text(
+                        //         'Complete and Send',
+                        //         style: GoogleFonts.montserrat(
+                        //           textStyle:
+                        //           Theme
+                        //               .of(context)
+                        //               .textTheme
+                        //               .titleSmall,
+                        //           fontWeight: FontWeight.bold,
+                        //           color:Colors.white ,
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ),
+                        // )
                       ],
                     ),
                   )
@@ -11976,7 +10238,7 @@ Thank you for being open to understanding me better and for considering my reque
           return Consumer<PreviewProvider>(
               builder: (c,previewProvider, _)
               {
-                mycircumstancesController.text  = previewProvider.mycircumstance;
+                previewProvider.mycircumstancesController.text  = previewProvider.mycircumstance;
                 return Theme(
                     data: Theme.of(context).copyWith(
                         dialogBackgroundColor: Colors.white),
@@ -12020,7 +10282,7 @@ Thank you for being open to understanding me better and for considering my reque
                             ),
                             TextField(
                               maxLines: 6,
-                              controller: mycircumstancesController,
+                              controller: previewProvider.mycircumstancesController,
                               cursorColor: primaryColorOfApp,
                               onChanged: (value) {
                                 if (value.isNotEmpty) {
@@ -12039,13 +10301,13 @@ Thank you for being open to understanding me better and for considering my reque
 
                                   // Calculate new cursor position based on changes in text
                                   final newTextLength = modifiedText.length;
-                                  final cursorPosition = mycircumstancesController
+                                  final cursorPosition = previewProvider.mycircumstancesController
                                       .selection.baseOffset +
                                       (newTextLength - value.length);
 
                                   // Update text and cursor position
-                                  mycircumstancesController.value =
-                                      mycircumstancesController.value.copyWith(
+                                  previewProvider.mycircumstancesController.value =
+                                      previewProvider.mycircumstancesController.value.copyWith(
                                         text: modifiedText,
                                         selection: TextSelection.fromPosition(
                                           TextPosition(offset: cursorPosition),
@@ -12150,7 +10412,7 @@ Thank you for being open to understanding me better and for considering my reque
                                     Map<String, dynamic> AboutMEDatas = {
                                       // 'About_Me_Label': AboutMeLabeltextController.text,
                                       // 'My_Circumstance': updatemycircumstancesController.text,
-                                      'My_Circumstance': mycircumstancesController.text,
+                                      'My_Circumstance': previewProvider.mycircumstancesController.text,
                                       // 'My_Strength': MystrengthsController.text,
                                       // 'My_Organisation': myOrganisationController.text,
                                       // 'My_Challenges_Organisation': myOrganisation2Controller.text,
@@ -12163,7 +10425,7 @@ Thank you for being open to understanding me better and for considering my reque
                                     await ApiRepository().updateAboutMe(
                                         AboutMEDatas, aboutMeData);
                                     _previewProvider.updatemycircumstance(
-                                        mycircumstancesController.text);
+                                        previewProvider.mycircumstancesController.text);
                                     ProgressDialog.hide();
                                     widget.refreshPage();
                                     Navigator.pop(context);
@@ -12214,7 +10476,7 @@ Thank you for being open to understanding me better and for considering my reque
         builder: (BuildContext context) {
           return Consumer<PreviewProvider>(
               builder: (c,previewProvider, _) {
-                MystrengthsController.text  = previewProvider.mystrength;
+                previewProvider.MystrengthsController.text  = previewProvider.mystrength;
 
                 return Theme(
                     data: Theme.of(context).copyWith(
@@ -12259,7 +10521,7 @@ Thank you for being open to understanding me better and for considering my reque
                               ),
                             ),
                             TextField(
-                              controller: MystrengthsController,
+                              controller: previewProvider.MystrengthsController,
                               maxLines: 6,
                               // cursorColor: primaryColorOfApp,
                               // onChanged: (value) {
@@ -12297,13 +10559,13 @@ Thank you for being open to understanding me better and for considering my reque
 
                                   // Calculate new cursor position based on changes in text
                                   final newTextLength = modifiedText.length;
-                                  final cursorPosition = MystrengthsController
+                                  final cursorPosition = previewProvider.MystrengthsController
                                       .selection.baseOffset +
                                       (newTextLength - value.length);
 
                                   // Update text and cursor position
-                                  MystrengthsController.value =
-                                      MystrengthsController.value.copyWith(
+                                  previewProvider.MystrengthsController.value =
+                                      previewProvider.MystrengthsController.value.copyWith(
                                         text: modifiedText,
                                         selection: TextSelection.fromPosition(
                                           TextPosition(offset: cursorPosition),
@@ -12393,7 +10655,7 @@ Thank you for being open to understanding me better and for considering my reque
                                     Map<String, dynamic> AboutMEDatas = {
                                       // 'About_Me_Label': AboutMeLabeltextController.text,
                                       // 'My_Circumstance': mycircumstancesController.text,
-                                      'My_Strength': MystrengthsController.text,
+                                      'My_Strength': previewProvider.MystrengthsController.text,
                                       // 'My_Organisation': myOrganisationController.text,
                                       // 'My_Challenges_Organisation': myOrganisation2Controller.text,
                                       // Add other fields as needed
@@ -12407,7 +10669,7 @@ Thank you for being open to understanding me better and for considering my reque
                                     await ApiRepository().updateAboutMe(
                                         AboutMEDatas, aboutMeData);
                                     _previewProvider.updatemystrength(
-                                        MystrengthsController.text);
+                                        previewProvider.MystrengthsController.text);
                                     ProgressDialog.hide();
                                     Navigator.pop(context);
                                   },
@@ -12457,7 +10719,7 @@ Thank you for being open to understanding me better and for considering my reque
         builder: (BuildContext context) {
           return Consumer<PreviewProvider>(
               builder: (c,previewProvider, _)
-              {myOrganisationController.text  = previewProvider.myorganization;
+              {previewProvider.myOrganisationController.text  = previewProvider.myorganization;
 
               return Theme(
                   data: Theme.of(context).copyWith(
@@ -12483,11 +10745,11 @@ Thank you for being open to understanding me better and for considering my reque
                                 vertical: 10.0, horizontal: 5),
                             child: Row(
                               children: [
-                                Text("What I value about ${employerController.text
+                                Text("What I value about ${previewProvider.editemployer
                                     .isEmpty
                                     ? "[my organisation]"
-                                    : employerController
-                                    .text} and workplace environment that helps me perform to my best: ",
+                                    : previewProvider.editemployer
+                                    } and workplace environment that helps me perform to my best: ",
                                     style: GoogleFonts.montserrat(textStyle: Theme
                                         .of(context)
                                         .textTheme
@@ -12505,7 +10767,7 @@ Thank you for being open to understanding me better and for considering my reque
                             ),
                           ),
                           TextField(
-                            controller: myOrganisationController,
+                            controller: previewProvider.myOrganisationController,
 
                             maxLines: 6,
 
@@ -12550,13 +10812,13 @@ Thank you for being open to understanding me better and for considering my reque
 
                                 // Calculate new cursor position based on changes in text
                                 final newTextLength = modifiedText.length;
-                                final cursorPosition = myOrganisationController
+                                final cursorPosition = previewProvider.myOrganisationController
                                     .selection.baseOffset +
                                     (newTextLength - value.length);
 
                                 // Update text and cursor position
-                                myOrganisationController.value =
-                                    myOrganisationController.value.copyWith(
+                                previewProvider.myOrganisationController.value =
+                                    previewProvider.myOrganisationController.value.copyWith(
                                       text: modifiedText,
                                       selection: TextSelection.fromPosition(
                                         TextPosition(offset: cursorPosition),
@@ -12647,7 +10909,7 @@ Thank you for being open to understanding me better and for considering my reque
                                     // 'About_Me_Label': AboutMeLabeltextController.text,
                                     // 'My_Circumstance': mycircumstancesController.text,
                                     // 'My_Strength': MystrengthsController.text,
-                                    'My_Organisation': myOrganisationController
+                                    'My_Organisation': previewProvider.myOrganisationController
                                         .text,
                                     // 'My_Challenges_Organisation': myOrganisation2Controller.text,
                                     // Add other fields as needed
@@ -12661,7 +10923,7 @@ Thank you for being open to understanding me better and for considering my reque
                                   await ApiRepository().updateAboutMe(
                                       AboutMEDatas, aboutMeData);
                                   _previewProvider.updatemyorganization(
-                                      myOrganisationController.text);
+                                      previewProvider.myOrganisationController.text);
                                   ProgressDialog.hide();
                                   Navigator.pop(context);
                                 },
@@ -12711,7 +10973,7 @@ Thank you for being open to understanding me better and for considering my reque
         builder: (BuildContext context) {
           return Consumer<PreviewProvider>(
               builder: (c,previewProvider, _)
-              { myOrganisation2Controller.text  = previewProvider.mychallenge;
+              { previewProvider.myOrganisation2Controller.text  = previewProvider.mychallenge;
               return Theme(
                   data: Theme.of(context).copyWith(
                       dialogBackgroundColor: Colors.white),
@@ -12738,11 +11000,9 @@ Thank you for being open to understanding me better and for considering my reque
                               text: TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: "What I find challenging about ${employerController
-                                        .text.isEmpty
+                                    text: "What I find challenging about ${previewProvider.editemployer == ""
                                         ? "[my organisation]"
-                                        : employerController
-                                        .text} and workplace environment that gets in the way of me performing to my best: ",
+                                        : previewProvider.editemployer} and workplace environment that gets in the way of me performing to my best: ",
                                     style: GoogleFonts.montserrat(
                                       textStyle: Theme
                                           .of(context)
@@ -12770,7 +11030,7 @@ Thank you for being open to understanding me better and for considering my reque
                             ),
                           ),
                           TextField(
-                            controller: myOrganisation2Controller,
+                            controller: previewProvider.myOrganisation2Controller,
                             keyboardType: TextInputType.multiline,
                             // onSubmitted: (_) => userAboutMEProvider.handleEnter(myOrganisation2Controller),
                             maxLines: 6,
@@ -12791,13 +11051,13 @@ Thank you for being open to understanding me better and for considering my reque
 
                                 // Calculate new cursor position based on changes in text
                                 final newTextLength = modifiedText.length;
-                                final cursorPosition = myOrganisation2Controller
+                                final cursorPosition = previewProvider.myOrganisation2Controller
                                     .selection.baseOffset +
                                     (newTextLength - value.length);
 
                                 // Update text and cursor position
-                                myOrganisation2Controller.value =
-                                    myOrganisation2Controller.value.copyWith(
+                                previewProvider.myOrganisation2Controller.value =
+                                    previewProvider.myOrganisation2Controller.value.copyWith(
                                       text: modifiedText,
                                       selection: TextSelection.fromPosition(
                                         TextPosition(offset: cursorPosition),
@@ -12889,8 +11149,7 @@ Thank you for being open to understanding me better and for considering my reque
                                     // 'My_Circumstance': mycircumstancesController.text,
                                     // 'My_Strength': MystrengthsController.text,
                                     // 'My_Organisation': myOrganisationController.text,
-                                    'My_Challenges_Organisation': myOrganisation2Controller
-                                        .text,
+                                    'My_Challenges_Organisation': previewProvider.myOrganisation2Controller.text,
                                     // Add other fields as needed
                                   };
 
@@ -12902,7 +11161,7 @@ Thank you for being open to understanding me better and for considering my reque
                                   await ApiRepository().updateAboutMe(
                                       AboutMEDatas, aboutMeData);
                                   _previewProvider.updatemychallenge(
-                                      myOrganisation2Controller.text);
+                                      previewProvider.myOrganisation2Controller.text);
                                   ProgressDialog.hide();
                                   Navigator.pop(context);
                                 },
@@ -13019,7 +11278,7 @@ Thank you for being open to understanding me better and for considering my reque
                               padding: const EdgeInsets.symmetric(
                                   vertical: 5.0, horizontal: 5),
                               child: TextField(
-                                controller: SendEmailtextController,
+                                controller: _previewProvider.SendEmailtextController,
                                 style: GoogleFonts.montserrat(
                                     textStyle: Theme.of(context).textTheme.bodySmall,
                                     fontWeight: FontWeight.w400,
@@ -13117,7 +11376,7 @@ Thank you for being open to understanding me better and for considering my reque
                     children: [
                       InkWell(
                         onTap: (){
-                          SendEmailtextController.clear();
+                          _previewProvider.SendEmailtextController.clear();
                           CopySendEmailtextController.clear();
                           SendNametextController.clear();
                           CopySendNametextController.clear();
@@ -13162,7 +11421,7 @@ Thank you for being open to understanding me better and for considering my reque
 
                           Map<String, dynamic> sentTojson1 ={
                             "Sent_to" : SendNametextController.text,
-                            "email": SendEmailtextController.text,
+                            "email": _previewProvider.SendEmailtextController.text,
                             "Date_sent" : formattedDate,
                           };
                           Map<String, dynamic> sentTojson2 ={
@@ -13191,7 +11450,7 @@ Thank you for being open to understanding me better and for considering my reque
                           print("sendMailPopUp filename: ${ filename}");
                         await ApiRepository().sendEmailWithAttachment(
                               context,
-                              SendEmailtextController.text,
+                            _previewProvider.SendEmailtextController.text,
                               SendNametextController.text,
                               CopySendEmailtextController.text,
                               CopySendNametextController.text,
@@ -13203,7 +11462,7 @@ Thank you for being open to understanding me better and for considering my reque
 
 
 
-                          print(SendEmailtextController.text);
+                          print(_previewProvider.SendEmailtextController.text);
                           print(CopySendEmailtextController.text);
                           print(SendNametextController.text);
                           print(CopySendNametextController.text);
@@ -13747,7 +12006,7 @@ Thank you for being open to understanding me better and for considering my reque
 
                           pw.SizedBox(width: 70,),
 
-                          pw.Text("${AboutMeDatetextController.text}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+                          pw.Text("${DateFormat('dd MMMM yyyy').format(DateTime.now())}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
                           pw.SizedBox(width: 120,),
 
@@ -14573,7 +12832,7 @@ Thank you for being open to understanding me better and for considering my reque
                     style: pw.TextStyle(font: headingfont1,fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),)
                 )),
 
-            pw.SizedBox(height: 10,),
+            // pw.SizedBox(height: 10,),
 
             (SolutiontableRows1.isNotEmpty) ? pw.Padding(
                 padding: const pw.EdgeInsets.symmetric(horizontal: 30),
@@ -14704,16 +12963,16 @@ Thank you for being open to understanding me better and for considering my reque
 
             pw.Padding(
                 padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                child: pw.Text("Here are things that can help me, for which I can and want to take",
+                child: pw.Text("Here are things that can help me, which I want to",
                     style: pw.TextStyle(font: headingfont1,fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),)
                 )),
 
-            pw.SizedBox(height: 10,),
+            // pw.SizedBox(height: 10,),
 
 
             (SolutiontableRows2.isNotEmpty) ? pw.Padding(
                 padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                child: pw.Text("request from my employer",
+                child: pw.Text("Request from my Employer",
                     style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
                 )) : pw.SizedBox(),
 
@@ -15035,10 +13294,40 @@ Thank you for being open to understanding me better and for considering my reque
 
             (SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
 
+            // pw.Padding(
+            //     padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+            //     // child:  pw.Text("My requests include workplace accommodations that I view as reasonable adjustments under the Equality Act 2010",
+            //     child:  pw.Text("https://assets.publishing.service.gov.uk/media/5a7b346d40f0b66a2fc05dc5/Equality_Act_2010_-_Duty_on_employers_to_make_reasonable_adjustments_for....pdf",
+            //         style: pw.TextStyle(font: bodyfont1,fontSize: 14,)
+            //     )),
+
             pw.Padding(
                 padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                child:  pw.Text("My requests include workplace accommodations that I view as reasonable adjustments under the Equality Act 2010",
-                    style: pw.TextStyle(font: bodyfont1,fontSize: 14,)
+                // child:  pw.Text("My requests include workplace accommodations that I view as reasonable adjustments under the Equality Act 2010",
+                child: pw.RichText(
+                  text: pw.TextSpan(
+                    style: pw.TextStyle(font: bodyfont1),
+                    children: [
+                      pw.TextSpan(
+                        text: 'My requests include workplace accommodations that I view as ',
+                      ),
+                      pw.WidgetSpan(
+                        child: pw.UrlLink(
+                          destination: 'https://assets.publishing.service.gov.uk/media/5a7b346d40f0b66a2fc05dc5/Equality_Act_2010_-_Duty_on_employers_to_make_reasonable_adjustments_for....pdf',
+                          child: pw.Text(
+                            'reasonable adjustments',
+                            style: pw.TextStyle(
+                              color: PdfColors.blue,
+                              decoration: pw.TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      ),
+                      pw.TextSpan(
+                        text: ' under the Equality Act 2010.',
+                      ),
+                    ],
+                  ),
                 )),
 
           ];
@@ -15061,6 +13350,17 @@ Thank you for being open to understanding me better and for considering my reque
   Future<void> downloadAboutMePdf(dataList,dataList2) async {
     // final Uint8List pdfBytes = await generateAboutMePdf();
     final Uint8List pdfBytes = await makePdf(dataList,dataList2);
+    final blob = html.Blob([pdfBytes], 'application/pdf');
+    final url = html.Url.createObjectUrlFromBlob(blob);
+    final anchor = html.AnchorElement(href: url)
+      ..setAttribute("download", "$About_Me_Label")
+      ..click();
+    html.Url.revokeObjectUrl(url);
+  }
+
+  Future<void> downloadOSPdf(dataList,dataList2) async {
+    // final Uint8List pdfBytes = await generateAboutMePdf();
+    final Uint8List pdfBytes = await _previewProvider.OSPdf(dataList,dataList2);
     final blob = html.Blob([pdfBytes], 'application/pdf');
     final url = html.Url.createObjectUrlFromBlob(blob);
     final anchor = html.AnchorElement(href: url)
@@ -15268,7 +13568,7 @@ Thank you for being open to understanding me better and for considering my reque
             pw.Padding(
               padding: pw.EdgeInsets.only(bottom: 10.0, right: 20,),
               child: pw.Container(
-                padding: const pw.EdgeInsets.all(8),
+                // padding: const pw.EdgeInsets.all(8),
                 child: pw.Row(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -15384,7 +13684,7 @@ Thank you for being open to understanding me better and for considering my reque
             pw.Padding(
                 padding: pw.EdgeInsets.only(bottom: 10.0, right: 20,),
                 child: pw.Container(
-                  padding: const pw.EdgeInsets.all(8),
+                  // padding: const pw.EdgeInsets.all(8),
                   child: pw.Row(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
@@ -15500,7 +13800,7 @@ Thank you for being open to understanding me better and for considering my reque
             pw.Padding(
                 padding: pw.EdgeInsets.only(bottom: 10.0, right: 20,),
                 child: pw.Container(
-                  padding: const pw.EdgeInsets.all(8),
+                  // padding: const pw.EdgeInsets.all(8),
                   child: pw.Row(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
@@ -15617,7 +13917,7 @@ Thank you for being open to understanding me better and for considering my reque
             pw.Padding(
                 padding: pw.EdgeInsets.only(bottom: 10.0, right: 20,),
                 child: pw.Container(
-                  padding: const pw.EdgeInsets.all(8),
+                  // padding: const pw.EdgeInsets.all(8),
                   child: pw.Row(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
@@ -16136,10 +14436,13 @@ Thank you for being open to understanding me better and for considering my reque
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       // Text("CH0${challengesData['id']}.",
-                      Text("${solutionsData['Label']}",
-                          style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              color: Colors.black)),
+                      Flexible(
+                        child: Text("${solutionsData['Label']}",
+                            overflow: TextOverflow.fade,
+                            style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: Colors.black)),
+                      ),
                       // Checkbox(
                       //   activeColor: Colors.blue,
                       //   value: userAboutMEProvider.isRecommendedcCheckedForTileSoltuions(documentsss![i]), // Use the state from the provider
@@ -19040,7 +17343,7 @@ Thank you for being open to understanding me better and for considering my reque
 
                                 challengesList.add(solutionData);
 
-                                _previewProvider.PreviewChallengesList.add(solutionData);
+                                // _previewProvider.PreviewChallengesList.add(solutionData);
 
                                 userAboutMEProvider.updateNotesByIdChallenges(userAboutMEProvider.editchallengess,Id,NotesController.text);
 
@@ -19277,7 +17580,8 @@ Thank you for being open to understanding me better and for considering my reque
   }
 
   void showEditconfirmChallengeDialogBox(Id,label,description,source,ChallengeStatus,tags,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,OriginalDescription,
-      Impact,Final_description,Category ,Keywords ,PotentialStrengths, HiddenStrengths, index, listname, Notes) {
+      Impact,Final_description,Category ,Keywords ,PotentialStrengths, HiddenStrengths, index, listname, Notes,Attachment,
+      ImpactToCoworker,ImpactToEmployee,NegativeImpactToOrganisation,RelatedChallengesTag, SuggestedChallengesTag) {
 
     print("CreatedDate: $CreatedDate");
 
@@ -19410,20 +17714,25 @@ Thank you for being open to understanding me better and for considering my reque
                                     'Source': source,
                                     'Challenge Status': ChallengeStatus,
                                     'tags': tags,
+                                    'Related_challenges_tags': RelatedChallengesTag,
+                                    'Suggested_solutions_tags': SuggestedChallengesTag,
                                     'Created By': CreatedBy,
                                     'Created Date': createdDate,
                                     'Modified By': ModifiedBy,
                                     'Modified Date': ModifiedDate,
                                     'Original Description': OriginalDescription,
                                     'Impact': Impact,
+                                    'Impacts_to_Coworkers': ImpactToCoworker,
+                                    'Impacts_to_employee': ImpactToEmployee,
+                                    'Negative_impacts_to_organisation': NegativeImpactToOrganisation,
                                     'Final_description': Final_description,
                                     'Category': Category,
                                     'Keywords': Keywords,
                                     'Potential Strengths': PotentialStrengths,
                                     'Hidden Strengths': HiddenStrengths,
                                     'Impact_on_me': NotesController.text,
-                                    'Attachment_link': userAboutMEProvider.downloadURL == null ? null : userAboutMEProvider.downloadURL,
-                                    'Attachment': userAboutMEProvider.aadhar == null ? "" : userAboutMEProvider.aadhar
+                                    'Attachment_link': userAboutMEProvider.downloadURL==null ? Attachment != null ? Attachment : "" : userAboutMEProvider.downloadURL,
+                                    'Attachment': userAboutMEProvider.aadhar== null ? Attachment != null ? Attachment : "" : userAboutMEProvider.aadhar
                                   };
 
                                   // challengesList[indexToUpdate] = updatedSolutionData;
@@ -19934,17 +18243,17 @@ Thank you for being open to understanding me better and for considering my reque
                                   userAboutMEProvider.updatenewprovider(solutionData["Provider"],solutionData["id"]);
                                   userAboutMEProvider.updatenewInplace(solutionData["InPlace"],solutionData["id"]);
 
-                                  if(_userAboutMEProvider.selectedProvider == "My Responsibilty"){
-                                    _previewProvider.PreviewSolutionMyResposibilty.add(solutionData);
-                                  }
-                                  if(_userAboutMEProvider.selectedInPlace == "Yes (Still Needed)"){
-                                    _previewProvider.PreviewSolutionStillNeeded.add(solutionData);}
-                                  if(_userAboutMEProvider.selectedInPlace == "Yes (Not Needed Anymore)"){
-                                    _previewProvider.PreviewSolutionNotNeededAnyMore.add(solutionData);}
-                                  if(_userAboutMEProvider.selectedInPlace == "No (Nice to have)"){
-                                    _previewProvider.PreviewSolutionNiceToHave.add(solutionData);}
-                                  if(_userAboutMEProvider.selectedInPlace == "No (Must Have)"){
-                                    _previewProvider.PreviewSolutionMustHave.add(solutionData);}
+                                  // if(_userAboutMEProvider.selectedProvider == "My Responsibilty"){
+                                  //   _previewProvider.PreviewSolutionMyResposibilty.add(solutionData);
+                                  // }
+                                  // if(_userAboutMEProvider.selectedInPlace == "Yes (Still Needed)"){
+                                  //   _previewProvider.PreviewSolutionStillNeeded.add(solutionData);}
+                                  // if(_userAboutMEProvider.selectedInPlace == "Yes (Not Needed Anymore)"){
+                                  //   _previewProvider.PreviewSolutionNotNeededAnyMore.add(solutionData);}
+                                  // if(_userAboutMEProvider.selectedInPlace == "No (Nice to have)"){
+                                  //   _previewProvider.PreviewSolutionNiceToHave.add(solutionData);}
+                                  // if(_userAboutMEProvider.selectedInPlace == "No (Must Have)"){
+                                  //   _previewProvider.PreviewSolutionMustHave.add(solutionData);}
 
                                   userAboutMEProvider.updateNotesByIdSolutions(userAboutMEProvider.editsolutionss,Id,NotesController.text,userAboutMEProvider.selectedInPlace,userAboutMEProvider.selectedProvider);
 
@@ -20305,7 +18614,8 @@ Thank you for being open to understanding me better and for considering my reque
   }
 
   void showEditconfirmSolutionsDialogBox(Id,label,description,source,ChallengeStatus,tags,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,OriginalDescription,
-      Impact,Final_description,Category ,Keywords ,PotentialStrengths, HiddenStrengths, listname,Notes,Provider,InPlace)  {
+      Impact,Final_description,Category ,Keywords ,PotentialStrengths, HiddenStrengths, listname,Notes,Provider,InPlace,
+      Attachment,Help,PositiveImpactstoEmployee,PositiveImpactstoOrganisation,RelatedSolutionsTags,SuggestedChallengesTags)  {
 
 
     NotesController.text = Notes;
@@ -20462,142 +18772,152 @@ Thank you for being open to understanding me better and for considering my reque
                                     'Final_description': Final_description,
                                     'Category': Category,
                                     'Keywords': Keywords,
+                                    'Helps': Help,
+                                    'Positive_impacts_to_employee': PositiveImpactstoEmployee,
+                                    'Positive_impacts_to_organisation': PositiveImpactstoOrganisation,
+                                    'Related_solution_tags': RelatedSolutionsTags,
+                                    'Suggested_challenges_tags': SuggestedChallengesTags,
                                     'Potential Strengths': PotentialStrengths,
                                     'Hidden Strengths': HiddenStrengths,
                                     'AboutMe_Notes': NotesController.text,
                                     'Provider': userAboutMEProvider.selectedProvider,
-                                    'InPlace': userAboutMEProvider.selectedProvider == 'My Responsibilty' ? null : userAboutMEProvider.selectedInPlace,
-                                    'Attachment_link': userAboutMEProvider.downloadURL == null ? null : userAboutMEProvider.downloadURL,
-                                    'Attachment': userAboutMEProvider.aadhar == null ? "-" : userAboutMEProvider.aadhar
+                                    'InPlace': userAboutMEProvider.selectedInPlace,
+                                    // 'Priority': userAboutMEProvider.selectedPriority,
+                                    // 'Attachment': downloadURLs,
+                                    'Attachment_link': userAboutMEProvider.downloadURL==null ? Attachment != null ? Attachment : "" : userAboutMEProvider.downloadURL,
+                                    'Attachment': userAboutMEProvider.aadhar== null ? Attachment != null ? Attachment : "" : userAboutMEProvider.aadhar
+                                    // 'confirmed': false, // Add a 'confirmed' field
                                   };
 
-                                  if(userAboutMEProvider.selectedProvider == 'My Responsibilty'){
-
-                                    // e
-
-                                    userAboutMEProvider.updateEditConfirmSolution18(Id,_previewProvider.PreviewSolutionMyResposibilty);
-                                    userAboutMEProvider.updateEditConfirmSolution28(Id,_previewProvider.PreviewSolutionStillNeeded);
-                                    userAboutMEProvider.updateEditConfirmSolution38(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
-                                    userAboutMEProvider.updateEditConfirmSolution48(Id,_previewProvider.PreviewSolutionNiceToHave);
-                                    userAboutMEProvider.updateEditConfirmSolution58(Id,_previewProvider.PreviewSolutionMustHave);
-
-                                    userAboutMEProvider.updateInplaceValue(userAboutMEProvider.selectedInPlace);
-
-                                    // if(solutionData['id']==Id){
-                                    //   _previewProvider.PreviewSolutionMyResposibilty.
-                                    // }
-
-                              int index = _previewProvider.PreviewSolutionMyResposibilty.indexWhere((solution) => solution['id'] == Id);
-
-                              if (index != -1) {
-                                print("inside replace My Resposibilty");
-                                print("index: $index");
-                                // _previewProvider.PreviewSolutionMyResposibilty[index] = solutionData;
-                                _previewProvider.PreviewSolutionMyResposibilty.removeAt(index); // Remove the old solution
-                                _previewProvider.PreviewSolutionMyResposibilty.add(solutionData);
-                              }
-
-                              else
-                                  _previewProvider.PreviewSolutionMyResposibilty.add(solutionData);
-                                  print("Add in My Resposibilty");
-                                  print(_previewProvider.PreviewSolutionMyResposibilty.length);
-                                  userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
-                                  print("Update solutionsList My Resposibilty");
-
-                              }
-
-                                 else if(userAboutMEProvider.selectedInPlace == "No (Must Have)"){
-
-                                    userAboutMEProvider.updateEditConfirmSolution18(Id,_previewProvider.PreviewSolutionMyResposibilty);
-                                    userAboutMEProvider.updateEditConfirmSolution28(Id,_previewProvider.PreviewSolutionStillNeeded);
-                                    userAboutMEProvider.updateEditConfirmSolution38(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
-                                    userAboutMEProvider.updateEditConfirmSolution48(Id,_previewProvider.PreviewSolutionNiceToHave);
-                                    userAboutMEProvider.updateEditConfirmSolution58(Id,_previewProvider.PreviewSolutionMustHave);
-
-
-                                    int index = _previewProvider.PreviewSolutionMustHave.indexWhere((solution) => solution['id'] == Id);
-                                    if (index != -1) {
-                                      print("inside replace No (Must Have)");
-                                      // _previewProvider.PreviewSolutionMustHave[index] = solutionData;
-                                      _previewProvider.PreviewSolutionMustHave.removeAt(index);
-                                      _previewProvider.PreviewSolutionMustHave.add(solutionData);
-                                    }
-                                    else
-                                  _previewProvider.PreviewSolutionMustHave.add(solutionData);
-                                  print("Add in No (Must Have)");
-                                  userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
-                                  print("Update solutionsList No (Must Have)");
-                              }
-
-                                 else if(userAboutMEProvider.selectedInPlace == "Yes (Still Needed)"){
-                                    userAboutMEProvider.updateEditConfirmSolution18(Id,_previewProvider.PreviewSolutionMyResposibilty);
-                                    userAboutMEProvider.updateEditConfirmSolution28(Id,_previewProvider.PreviewSolutionStillNeeded);
-                                    userAboutMEProvider.updateEditConfirmSolution38(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
-                                    userAboutMEProvider.updateEditConfirmSolution48(Id,_previewProvider.PreviewSolutionNiceToHave);
-                                    userAboutMEProvider.updateEditConfirmSolution58(Id,_previewProvider.PreviewSolutionMustHave);
-
-                                    int index = _previewProvider.PreviewSolutionStillNeeded.indexWhere((solution) => solution['id'] == Id);
-                                    if (index != -1) {
-                                      print("inside replace Yes (Still Needed)");
-                                      // _previewProvider.PreviewSolutionStillNeeded[index] = solutionData;
-                                      _previewProvider.PreviewSolutionStillNeeded.removeAt(index); // Remove the old solution
-                                      _previewProvider.PreviewSolutionStillNeeded.add(solutionData);
-                                    }
-                                    else
-                                  _previewProvider.PreviewSolutionStillNeeded.add(solutionData);
-                                  print("Add in Yes (Still Needed)");
-                                  userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
-                                  print("Update solutionsList Yes (Still Needed)");
-                              }
-
-                                 else if(userAboutMEProvider.selectedInPlace == "Yes (Not Needed Anymore)"){
-                                    userAboutMEProvider.updateEditConfirmSolution18(Id,_previewProvider.PreviewSolutionMyResposibilty);
-                                    userAboutMEProvider.updateEditConfirmSolution28(Id,_previewProvider.PreviewSolutionStillNeeded);
-                                    userAboutMEProvider.updateEditConfirmSolution38(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
-                                    userAboutMEProvider.updateEditConfirmSolution48(Id,_previewProvider.PreviewSolutionNiceToHave);
-                                    userAboutMEProvider.updateEditConfirmSolution58(Id,_previewProvider.PreviewSolutionMustHave);
-
-                                    int index = _previewProvider.PreviewSolutionNotNeededAnyMore.indexWhere((solution) => solution['id'] == Id);
-                                    if (index != -1) {
-                                      print("inside replace Yes (Not Needed Anymore)");
-                                      // _previewProvider.PreviewSolutionNotNeededAnyMore[index] = solutionData;
-                                      _previewProvider.PreviewSolutionNotNeededAnyMore.removeAt(index); // Remove the old solution
-                                      _previewProvider.PreviewSolutionNotNeededAnyMore.add(solutionData);
-                                    }
-                                    else
-                                  _previewProvider.PreviewSolutionNotNeededAnyMore.add(solutionData);
-                                  print("Add in Yes (Not Needed Anymore)");
-                                  userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
-                                  print("Update solutionsList Yes (Not Needed Anymore)");
-                              }
-
-                                 else if(userAboutMEProvider.selectedInPlace == "No (Nice to have)"){
-                                    userAboutMEProvider.updateEditConfirmSolution18(Id,_previewProvider.PreviewSolutionMyResposibilty);
-                                    userAboutMEProvider.updateEditConfirmSolution28(Id,_previewProvider.PreviewSolutionStillNeeded);
-                                    userAboutMEProvider.updateEditConfirmSolution38(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
-                                    userAboutMEProvider.updateEditConfirmSolution48(Id,_previewProvider.PreviewSolutionNiceToHave);
-                                    userAboutMEProvider.updateEditConfirmSolution58(Id,_previewProvider.PreviewSolutionMustHave);
-
-                                    int index = _previewProvider.PreviewSolutionNiceToHave.indexWhere((solution) => solution['id'] == Id);
-                                    if (index != -1) {
-                                      print("inside replace No (Nice to have)");
-                                      // _previewProvider.PreviewSolutionNiceToHave[index] = solutionData;
-                                      _previewProvider.PreviewSolutionNiceToHave.removeAt(index); // Remove the old solution
-                                      _previewProvider.PreviewSolutionNiceToHave.add(solutionData);
-                                      // userAboutMEProvider.updateconfirmList(_previewProvider.PreviewSolutionNiceToHave, index, solutionData);
-
-                                    }
-                                    else
-                                  _previewProvider.PreviewSolutionNiceToHave.add(solutionData);
-                                  print("Add in No (Nice to have)");
-                                  userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
-                                  print("Update solutionsList No (Nice to have)");
-                              }
-
+                              //     if(userAboutMEProvider.selectedProvider == 'My Responsibilty'){
+                              //
+                              //       // e
+                              //
+                              //       userAboutMEProvider.updateEditConfirmSolution18(Id,_previewProvider.PreviewSolutionMyResposibilty);
+                              //       userAboutMEProvider.updateEditConfirmSolution28(Id,_previewProvider.PreviewSolutionStillNeeded);
+                              //       userAboutMEProvider.updateEditConfirmSolution38(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
+                              //       userAboutMEProvider.updateEditConfirmSolution48(Id,_previewProvider.PreviewSolutionNiceToHave);
+                              //       userAboutMEProvider.updateEditConfirmSolution58(Id,_previewProvider.PreviewSolutionMustHave);
+                              //
+                              //       userAboutMEProvider.updateInplaceValue(userAboutMEProvider.selectedInPlace);
+                              //
+                              //       // if(solutionData['id']==Id){
+                              //       //   _previewProvider.PreviewSolutionMyResposibilty.
+                              //       // }
+                              //
+                              // int index = _previewProvider.PreviewSolutionMyResposibilty.indexWhere((solution) => solution['id'] == Id);
+                              //
+                              // if (index != -1) {
+                              //   print("inside replace My Resposibilty");
+                              //   print("index: $index");
+                              //   // _previewProvider.PreviewSolutionMyResposibilty[index] = solutionData;
+                              //   _previewProvider.PreviewSolutionMyResposibilty.removeAt(index); // Remove the old solution
+                              //   _previewProvider.PreviewSolutionMyResposibilty.add(solutionData);
+                              // }
+                              //
+                              // else
+                              //     _previewProvider.PreviewSolutionMyResposibilty.add(solutionData);
+                              //     print("Add in My Resposibilty");
+                              //     print(_previewProvider.PreviewSolutionMyResposibilty.length);
+                              //     userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
+                              //     print("Update solutionsList My Resposibilty");
+                              //
+                              // }
+                              //
+                              //    else if(userAboutMEProvider.selectedInPlace == "No (Must Have)"){
+                              //
+                              //       userAboutMEProvider.updateEditConfirmSolution18(Id,_previewProvider.PreviewSolutionMyResposibilty);
+                              //       userAboutMEProvider.updateEditConfirmSolution28(Id,_previewProvider.PreviewSolutionStillNeeded);
+                              //       userAboutMEProvider.updateEditConfirmSolution38(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
+                              //       userAboutMEProvider.updateEditConfirmSolution48(Id,_previewProvider.PreviewSolutionNiceToHave);
+                              //       userAboutMEProvider.updateEditConfirmSolution58(Id,_previewProvider.PreviewSolutionMustHave);
+                              //
+                              //
+                              //       int index = _previewProvider.PreviewSolutionMustHave.indexWhere((solution) => solution['id'] == Id);
+                              //       if (index != -1) {
+                              //         print("inside replace No (Must Have)");
+                              //         // _previewProvider.PreviewSolutionMustHave[index] = solutionData;
+                              //         _previewProvider.PreviewSolutionMustHave.removeAt(index);
+                              //         _previewProvider.PreviewSolutionMustHave.add(solutionData);
+                              //       }
+                              //       else
+                              //     _previewProvider.PreviewSolutionMustHave.add(solutionData);
+                              //     print("Add in No (Must Have)");
+                              //     userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
+                              //     print("Update solutionsList No (Must Have)");
+                              // }
+                              //
+                              //    else if(userAboutMEProvider.selectedInPlace == "Yes (Still Needed)"){
+                              //       userAboutMEProvider.updateEditConfirmSolution18(Id,_previewProvider.PreviewSolutionMyResposibilty);
+                              //       userAboutMEProvider.updateEditConfirmSolution28(Id,_previewProvider.PreviewSolutionStillNeeded);
+                              //       userAboutMEProvider.updateEditConfirmSolution38(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
+                              //       userAboutMEProvider.updateEditConfirmSolution48(Id,_previewProvider.PreviewSolutionNiceToHave);
+                              //       userAboutMEProvider.updateEditConfirmSolution58(Id,_previewProvider.PreviewSolutionMustHave);
+                              //
+                              //       int index = _previewProvider.PreviewSolutionStillNeeded.indexWhere((solution) => solution['id'] == Id);
+                              //       if (index != -1) {
+                              //         print("inside replace Yes (Still Needed)");
+                              //         // _previewProvider.PreviewSolutionStillNeeded[index] = solutionData;
+                              //         _previewProvider.PreviewSolutionStillNeeded.removeAt(index); // Remove the old solution
+                              //         _previewProvider.PreviewSolutionStillNeeded.add(solutionData);
+                              //       }
+                              //       else
+                              //     _previewProvider.PreviewSolutionStillNeeded.add(solutionData);
+                              //     print("Add in Yes (Still Needed)");
+                              //     userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
+                              //     print("Update solutionsList Yes (Still Needed)");
+                              // }
+                              //
+                              //    else if(userAboutMEProvider.selectedInPlace == "Yes (Not Needed Anymore)"){
+                              //       userAboutMEProvider.updateEditConfirmSolution18(Id,_previewProvider.PreviewSolutionMyResposibilty);
+                              //       userAboutMEProvider.updateEditConfirmSolution28(Id,_previewProvider.PreviewSolutionStillNeeded);
+                              //       userAboutMEProvider.updateEditConfirmSolution38(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
+                              //       userAboutMEProvider.updateEditConfirmSolution48(Id,_previewProvider.PreviewSolutionNiceToHave);
+                              //       userAboutMEProvider.updateEditConfirmSolution58(Id,_previewProvider.PreviewSolutionMustHave);
+                              //
+                              //       int index = _previewProvider.PreviewSolutionNotNeededAnyMore.indexWhere((solution) => solution['id'] == Id);
+                              //       if (index != -1) {
+                              //         print("inside replace Yes (Not Needed Anymore)");
+                              //         // _previewProvider.PreviewSolutionNotNeededAnyMore[index] = solutionData;
+                              //         _previewProvider.PreviewSolutionNotNeededAnyMore.removeAt(index); // Remove the old solution
+                              //         _previewProvider.PreviewSolutionNotNeededAnyMore.add(solutionData);
+                              //       }
+                              //       else
+                              //     _previewProvider.PreviewSolutionNotNeededAnyMore.add(solutionData);
+                              //     print("Add in Yes (Not Needed Anymore)");
+                              //     userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
+                              //     print("Update solutionsList Yes (Not Needed Anymore)");
+                              // }
+                              //
+                              //    else if(userAboutMEProvider.selectedInPlace == "No (Nice to have)"){
+                              //       userAboutMEProvider.updateEditConfirmSolution18(Id,_previewProvider.PreviewSolutionMyResposibilty);
+                              //       userAboutMEProvider.updateEditConfirmSolution28(Id,_previewProvider.PreviewSolutionStillNeeded);
+                              //       userAboutMEProvider.updateEditConfirmSolution38(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
+                              //       userAboutMEProvider.updateEditConfirmSolution48(Id,_previewProvider.PreviewSolutionNiceToHave);
+                              //       userAboutMEProvider.updateEditConfirmSolution58(Id,_previewProvider.PreviewSolutionMustHave);
+                              //
+                              //       int index = _previewProvider.PreviewSolutionNiceToHave.indexWhere((solution) => solution['id'] == Id);
+                              //       if (index != -1) {
+                              //         print("inside replace No (Nice to have)");
+                              //         // _previewProvider.PreviewSolutionNiceToHave[index] = solutionData;
+                              //         _previewProvider.PreviewSolutionNiceToHave.removeAt(index); // Remove the old solution
+                              //         _previewProvider.PreviewSolutionNiceToHave.add(solutionData);
+                              //         // userAboutMEProvider.updateconfirmList(_previewProvider.PreviewSolutionNiceToHave, index, solutionData);
+                              //
+                              //       }
+                              //       else
+                              //     _previewProvider.PreviewSolutionNiceToHave.add(solutionData);
+                              //     print("Add in No (Nice to have)");
+                              //     userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
+                              //     print("Update solutionsList No (Nice to have)");
+                              // }
+///
 
                                   // print("solutionsList after edit: $solutionsList");
                                   // print("solutionsList length after edit: ${solutionsList.length}");
                                   // userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
+
+                                  solutionsList.add(solutionData);
                                   userAboutMEProvider.updatenewprovider(solutionData["Provider"], solutionData["id"]);
                                   userAboutMEProvider.updatenewInplace(solutionData["InPlace"], solutionData["id"]);
                                 }
@@ -20605,6 +18925,7 @@ Thank you for being open to understanding me better and for considering my reque
                                 else {
                                   print("Id not found in solutionData.");
                                 }
+
 
                                 userAboutMEProvider.updateNotesByIdSolutions(userAboutMEProvider.editsolutionss,Id,NotesController.text,userAboutMEProvider.selectedInPlace,userAboutMEProvider.selectedProvider);
 
@@ -20999,13 +19320,1104 @@ Thank you for being open to understanding me better and for considering my reque
     );
   }
 
+  void OSEditconfirmSolutionsBox(Id,label,description,source,ChallengeStatus,tags,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,OriginalDescription,
+      Impact,Final_description,Category ,Keywords ,PotentialStrengths, HiddenStrengths, listname,Notes,Provider,InPlace,
+      Attachment,Help,PositiveImpactstoEmployee,PositiveImpactstoOrganisation,RelatedSolutionsTags,SuggestedChallengesTags)  {
+
+
+    NotesController.text = Notes;
+    _userAboutMEProvider.selectedProvider = Provider;
+    _userAboutMEProvider.selectedInPlace = InPlace;
+
+    String createdDate = "";
+
+    if (CreatedDate is Timestamp) {
+      createdDate = formatTimestamp(CreatedDate);
+    } else if (CreatedDate != null) {
+      createdDate = CreatedDate.toString();
+    }
+
+    print("Inside showconfirmrDialogBox");
+    print("pop up Id: $Id");
+    print("label: $label");
+    print("Provider: $Provider");
+    print("InPlace: $InPlace");
+
+    // print("description: $description");
+    // print("source: $source");
+    // print("Status: $ChallengeStatus");
+    // print("tags: ${tags}");
+    // print("CreatedBy: $CreatedBy");
+    // print("CreatedDate: $CreatedDate");
+    // print("ModifiedBy: $ModifiedBy");
+    // print("ModifiedDate: $ModifiedDate");
+    // print("OriginalDescription: $OriginalDescription");
+    // print("Impact: $Impact");
+    // print("Final_description: $Final_description");
+    // print("Category: $Category");
+    // print("Keywords: $Keywords");
+    // print("PotentialStrengths: $PotentialStrengths");
+    // print("HiddenStrengths: $HiddenStrengths");
+    // print("Notes: $Notes");
+    // // print("index: $index");
+    // print("listname: $listname");
+
+    // print("solutionsList before edit: $solutionsList");
+    // print("solutionsList before edit: ${solutionsList.length}");
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Consumer<UserAboutMEProvider>(
+              builder: (c,userAboutMEProvider, _){
+                // addKeywordProvider.getcategoryAndKeywords();
+                // addKeywordProvider.newgetSource();
+                // addKeywordProvider.getThriversStatus();
+                return Theme(
+                  data: Theme.of(context).copyWith(dialogBackgroundColor: Colors.white),
+                  child: AlertDialog(
+                    insetPadding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.2),
+
+                    actions: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: (){
+                              NotesController.clear();
+                              userAboutMEProvider.selectedPriority = null;
+                              userAboutMEProvider.selectedProvider = null;
+                              userAboutMEProvider.selectedInPlace = null;
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              width: MediaQuery.of(context).size.width * .2,
+
+                              height: 60,
+                              decoration: BoxDecoration(
+                                //color: Colors.white,
+                                border: Border.all(
+                                  //color:primaryColorOfApp ,
+                                    width: 1.0),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Cancel',
+                                  style: GoogleFonts.montserrat(
+                                    textStyle:
+                                    Theme
+                                        .of(context)
+                                        .textTheme
+                                        .titleSmall,
+                                    fontWeight: FontWeight.bold,
+                                    //color: primaryColorOfApp
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                          ),
+                          SizedBox(width: 5, height: 5,),
+                          InkWell(
+                            onTap: () async {
+
+                              if(_userAboutMEProvider.selectedProvider == null){
+                                toastification.show(context: context,
+                                    title: Text('Who would you like to provide this? Select one'),
+                                    autoCloseDuration: Duration(milliseconds: 2500),
+                                    alignment: Alignment.center,
+                                    backgroundColor: Colors.red,
+                                    foregroundColor: Colors.white,
+                                    icon: Icon(Icons.error, color: Colors.white,),
+                                    animationDuration: Duration(milliseconds: 1000),
+                                    showProgressBar: false
+                                );
+                              }
+
+                              else if(_userAboutMEProvider.selectedProvider == "Request of my employer" && _userAboutMEProvider.selectedInPlace == null){
+                                toastification.show(context: context,
+                                    title: Text('InPlace? Select one'),
+                                    autoCloseDuration: Duration(milliseconds: 2500),
+                                    alignment: Alignment.center,
+                                    backgroundColor: Colors.red,
+                                    foregroundColor: Colors.white,
+                                    icon: Icon(Icons.error, color: Colors.white,),
+                                    animationDuration: Duration(milliseconds: 1000),
+                                    showProgressBar: false
+                                );
+                              }
+
+                              else {
+                                ProgressDialog.show(context, "Confirming", Icons.check_circle_outline);
+
+                                if(userAboutMEProvider.aadhar != null) {
+                                  await userAboutMEProvider.uploadFile(
+                                      userAboutMEProvider.fileBytes,
+                                      userAboutMEProvider.aadhar);
+                                }
+
+
+
+                                int indexToUpdate = solutionsListForOs.indexWhere((element) => element['id'] == Id);
+
+                                if (indexToUpdate != -1) {
+                                  Map<String, dynamic> solutionData = {
+                                    'id': Id,
+                                    'Label': label,
+                                    'Description': description,
+                                    'Source': source,
+                                    'Challenge Status': ChallengeStatus,
+                                    'tags': tags,
+                                    'Created By': CreatedBy,
+                                    'Created Date': createdDate,
+                                    'Modified By': ModifiedBy,
+                                    'Modified Date': ModifiedDate,
+                                    'Original Description': OriginalDescription,
+                                    'Impact': Impact,
+                                    'Final_description': Final_description,
+                                    'Category': Category,
+                                    'Keywords': Keywords,
+                                    'Helps': Help,
+                                    'Positive_impacts_to_employee': PositiveImpactstoEmployee,
+                                    'Positive_impacts_to_organisation': PositiveImpactstoOrganisation,
+                                    'Related_solution_tags': RelatedSolutionsTags,
+                                    'Suggested_challenges_tags': SuggestedChallengesTags,
+                                    'Potential Strengths': PotentialStrengths,
+                                    'Hidden Strengths': HiddenStrengths,
+                                    'AboutMe_Notes': NotesController.text,
+                                    'Provider': userAboutMEProvider.selectedProvider,
+                                    'InPlace': userAboutMEProvider.selectedInPlace,
+                                    // 'Priority': userAboutMEProvider.selectedPriority,
+                                    // 'Attachment': downloadURLs,
+                                    'Attachment_link': userAboutMEProvider.downloadURL==null ? Attachment != null ? Attachment : "" : userAboutMEProvider.downloadURL,
+                                    'Attachment': userAboutMEProvider.aadhar== null ? Attachment != null ? Attachment : "" : userAboutMEProvider.aadhar
+                                    // 'confirmed': false, // Add a 'confirmed' field
+                                  };
+
+                                  if(userAboutMEProvider.selectedProvider == 'My Responsibilty'){
+
+                                    // e
+
+                                    userAboutMEProvider.updateEditConfirmSolution18(Id,_previewProvider.PreviewSolutionMyResposibilty);
+                                    userAboutMEProvider.updateEditConfirmSolution28(Id,_previewProvider.PreviewSolutionStillNeeded);
+                                    userAboutMEProvider.updateEditConfirmSolution38(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
+                                    userAboutMEProvider.updateEditConfirmSolution48(Id,_previewProvider.PreviewSolutionNiceToHave);
+                                    userAboutMEProvider.updateEditConfirmSolution58(Id,_previewProvider.PreviewSolutionMustHave);
+
+                                    userAboutMEProvider.updateInplaceValue(userAboutMEProvider.selectedInPlace);
+
+                                    // if(solutionData['id']==Id){
+                                    //   _previewProvider.PreviewSolutionMyResposibilty.
+                                    // }
+
+                                    int index = _previewProvider.PreviewSolutionMyResposibilty.indexWhere((solution) => solution['id'] == Id);
+
+                                    if (index != -1) {
+                                      print("inside replace My Resposibilty");
+                                      print("index: $index");
+                                      // _previewProvider.PreviewSolutionMyResposibilty[index] = solutionData;
+                                      _previewProvider.PreviewSolutionMyResposibilty.removeAt(index); // Remove the old solution
+                                      _previewProvider.PreviewSolutionMyResposibilty.add(solutionData);
+                                    }
+
+                                    else
+                                      _previewProvider.PreviewSolutionMyResposibilty.add(solutionData);
+                                    print("Add in My Resposibilty");
+                                    print(_previewProvider.PreviewSolutionMyResposibilty.length);
+                                    userAboutMEProvider.updateconfirmList(solutionsListForOs, indexToUpdate, solutionData);
+                                    print("Update solutionsList My Resposibilty");
+
+                                  }
+
+                                  else if(userAboutMEProvider.selectedInPlace == "No (Must Have)"){
+
+                                    userAboutMEProvider.updateEditConfirmSolution18(Id,_previewProvider.PreviewSolutionMyResposibilty);
+                                    userAboutMEProvider.updateEditConfirmSolution28(Id,_previewProvider.PreviewSolutionStillNeeded);
+                                    userAboutMEProvider.updateEditConfirmSolution38(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
+                                    userAboutMEProvider.updateEditConfirmSolution48(Id,_previewProvider.PreviewSolutionNiceToHave);
+                                    userAboutMEProvider.updateEditConfirmSolution58(Id,_previewProvider.PreviewSolutionMustHave);
+
+
+                                    int index = _previewProvider.PreviewSolutionMustHave.indexWhere((solution) => solution['id'] == Id);
+                                    if (index != -1) {
+                                      print("inside replace No (Must Have)");
+                                      // _previewProvider.PreviewSolutionMustHave[index] = solutionData;
+                                      _previewProvider.PreviewSolutionMustHave.removeAt(index);
+                                      _previewProvider.PreviewSolutionMustHave.add(solutionData);
+                                    }
+                                    else
+                                      _previewProvider.PreviewSolutionMustHave.add(solutionData);
+                                    print("Add in No (Must Have)");
+                                    userAboutMEProvider.updateconfirmList(solutionsListForOs, indexToUpdate, solutionData);
+                                    print("Update solutionsList No (Must Have)");
+                                  }
+
+                                  else if(userAboutMEProvider.selectedInPlace == "Yes (Still Needed)"){
+                                    userAboutMEProvider.updateEditConfirmSolution18(Id,_previewProvider.PreviewSolutionMyResposibilty);
+                                    userAboutMEProvider.updateEditConfirmSolution28(Id,_previewProvider.PreviewSolutionStillNeeded);
+                                    userAboutMEProvider.updateEditConfirmSolution38(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
+                                    userAboutMEProvider.updateEditConfirmSolution48(Id,_previewProvider.PreviewSolutionNiceToHave);
+                                    userAboutMEProvider.updateEditConfirmSolution58(Id,_previewProvider.PreviewSolutionMustHave);
+
+                                    int index = _previewProvider.PreviewSolutionStillNeeded.indexWhere((solution) => solution['id'] == Id);
+                                    if (index != -1) {
+                                      print("inside replace Yes (Still Needed)");
+                                      // _previewProvider.PreviewSolutionStillNeeded[index] = solutionData;
+                                      _previewProvider.PreviewSolutionStillNeeded.removeAt(index); // Remove the old solution
+                                      _previewProvider.PreviewSolutionStillNeeded.add(solutionData);
+                                    }
+                                    else
+                                      _previewProvider.PreviewSolutionStillNeeded.add(solutionData);
+                                    print("Add in Yes (Still Needed)");
+                                    userAboutMEProvider.updateconfirmList(solutionsListForOs, indexToUpdate, solutionData);
+                                    print("Update solutionsList Yes (Still Needed)");
+                                  }
+
+                                  else if(userAboutMEProvider.selectedInPlace == "Yes (Not Needed Anymore)"){
+                                    userAboutMEProvider.updateEditConfirmSolution18(Id,_previewProvider.PreviewSolutionMyResposibilty);
+                                    userAboutMEProvider.updateEditConfirmSolution28(Id,_previewProvider.PreviewSolutionStillNeeded);
+                                    userAboutMEProvider.updateEditConfirmSolution38(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
+                                    userAboutMEProvider.updateEditConfirmSolution48(Id,_previewProvider.PreviewSolutionNiceToHave);
+                                    userAboutMEProvider.updateEditConfirmSolution58(Id,_previewProvider.PreviewSolutionMustHave);
+
+                                    int index = _previewProvider.PreviewSolutionNotNeededAnyMore.indexWhere((solution) => solution['id'] == Id);
+                                    if (index != -1) {
+                                      print("inside replace Yes (Not Needed Anymore)");
+                                      // _previewProvider.PreviewSolutionNotNeededAnyMore[index] = solutionData;
+                                      _previewProvider.PreviewSolutionNotNeededAnyMore.removeAt(index); // Remove the old solution
+                                      _previewProvider.PreviewSolutionNotNeededAnyMore.add(solutionData);
+                                    }
+                                    else
+                                      _previewProvider.PreviewSolutionNotNeededAnyMore.add(solutionData);
+                                    print("Add in Yes (Not Needed Anymore)");
+                                    userAboutMEProvider.updateconfirmList(solutionsListForOs, indexToUpdate, solutionData);
+                                    print("Update solutionsList Yes (Not Needed Anymore)");
+                                  }
+
+                                  else if(userAboutMEProvider.selectedInPlace == "No (Nice to have)"){
+                                    userAboutMEProvider.updateEditConfirmSolution18(Id,_previewProvider.PreviewSolutionMyResposibilty);
+                                    userAboutMEProvider.updateEditConfirmSolution28(Id,_previewProvider.PreviewSolutionStillNeeded);
+                                    userAboutMEProvider.updateEditConfirmSolution38(Id,_previewProvider.PreviewSolutionNotNeededAnyMore);
+                                    userAboutMEProvider.updateEditConfirmSolution48(Id,_previewProvider.PreviewSolutionNiceToHave);
+                                    userAboutMEProvider.updateEditConfirmSolution58(Id,_previewProvider.PreviewSolutionMustHave);
+
+                                    int index = _previewProvider.PreviewSolutionNiceToHave.indexWhere((solution) => solution['id'] == Id);
+                                    if (index != -1) {
+                                      print("inside replace No (Nice to have)");
+                                      // _previewProvider.PreviewSolutionNiceToHave[index] = solutionData;
+                                      _previewProvider.PreviewSolutionNiceToHave.removeAt(index); // Remove the old solution
+                                      _previewProvider.PreviewSolutionNiceToHave.add(solutionData);
+                                      // userAboutMEProvider.updateconfirmList(_previewProvider.PreviewSolutionNiceToHave, index, solutionData);
+
+                                    }
+                                    else
+                                      _previewProvider.PreviewSolutionNiceToHave.add(solutionData);
+                                    print("Add in No (Nice to have)");
+                                    userAboutMEProvider.updateconfirmList(solutionsListForOs, indexToUpdate, solutionData);
+                                    print("Update solutionsList No (Nice to have)");
+                                  }
+
+
+                                  // print("solutionsList after edit: $solutionsList");
+                                  // print("solutionsList length after edit: ${solutionsList.length}");
+                                  // userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
+                                  userAboutMEProvider.updatenewprovider(solutionData["Provider"], solutionData["id"]);
+                                  userAboutMEProvider.updatenewInplace(solutionData["InPlace"], solutionData["id"]);
+                                }
+
+                                else {
+                                  print("Id not found in solutionData.");
+                                }
+
+                                // userAboutMEProvider.updateNotesByIdSolutions(userAboutMEProvider.editsolutionss,Id,NotesController.text,userAboutMEProvider.selectedInPlace,userAboutMEProvider.selectedProvider);
+
+                                widget.refreshPage();
+
+                                ProgressDialog.hide();
+
+
+
+                                NotesController.clear();
+                                userAboutMEProvider.selectedPriority = null;
+                                userAboutMEProvider.selectedProvider = null;
+                                userAboutMEProvider.selectedInPlace = null;
+                                userAboutMEProvider.aadhar = null;
+                                userAboutMEProvider.fileBytes = null;
+                                Navigator.pop(context);
+                              }
+
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * .2,
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              height: 60,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                border: Border.all(
+                                    color: Colors.blue,
+                                    width: 2.0),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Confirm',
+                                  style: GoogleFonts.montserrat(
+                                      textStyle:
+                                      Theme
+                                          .of(context)
+                                          .textTheme
+                                          .titleSmall,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                              ),
+                            ),
+
+                          ),
+                        ],
+                      ),
+                    ],
+
+                    title: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+
+                        Padding(
+                          padding: const EdgeInsets.only(left: 0.0),
+                          child: Text("Edit/Confirm Solution",
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                  color: Colors.black)),
+                        ),
+
+                      ],
+                    ),
+                    content: SizedBox(
+                      width: double.maxFinite,
+                      //height: MediaQuery.of(context).size.height*0.5,
+                      child: SingleChildScrollView(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+
+                              ///
+
+                              // Padding(
+                              //   padding: const EdgeInsets.only(left: 20.0),
+                              //   child: Text("Id: ${Id}",
+                              //       overflow: TextOverflow.ellipsis,
+                              //       style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                              //           fontSize: 15,
+                              //           color: Colors.black)),
+                              // ),
+
+                              Padding(
+                                padding: const EdgeInsets.only(left: 0.0),
+                                child: Text("${label}",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Colors.black)),
+                              ),
+
+                              Padding(
+                                padding: const EdgeInsets.only(left: 0.0),
+                                child: Container(
+                                  // width: 400,
+                                  child: Text("${Final_description}",
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: GoogleFonts.montserrat(fontWeight: FontWeight.w600,
+                                          fontSize: 15,
+                                          color: Colors.black)),
+                                ),
+                              ),
+
+                              Divider(),
+
+                              // Padding(
+                              //   padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 0),
+                              //   child: Text("edit as appropriate",
+                              //       style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                              //           fontSize: 14,
+                              //           color: Colors.red,
+                              //           fontWeight: FontWeight.w400)),
+                              // ),
+                              // SizedBox(height: 5,),
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                                child: Row(
+                                  children: [
+                                    Text("How this solutions helps me :",
+                                        style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                            fontWeight: FontWeight.w600)),
+                                    Text(" edit as appropriate",
+                                        style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                            fontSize: 14,
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.w400)),
+                                  ],
+                                ),
+                              ),
+
+                              TextField(
+                                maxLines: 4,
+                                controller: NotesController,
+                                cursorColor: primaryColorOfApp,
+
+                                // readOnly: readonly,
+                                // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                style: GoogleFonts.montserrat(
+                                    textStyle: Theme
+                                        .of(context)
+                                        .textTheme
+                                        .bodyLarge,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black),
+                                decoration: InputDecoration(
+                                  //errorText: userAccountSearchErrorText,
+                                  contentPadding: EdgeInsets.all(25),
+                                  // labelText: "Notes",
+                                  hintText: "Notes",
+
+                                  /*prefixIcon: Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Icon(Icons.question_mark_outlined,
+                                                       // color: primaryColorOfApp
+                                                          ),
+                                                    ),*/
+
+                                  errorStyle: GoogleFonts.montserrat(
+                                      textStyle: Theme
+                                          .of(context)
+                                          .textTheme
+                                          .bodyLarge,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.redAccent),
+
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.black),
+                                      borderRadius: BorderRadius.circular(15)),
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.black12),
+                                      borderRadius: BorderRadius.circular(15)),
+                                  //hintText: "e.g Abouzied",
+                                  labelStyle: GoogleFonts.montserrat(
+                                      textStyle: Theme
+                                          .of(context)
+                                          .textTheme
+                                          .bodyLarge,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black),
+                                ),
+                              ),
+
+                              SizedBox(height: 10,),
+
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                                child: Text("Provider :",
+                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                        fontWeight: FontWeight.w600)),
+                              ),
+
+                              // DropdownButtonFormField(
+                              //   style: TextStyle(fontSize: 12,overflow: TextOverflow.ellipsis),
+                              //   decoration: InputDecoration(
+                              //     //errorText: userAccountSearchErrorText,
+                              //     contentPadding: EdgeInsets.all(15),
+                              //     // labelText: "Priority",
+                              //     hintText: "Provider",
+                              //
+                              //
+                              //     errorStyle: GoogleFonts.montserrat(
+                              //         textStyle: Theme
+                              //             .of(context)
+                              //             .textTheme
+                              //             .bodyLarge,
+                              //         fontWeight: FontWeight.w400,
+                              //         color: Colors.redAccent),
+                              //
+                              //     focusedBorder: OutlineInputBorder(
+                              //         borderSide: BorderSide(color: Colors.black),
+                              //         borderRadius: BorderRadius.circular(15)),
+                              //     border: OutlineInputBorder(
+                              //         borderSide: BorderSide(color: Colors.black12),
+                              //         borderRadius: BorderRadius.circular(15)),
+                              //     //hintText: "e.g Abouzied",
+                              //     labelStyle: GoogleFonts.montserrat(
+                              //         textStyle: Theme
+                              //             .of(context)
+                              //             .textTheme
+                              //             .bodyLarge,
+                              //         fontWeight: FontWeight.w400,
+                              //         color: Colors.black),
+                              //   ),
+                              //   value: selectedProvider,
+                              //   onChanged: (newValue) {
+                              //    setState(() {
+                              //      selectedProvider = newValue;
+                              //    });
+                              //   },
+                              //   icon: Icon(Icons.keyboard_arrow_down_outlined,size: 20,),
+                              //   items: provider.map<DropdownMenuItem<String>>((String value) {
+                              //
+                              //     return DropdownMenuItem<String>(
+                              //       value: value,
+                              //       child: Text(value, overflow: TextOverflow.ellipsis,),
+                              //     );
+                              //   }).toList(),
+                              // ),
+
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: userAboutMEProvider.provider.map((String value) {
+                                  return Container(
+                                    width: MediaQuery.of(context).size.width * .24,
+                                    child: Row(
+                                      children: [
+                                        Radio<String>(
+                                          value: value,
+                                          groupValue: userAboutMEProvider.selectedProvider,
+                                          activeColor: Colors.blue,
+                                          onChanged: (newValue) {
+                                            // setState(() {
+                                            //   selectedProvider = newValue;
+                                            // });
+                                            userAboutMEProvider.updateProvider(newValue);
+                                          },
+                                        ),
+                                        Text(
+                                          value,
+                                          style: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+
+                              SizedBox(height: 10,),
+
+                              (userAboutMEProvider.selectedProvider=="Request of my employer") ? Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                                child: Text("In Place :",
+                                    style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                        fontWeight: FontWeight.w600)),
+                              ) : Container(),
+
+                              (userAboutMEProvider.selectedProvider=="Request of my employer") ?   Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: userAboutMEProvider.InPlace.map((String value) {
+                                  return Container(
+                                    width: MediaQuery.of(context).size.width * .3,
+                                    child: Row(
+                                      children: [
+                                        Radio<String>(
+                                          value: value,
+                                          groupValue: userAboutMEProvider.selectedInPlace,
+                                          activeColor: Colors.blue,
+                                          onChanged: (newValue) {
+                                            // setState(() {
+                                            //   selectedProvider = newValue;
+                                            // });
+                                            userAboutMEProvider.updateInPlace(newValue);
+                                          },
+                                        ),
+                                        Text(
+                                          value,
+                                          style: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                              ) : Container(),
+
+
+                              SizedBox(height: 10,),
+
+                              // Padding(
+                              //   padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                              //   child: Text("Priority :", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                              //       fontWeight: FontWeight.w600)),
+                              // ),
+                              // Row(
+                              //   mainAxisAlignment: MainAxisAlignment.start,
+                              //   children: userAboutMEProvider.Priority.map((String value) {
+                              //     return Container(
+                              //       width: MediaQuery.of(context).size.width * .18,
+                              //       child: Row(
+                              //         children: [
+                              //           Radio<String>(
+                              //             value: value,
+                              //             groupValue: userAboutMEProvider.selectedPriority,
+                              //             activeColor: Colors.blue,
+                              //             onChanged: (newValue) {
+                              //               // setState(() {
+                              //               //   selectedProvider = newValue;
+                              //               // });
+                              //               userAboutMEProvider.updatePriority(newValue);
+                              //             },
+                              //           ),
+                              //           Flexible(
+                              //             child: Text(
+                              //               value,
+                              //               style: TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis,),
+                              //             ),
+                              //           ),
+                              //         ],
+                              //       ),
+                              //     );
+                              //   }).toList(),
+                              // ),
+
+                              SizedBox(height: 10,),
+
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                                    child: Text("Relevant attachments :", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
+                                  ),
+                                  SizedBox(width: 10,),
+
+                                  InkWell(
+                                    onTap: (){
+                                      userAboutMEProvider.pickFiles();
+                                    },
+                                    child: Container(
+                                      // padding: EdgeInsets.all(20),
+                                      child: Center(child: Icon(Icons.add, size: 30, color: Colors.white,)),
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        color: Colors.blue,
+                                        borderRadius: BorderRadius.circular(50),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text("${userAboutMEProvider.aadhar== null ? "" : userAboutMEProvider.aadhar}", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
+                              ),
+
+
+
+
+                            ]
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              });
+        }
+    );
+  }
+
+  void OSEditChallengeDialogBox(Id,label,description,source,ChallengeStatus,tags,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,OriginalDescription,
+      Impact,Final_description,Category ,Keywords ,PotentialStrengths, HiddenStrengths, index, listname, Notes,Attachment,
+      ImpactToCoworker,ImpactToEmployee,NegativeImpactToOrganisation,RelatedChallengesTag, SuggestedChallengesTag) {
+
+    print("CreatedDate: $CreatedDate");
+
+
+    NotesController.text = Notes;
+
+    String createdDate = "";
+
+    if (CreatedDate is Timestamp) {
+      createdDate = formatTimestamp(CreatedDate);
+    } else if (CreatedDate != null) {
+      createdDate = CreatedDate.toString();
+    }
+
+    print("Inside showconfirmrDialogBox");
+    print("Id: CH0$Id");
+    print("label: $label");
+    print("description: $description");
+    print("source: $source");
+    print("Status: $ChallengeStatus");
+    print("tags: ${tags}");
+    print("CreatedBy: $CreatedBy");
+    print("CreatedDate: $createdDate");
+    print("ModifiedBy: $ModifiedBy");
+    print("ModifiedDate: $ModifiedDate");
+    print("OriginalDescription: $OriginalDescription");
+    print("Impact: $Impact");
+    print("Final_description: $Final_description");
+    print("Category: $Category");
+    print("Keywords: $Keywords");
+    print("PotentialStrengths: $PotentialStrengths");
+    print("HiddenStrengths: $HiddenStrengths");
+    print("Notes: $Notes");
+    print("index: $index");
+    print("listname: $listname");
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Consumer<UserAboutMEProvider>(
+              builder: (c,userAboutMEProvider, _){
+                // addKeywordProvider.getcategoryAndKeywords();
+                // addKeywordProvider.newgetSource();
+                // addKeywordProvider.getThriversStatus();
+                return Theme(
+                  data: Theme.of(context).copyWith(dialogBackgroundColor: Colors.white),
+                  child: AlertDialog(
+                    insetPadding: EdgeInsets.symmetric(horizontal: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.2),
+                    actions: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: (){
+                              NotesController.clear();
+                              userAboutMEProvider.selectedPriority = null;
+                              userAboutMEProvider.selectedProvider = null;
+                              userAboutMEProvider.selectedInPlace = null;
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              width: MediaQuery.of(context).size.width * .2,
+
+                              height: 60,
+                              decoration: BoxDecoration(
+                                //color: Colors.white,
+                                border: Border.all(
+                                  //color:primaryColorOfApp ,
+                                    width: 1.0),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Cancel',
+                                  style: GoogleFonts.montserrat(
+                                    textStyle:
+                                    Theme
+                                        .of(context)
+                                        .textTheme
+                                        .titleSmall,
+                                    fontWeight: FontWeight.bold,
+                                    //color: primaryColorOfApp
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                          ),
+                          SizedBox(width: 5, height: 5,),
+                          InkWell(
+                            onTap: () async {
+                              // if(NotesController.text.isEmpty || userAboutMEProvider.selectedProvider == null || userAboutMEProvider.selectedInPlace == null
+                              //     || userAboutMEProvider.selectedPriority == null ){
+                              //   if(NotesController.text.isEmpty){
+                              //     showEmptyAlert(context, "Add Notes");
+                              //   }
+                              //   else if(userAboutMEProvider.selectedProvider == null ){
+                              //     showEmptyAlert(context, "Select Provider");
+                              //   }
+                              //   else if(userAboutMEProvider.selectedInPlace == null ){
+                              //     showEmptyAlert(context, "Select In Place");
+                              //   }
+                              //   else if(userAboutMEProvider.selectedPriority == null){
+                              //     showEmptyAlert(context, "Select Priority");
+                              //   }
+                              // }
+                              // else
+                              {
+                                ProgressDialog.show(context, "Confirming", Icons.check_circle_outline);
+
+                                if(userAboutMEProvider.aadhar != null) {
+                                  await userAboutMEProvider.uploadFile(
+                                      userAboutMEProvider.fileBytes,
+                                      userAboutMEProvider.aadhar);
+                                }
+
+
+                                int indexToUpdate = challengesListForOs.indexWhere((element) => element['id'] == Id);
+
+                                if (indexToUpdate != -1) {
+                                  // Create a new solutionData to update the existing one
+                                  Map<String, dynamic> updatedSolutionData = {
+                                    'id': Id,
+                                    'Label': label,
+                                    'Description': description,
+                                    'Source': source,
+                                    'Challenge Status': ChallengeStatus,
+                                    'tags': tags,
+                                    'Related_challenges_tags': RelatedChallengesTag,
+                                    'Suggested_solutions_tags': SuggestedChallengesTag,
+                                    'Created By': CreatedBy,
+                                    'Created Date': createdDate,
+                                    'Modified By': ModifiedBy,
+                                    'Modified Date': ModifiedDate,
+                                    'Original Description': OriginalDescription,
+                                    'Impact': Impact,
+                                    'Impacts_to_Coworkers': ImpactToCoworker,
+                                    'Impacts_to_employee': ImpactToEmployee,
+                                    'Negative_impacts_to_organisation': NegativeImpactToOrganisation,
+                                    'Final_description': Final_description,
+                                    'Category': Category,
+                                    'Keywords': Keywords,
+                                    'Potential Strengths': PotentialStrengths,
+                                    'Hidden Strengths': HiddenStrengths,
+                                    'Impact_on_me': NotesController.text,
+                                    'Attachment_link': userAboutMEProvider.downloadURL==null ? Attachment != null ? Attachment : "" : userAboutMEProvider.downloadURL,
+                                    'Attachment': userAboutMEProvider.aadhar== null ? Attachment != null ? Attachment : "" : userAboutMEProvider.aadhar
+                                  };
+
+                                  // challengesList[indexToUpdate] = updatedSolutionData;
+                                  userAboutMEProvider.updateconfirmList(challengesListForOs,indexToUpdate,updatedSolutionData);
+                                  userAboutMEProvider.updateconfirmList(_previewProvider.PreviewChallengesList,indexToUpdate,updatedSolutionData);
+                                } else {
+                                  print("Id not found in challengesListForOs.");
+                                }
+
+                                // userAboutMEProvider.updateNotesByIdChallenges(userAboutMEProvider.editchallengess,Id,NotesController.text);
+
+                                widget.refreshPage();
+
+                                ProgressDialog.hide();
+
+
+                                NotesController.clear();
+                                userAboutMEProvider.selectedPriority = null;
+                                userAboutMEProvider.selectedProvider = null;
+                                userAboutMEProvider.selectedInPlace = null;
+                                userAboutMEProvider.aadhar = null;
+                                userAboutMEProvider.fileBytes = null;
+                                Navigator.pop(context);
+                              }
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * .2,
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              height: 60,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                border: Border.all(
+                                    color: Colors.blue,
+                                    width: 2.0),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Save',
+                                  style: GoogleFonts.montserrat(
+                                      textStyle:
+                                      Theme
+                                          .of(context)
+                                          .textTheme
+                                          .titleSmall,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                              ),
+                            ),
+
+                          ),
+                        ],
+                      ),
+
+                    ],
+                    title: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+
+                        Padding(
+                          padding: const EdgeInsets.only(left: 0.0),
+                          child: Text("Edit/Confirm Challenge",
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                  color: Colors.black)),
+                        ),
+
+                      ],
+                    ),
+                    content: SizedBox(
+                      width: double.maxFinite,
+                      //height: MediaQuery.of(context).size.height*0.5,
+                      child: SingleChildScrollView(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+
+                              ///
+                              // Padding(
+                              //   padding: const EdgeInsets.only(left: 20.0),
+                              //   child: Text("Id: ${Id}",
+                              //       overflow: TextOverflow.ellipsis,
+                              //       style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                              //           fontSize: 15,
+                              //           color: Colors.black)),
+                              // ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 0.0),
+                                child: Text("${label}",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Colors.black)),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 0.0),
+                                child: Container(
+                                  // width: 400,
+                                  child: Text("${Final_description}",
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: GoogleFonts.montserrat(fontWeight: FontWeight.w600,
+                                          fontSize: 15,
+                                          color: Colors.black)),
+                                ),
+                              ),
+
+                              Divider(),
+
+                              // Padding(
+                              //   padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 0),
+                              //   child: Text("edit as appropriate",
+                              //       style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                              //           fontSize: 14,
+                              //           color: Colors.red,
+                              //           fontWeight: FontWeight.w400)),
+                              // ),
+                              // SizedBox(height: 5,),
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 5),
+                                child: Row(
+                                  children: [
+                                    Text("Impact on me: ",
+                                        style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                            fontWeight: FontWeight.w600)),
+                                    Text(" edit as appropriate",
+                                        style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,
+                                            fontSize: 14,
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.w400)),
+                                  ],
+                                ),
+                              ),
+
+                              TextField(
+                                maxLines: 4,
+                                controller: NotesController,
+                                cursorColor: primaryColorOfApp,
+
+                                // readOnly: readonly,
+                                // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                style: GoogleFonts.montserrat(
+                                    textStyle: Theme
+                                        .of(context)
+                                        .textTheme
+                                        .bodyLarge,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black),
+                                decoration: InputDecoration(
+                                  //errorText: userAccountSearchErrorText,
+                                  contentPadding: EdgeInsets.all(15),
+                                  helperStyle: TextStyle(color: Colors.red),
+                                  // labelText: "Notes",
+
+                                  /*prefixIcon: Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Icon(Icons.question_mark_outlined,
+                                                       // color: primaryColorOfApp
+                                                          ),
+                                                    ),*/
+
+                                  errorStyle: GoogleFonts.montserrat(
+                                      textStyle: Theme
+                                          .of(context)
+                                          .textTheme
+                                          .bodyLarge,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.redAccent),
+
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.black),
+                                      borderRadius: BorderRadius.circular(15)),
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.black12),
+                                      borderRadius: BorderRadius.circular(15)),
+                                  //hintText: "e.g Abouzied",
+                                  labelStyle: GoogleFonts.montserrat(
+                                      textStyle: Theme
+                                          .of(context)
+                                          .textTheme
+                                          .bodyLarge,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black),
+                                ),
+                              ),
+
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                                    child: Text("Relevant attachments :", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
+                                  ),
+                                  SizedBox(width: 10,),
+
+                                  InkWell(
+                                    onTap: (){
+                                      userAboutMEProvider.pickFiles();
+                                    },
+                                    child: Container(
+                                      // padding: EdgeInsets.all(20),
+                                      child: Center(child: Icon(Icons.add, size: 30, color: Colors.white,)),
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        color: Colors.blue,
+                                        borderRadius: BorderRadius.circular(50),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text("${userAboutMEProvider.aadhar==null ? "" : userAboutMEProvider.aadhar}", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
+                                // child: Text("document.pdf", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
+                              ),
+
+
+                            ]
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              });
+        }
+    );
+  }
+
   ScrollController _scrollController1 = ScrollController();
   ScrollController _scrollController2 = ScrollController();
   ScrollController _scrollController3 = ScrollController();
   ScrollController _scrollController4 = ScrollController();
 
   void NewViewDialog(Label, Description, Impact, FinalDescription, keywords, tags, insideId,document,isTrueOrFalse,AddButton,
-      ImpactToCoworker,ImpactToEmployee,NegativeImpactToOrganisation,RelatedChallengesTag, SuggestedChallengesTag){
+      ImpactToCoworker,ImpactToEmployee,NegativeImpactToOrganisation,RelatedChallengesTag, SuggestedChallengesTag)  {
 
 
     final DateFormat formatter = DateFormat("MMMM d, yyyy 'at' h:mm:ss a 'UTC'Z");
@@ -21364,7 +20776,7 @@ Thank you for being open to understanding me better and for considering my reque
                                                                 }
                                                                 if(_tabController.index == 5){
                                                                   searchbyCatcontroller.text = item;
-                                                                  _addKeywordProvider.loadDataForPageSearchFilter(searchbyCatcontroller.text.toString());
+                                                                  _addKeywordProvider.loadDataForPageSearchFilter(item);
                                                                   // Navigator.pop(context);
                                                                   showSolutionSelectors();
                                                                 }
@@ -22566,7 +21978,7 @@ Thank you for being open to understanding me better and for considering my reque
                                                                 }
                                                                 if(_tabController.index == 5){
                                                                   searchbyCatcontroller.text = item;
-                                                                  _addKeywordProvider.loadDataForPageSearchFilter(searchbyCatcontroller.text.toString());
+                                                                  _addKeywordProvider.loadDataForPageSearchFilter(item);
                                                                   // Navigator.pop(context);
                                                                   showSolutionSelectors();
                                                                 }
@@ -22624,15 +22036,15 @@ Thank you for being open to understanding me better and for considering my reque
                                                           children: addKeywordProvider.ProviderEditTags.map((item){
                                                             return InkWell(
                                                               onTap: (){
-                                                                if(_tabController.index == 2){
+                                                                if(_tabController.index == 4){
                                                                   searchChallengescontroller.text = item;
                                                                   _challengesProvider.loadDataForPageSearchFilter(item);
                                                                   // Navigator.pop(context);
                                                                   showChallengesSelector();
                                                                 }
-                                                                if(_tabController.index == 3){
+                                                                if(_tabController.index == 5){
                                                                   searchbyCatcontroller.text = item;
-                                                                  _addKeywordProvider.loadDataForPageSearchFilter(searchbyCatcontroller.text.toString());
+                                                                  _addKeywordProvider.loadDataForPageSearchFilter(item);
                                                                   // Navigator.pop(context);
                                                                   showSolutionSelectors();
                                                                 }
@@ -23862,3 +23274,1109 @@ Thank you for being open to understanding me better and for considering my reque
   }
 
 }
+
+///
+// Widget PreviewPage(aboutMeData){
+//   // List<dynamic> challengesData = aboutMeData['Challenges'];
+//   // for (var challengeData in challengesData) {
+//   //   if (challengeData is Map<String, dynamic>) {
+//   //     _previewProvider.PreviewChallengesList.add(challengeData);
+//   //   }
+//   // }
+//   return Consumer<PreviewProvider>(
+//       builder: (c,previewProvider, _){
+//
+//         return  Container(
+//           height: MediaQuery
+//               .of(context)
+//               .size
+//               .height,
+//           child: SingleChildScrollView(
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 SizedBox(height: 5,),
+//                 // Padding(
+//                 //   padding: const EdgeInsets.only(left: 20.0),
+//                 //   child: Row(
+//                 //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 //     children: [
+//                 //       Text("5. Preview",
+//                 //           style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+//                 //               fontSize: 30,
+//                 //               color: Colors.black)),
+//                 //       InkWell(
+//                 //         onTap: (){
+//                 //           downloadAboutMePdf(challengesList,solutionsList);
+//                 //         },
+//                 //         child:Container(
+//                 //           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+//                 //           width: MediaQuery.of(context).size.width * .15,
+//                 //           decoration: BoxDecoration(
+//                 //             color:Colors.blue ,
+//                 //             border: Border.all(
+//                 //                 color:Colors.blue ,
+//                 //                 width: 1.0),
+//                 //             borderRadius: BorderRadius.circular(15.0),
+//                 //           ),
+//                 //           child: Center(
+//                 //             child: Text(
+//                 //               'Download Pdf',
+//                 //               style: GoogleFonts.montserrat(
+//                 //                 textStyle:
+//                 //                 Theme
+//                 //                     .of(context)
+//                 //                     .textTheme
+//                 //                     .titleSmall,
+//                 //                 fontWeight: FontWeight.bold,
+//                 //                 color:Colors.white ,
+//                 //               ),
+//                 //             ),
+//                 //           ),
+//                 //         ),
+//                 //       )
+//                 //     ],
+//                 //   ),
+//                 // ),
+//                 // SizedBox(height: 20,),
+//                 Padding(
+//                   padding: const EdgeInsets.symmetric(
+//                       vertical: 10.0, horizontal: 5),
+//                   child: Row(
+//                     mainAxisAlignment: MainAxisAlignment.start,
+//                     children: [
+//                       // Text("Title: ",
+//                       //     style: GoogleFonts.montserrat(textStyle: Theme
+//                       //         .of(context)
+//                       //         .textTheme
+//                       //         .titleMedium,)),
+//                       // Text("${previewProvider.title==null ? "" : previewProvider.title}",
+//                       //     style: GoogleFonts.montserrat(textStyle: Theme
+//                       //         .of(context)
+//                       //         .textTheme
+//                       //         .bodyLarge,fontWeight: FontWeight.w700)),
+//
+//                       Text("Report Title: ", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleMedium,)),
+//
+//                       Flexible(
+//                         child: Container(
+//                           height: 40,
+//                           width: MediaQuery.of(context).size.width * .25,
+//                           child: TextField(
+//                             controller: AboutMeLabeltextController,
+//                             onChanged: (value) {
+//                               _previewProvider.updatetitle(value);
+//                             },
+//                             style: GoogleFonts.montserrat(
+//                                 textStyle: Theme
+//                                     .of(context)
+//                                     .textTheme
+//                                     .bodyLarge,
+//                                 fontWeight: FontWeight.w400,
+//                                 color: Colors.black),
+//                             decoration: InputDecoration(
+//                               contentPadding: EdgeInsets.all(10),
+//                               // labelText: "Name",
+//                               hintText: "About Me Title",
+//                               errorStyle: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.bodyLarge,
+//                                   fontWeight: FontWeight.w400,
+//                                   color: Colors.redAccent),
+//                               focusedBorder: OutlineInputBorder(
+//                                   borderSide: BorderSide(color: Colors.black),
+//                                   borderRadius: BorderRadius.circular(15)),
+//                               border: OutlineInputBorder(
+//                                   borderSide: BorderSide(color: Colors.black12),
+//                                   borderRadius: BorderRadius.circular(15)),
+//                               labelStyle: GoogleFonts.montserrat(
+//                                   textStyle: Theme
+//                                       .of(context)
+//                                       .textTheme
+//                                       .bodyLarge,
+//                                   fontWeight: FontWeight.w400,
+//                                   color: Colors.black),
+//                             ),
+//                           ),
+//                         ),
+//                       ),
+//
+//                       SizedBox(width: 10,),
+//
+//                       InkWell(
+//                         onTap: () async {
+//                           // sideMenu.changePage(2);
+//                           // page.jumpToPage(1);
+//                         },
+//                         child: Container(
+//                           // margin: EdgeInsets.all(10),
+//                           padding: EdgeInsets.all(5),
+//                           height: 40,
+//                           width: MediaQuery.of(context).size.width * 0.15,
+//                           decoration: BoxDecoration(
+//                             // color: Colors.white,
+//                             border: Border.all(color:primaryColorOfApp, width: 1.0),
+//                             borderRadius: BorderRadius.circular(10.0),
+//                           ),
+//                           child: Row(
+//                             mainAxisAlignment: MainAxisAlignment.center,
+//                             crossAxisAlignment: CrossAxisAlignment.center,
+//                             children: [
+//                               Icon(Icons.insert_drive_file,color: Colors.black,size: 20,),
+//                               SizedBox(width: 5,),
+//                               Expanded(
+//                                 child: Text(
+//                                   // 'Thrivers',
+//                                   'For Someone Else',
+//                                   overflow: TextOverflow.ellipsis,
+//                                   style: GoogleFonts.montserrat(
+//                                       textStyle:
+//                                       Theme.of(context).textTheme.bodySmall,
+//                                       color: Colors.black),
+//                                 ),
+//                               ),
+//                             ],
+//                           ),
+//                         ),
+//
+//                       ),
+//
+//                     ],
+//                   ),
+//                 ),
+//                 Divider(color: Colors.black26,),
+//
+//                 Padding(
+//                   padding: const EdgeInsets.symmetric(
+//                       vertical: 10.0, horizontal: 5),
+//                   child: TextField(
+//                     controller: AboutMeDescriptiontextController,
+//                     onChanged: (value) {
+//                       // _previewProvider.updatetitle(value);
+//                     },
+//                     style: GoogleFonts.montserrat(
+//                         textStyle: Theme.of(context).textTheme.bodySmall,
+//                         fontWeight: FontWeight.w400,
+//                         color: Colors.black),
+//                     decoration: InputDecoration(
+//                       hintText: "Description",
+//                       focusedBorder: OutlineInputBorder(
+//                           borderSide: BorderSide(color: Colors.black),
+//                           borderRadius: BorderRadius.circular(10)),
+//                       border: OutlineInputBorder(
+//                           borderSide: BorderSide(color: Colors.black12),
+//                           borderRadius: BorderRadius.circular(10)),
+//                     ),
+//                   ),
+//                 ),
+//
+//                 Container(
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//
+//                     children: [
+//
+//                       Padding(
+//                         padding: const EdgeInsets.symmetric(
+//                             vertical: 10.0, horizontal: 5),
+//                         child: Text("Personal Info",
+//                             style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+//                                 fontSize: 20,
+//                                 color: Colors.black)),
+//                       ),
+//
+//                       Padding(
+//                         padding: const EdgeInsets.symmetric(
+//                             vertical: 10.0, horizontal: 5),
+//                         child: Row(
+//                           mainAxisAlignment: MainAxisAlignment.start,
+//                           children: [
+//                             Text("1. Email: ",
+//                                 style: GoogleFonts.montserrat(textStyle: Theme
+//                                     .of(context)
+//                                     .textTheme
+//                                     .titleMedium,)),
+//                             Text("${previewProvider.email==null ? "" : previewProvider.email}",
+//                                 style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.bodyLarge,fontWeight: FontWeight.w700)),
+//                           ],
+//                         ),
+//                       ),
+//                       Padding(
+//                         padding: const EdgeInsets.symmetric(
+//                             vertical: 10.0, horizontal: 5),
+//                         child: Row(
+//                           mainAxisAlignment: MainAxisAlignment.start,
+//                           children: [
+//                             Text("2. Name: ",
+//                                 style: GoogleFonts.montserrat(textStyle: Theme
+//                                     .of(context)
+//                                     .textTheme
+//                                     .titleMedium,)),
+//                             Text("${previewProvider.name==null ? "" : previewProvider.name}",
+//                                 style: GoogleFonts.montserrat(textStyle: Theme
+//                                     .of(context)
+//                                     .textTheme
+//                                     .bodyLarge,fontWeight: FontWeight.w700)),
+//                           ],
+//                         ),
+//                       ),
+//                       Padding(
+//                         padding: const EdgeInsets.symmetric(
+//                             vertical: 10.0, horizontal: 5),
+//                         child: Row(
+//                           mainAxisAlignment: MainAxisAlignment.start,
+//                           children: [
+//                             Text("3. Employer: ",
+//                                 style: GoogleFonts.montserrat(textStyle: Theme
+//                                     .of(context)
+//                                     .textTheme
+//                                     .titleMedium,)),
+//                             Text("${previewProvider.employer==null ? "" : previewProvider.employer}",
+//                                 style: GoogleFonts.montserrat(textStyle: Theme
+//                                     .of(context)
+//                                     .textTheme
+//                                     .bodyLarge,fontWeight: FontWeight.w700)),
+//                           ],
+//                         ),
+//                       ),
+//                       Padding(
+//                         padding: const EdgeInsets.symmetric(
+//                             vertical: 10.0, horizontal: 5),
+//                         child: Row(
+//                           mainAxisAlignment: MainAxisAlignment.start,
+//                           children: [
+//                             Text("4. Division or section: ",
+//                                 style: GoogleFonts.montserrat(textStyle: Theme
+//                                     .of(context)
+//                                     .textTheme
+//                                     .titleMedium,)),
+//                             Text("${previewProvider.division==null ? "" : previewProvider.division}",
+//                                 style: GoogleFonts.montserrat(textStyle: Theme
+//                                     .of(context)
+//                                     .textTheme
+//                                     .bodyLarge,fontWeight: FontWeight.w700)),
+//                           ],
+//                         ),
+//                       ),
+//                       Padding(
+//                         padding: const EdgeInsets.symmetric(
+//                             vertical: 10.0, horizontal: 5),
+//                         child: Row(
+//                           mainAxisAlignment: MainAxisAlignment.start,
+//
+//                           children: [
+//                             Text("5. Role: ",
+//                                 style: GoogleFonts.montserrat(textStyle: Theme
+//                                     .of(context)
+//                                     .textTheme
+//                                     .titleMedium,)),
+//                             Text("${previewProvider.role==null ? "" : previewProvider.role}",
+//                                 style: GoogleFonts.montserrat(textStyle: Theme
+//                                     .of(context)
+//                                     .textTheme
+//                                     .bodyLarge,fontWeight: FontWeight.w700)),
+//                           ],
+//                         ),
+//                       ),
+//                       Padding(
+//                         padding: const EdgeInsets.symmetric(
+//                             vertical: 10.0, horizontal: 5),
+//                         child: Row(
+//                           mainAxisAlignment: MainAxisAlignment.start,
+//
+//                           children: [
+//                             Text("6. Location: ",
+//                                 style: GoogleFonts.montserrat(textStyle: Theme
+//                                     .of(context)
+//                                     .textTheme
+//                                     .titleMedium,)),
+//                             Text("${previewProvider.location==null ? "" : previewProvider.location}",
+//                                 style: GoogleFonts.montserrat(textStyle: Theme
+//                                     .of(context)
+//                                     .textTheme
+//                                     .bodyLarge,fontWeight: FontWeight.w700)),
+//                           ],
+//                         ),
+//                       ),
+//                       Padding(
+//                         padding: const EdgeInsets.symmetric(
+//                             vertical: 10.0, horizontal: 5),
+//                         child: Row(
+//                           mainAxisAlignment: MainAxisAlignment.start,
+//                           children: [
+//                             Text("7. Employee number: ",
+//                                 style: GoogleFonts.montserrat(textStyle: Theme
+//                                     .of(context)
+//                                     .textTheme
+//                                     .titleMedium,)),
+//                             Text("${previewProvider.employeeNumber==null ? "" : previewProvider.employeeNumber}",
+//                                 style: GoogleFonts.montserrat(textStyle: Theme
+//                                     .of(context)
+//                                     .textTheme
+//                                     .bodyLarge,fontWeight: FontWeight.w700)),
+//                           ],
+//                         ),
+//                       ),
+//                       Padding(
+//                         padding: const EdgeInsets.symmetric(
+//                             vertical: 10.0, horizontal: 5),
+//                         child: Row(
+//                           mainAxisAlignment: MainAxisAlignment.start,
+//                           children: [
+//                             Text("8. Line manager:",
+//                                 style: GoogleFonts.montserrat(textStyle: Theme
+//                                     .of(context)
+//                                     .textTheme
+//                                     .titleMedium,)),
+//                             Text("${previewProvider.linemanager==null ? "" : previewProvider.linemanager}",
+//                                 style: GoogleFonts.montserrat(textStyle: Theme
+//                                     .of(context)
+//                                     .textTheme
+//                                     .bodyLarge,fontWeight: FontWeight.w700)),
+//                           ],
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//
+//                 Container(
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//
+//                     children: [
+//                       Padding(
+//                         padding: const EdgeInsets.symmetric(
+//                             vertical: 10.0, horizontal: 5),
+//                         child: Text("Insight about me",
+//                             style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+//                                 fontSize: 20,
+//                                 color: Colors.black)),
+//                       ),
+//                       // Padding(
+//                       //   padding: const EdgeInsets.symmetric(
+//                       //       vertical: 10.0, horizontal: 5),
+//                       //   child: Row(
+//                       //     mainAxisAlignment: MainAxisAlignment.start,
+//                       //     children: [
+//                       //       Text("Title: ",
+//                       //           style: GoogleFonts.montserrat(textStyle: Theme
+//                       //               .of(context)
+//                       //               .textTheme
+//                       //               .titleMedium,)),
+//                       //       Text("${previewProvider.title==null ? "" : previewProvider.title}",
+//                       //           style: GoogleFonts.montserrat(textStyle: Theme
+//                       //               .of(context)
+//                       //               .textTheme
+//                       //               .bodyLarge,fontWeight: FontWeight.w700)),
+//                       //     ],
+//                       //   ),
+//                       // ),
+//
+//
+//                       Padding(
+//                         padding: const EdgeInsets.symmetric(
+//                             vertical: 10.0, horizontal: 5),
+//                         child: Text("1. About Me and My circumstances: ",
+//                             style: GoogleFonts.montserrat(textStyle: Theme
+//                                 .of(context)
+//                                 .textTheme
+//                                 .titleMedium,)),
+//                       ),
+//                       Padding(
+//                         padding: const EdgeInsets.symmetric(
+//                             horizontal: 5),
+//                         child: Text("${previewProvider.mycircumstance==null ? "" : previewProvider.mycircumstance}",
+//                             style: GoogleFonts.montserrat(textStyle: Theme
+//                                 .of(context)
+//                                 .textTheme
+//                                 .bodyLarge,fontWeight: FontWeight.w700)),
+//                       ),
+//                       Padding(
+//                         padding: const EdgeInsets.symmetric(
+//                             vertical: 10.0, horizontal: 5),
+//                         child: Text("2. My strengths that I want to have the opportunity to use in my role: ",
+//                             style: GoogleFonts.montserrat(textStyle: Theme
+//                                 .of(context)
+//                                 .textTheme
+//                                 .titleMedium,)),
+//                       ),
+//                       Padding(
+//                         padding: const EdgeInsets.symmetric(
+//                             horizontal: 5),
+//                         child: Text("${previewProvider.mystrength==null ? "" : previewProvider.mystrength}",
+//                             style: GoogleFonts.montserrat(textStyle: Theme
+//                                 .of(context)
+//                                 .textTheme
+//                                 .bodyLarge,fontWeight: FontWeight.w700)),
+//
+//                       ),
+//                       Padding(
+//                         padding: const EdgeInsets.symmetric(
+//                             vertical: 10.0, horizontal: 5),
+//                         child: Text("3. What I value about [my organisation] and workplace environment that helps me perform to my best: ",
+//                             style: GoogleFonts.montserrat(textStyle: Theme
+//                                 .of(context)
+//                                 .textTheme
+//                                 .titleMedium,)),
+//                       ),
+//                       Padding(
+//                         padding: const EdgeInsets.symmetric(
+//                             horizontal: 5),
+//                         child: Text("${previewProvider.myorganization==null ? "" : previewProvider.myorganization}",
+//                             style: GoogleFonts.montserrat(textStyle: Theme
+//                                 .of(context)
+//                                 .textTheme
+//                                 .bodyLarge,fontWeight: FontWeight.w700)),
+//
+//                       ),
+//                       Padding(
+//                         padding: const EdgeInsets.symmetric(
+//                             vertical: 10.0, horizontal: 5),
+//                         child: Text("4. What I find challenging about [My Organisation] and the workplace environment that makes it harder for me to perform my best: ",
+//                             style: GoogleFonts.montserrat(textStyle: Theme
+//                                 .of(context)
+//                                 .textTheme
+//                                 .titleMedium,)),
+//                       ),
+//                       Padding(
+//                         padding: const EdgeInsets.symmetric(
+//                             horizontal: 5),
+//                         child: Text("${previewProvider.mychallenge==null ? "" : previewProvider.mychallenge}",
+//                             style: GoogleFonts.montserrat(textStyle: Theme
+//                                 .of(context)
+//                                 .textTheme
+//                                 .bodyLarge,fontWeight: FontWeight.w700)),
+//
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//
+//                 Container(
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       Padding(
+//                         padding: const EdgeInsets.symmetric(
+//                             vertical: 10.0, horizontal: 5),
+//                         child: Text("Challenges",
+//                             style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+//                                 fontSize: 20,
+//                                 color: Colors.black)),
+//                       ),
+//                       Consumer<PreviewProvider>(
+//                         builder: (context, previewProvider, _) {
+//                           // solutions = userAboutMEProvider.getSelectedSolutions();
+//                           print("PreviewChallengesList : ${previewProvider.PreviewChallengesList}");
+//
+//
+//                           return Container(
+//                             // height: MediaQuery.of(context).size.height * .6,
+//                             width: MediaQuery.of(context).size.width ,
+//                             decoration: BoxDecoration(
+//                               border: Border.all(color: Colors.black26),
+//                               borderRadius: BorderRadius.circular(20),
+//                             ),
+//                             // width: MediaQuery.of(context).size.width,
+//                             child:SingleChildScrollView(
+//                               child: DataTable(
+//                                 dataRowMaxHeight:60 ,
+//                                 headingTextStyle: GoogleFonts.montserrat(
+//                                     textStyle: Theme.of(context).textTheme.titleMedium,
+//                                     fontWeight: FontWeight.w500,
+//                                     color: Colors.black),
+//                                 columnSpacing: 15,
+//                                 columns: [
+//                                   DataColumn(
+//                                     label: Container(
+//                                       // color: Colors.blue,
+//                                       // width: 60,
+//                                       child: Text('Id',textAlign: TextAlign.center,),
+//                                     ),
+//
+//                                   ),
+//                                   DataColumn(
+//                                     label: Container(
+//                                       // width: 180,
+//                                       child: Text('Label',),
+//                                     ),
+//                                   ),
+//                                   DataColumn(
+//                                     label: Text('Impact',),
+//                                   ),
+//                                   DataColumn(
+//                                     label: Container(
+//                                       // width: 400,
+//                                         child: Text('Description')
+//                                     ),
+//                                   ),
+//                                   DataColumn(
+//                                     label: Container(
+//                                       // width: 400,
+//                                         child: Text('Impact on me')
+//                                     ),
+//                                   ),
+//                                   DataColumn(
+//                                     label: Container(
+//                                       // width: 400,
+//                                         child: Text('Attachment')
+//                                     ),
+//                                   ),
+//
+//
+//                                 ],
+//
+//                                 rows: previewProvider.PreviewChallengesList.map((solution) {
+//                                   int index = previewProvider.PreviewChallengesList.indexOf(solution);
+//
+//
+//                                   // print(jsonString);
+//
+//
+//                                   return DataRow(
+//                                     cells: [
+//                                       DataCell(
+//                                           Container(
+//                                             // width: 60,
+//                                               child: Text("CH0${solution['id']}.", style: GoogleFonts.montserrat(
+//                                                 // child: Text("${index + 1}.", style: GoogleFonts.montserrat(
+//                                                   textStyle: Theme.of(context).textTheme.bodySmall,
+//                                                   fontWeight: FontWeight.w600,
+//                                                   color: Colors.black),))),
+//                                       DataCell(
+//                                           Container(
+//                                             // width: 180,
+//                                               child: Text(solution['Label'],
+//                                                   overflow: TextOverflow.ellipsis,maxLines: 2,
+//                                                   style: GoogleFonts.montserrat(
+//                                                       textStyle: Theme.of(context).textTheme.bodySmall,
+//                                                       fontWeight: FontWeight.w600,
+//                                                       color: Colors.black)
+//                                               ))),
+//                                       DataCell(
+//                                           Container(
+//                                             // width: 400,
+//                                               child: Text(solution['Impact'],
+//                                                   overflow: TextOverflow.ellipsis,maxLines: 2,
+//                                                   style: GoogleFonts.montserrat(
+//                                                       textStyle: Theme.of(context).textTheme.bodySmall,
+//                                                       fontWeight: FontWeight.w600,
+//                                                       color: Colors.black)
+//                                               ))),
+//                                       DataCell(
+//                                           Container(
+//                                             // width: 400,
+//                                               child: Text(solution['Final_description'],
+//                                                   overflow: TextOverflow.ellipsis,maxLines: 2,
+//                                                   style: GoogleFonts.montserrat(
+//                                                       textStyle: Theme.of(context).textTheme.bodySmall,
+//                                                       fontWeight: FontWeight.w600,
+//                                                       color: Colors.black)
+//                                               ))),
+//
+//                                       DataCell(
+//                                           Container(
+//                                             // width: 400,
+//                                               child: Text(solution['Impact_on_me'],
+//                                                   overflow: TextOverflow.ellipsis,maxLines: 2,
+//                                                   style: GoogleFonts.montserrat(
+//                                                       textStyle: Theme.of(context).textTheme.bodySmall,
+//                                                       fontWeight: FontWeight.w600,
+//                                                       color: Colors.black)
+//                                               ))),
+//
+//                                       DataCell(
+//                                           Container(
+//                                             // width: 400,
+//                                               child: Text(solution['Attachment'],
+//                                                   overflow: TextOverflow.ellipsis,maxLines: 2,
+//                                                   style: GoogleFonts.montserrat(
+//                                                       textStyle: Theme.of(context).textTheme.bodySmall,
+//                                                       fontWeight: FontWeight.w600,
+//                                                       color: Colors.black)
+//                                               ))),
+//
+//                                       // DataCell(
+//                                       //   Container(
+//                                       //     // height: 100,
+//                                       //     margin: EdgeInsets.all(5),
+//                                       //     width: 140,
+//                                       //     child: Center(
+//                                       //       child: TextField(
+//                                       //         maxLines: 4,
+//                                       //         controller: TextEditingController(text: solution.notes),
+//                                       //         onChanged: (value) {
+//                                       //         },
+//                                       //         style: GoogleFonts.montserrat(
+//                                       //             textStyle: Theme
+//                                       //                 .of(context)
+//                                       //                 .textTheme
+//                                       //                 .bodySmall,
+//                                       //             fontWeight: FontWeight.w400,
+//                                       //             color: Colors.black),
+//                                       //         decoration: InputDecoration(
+//                                       //           contentPadding: EdgeInsets.all(10),
+//                                       //           // labelText: "Name",
+//                                       //           hintText: "Notes",
+//                                       //           errorStyle: GoogleFonts.montserrat(
+//                                       //               textStyle: Theme
+//                                       //                   .of(context)
+//                                       //                   .textTheme
+//                                       //                   .bodyLarge,
+//                                       //               fontWeight: FontWeight.w400,
+//                                       //               color: Colors.redAccent),
+//                                       //           focusedBorder: OutlineInputBorder(
+//                                       //               borderSide: BorderSide(color: Colors.black),
+//                                       //               borderRadius: BorderRadius.circular(5)),
+//                                       //           border: OutlineInputBorder(
+//                                       //               borderSide: BorderSide(color: Colors.black12),
+//                                       //               borderRadius: BorderRadius.circular(5)),
+//                                       //           labelStyle: GoogleFonts.montserrat(
+//                                       //               textStyle: Theme
+//                                       //                   .of(context)
+//                                       //                   .textTheme
+//                                       //                   .bodyLarge,
+//                                       //               fontWeight: FontWeight.w400,
+//                                       //               color: Colors.black),
+//                                       //         ),
+//                                       //       ),
+//                                       //     ),
+//                                       //   ),), // Empty cell for Notes
+//
+//                                       // DataCell(
+//                                       //     Container(
+//                                       //       child: IconButton(
+//                                       //         onPressed: (){
+//                                       //
+//                                       //         },
+//                                       //         icon: Icon(Icons.add),
+//                                       //       ),
+//                                       //     )),  // Empty cell for Attachments
+//                                       // DataCell(
+//                                       //   Container(
+//                                       //     width: 120,
+//                                       //     child: DropdownButton(
+//                                       //       style: TextStyle(fontSize: 12,overflow: TextOverflow.ellipsis),
+//                                       //       // value: selectedProvider,
+//                                       //       value: selectedProviderValues[index],
+//                                       //       onChanged: (newValue) {
+//                                       //         // userAboutMEProvider.updatevalue(selectedProviderValues[index], newValue.toString());
+//                                       //         setState(() {
+//                                       //           // selectedProvider = newValue.toString();
+//                                       //           selectedProviderValues[index] = newValue.toString();
+//                                       //         });
+//                                       //       },
+//                                       //       items: provider.map((option) {
+//                                       //         return DropdownMenuItem(
+//                                       //           value: option,
+//                                       //           child: Text(option, overflow: TextOverflow.ellipsis,maxLines: 2,),
+//                                       //         );
+//                                       //       }).toList(),
+//                                       //     ),
+//                                       //   ),
+//                                       // ),  // Empty cell for Provider
+//                                       // DataCell(
+//                                       //   Container(
+//                                       //     width: 60,
+//                                       //     child: DropdownButton(
+//                                       //       style: TextStyle(fontSize: 12,overflow: TextOverflow.ellipsis),
+//                                       //       value: selectedInPlaceValues[index],
+//                                       //       // value: selectedInPlace,
+//                                       //       onChanged: (newValue) {
+//                                       //         setState(() {
+//                                       //           selectedInPlaceValues[index] = newValue.toString();
+//                                       //           // selectedInPlace = newValue.toString();
+//                                       //         });
+//                                       //       },
+//                                       //       items: InPlace.map((option) {
+//                                       //         return DropdownMenuItem(
+//                                       //           value: option,
+//                                       //           child: Text(option),
+//                                       //         );
+//                                       //       }).toList(),
+//                                       //     ),
+//                                       //   ),
+//                                       // ),  // Empty cell for In Place
+//                                       // DataCell(
+//                                       //   Container(
+//                                       //     width: 140,
+//                                       //     // child:  DropdownButton(
+//                                       //     //   style: TextStyle(fontSize: 12,overflow: TextOverflow.ellipsis),
+//                                       //     //   value: selectedPriorityValues[index],
+//                                       //     //   // value: selectedPriority,
+//                                       //     //   onChanged: (newValue) {
+//                                       //     //     setState(() {
+//                                       //     //       selectedPriorityValues[index] = newValue.toString();
+//                                       //     //
+//                                       //     //       print("$index: ${selectedPriorityValues[index]} ");
+//                                       //     //       // selectedPriority = newValue.toString();
+//                                       //     //     });
+//                                       //     //   },
+//                                       //     //   items: Priority.map((option) {
+//                                       //     //     return DropdownMenuItem(
+//                                       //     //       value: option,
+//                                       //     //       child: Text(option, overflow: TextOverflow.ellipsis,),
+//                                       //     //     );
+//                                       //     //   }).toList(),
+//                                       //     // ),
+//                                       //     child:  DropdownButtonFormField(
+//                                       //       style: TextStyle(fontSize: 12,overflow: TextOverflow.ellipsis),
+//                                       //       decoration: InputDecoration(
+//                                       //
+//                                       //         hintText: 'Priority',
+//                                       //       ),
+//                                       //       value: userAboutMEProvider.selectedPriorityValues[index],
+//                                       //       onChanged: (newValue) {
+//                                       //         userAboutMEProvider.updateSelectedPriorityValues(index, newValue);
+//                                       //         print('priority ${index} and ${userAboutMEProvider.selectedPriorityValues}');
+//                                       //       },
+//                                       //       icon: Icon(Icons.keyboard_arrow_down_outlined,size: 20,),
+//                                       //       items: selectedPriorityValues.map<DropdownMenuItem<String>>((String value) {
+//                                       //         // String displayedText = value;
+//                                       //         // if (displayedText.length > 5) {
+//                                       //         //   // Limit the displayed text to 10 characters and add ellipsis
+//                                       //         //   displayedText = displayedText.substring(0, 5) + '..';
+//                                       //         // }
+//                                       //         return DropdownMenuItem<String>(
+//                                       //           value: value,
+//                                       //           child: Text(value, overflow: TextOverflow.ellipsis,),
+//                                       //         );
+//                                       //       }).toList(),
+//                                       //     ),
+//                                       //   ),
+//                                       // ),  // Empty cell for Priority
+//
+//                                     ],
+//                                   );
+//                                 }).toList(),
+//                               ),
+//                             ),
+//
+//                           );
+//                         },
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//
+//                 Container(
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//
+//                     children: [
+//                       Padding(
+//                         padding: const EdgeInsets.symmetric(
+//                             vertical: 10.0, horizontal: 5),
+//                         child: Text("Solutions",
+//                             style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+//                                 fontSize: 20,
+//                                 color: Colors.black)),
+//                       ),
+//                       Consumer<PreviewProvider>(
+//                         builder: (context, previewProvider, _) {
+//                           print("PreviewSolutionList : ${previewProvider.PreviewSolutionList}");
+//
+//
+//                           return Container(
+//                             // height: 350,
+//                             // height: MediaQuery.of(context).size.height * .48,
+//                             width: MediaQuery.of(context).size.width,
+//
+//                             decoration: BoxDecoration(
+//                               border: Border.all(color: Colors.black26),
+//                               borderRadius: BorderRadius.circular(20),
+//                             ),
+//                             // width: MediaQuery.of(context).size.width,
+//                             child:SingleChildScrollView(
+//                               child: DataTable(
+//                                 dataRowMaxHeight:60 ,
+//                                 headingTextStyle: GoogleFonts.montserrat(
+//                                     textStyle: Theme.of(context).textTheme.titleMedium,
+//                                     fontWeight: FontWeight.w500,
+//                                     color: Colors.black),
+//                                 // border: TableBorder.all(color: Colors.black),
+//                                 columnSpacing: 15,
+//                                 columns: [
+//
+//                                   DataColumn(
+//                                     label: Container(
+//                                       // color: Colors.blue,
+//                                       // width: 60,
+//                                       child: Text('Id',textAlign: TextAlign.center,),
+//                                     ),
+//
+//                                   ),
+//                                   DataColumn(
+//                                     label: Container(
+//                                       // width: 180,
+//                                       child: Text('label',),
+//                                     ),
+//                                   ),
+//                                   DataColumn(
+//                                     label: Container(
+//                                       // width: 250,
+//                                       child: Text('Impact',),
+//                                     ),
+//                                   ),
+//                                   DataColumn(
+//                                     label: Container(
+//                                       // width: 400,
+//                                         child: Text('Description')
+//                                     ),
+//                                   ),
+//                                   DataColumn(
+//                                     label: Flexible(child: Text('Provider')),
+//                                   ),
+//                                   DataColumn(
+//                                     label: Flexible(child: Text('In Place')),
+//                                   ),
+//                                   DataColumn(
+//                                     label: Flexible(child: Text('Attachment')),
+//                                   ),
+//                                 ],
+//                                 rows: previewProvider.PreviewSolutionList.map((challenge) {
+//                                   int index = previewProvider.PreviewSolutionList.indexOf(challenge);
+//                                   // print(jsonString);
+//                                   return DataRow(
+//                                     cells: [
+//                                       DataCell(
+//                                           Container(
+//                                             // width: 60,
+//                                             //   child: Text("${index + 1}.", style: GoogleFonts.montserrat(
+//                                               child: Text("SH0${challenge['id']}.", style: GoogleFonts.montserrat(
+//                                                   textStyle: Theme.of(context).textTheme.bodySmall,
+//                                                   fontWeight: FontWeight.w600,
+//                                                   color: Colors.black),))
+//                                       ),
+//                                       DataCell(
+//                                           Container(
+//                                             child: Text(challenge['Label'],
+//                                                 overflow: TextOverflow.ellipsis,maxLines: 2,
+//                                                 style: GoogleFonts.montserrat(
+//                                                     textStyle: Theme.of(context).textTheme.bodySmall,
+//                                                     fontWeight: FontWeight.w600,
+//                                                     color: Colors.black)
+//                                             ),
+//                                           )),
+//                                       DataCell(
+//                                           Container(
+//                                             // width: 250,
+//                                               child: Text(challenge["Impact"],
+//                                                   overflow: TextOverflow.ellipsis,maxLines: 2,
+//                                                   style: GoogleFonts.montserrat(
+//                                                       textStyle: Theme.of(context).textTheme.bodySmall,
+//                                                       fontWeight: FontWeight.w600,
+//                                                       color: Colors.black)
+//                                               ))),
+//                                       DataCell(
+//                                           Container(
+//                                             // width: 400,
+//                                               child: Text(challenge['Final_description'],
+//                                                   overflow: TextOverflow.ellipsis,maxLines: 2,
+//                                                   style: GoogleFonts.montserrat(
+//                                                       textStyle: Theme.of(context).textTheme.bodySmall,
+//                                                       fontWeight: FontWeight.w600,
+//                                                       color: Colors.black)
+//                                               ))),
+//                                       DataCell(
+//                                           Container(
+//                                             // width: 400,
+//                                               child: Text(challenge['Provider']==null ? "" : challenge['Provider'],
+//                                                   overflow: TextOverflow.ellipsis,maxLines: 2,
+//                                                   style: GoogleFonts.montserrat(
+//                                                       textStyle: Theme.of(context).textTheme.bodySmall,
+//                                                       fontWeight: FontWeight.w600,
+//                                                       color: Colors.black)
+//                                               ))),
+//                                       DataCell(
+//                                           Container(
+//                                             // width: 400,
+//                                               child: Text(challenge['InPlace']==null ? "" : challenge['InPlace'],
+//                                                   overflow: TextOverflow.ellipsis,maxLines: 2,
+//                                                   style: GoogleFonts.montserrat(
+//                                                       textStyle: Theme.of(context).textTheme.bodySmall,
+//                                                       fontWeight: FontWeight.w600,
+//                                                       color: Colors.black)
+//                                               ))),
+//                                       DataCell(
+//                                           Container(
+//                                             // width: 400,
+//                                               child: Text(challenge['Attachment']==null ? "" : challenge['Attachment'],
+//                                                   overflow: TextOverflow.ellipsis,maxLines: 2,
+//                                                   style: GoogleFonts.montserrat(
+//                                                       textStyle: Theme.of(context).textTheme.bodySmall,
+//                                                       fontWeight: FontWeight.w600,
+//                                                       color: Colors.black)
+//                                               ))),
+//                                     ],
+//                                   );
+//                                 }).toList(),
+//                               ),
+//                             ),
+//
+//                           );
+//                         },
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//
+//                 Padding(
+//                   padding: const EdgeInsets.symmetric(
+//                       vertical: 15.0, horizontal: 5),
+//                   child: TextField(
+//                     controller: AboutMeUseFulInfotextController,
+//                     onChanged: (value) {
+//                       _previewProvider.updatetitle(value);
+//                     },
+//                     style: GoogleFonts.montserrat(
+//                         textStyle: Theme.of(context).textTheme.bodySmall,
+//                         fontWeight: FontWeight.w400,
+//                         color: Colors.black),
+//                     decoration: InputDecoration(
+//                       hintText: "Links/Document/Product Info",
+//                       focusedBorder: OutlineInputBorder(
+//                           borderSide: BorderSide(color: Colors.black),
+//                           borderRadius: BorderRadius.circular(10)),
+//                       border: OutlineInputBorder(
+//                           borderSide: BorderSide(color: Colors.black12),
+//                           borderRadius: BorderRadius.circular(10)),
+//                     ),
+//                   ),
+//                 ),
+//
+//
+//                 Row(
+//                   children: [
+//                     Padding(
+//                       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+//                       child: Text("Attachments :", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
+//                     ),
+//                     SizedBox(width: 10,),
+//
+//                     InkWell(
+//                       onTap: (){
+//                         // _userAboutMEProvider.pickFiles();
+//                       },
+//                       child: Container(
+//                         // padding: EdgeInsets.all(20),
+//                         child: Center(child: Icon(Icons.add, size: 30, color: Colors.white,)),
+//                         width: 30,
+//                         height: 30,
+//                         decoration: BoxDecoration(
+//                           color: Colors.blue,
+//                           borderRadius: BorderRadius.circular(50),
+//                         ),
+//                       ),
+//                     )
+//                   ],
+//                 ),
+//                 Padding(
+//                   padding: const EdgeInsets.all(8.0),
+//                   child: Text("${_userAboutMEProvider.aadhar==null ? "" : _userAboutMEProvider.aadhar}", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
+//                   // child: Text("document.pdf", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
+//                 ),
+//
+//                 SizedBox(height: 10,),
+//
+//                 Row(
+//                   mainAxisAlignment: MainAxisAlignment.end,
+//                   children: [
+//                     InkWell(
+//                       onTap: () async {
+//                         var createdAt = DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now());
+//
+//                         Map<String, dynamic> AboutMEDatas = {
+//                           'About_Me_Label': AboutMeLabeltextController.text,
+//                           'AB_Status' : "Complete",
+//                           'AB_Description' : AboutMeDescriptiontextController.text,
+//                           'AB_Useful_Info' : AboutMeUseFulInfotextController.text,
+//                           'AB_Attachment' : "",
+//                         };
+//
+//
+//                         String solutionJson = json.encode(AboutMEDatas);
+//                         print(solutionJson);
+//
+//                         ProgressDialog.show(context, "Completing", Icons.save);
+//                         await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
+//                         ProgressDialog.hide();
+//                         sendMailPopUp(challengesList,solutionsList);
+//                         // selectedEmail = null;
+//                         // nameController.clear();
+//                         // searchEmailcontroller.clear();
+//                         // employerController.clear();
+//                         // divisionOrSectionController.clear();
+//                         // RoleController.clear();
+//                         // LocationController.clear();
+//                         // EmployeeNumberController.clear();
+//                         // LineManagerController.clear();
+//                         // mycircumstancesController.clear();
+//                         // MystrengthsController.clear();
+//                         // mycircumstancesController.clear();
+//                         // AboutMeLabeltextController.clear();
+//                         // RefineController.clear();
+//                         // solutionsList.clear();
+//                         // _userAboutMEProvider.solutionss.clear();
+//                         // _userAboutMEProvider.editsolutionss.clear();
+//                         // _userAboutMEProvider.challengess.clear();
+//                         // _userAboutMEProvider.editchallengess.clear();
+//                         // _userAboutMEProvider.combinedSolutionsResults.clear();
+//                         // _userAboutMEProvider.combinedResults.clear();
+//                         // previewProvider.email=null;
+//                         // previewProvider.name=null;
+//                         // previewProvider.employer=null;
+//                         // previewProvider.division=null;
+//                         // previewProvider.role=null;
+//                         // previewProvider.location=null;
+//                         // previewProvider.employeeNumber=null ;
+//                         // previewProvider.linemanager=null;
+//                         // previewProvider.title=null;
+//                         // previewProvider.mycircumstance=null;
+//                         // previewProvider.mystrength=null ;
+//                         // previewProvider.myorganization=null ;
+//                         // previewProvider.mychallenge=null ;
+//                         // previewProvider.PreviewChallengesList.clear();
+//                         // previewProvider.PreviewSolutionList.clear();
+//                         // // _navigateToTab(0);
+//                         // widget.refreshPage();
+//                         // // Navigator.pop(context);
+//                         // setState(() {
+//                         //   widget.page.jumpToPage(1);
+//                         // });
+//                       },
+//                       child:Container(
+//                         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+//                         width: MediaQuery.of(context).size.width * .15,
+//                         decoration: BoxDecoration(
+//                           color:Colors.blue ,
+//                           border: Border.all(
+//                               color:Colors.blue ,
+//                               width: 1.0),
+//                           borderRadius: BorderRadius.circular(15.0),
+//                         ),
+//                         child: Center(
+//                           child: Text(
+//                             'Complete and send',
+//                             style: GoogleFonts.montserrat(
+//                               textStyle:
+//                               Theme
+//                                   .of(context)
+//                                   .textTheme
+//                                   .titleSmall,
+//                               fontWeight: FontWeight.bold,
+//                               color:Colors.white ,
+//                             ),
+//                           ),
+//                         ),
+//                       ),
+//                     ),
+//                   ],
+//                 )
+//               ],
+//             ),
+//           ),
+//         );
+//       });
+// }
+
+/// backup previwpage

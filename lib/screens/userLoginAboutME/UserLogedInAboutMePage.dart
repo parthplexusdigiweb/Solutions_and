@@ -47,6 +47,8 @@ class _UserLogedInAboutMePageState extends State<UserLogedInAboutMePage> with Ti
   SideMenuController sideMenu = SideMenuController();
   int pageNumber = 0;
 
+
+
   TextEditingController nameController = TextEditingController();
   TextEditingController employerController = TextEditingController();
   TextEditingController divisionOrSectionController = TextEditingController();
@@ -229,6 +231,7 @@ Date
     _futureFirstDraftDocument = getFirstDraftDocument();
     print("widget.Pagejump: ${widget.tabindex}");
     print("widget.AdminName: ${widget.AdminName}");
+    print("inside _UserLogedInAboutMePageState");
     // if(widget.Pagejump==true){
     //   page.jumpToPage(3);
     //   _previewProvider.pagechange(0);
@@ -245,9 +248,13 @@ Date
     _tabController.animateTo(index);
   }
 
+  Key _key = UniqueKey();
+
   void refreshPage() {
     // Call setState or perform any actions to refresh the page
-    setState(() {});
+    setState(() {
+      // _key = UniqueKey();
+    });
   }
 
   late Future<DocumentSnapshot> _futureFirstDraftDocument;
@@ -8623,7 +8630,6 @@ Date
                               base64EncodedData,
                               filename,
                               ccEmails: previewProvider.ccEmails,
-                              ccNames: previewProvider.ccNames,
                             );
 
                             await downloadAboutMePdf(challengesList,solutionsList);
