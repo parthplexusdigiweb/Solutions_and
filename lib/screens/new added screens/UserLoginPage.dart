@@ -281,7 +281,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
 
                             QuerySnapshot newquerySnapshot = await FirebaseFirestore.instance.collection('Users').where('email', isEqualTo: loginTextEditingcontroller.text).where('isPPS', isEqualTo: false).limit(1).get();
 
-                            // if(newquerySnapshot.docs.isNotEmpty){
+                            if(newquerySnapshot.docs.isNotEmpty){
 
                               var userData = newquerySnapshot.docs.first;
 
@@ -342,7 +342,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                               var userdocs = await newquerySnapshot.docs.first.id;
                               await ApiRepository().updateUserDetail({"isPPS": true},userdocs);
                              var documentId = await ApiRepository().createAboutMe(AboutMEDatas);
-                            // }
+                            }
                             ///
                             bool isLoginSuccessful = await ApiRepository().sendLoginMail(loginTextEditingcontroller.text);
                             // bool isLoginSuccessful = true;

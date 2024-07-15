@@ -573,6 +573,8 @@ class ApiRepository{
     String loginlink = "https://thriver-solutions.web.app/userLogin/authenticate?loginToken=$token";
     // String loginlink = "https://thriver-solutions.web.app/userLogin/authenticate";
 
+    print("token: $token");
+    print("loginlink: $loginlink");
     var request = http.Request('POST', Uri.parse('$BREVO_BASE_URL/smtp/email'));
     request.body = json.encode({
       "sender": {
