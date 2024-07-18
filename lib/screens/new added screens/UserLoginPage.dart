@@ -132,7 +132,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text('You will recieve a link to login to your dashboard in your email ', style:TextStyle(
+                    child: Text('You will receive a link to login to your dashboard in your email ', style:TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
@@ -142,7 +142,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
                     child: TextField(
-                      maxLines: null,
+                      // maxLines: null,
                       controller: loginTextEditingcontroller,
                       cursorColor: Colors.white,
                       style: GoogleFonts.montserrat(
@@ -152,6 +152,9 @@ class _UserLoginPageState extends State<UserLoginPage> {
                               .bodyLarge,
                           fontWeight: FontWeight.w400,
                           color: Colors.white),
+                      onSubmitted: (value) {
+                        sendEmail();
+                      },
                       decoration: InputDecoration(
                         //errorText: userAccountSearchErrorText,
                         contentPadding: EdgeInsets.all(25),
@@ -200,271 +203,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
 
                   Center(
                     child: InkWell(
-                      onTap: () async {
-                        final prefs = await SharedPreferences.getInstance();
-                        isloggedIn = await prefs.setBool('isLoggedIn', true);
-                        print("setBoolisloggedIn: $isloggedIn");
-                        if(loginTextEditingcontroller.text.isEmpty){showEmptyAlert2(context,"Enter Email to Login","","","OK");}
-                      else  if(!loginTextEditingcontroller.text.trim().isValidEmail()){
-                          showEmptyAlert2(context,"Enter a Valid Email","${loginTextEditingcontroller.text.trim()} is not a valid email address","${loginTextEditingcontroller.text}","Retype Email Address");
-                          // showDialog(
-                          //     context: context,
-                          //     barrierColor: Colors.black87,
-                          //     builder: (BuildContext context) {
-                          //       return Dialog(
-                          //         shape: RoundedRectangleBorder(
-                          //             borderRadius:
-                          //             BorderRadius.circular(0.0)), //this right here
-                          //         child: Container(
-                          //           height: 200,
-                          //           width: 350,
-                          //           child: Padding(
-                          //             padding: const EdgeInsets.all(12.0),
-                          //             child: Column(
-                          //               mainAxisAlignment: MainAxisAlignment.center,
-                          //               crossAxisAlignment: CrossAxisAlignment.center,
-                          //               children: [
-                          //                 Row(
-                          //                   mainAxisAlignment: MainAxisAlignment.center,
-                          //                   crossAxisAlignment: CrossAxisAlignment.center,
-                          //                   children: [
-                          //                     Icon(Icons.error,color: Colors.red,size: 60,),
-                          //                     SizedBox(width: 20,),
-                          //                     Text("Enter a Valid Email",style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          //                       fontWeight: FontWeight.bold,
-                          //                     ),),
-                          //                   ],
-                          //                 ),
-                          //                 Text("${loginTextEditingcontroller.text.trim()} is not a valid email address",style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          //                 ),),
-                          //                 Row(
-                          //                   children: [
-                          //                     Icon(Icons.email,color:primaryColorOfApp,),
-                          //                     SizedBox(width: 20,),
-                          //                     Text(loginTextEditingcontroller.text,style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          //                     ),),
-                          //                   ],
-                          //                 ),
-                          //                 SizedBox(height: 10,),
-                          //                 SizedBox(
-                          //                   width: 320.0,
-                          //                   child: ElevatedButton(
-                          //                     style: ElevatedButton.styleFrom(
-                          //                       primary: Colors.black,
-                          //                     ),
-                          //                     onPressed: () {
-                          //                       Navigator.pop(context);
-                          //                       loginTextEditingcontroller.clear();
-                          //                     },
-                          //                     child: Text(
-                          //                       "Retype Email Address",
-                          //                       style: TextStyle(color: Colors.white),
-                          //                     ),
-                          //                   ),
-                          //                 )
-                          //               ],
-                          //             ),
-                          //           ),
-                          //         ),
-                          //       );
-                          //     });
-                        }
-                        else {
-                          print("inside else:");
-                          QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Users').
-                          where('email', isEqualTo: loginTextEditingcontroller.text.trim()).get();
-                          if (querySnapshot.docs.isNotEmpty) {
-
-                            print("inside querySnapshot: ${querySnapshot.docs.first.get("email")}");
-
-                            ProgressDialog.show(context, "Logining in\n${loginTextEditingcontroller.text}", Icons.ice_skating);
-
-                            QuerySnapshot newquerySnapshot = await FirebaseFirestore.instance.collection('Users').where('email', isEqualTo: loginTextEditingcontroller.text).where('isPPS', isEqualTo: false).limit(1).get();
-
-                            if(newquerySnapshot.docs.isNotEmpty){
-
-                              var userData = newquerySnapshot.docs.first;
-
-                              print("inside user: $userData");
-
-                              QuerySnapshot AboutMequerySnapshot = await FirebaseFirestore.instance.collection('AboutMe').orderBy('AB_id', descending: true).limit(1).get();
-                              var createdAt = DateFormat('yyyy-MM-dd, HH:mm').format(DateTime.now());
-                              int ids;
-                              if (AboutMequerySnapshot.size == 0) {
-                                // Collection doesn't exist, set 'AB_id' to 1 by default
-                                ids = 1;
-                              } else {
-                                final abc = AboutMequerySnapshot.docs.first;
-                                print("AB_id; ${abc['AB_id']}");
-                                print("AB_id; ${abc['AB_id'].runtimeType}");
-                                ids = abc['AB_id'] + 1;
-                              }
-                              Map<String, dynamic> AboutMEDatas = {
-                                'AB_id': ids,
-                                'Email': loginTextEditingcontroller.text,
-                                'User_Name': userData['UserName'],
-                                'Employer': userData['Employer'],
-                                'Division_or_Section': userData['Division_or_Section'],
-                                'Role': userData['Role'],
-                                'Location': userData['Location'],
-                                'Employee_Number': userData['Employee_Number'],
-                                'Line_Manager': userData['Line_Manager'],
-                                'isPPS': true,
-                                'isOS': false,
-                                // 'About_Me_Label': "${DateFormat('yyyy-MM-dd').format(DateTime.now())} ${userData['UserName']}_Personal Private Summary.pdf",
-                                'About_Me_Label': "PPS",
-                                'Purpose_of_report': "",
-                                'Purpose': "Others" ,
-                                'AB_Description' : "",
-                                'AB_Date' : DateFormat('yyyy-MM-dd').format(DateTime.now()),
-                                'AB_Useful_Info' : "",
-                                'AB_Attachment' : "",
-                                'AB_Status' : "main",
-                                'My_Circumstance': "",
-                                'My_Strength': "",
-                                'My_Organisation': "",
-                                'My_Challenges_Organisation': "",
-                                'Solutions': [],
-                                'Challenges': [],
-                                "Created_By": userData['UserName'],
-                                "Created_Date": DateFormat('yyyy-MM-dd, HH:mm:ss').format(DateTime.now()),
-                                "Modified_By": "",
-                                "Modified_Date": "",
-                                "Report_sent_to": [],
-                                "Report_sent_to_cc": [],
-                                // Add other fields as needed
-                              };
-
-                              String solutionJson = json.encode(AboutMEDatas);
-                              print(solutionJson);
-                              print("runtimeType :${AboutMEDatas.runtimeType}");
-                              // ProgressDialog.show(context, "Creating About Me", Icons.chair);
-                              var userdocs = await newquerySnapshot.docs.first.id;
-                              await ApiRepository().updateUserDetail({"isPPS": true},userdocs);
-                             var documentId = await ApiRepository().createAboutMe(AboutMEDatas);
-                            }
-                            ///
-                            bool isLoginSuccessful = await ApiRepository().sendLoginMail(loginTextEditingcontroller.text);
-                            // bool isLoginSuccessful = true;
-                            ///
-                            // bool isLoginSuccessful = true;
-                            // isloggedIn = true;
-                            ProgressDialog.hide();
-                            if (isLoginSuccessful) {
-                              // showEmptyAlert(context,"Email Sent\nSuccessfully\nYou Will Receive a link to login\nto your dashboard in your email",Icons.mark_email_read_outlined, Colors.green);
-                              // Navigator.pushReplacement(
-                              //   context,
-                              //   // MaterialPageRoute(builder: (context) =>  HomeScreenTabs()),
-                              //   MaterialPageRoute(builder: (context) =>  NewHomeScreenTabs()),
-                              // );
-                              showDialog(
-                                  context: context,
-                                  barrierColor: Colors.black87,
-                                  builder: (BuildContext context) {
-                                    return Dialog(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(0.0)),
-                                      //this right here
-                                      child: Container(
-                                        height: 200,
-                                        width: 200,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(12.0),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  Icon(
-                                                    Icons.check_circle,
-                                                    color: Colors.green,
-                                                    size: 60,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 20,
-                                                  ),
-                                                  Text(
-                                                    "Email Sent\nSuccessfully",
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headlineSmall
-                                                        ?.copyWith(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Text(
-                                                "You Will Receive a link to login to your dashboard in your email",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .labelMedium
-                                                    ?.copyWith(),
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.email,
-                                                    color: primaryColorOfApp,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 20,
-                                                  ),
-                                                  Text(
-                                                    loginTextEditingcontroller.text,
-                                                    style: Theme.of(context).textTheme.labelMedium?.copyWith(),
-                                                  ),
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              SizedBox(
-                                                width: 320.0,
-                                                child: ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    primary: Colors.black,
-                                                  ),
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: Text(
-                                                    "Okay",
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  });
-                            } else {
-                              showEmptyAlert(context, "Something went wrong",
-                                  '', Icons.error, Colors.red);
-                            }
-                          } else {
-                            showEmptyAlert(
-                                context,
-                                "Email does not exist",
-                                'First, Register your email to login',
-                                Icons.error,
-                                Colors.red);
-                          }
-                        }
-                      },
+                      onTap: sendEmail,
                       child: Container(
                         height: 60,
                         width: 200,
@@ -492,6 +231,271 @@ class _UserLoginPageState extends State<UserLoginPage> {
       ),
     );
   }
+
+  void sendEmail()  async {
+    final prefs = await SharedPreferences.getInstance();
+    isloggedIn = await prefs.setBool('isLoggedIn', true);
+    print("setBoolisloggedIn: $isloggedIn");
+    if(loginTextEditingcontroller.text.isEmpty){showEmptyAlert2(context,"Enter Email to Login","","","OK");}
+    else  if(!loginTextEditingcontroller.text.trim().isValidEmail()){
+      showEmptyAlert2(context,"Enter a Valid Email","${loginTextEditingcontroller.text.trim()} is not a valid email address","${loginTextEditingcontroller.text}","Retype Email Address");
+      // showDialog(
+      //     context: context,
+      //     barrierColor: Colors.black87,
+      //     builder: (BuildContext context) {
+      //       return Dialog(
+      //         shape: RoundedRectangleBorder(
+      //             borderRadius:
+      //             BorderRadius.circular(0.0)), //this right here
+      //         child: Container(
+      //           height: 200,
+      //           width: 350,
+      //           child: Padding(
+      //             padding: const EdgeInsets.all(12.0),
+      //             child: Column(
+      //               mainAxisAlignment: MainAxisAlignment.center,
+      //               crossAxisAlignment: CrossAxisAlignment.center,
+      //               children: [
+      //                 Row(
+      //                   mainAxisAlignment: MainAxisAlignment.center,
+      //                   crossAxisAlignment: CrossAxisAlignment.center,
+      //                   children: [
+      //                     Icon(Icons.error,color: Colors.red,size: 60,),
+      //                     SizedBox(width: 20,),
+      //                     Text("Enter a Valid Email",style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+      //                       fontWeight: FontWeight.bold,
+      //                     ),),
+      //                   ],
+      //                 ),
+      //                 Text("${loginTextEditingcontroller.text.trim()} is not a valid email address",style: Theme.of(context).textTheme.labelMedium?.copyWith(
+      //                 ),),
+      //                 Row(
+      //                   children: [
+      //                     Icon(Icons.email,color:primaryColorOfApp,),
+      //                     SizedBox(width: 20,),
+      //                     Text(loginTextEditingcontroller.text,style: Theme.of(context).textTheme.labelMedium?.copyWith(
+      //                     ),),
+      //                   ],
+      //                 ),
+      //                 SizedBox(height: 10,),
+      //                 SizedBox(
+      //                   width: 320.0,
+      //                   child: ElevatedButton(
+      //                     style: ElevatedButton.styleFrom(
+      //                       primary: Colors.black,
+      //                     ),
+      //                     onPressed: () {
+      //                       Navigator.pop(context);
+      //                       loginTextEditingcontroller.clear();
+      //                     },
+      //                     child: Text(
+      //                       "Retype Email Address",
+      //                       style: TextStyle(color: Colors.white),
+      //                     ),
+      //                   ),
+      //                 )
+      //               ],
+      //             ),
+      //           ),
+      //         ),
+      //       );
+      //     });
+    }
+    else {
+      print("inside else:");
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Users').
+      where('email', isEqualTo: loginTextEditingcontroller.text.trim()).get();
+      if (querySnapshot.docs.isNotEmpty) {
+
+        print("inside querySnapshot: ${querySnapshot.docs.first.get("email")}");
+
+        ProgressDialog.show(context, "Logging in\n${loginTextEditingcontroller.text}", Icons.ice_skating);
+
+        QuerySnapshot newquerySnapshot = await FirebaseFirestore.instance.collection('Users').where('email', isEqualTo: loginTextEditingcontroller.text).where('isPPS', isEqualTo: false).limit(1).get();
+
+        if(newquerySnapshot.docs.isNotEmpty){
+
+          var userData = newquerySnapshot.docs.first;
+
+          print("inside user: $userData");
+
+          QuerySnapshot AboutMequerySnapshot = await FirebaseFirestore.instance.collection('AboutMe').orderBy('AB_id', descending: true).limit(1).get();
+          var createdAt = DateFormat('yyyy-MM-dd, HH:mm').format(DateTime.now());
+          int ids;
+          if (AboutMequerySnapshot.size == 0) {
+            // Collection doesn't exist, set 'AB_id' to 1 by default
+            ids = 1;
+          } else {
+            final abc = AboutMequerySnapshot.docs.first;
+            print("AB_id; ${abc['AB_id']}");
+            print("AB_id; ${abc['AB_id'].runtimeType}");
+            ids = abc['AB_id'] + 1;
+          }
+          Map<String, dynamic> AboutMEDatas = {
+            'AB_id': ids,
+            'Email': loginTextEditingcontroller.text,
+            'User_Name': userData['UserName'],
+            'Employer': userData['Employer'],
+            'Division_or_Section': userData['Division_or_Section'],
+            'Role': userData['Role'],
+            'Location': userData['Location'],
+            'Employee_Number': userData['Employee_Number'],
+            'Line_Manager': userData['Line_Manager'],
+            'isPPS': true,
+            'isOS': false,
+            // 'About_Me_Label': "${DateFormat('yyyy-MM-dd').format(DateTime.now())} ${userData['UserName']}_Personal Private Summary.pdf",
+            'About_Me_Label': "PPS",
+            'Purpose_of_report': "",
+            'Purpose': "Others" ,
+            'AB_Description' : "",
+            'AB_Date' : DateFormat('yyyy-MM-dd').format(DateTime.now()),
+            'AB_Useful_Info' : "",
+            'AB_Attachment' : "",
+            'AB_Status' : "main",
+            'My_Circumstance': "",
+            'My_Strength': "",
+            'My_Organisation': "",
+            'My_Challenges_Organisation': "",
+            'Solutions': [],
+            'Challenges': [],
+            "Created_By": userData['UserName'],
+            "Created_Date": DateFormat('yyyy-MM-dd, HH:mm:ss').format(DateTime.now()),
+            "Modified_By": "",
+            "Modified_Date": "",
+            "Report_sent_to": [],
+            "Report_sent_to_cc": [],
+            // Add other fields as needed
+          };
+
+          String solutionJson = json.encode(AboutMEDatas);
+          print(solutionJson);
+          print("runtimeType :${AboutMEDatas.runtimeType}");
+          // ProgressDialog.show(context, "Creating About Me", Icons.chair);
+          var userdocs = await newquerySnapshot.docs.first.id;
+          await ApiRepository().updateUserDetail({"isPPS": true},userdocs);
+          var documentId = await ApiRepository().createAboutMe(AboutMEDatas);
+        }
+        ///
+        // bool isLoginSuccessful = await ApiRepository().sendLoginMail(loginTextEditingcontroller.text);
+        bool isLoginSuccessful = true;
+        ///
+        // bool isLoginSuccessful = true;
+        // isloggedIn = true;
+        ProgressDialog.hide();
+        if (isLoginSuccessful) {
+          // showEmptyAlert(context,"Email Sent\nSuccessfully\nYou Will Receive a link to login\nto your dashboard in your email",Icons.mark_email_read_outlined, Colors.green);
+          // Navigator.pushReplacement(
+          //   context,
+          //   // MaterialPageRoute(builder: (context) =>  HomeScreenTabs()),
+          //   MaterialPageRoute(builder: (context) =>  NewHomeScreenTabs()),
+          // );
+          showDialog(
+            context: context,
+            barrierColor: Colors.black87,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                actionsAlignment: MainAxisAlignment.center,
+                content: Container(
+                  padding: EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.check_circle,
+                        color: Colors.green,
+                        size: 60,
+                      ),
+                      SizedBox(width: 20),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "Email Sent Successfully",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineSmall
+                                  ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.email,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    loginTextEditingcontroller.text,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelMedium
+                                        ?.copyWith(),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              "You will receive a link to login to your dashboard in your email",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium
+                                  ?.copyWith(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                actions: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "Okay",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+
+        } else {
+          showEmptyAlert(context, "Something went wrong",
+              '', Icons.error, Colors.red);
+        }
+      } else {
+        showEmptyAlert(
+            context,
+            "Email does not exist",
+            'First, register your email to login',
+            Icons.error,
+            Colors.red);
+      }
+    }
+  }
+
   void showEmptyAlert(context,message, message2,IconData icon, Color? color) {
     showDialog(
         context: context,
@@ -505,28 +509,30 @@ class _UserLoginPageState extends State<UserLoginPage> {
             shape: RoundedRectangleBorder(
                 borderRadius:
                 BorderRadius.circular(0.0)),
-            title: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                Icon(icon,color: color,size: 60,),
+                SizedBox(width: 20,),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(icon,color: color,size: 60,),
-                    SizedBox(width: 20,),
-                    Flexible(
+                    Padding(
+                      padding: const EdgeInsets.all(5.0),
                       child: Text(message,style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Text(message2,style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),),
+                    ),
                   ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Text(message2,style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),),
                 ),
               ],
             ),
@@ -553,68 +559,92 @@ class _UserLoginPageState extends State<UserLoginPage> {
         });
   }
 
-  void showEmptyAlert2(context,message, message2,message4, message3,) {
+  void showEmptyAlert2(BuildContext context, String message, String message2, String message4, String message3) {
     showDialog(
-        context: context,
-        barrierColor: Colors.black87,
-        builder: (BuildContext context) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-                borderRadius:
-                BorderRadius.circular(0.0)), //this right here
-            child: Container(
-              height: 200,
-              width: 350,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(Icons.error,color: Colors.red,size: 60,),
-                        SizedBox(width: 20,),
-                        Text(message,style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+      context: context,
+      barrierColor: Colors.black87,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          actionsAlignment: MainAxisAlignment.center,
+          content: Container(
+            padding: EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.error,
+                  color: Colors.red,
+                  size: 60,
+                ),
+                SizedBox(width: 20),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        message,
+                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.bold,
-                        ),),
-                      ],
-                    ),
-                    Text("$message2",style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    ),),
-                    (message4 != "" || message4.toString().isNotEmpty) ? Row(
-                      children: [
-                        Icon(Icons.email,color:primaryColorOfApp,),
-                        SizedBox(width: 20,),
-                        Text(message4,style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        ),),
-                      ],
-                    ) : Container(),
-                    SizedBox(height: 10,),
-                    SizedBox(
-                      width: 320.0,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.black,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          loginTextEditingcontroller.clear();
-                        },
-                        child: Text(
-                          message3,
-                          style: TextStyle(color: Colors.white),
                         ),
                       ),
-                    )
-                  ],
+                      SizedBox(height: 10),
+                      Text(
+                        message2,
+                        style: Theme.of(context).textTheme.labelMedium?.copyWith(),
+                      ),
+                      if (message4.isNotEmpty)
+                        SizedBox(height: 10),
+                      if (message4.isNotEmpty)
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.email,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                message4,
+                                style: Theme.of(context).textTheme.labelMedium?.copyWith(),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                  loginTextEditingcontroller.clear();
+                },
+                child: Text(
+                  message3,
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ),
-          );
-        });
+          ],
+        );
+      },
+    );
   }
 
 

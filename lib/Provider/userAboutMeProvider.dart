@@ -508,6 +508,7 @@ class UserAboutMEProvider with ChangeNotifier{
   Future<Set<DocumentSnapshot<Object?>>> getRelatedSolutions(List<dynamic> tags, List<dynamic> keywords) async {
     CollectionReference solutionsCollection = FirebaseFirestore.instance.collection('Thrivers');
 
+    isLoadingMore = false;
     List<QuerySnapshot> allQueries = [];
 
     print("search tagsss: $tags");
@@ -518,13 +519,13 @@ class UserAboutMEProvider with ChangeNotifier{
     List<List<dynamic>> keywordChunks = _splitList(keywords, 30);
 
     print("search tagChunkssssss: $tagChunks");
-    print("search keywordChunkssssss: $keywordChunks");
+    // print("search keywordChunkssssss: $keywordChunks");
 
 
     // Perform queries for each chunk and store the results
     for (var tagChunk in tagChunks) {
 
-      print("search tagChunk: $tagChunk");
+      print("searching relevant tags: $tagChunk");
 
       QuerySnapshot tagsQuery = await solutionsCollection
           // .where('tags', arrayContainsAny: tagChunk)
@@ -560,6 +561,7 @@ class UserAboutMEProvider with ChangeNotifier{
     print("getRelatedSolutions: ${combinedSolutionsResults}");
     print("getRelatedSolutions: ${combinedSolutionsResults.length}");
 
+    isLoadingMore = true;
     return combinedSolutionsResults;
   }
 
@@ -2245,8 +2247,10 @@ class UserAboutMEProvider with ChangeNotifier{
 
   Future<void> searchsolutions(search) async   {
 
+    isLoadingMore = false;
     try {
-      isLoadingMore = true;
+
+      print("try isLoadingMore: ${isLoadingMore}");
 
       List<QueryDocumentSnapshot<Object?>>? docssssss;
       final CollectionReference productsCollection = FirebaseFirestore.instance.collection('Thrivers');
@@ -2360,7 +2364,7 @@ class UserAboutMEProvider with ChangeNotifier{
 
       // Notify listeners after a delay to ensure the UI is updated
       Future.delayed(Duration(seconds: 1), () {
-        isLoadingMore = false;
+        isLoadingMore = true;
         var lengthOfdocument = combinedSolutionsResults.length;
         print("length of lengthOfdocument: ${lengthOfdocument}");
         notifyListeners();
@@ -2374,9 +2378,10 @@ class UserAboutMEProvider with ChangeNotifier{
     } finally {
       // Notify listeners after a delay to ensure the UI is updated
       Future.delayed(Duration(seconds: 1), () {
-        isLoadingMore = false;
+        isLoadingMore = true;
+        print("finally isLoadingMore: ${isLoadingMore}");
         var lengthOfdocument = combinedSolutionsResults.length;
-        print("length of lengthOfdocument: ${lengthOfdocument}");
+        print("finally length of lengthOfdocument: ${lengthOfdocument}");
         notifyListeners(); // This will trigger UI update if necessary
       });
       notifyListeners();
@@ -2387,6 +2392,7 @@ class UserAboutMEProvider with ChangeNotifier{
     // anytext.clear();
     combinedResults.clear();
     issuggestedloading = true;
+    print("combinedResults is cleared: $combinedResults");
     notifyListeners();
   }
 
@@ -2394,6 +2400,7 @@ class UserAboutMEProvider with ChangeNotifier{
     // anytext.clear();
     combinedSolutionsResults.clear();
     isLoadingMore = true;
+    print("combinedSolutionsResults is cleared: $combinedSolutionsResults");
     notifyListeners();
   }
 

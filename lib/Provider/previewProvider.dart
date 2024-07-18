@@ -16,7 +16,7 @@ import 'package:thrivers/model/challenges_table_model.dart';
 import 'package:thrivers/model/soluton_table_model.dart';
 
 class PreviewProvider with ChangeNotifier{
-  var name, email, employer,editemployer, division, role, location, employeeNumber, linemanager, title, mycircumstance, mystrength, myorganization, mychallenge,ABDescription;
+  var name, email, employer,editemployer, division, role, location, employeeNumber, linemanager, title, mycircumstance, mystrength, myorganization, mychallenge,ABDescription, Osdate;
 
   List<Map<String, dynamic>> PreviewChallengesList = [];
   List<Map<String, dynamic>> PreviewSolutionList = [];
@@ -132,6 +132,12 @@ class PreviewProvider with ChangeNotifier{
    myorganization = assigndata["My_Organisation"];
    mychallenge = assigndata["My_Challenges_Organisation"];
     ABDescription = assigndata["AB_Description"];
+    print("assigndata : ${assigndata["Created_Date"]}");
+    print("assigndata : ${assigndata["Created_Date"].runtimeType}");
+
+    DateTime parsedDate = DateTime.parse(assigndata["Created_Date"]!.split(', ')[0]);
+    print("date : $parsedDate");
+    Osdate = DateFormat('dd MMMM yyyy').format(parsedDate);
    // if (assigndata.exists) {
      print("assigndata.exist");
 
@@ -793,11 +799,11 @@ class PreviewProvider with ChangeNotifier{
 
                           pw.SizedBox(width: 70,),
 
-                          pw.Text("${DateFormat('dd MMMM yyyy, HH:mm a').format(DateTime.now())}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+                          pw.Text("${DateFormat('dd MMMM yyyy').format(DateTime.now())}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
                           pw.SizedBox(width: 120,),
 
-                          // pw.Text("Page 1 of 6",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+                          pw.Text("Page ${context.pageNumber} of ${context.pagesCount}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
                         ]
                     ),
@@ -865,7 +871,8 @@ class PreviewProvider with ChangeNotifier{
                   ),
                   pw.Text(
                     // "${AboutMeDatetextController.text}",
-                    "01 July 2024",
+                    // "01 July 2024",
+                    "${Osdate}",
                     style: pw.TextStyle(font: bodyfont1),
                   ),
                 ],
@@ -991,11 +998,11 @@ class PreviewProvider with ChangeNotifier{
 
                           pw.SizedBox(width: 70,),
 
-                          pw.Text("${DateFormat('dd MMMM yyyy, HH:mm a').format(DateTime.now())}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+                          pw.Text("${DateFormat('dd MMMM yyyy').format(DateTime.now())}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
                           pw.SizedBox(width: 120,),
 
-                          // pw.Text("Page 1 of 6",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+                          pw.Text("Page ${context.pageNumber} of ${context.pagesCount}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
                         ]
                     ),
@@ -1170,11 +1177,11 @@ class PreviewProvider with ChangeNotifier{
 
                           pw.SizedBox(width: 70,),
 
-                          pw.Text("${DateFormat('dd MMMM yyyy, HH:mm a').format(DateTime.now())}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+                          pw.Text("${DateFormat('dd MMMM yyyy').format(DateTime.now())}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
                           pw.SizedBox(width: 120,),
 
-                          // pw.Text("Page 1 of 6",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+                          pw.Text("Page ${context.pageNumber} of ${context.pagesCount}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
                         ]
                     ),
@@ -1344,11 +1351,11 @@ class PreviewProvider with ChangeNotifier{
 
                         pw.SizedBox(width: 70,),
 
-                        pw.Text("${DateFormat('dd MMMM yyyy, HH:mm a').format(DateTime.now())}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+                        pw.Text("${DateFormat('dd MMMM yyyy').format(DateTime.now())}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
                         pw.SizedBox(width: 120,),
 
-                        // pw.Text("Page 1 of 6",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+                        pw.Text("Page ${context.pageNumber} of ${context.pagesCount}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
                       ]
                   ),
@@ -1535,11 +1542,11 @@ class PreviewProvider with ChangeNotifier{
 
                         pw.SizedBox(width: 70,),
 
-                        pw.Text("${DateFormat('dd MMMM yyyy, HH:mm a').format(DateTime.now())}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+                        pw.Text("${DateFormat('dd MMMM yyyy').format(DateTime.now())}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
                         pw.SizedBox(width: 120,),
 
-                        // pw.Text("Page 1 of 6",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+                        pw.Text("Page ${context.pageNumber} of ${context.pagesCount}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
                       ]
                   ),

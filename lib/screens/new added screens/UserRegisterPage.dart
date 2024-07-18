@@ -168,7 +168,7 @@ class _RegisterPageState extends State<RegisterPage> {
         // ProgressDialog.show(context, "Creating About Me", Icons.chair);
         documentId = await ApiRepository().createAboutMe(AboutMEDatas);
 
-        showEmptyAlert(context,'Registration Successful',Icons.mark_email_read , Colors.green);
+        showEmptyAlert(context,'Registration successful',Icons.mark_email_read , Colors.green);
         // showDialog(
         //   context: context,
         //   builder: (BuildContext context) {
@@ -463,7 +463,6 @@ class _RegisterPageState extends State<RegisterPage> {
                         padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
                         child: TextField(
                           controller: employerController,
-                  
                           // cursorColor: primaryColorOfApp,
                           onChanged: (value) {
                   
@@ -477,7 +476,6 @@ class _RegisterPageState extends State<RegisterPage> {
                               fontWeight: FontWeight.w400,
                               color: Colors.white),
                           cursorColor: Colors.white,
-
                           decoration: InputDecoration(
                             //errorText: userAccountSearchErrorText,
                             contentPadding: EdgeInsets.all(10),
@@ -497,7 +495,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                     .bodyLarge,
                                 fontWeight: FontWeight.w400,
                                 color: Colors.redAccent),
-
                             focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white,width: 4),
                                 borderRadius: BorderRadius.circular(0)),
@@ -519,19 +516,14 @@ class _RegisterPageState extends State<RegisterPage> {
                                 color: Colors.white),
                           ),
                         ),
-                  
-                  
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
                         child: TextField(
                           controller: divisionOrSectionController,
                           cursorColor: Colors.white,
-
                           // cursorColor: primaryColorOfApp,
-                          onChanged: (value) {
-                  
-                          },
+                          onChanged: (value) {},
                           style: GoogleFonts.montserrat(
                               textStyle: Theme
                                   .of(context)
@@ -843,7 +835,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             else if(LineManagerController.text.isEmpty){showEmptyAlert2(context,"Enter Your line manager","","","OK");}
                           }
                           else  if(!emailTextEditingController.text.trim().isValidEmail()){
-                            showEmptyAlert2(context,"Enter a Valid Email","${emailTextEditingController.text.trim()} is not a valid email address",emailTextEditingController,"Retype Email Address");
+                            showEmptyAlert2(context,"Enter a Valid Email","${emailTextEditingController.text.trim()} is not a valid email address",emailTextEditingController.text.toString(),"Retype Email Address");
                           }
                           else {
                             ProgressDialog.show(context, "Creating Your\nAccount", Icons.ice_skating);
@@ -953,90 +945,88 @@ class _RegisterPageState extends State<RegisterPage> {
         });
   }
 
-  void showEmptyAlert2(context, message, message2, message4, message3) {
+  void showEmptyAlert2(BuildContext context, String message, String message2, String message4, String message3) {
     showDialog(
       context: context,
       barrierColor: Colors.black87,
       builder: (BuildContext context) {
         return AlertDialog(
-          insetPadding: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.width * 0.35,
-          ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
+            borderRadius: BorderRadius.circular(12.0),
           ),
-          content: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.2,
-            width: MediaQuery.of(context).size.width * 0.8,
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
+          actionsAlignment: MainAxisAlignment.center,
+          content: Container(
+            padding: EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.error,
+                  color: Colors.red,
+                  size: 60,
+                ),
+                SizedBox(width: 20),
+                Expanded(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.error, color: Colors.red, size: 60),
-                      SizedBox(width: 20),
-                      Flexible(
-                        child: Text(
-                          message,
-                          style: Theme.of(context).textTheme.headline6?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                      Text(
+                        message,
+                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ],
-                  ),
-                  Flexible(
-                    child: Text(
-                      message2,
-                      style: Theme.of(context).textTheme.subtitle1?.copyWith(),
-                    ),
-                  ),
-                  (message4 != "" || message4.toString().isNotEmpty)
-                      ? Row(
-                    children: [
-                      Icon(
-                        Icons.email,
-                        color: primaryColorOfApp,
+                      SizedBox(height: 10),
+                      Text(
+                        message2,
+                        style: Theme.of(context).textTheme.labelMedium?.copyWith(),
                       ),
-                      SizedBox(width: 20),
-                      Flexible(
-                        child: Text(
-                          "${message4.text}",
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle1
-                              ?.copyWith(),
+                      if (message4.isNotEmpty)
+                        SizedBox(height: 10),
+                      if (message4.isNotEmpty)
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.email,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                message4,
+                                style: Theme.of(context).textTheme.labelMedium?.copyWith(),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
                     ],
-                  )
-                      : Container(),
-                ],
-              ),
+                  ),
+                ),
+              ],
             ),
           ),
           actions: [
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.8,
+              width: double.infinity,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   primary: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
                 ),
                 onPressed: () {
                   Navigator.pop(context);
-                  message4.clear();
+                  emailTextEditingController.clear();
                 },
                 child: Text(
                   message3,
                   style: TextStyle(color: Colors.white),
                 ),
               ),
-            )
+            ),
           ],
         );
       },

@@ -407,7 +407,7 @@ Date
     }
   }
 
-  Future<void> duplicatePPStoOS(context,documentId, int AB_id,Purpose_of_report) async {
+  Future<void> duplicatePPStoOS(context,documentId, int AB_id,Purpose_of_report,employer,linemanager) async {
     try {
       CollectionReference collectionReference = FirebaseFirestore.instance.collection('AboutMe');
 
@@ -416,6 +416,21 @@ Date
 
       // Generate a new ID for the duplicated document
       var newDocumentId = collectionReference.doc().id;
+
+      String message = """
+Thank you to ${employer}....
+
+… for recognising that our organisation performs better, and we achieve more together,when each of us feels safe and open to share what we need in order to be our best in the roles we are asked and agree to perform.
+
+This document sets out what I think it would be helpful for you to know about me and includes information about what I believe helps me to thrive, so that I can perform to my  best, both for me and for ${employer}.
+
+Next steps
+
+I will arrange a meeting with my [you]/[occupational health]/[${linemanager}] to discuss myrequests in person, and to ascertain which are possible for me to action personally and which ${employer} is able to provide for me. My requests include workplaceaccommodations that I view as reasonable adjustments under the Equality Act 2010.
+
+Thank you for being open to understanding me better and for considering my requests.
+
+""";
 
       var createdAt = DateFormat('yyyy-MM-dd, HH:mm:ss').format(DateTime.now());
 
@@ -428,6 +443,7 @@ Date
       data['Report_sent_to'] = []; // Update with the new value you want
       data['Report_sent_to_cc'] = []; // Update with the new value you want
       data['Created_Date'] = createdAt; // Update with the new value you want
+      data['AB_Description'] = message; // Update with the new value you want
 
       // Save the duplicated data with the new ID
       await collectionReference.doc(newDocumentId).set(data);
@@ -549,14 +565,14 @@ Date
       // Add other fields as needed
     };
 
-    String solutionJson = json.encode(AboutMEDatas);
-    print(solutionJson);
+    // String solutionJson = json.encode(AboutMEDatas);
+    // print(solutionJson);
 
     // ProgressDialog.show(context, "Updating", Icons.update);
     await ApiRepository().updateAboutMe(AboutMEDatas, documentId);
     QuerySnapshot userData = await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: widget.AdminName).get();
-    print("userData; ${userData.docs.first['UserName']}");
-    print("userData.docs:  ${userData.docs.first.id}");
+    // print("userData; ${userData.docs.first['UserName']}");
+    // print("userData.docs:  ${userData.docs.first.id}");
 
     var  userdocs = await userData.docs.first.id;
     await ApiRepository().updateUserDetail({
@@ -590,8 +606,8 @@ Date
       // Add other fields as needed
     };
 
-    String solutionJson = json.encode(AboutMEDatas);
-    print(solutionJson);
+    // String solutionJson = json.encode(AboutMEDatas);
+    // print(solutionJson);
 
     // ProgressDialog.show(context, "Saving", Icons.save);
     await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
@@ -636,11 +652,11 @@ Date
 
     };
 
-    String solutionJson = json.encode(AboutMEDatas);
-    print("solutionJson: $solutionJson");
+    // String solutionJson = json.encode(AboutMEDatas);
+    // print("solutionJson: $solutionJson");
 
     for(var i in challengesList){
-      print("challengesList Challenges ${i['tags']}");
+      // print("challengesList Challenges ${i['tags']}");
       generatedsolutionstags.addAll(i['tags']);
 
       print("challengesList generatedsolutionstags.length ${generatedsolutionstags.length}");
@@ -648,7 +664,10 @@ Date
 
     }
 
-    await _userAboutMEProvider.getRelatedSolutions(generatedsolutionstags, generatedsolutionscategory);
+    if(_userAboutMEProvider.combinedSolutionsResults.isEmpty){
+      print("_userAboutMEProvider.combinedSolutionsResults.isEmpty");
+      await _userAboutMEProvider.getRelatedSolutions(generatedsolutionstags, generatedsolutionscategory);
+    }
 
     // ProgressDialog.show(context, "Saving", Icons.save);
     await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
@@ -659,8 +678,8 @@ Date
       'Solutions': solutionsList,
     };
 
-    String solutionJson = json.encode(AboutMEDatas);
-    print("ssss :${solutionJson}");
+    // String solutionJson = json.encode(AboutMEDatas);
+    // print("ssss :${solutionJson}");
 
     // ProgressDialog.show(context, "Saving", Icons.save);
     await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
@@ -2092,7 +2111,7 @@ Date
                                                     name = "$createdAt ${aboutMeData.get("User_Name")}_Official Submission(${count.size + 1}).pdf";
                                                   }
                                                   setState(() {
-                                                    duplicatePPStoOS(context, aboutMeData.id, AB_id, name);
+                                                    duplicatePPStoOS(context, aboutMeData.id, AB_id, name,aboutMeData.get("Employer"),aboutMeData.get("Line_Manager"));
                                                     // Navigator.pop(ctx);
                                                   });
                                                   // Navigator.pop(ctx);
@@ -6930,14 +6949,17 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                       ),
                                     ),
                                     SizedBox(height: 10,),
-                                    (userAboutMEProvider.combinedSolutionsResults.isEmpty) ?
+
                                     Container(
-                                      // height: 350,
-                                      height: MediaQuery.of(context).size.height * .6,//.48,
-                                      width: MediaQuery.of(context).size.width ,
-                                      child: Center(
-                                        child: (userAboutMEProvider.isLoadingMore==false) ?
-                                        TextAnimatorSequence(
+                                      height: MediaQuery.of(context).size.height * .6,
+                                      // width: MediaQuery.of(context).size.width * .46,
+                                      decoration: BoxDecoration(
+                                        border: (userAboutMEProvider.combinedSolutionsResults.isEmpty) ?  Border.all(color: Colors.green) : Border.all(color: Colors.green),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: (userAboutMEProvider.isLoadingMoree==false) ?
+                                      Center(
+                                        child: TextAnimatorSequence(
                                           children: [
                                             TextAnimator('Loading...',
                                                 incomingEffect: WidgetTransitionEffects.incomingScaleDown(),
@@ -6958,30 +6980,15 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                           tapToProceed: true,
                                           loop: true,
                                           transitionTime: const Duration(seconds: 4),
-                                        )
-                                        // TextAnimator("loading",
-                                        //   atRestEffect: WidgetRestingEffects.wave(
-                                        //       curve: Curves.slowMiddle
-                                        //   ),
-                                        // )
-                                            : Text("No Suggestions Yet",
-                                          overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.headlineLarge,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black),),),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.green),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                    ) :
-                                    Container(
-                                      height: MediaQuery.of(context).size.height * .6,
-                                      // width: MediaQuery.of(context).size.width * .46,
-                                      decoration: BoxDecoration(
-                                        border: (userAboutMEProvider.combinedSolutionsResults.isEmpty) ?  Border.all(color: Colors.green) : Border.all(color: Colors.green),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Container(
+                                        ),
+                                      ) : (userAboutMEProvider.combinedSolutionsResults.isEmpty && userAboutMEProvider.isLoadingMoree==true) ?
+                                      Center(child: Text("No Suggestions founded for ${searchsolutions.text}",
+                                        overflow: TextOverflow.ellipsis,
+                                        style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.headlineLarge,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black),),)
+                                          : (userAboutMEProvider.combinedSolutionsResults.isNotEmpty) ?
+                                      Container(
                                         height: MediaQuery.of(context).size.height * .5,
                                         // width: MediaQuery.of(context).size.width * .46,
                                         child: ListView.builder(
@@ -7018,6 +7025,13 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                             );
                                           },
                                         ),
+                                      ) :
+                                      Center(
+                                        child: Text("No Suggestions Yet",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.headlineLarge,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black),),
                                       ),
                                     ),
                                   ],
