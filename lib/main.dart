@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:thrivers/Provider/AddKeywordsProvider.dart';
 import 'package:thrivers/Provider/LoginAuthProvider.dart';
+import 'package:thrivers/Provider/UniversalListProvider.dart';
 import 'package:thrivers/Provider/provider_for_challenges.dart';
 import 'package:thrivers/Provider/userAboutMeProvider.dart';
 import 'package:thrivers/screens/addchallengesScreen.dart';
@@ -70,6 +71,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => ChallengesProvider()),
         ChangeNotifierProvider(create: (_) => UserAboutMEProvider()),
         ChangeNotifierProvider(create: (_) => PreviewProvider()),
+        ChangeNotifierProvider(create: (_) => UniversalListProvider()),
         ChangeNotifierProvider(create: (_) => UserSession()),
       ],
         child: const MyApp())

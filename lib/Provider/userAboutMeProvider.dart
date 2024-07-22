@@ -374,7 +374,7 @@ class UserAboutMEProvider with ChangeNotifier{
   //   }
 
 ///
-    // print("combinedResults: $combinedResults");
+    // print("combinedResults:  ");
     print("combinedResults.length: ${combinedResults.length}");
 
     notifyListeners();
@@ -2403,5 +2403,6 @@ class UserAboutMEProvider with ChangeNotifier{
     print("combinedSolutionsResults is cleared: $combinedSolutionsResults");
     notifyListeners();
   }
+
 
 }

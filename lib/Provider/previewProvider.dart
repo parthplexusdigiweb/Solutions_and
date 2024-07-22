@@ -872,7 +872,8 @@ class PreviewProvider with ChangeNotifier{
                   pw.Text(
                     // "${AboutMeDatetextController.text}",
                     // "01 July 2024",
-                    "${Osdate}",
+                    // "${Osdate}",
+                    "${DateFormat('dd MMMM yyyy').format(DateTime.now())}",
                     style: pw.TextStyle(font: bodyfont1),
                   ),
                 ],
@@ -944,6 +945,126 @@ class PreviewProvider with ChangeNotifier{
                     font: bodyfont1,
                     fontWeight: pw.FontWeight.bold,
                   ),)
+              ),
+
+
+              pw.Container(
+                  padding: pw.EdgeInsets.all(5),
+                  margin: pw.EdgeInsets.symmetric(horizontal: 30),
+                  width: double.maxFinite,
+                  child: pw.Column(
+                      children: [
+                        pw.SizedBox(height: 15,),
+
+                        pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.start,
+                          children: [
+                            pw.Container(
+                              width: 130,
+                              child: pw.Text(
+                                "Name: ",
+                                style: pw.TextStyle(
+                                  font: headingfont1,
+                                  fontWeight: pw.FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            pw.Text(
+                              "${name}",
+                              style: pw.TextStyle(font: bodyfont1),
+                            ),
+                          ],
+                        ),
+
+                        pw.SizedBox(height: 15,),
+
+                        pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.start,
+                          children: [
+                            pw.Container(
+                              width: 130,
+                              child: pw.Text(
+                                "Role: ",
+                                style: pw.TextStyle(
+                                  font: headingfont1,
+                                  fontWeight: pw.FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            pw.Text(
+                              "${role}",
+                              style: pw.TextStyle(font: bodyfont1),
+                            ),
+                          ],
+                        ),
+
+                        pw.SizedBox(height: 15,),
+
+                        pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.start,
+                          children: [
+                            pw.Container(
+                              width: 130,
+                              child: pw.Text(
+                                "Location: ",
+                                style: pw.TextStyle(
+                                  font: headingfont1,
+                                  fontWeight: pw.FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            pw.Text(
+                              "${location}",
+                              style: pw.TextStyle(font: bodyfont1),
+                            ),
+                          ],
+                        ),
+
+                        pw.SizedBox(height: 15,),
+
+                        pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.start,
+                          children: [
+                            pw.Container(
+                              width: 130,
+                              child: pw.Text(
+                                "Employee number: ",
+                                style: pw.TextStyle(
+                                  font: headingfont1,
+                                  fontWeight: pw.FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            pw.Text(
+                              "${employeeNumber}",
+                              style: pw.TextStyle(font: bodyfont1),
+                            ),
+                          ],
+                        ),
+
+                        pw.SizedBox(height: 15,),
+
+                        pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.start,
+                          children: [
+                            pw.Container(
+                              width: 130,
+                              child: pw.Text(
+                                "Team Leader: ",
+                                style: pw.TextStyle(
+                                  font: headingfont1,
+                                  fontWeight: pw.FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            pw.Text(
+                              "${linemanager}",
+                              style: pw.TextStyle(font: bodyfont1),
+                            ),
+                          ],
+                        ),
+                      ]
+                  ),
               ),
 
               // pw.SizedBox(height: 15,),
