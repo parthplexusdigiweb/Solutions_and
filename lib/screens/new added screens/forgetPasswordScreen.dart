@@ -19,17 +19,17 @@ import 'package:thrivers/screens/new%20added%20screens/UserRegisterPage.dart';
 import 'package:thrivers/screens/new%20added%20screens/thriverLandingScreen.dart';
 import 'package:toastification/toastification.dart';
 
-class UserLoginPage extends StatefulWidget {
+class ForgetPasswrdScreen extends StatefulWidget {
 
 
   @override
-  State<UserLoginPage> createState() => _UserLoginPageState();
+  State<ForgetPasswrdScreen> createState() => _ForgetPasswrdScreenState();
 }
 
-class _UserLoginPageState extends State<UserLoginPage> {
+class _ForgetPasswrdScreenState extends State<ForgetPasswrdScreen> {
 
   TextEditingController loginTextEditingcontroller = TextEditingController();
-  TextEditingController passwordcontroller = TextEditingController();
+  // TextEditingController passwordcontroller = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
 
@@ -111,294 +111,294 @@ class _UserLoginPageState extends State<UserLoginPage> {
       body: Form(
         key: _formKey,
         child: Consumer<LoginRegisterProvider>(
-          builder: (c,loginRegisterProvider, _) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height * .45,
-                    width: MediaQuery.of(context).size.width * .25,
-                    // height: 330,
-                    // width: 420,
-                    // color: Colors.blue,
-                    padding: EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(color: Colors.black,blurRadius: 10,),
-                        ]
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 20,),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('Solution Login', style:TextStyle(
-                            fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          // child: Text('You will receive a link to login to your dashboard in your email ', style:TextStyle(
-                          child: Text('Enter your email and password to login to your dashboard', style:TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
-                          ),
-                        ),
-                        SizedBox(height: 10,),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
-                          child: TextField(
-                            // maxLines: null,
-                            controller: loginTextEditingcontroller,
-                            cursorColor: Colors.white,
-                            style: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
+            builder: (c,loginRegisterProvider, _) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: MediaQuery.of(context).size.height * .4,
+                      width: MediaQuery.of(context).size.width * .25,
+                      // height: 330,
+                      // width: 420,
+                      // color: Colors.blue,
+                      padding: EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(color: Colors.black,blurRadius: 10,),
+                          ]
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 20,),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text('Forget Password?', style:TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
                                 color: Colors.white),
-                            onSubmitted: (value) {
-                              if(loginTextEditingcontroller.text.isEmpty || passwordcontroller.text.isEmpty){
-                                if(loginTextEditingcontroller.text.isEmpty){
-                                  toastification.show(context: context,
-                                      title: Text('enter email'),
-                                      autoCloseDuration: Duration(milliseconds: 2500),
-                                      alignment: Alignment.center,
-                                      backgroundColor: Colors.red,
-                                      foregroundColor: Colors.white,
-                                      icon: Icon(Icons.error, color: Colors.white,),
-                                      animationDuration: Duration(milliseconds: 1000),
-                                      showProgressBar: false
-                                  );
-                                }
-                                else if(passwordcontroller.text.isEmpty){
-                                  toastification.show(context: context,
-                                      title: Text('enter password'),
-                                      autoCloseDuration: Duration(milliseconds: 2500),
-                                      alignment: Alignment.center,
-                                      backgroundColor: Colors.red,
-                                      foregroundColor: Colors.white,
-                                      icon: Icon(Icons.error, color: Colors.white,),
-                                      animationDuration: Duration(milliseconds: 1000),
-                                      showProgressBar: false
-                                  );
-                                }
-                              }
-                             else  if (_formKey.currentState?.validate() ?? false) {
-                                sendEmail();
-                              };
-                            },
-                            decoration: InputDecoration(
-                              //errorText: userAccountSearchErrorText,
-                              contentPadding: EdgeInsets.all(25),
-                              labelText: "Email",
-                              hintText: "Email",
-                              hintStyle: TextStyle(color: Colors.white),
-
-                              prefixIcon: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Icon(Icons.mail,
-                                    color: Colors.white
-                                ),
-                              ),
-
-                              errorStyle: GoogleFonts.montserrat(
-                                  textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .bodyLarge,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.redAccent),
-
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white,width: 4),
-                                  borderRadius: BorderRadius.circular(0)),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white,),
-                                  borderRadius: BorderRadius.circular(15)),
-                              disabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white),
-                                  borderRadius: BorderRadius.circular(15)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white,width: 2 ),
-                                  borderRadius: BorderRadius.circular(0)),
-                              labelStyle: GoogleFonts.montserrat(
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            // child: Text('You will receive a link to login to your dashboard in your email ', style:TextStyle(
+                            child: Text('Enter your email and password will be sended to your email', style:TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                            ),
+                          ),
+                          SizedBox(height: 10,),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                            child: TextField(
+                              // maxLines: null,
+                              controller: loginTextEditingcontroller,
+                              cursorColor: Colors.white,
+                              style: GoogleFonts.montserrat(
                                   textStyle: Theme
                                       .of(context)
                                       .textTheme
                                       .bodyLarge,
                                   fontWeight: FontWeight.w400,
                                   color: Colors.white),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10,),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
-                          child: TextFormField(
-                            // maxLines: null,
-                            controller: passwordcontroller,
-                            cursorColor: Colors.white,
-                            style: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white),
-                            onFieldSubmitted:  (value) {
-                              if(loginTextEditingcontroller.text.isEmpty || passwordcontroller.text.isEmpty){
-                                if(loginTextEditingcontroller.text.isEmpty){
-                                  toastification.show(context: context,
-                                      title: Text('enter email'),
-                                      autoCloseDuration: Duration(milliseconds: 2500),
-                                      alignment: Alignment.center,
-                                      backgroundColor: Colors.red,
-                                      foregroundColor: Colors.white,
-                                      icon: Icon(Icons.error, color: Colors.white,),
-                                      animationDuration: Duration(milliseconds: 1000),
-                                      showProgressBar: false
-                                  );
+                              onSubmitted: (value) {
+                                if(loginTextEditingcontroller.text.isEmpty ){
+                                  if(loginTextEditingcontroller.text.isEmpty){
+                                    toastification.show(context: context,
+                                        title: Text('enter email'),
+                                        autoCloseDuration: Duration(milliseconds: 2500),
+                                        alignment: Alignment.center,
+                                        backgroundColor: Colors.red,
+                                        foregroundColor: Colors.white,
+                                        icon: Icon(Icons.error, color: Colors.white,),
+                                        animationDuration: Duration(milliseconds: 1000),
+                                        showProgressBar: false
+                                    );
+                                  }
+                                  // else if(passwordcontroller.text.isEmpty){
+                                  //   toastification.show(context: context,
+                                  //       title: Text('enter password'),
+                                  //       autoCloseDuration: Duration(milliseconds: 2500),
+                                  //       alignment: Alignment.center,
+                                  //       backgroundColor: Colors.red,
+                                  //       foregroundColor: Colors.white,
+                                  //       icon: Icon(Icons.error, color: Colors.white,),
+                                  //       animationDuration: Duration(milliseconds: 1000),
+                                  //       showProgressBar: false
+                                  //   );
+                                  // }
                                 }
-                                else if(passwordcontroller.text.isEmpty){
-                                  toastification.show(context: context,
-                                      title: Text('enter password'),
-                                      autoCloseDuration: Duration(milliseconds: 2500),
-                                      alignment: Alignment.center,
-                                      backgroundColor: Colors.red,
-                                      foregroundColor: Colors.white,
-                                      icon: Icon(Icons.error, color: Colors.white,),
-                                      animationDuration: Duration(milliseconds: 1000),
-                                      showProgressBar: false
-                                  );
-                                }
-                              }
-                              else if (_formKey.currentState?.validate() ?? false) {
-                                sendEmail();
-                              };
-                            },
-                            obscureText: loginRegisterProvider.isVisible,
-                            obscuringCharacter: "*",
-                            decoration: InputDecoration(
-                              //errorText: userAccountSearchErrorText,
-                              contentPadding: EdgeInsets.all(25),
-                              labelText: "Password",
-                              hintText: "Password",
-                              hintStyle: TextStyle(color: Colors.white),
-                              prefixIcon: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Icon(Icons.password,
-                                    color: Colors.white
-                                ),
-                              ),
-                              suffixIcon: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: IconButton(
-                                  icon: Icon(
-                                    loginRegisterProvider.isVisible ? Icons.visibility : Icons.visibility_off,
-                                  ),
-                                  onPressed: loginRegisterProvider.toggleVisibility,
-                                ),
-                              ),
-                              errorStyle: GoogleFonts.montserrat(
-                                  textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .bodyLarge,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.redAccent),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white,width: 4),
-                                  borderRadius: BorderRadius.circular(0)),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white,),
-                                  borderRadius: BorderRadius.circular(15)),
-                              disabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white),
-                                  borderRadius: BorderRadius.circular(15)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white,width: 2 ),
-                                  borderRadius: BorderRadius.circular(0)),
-                              labelStyle: GoogleFonts.montserrat(
-                                  textStyle: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .bodyLarge,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.white),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your password';
-                              }
-                              if (value.length < 8) {
-                                return 'Password must be at least 8 characters';
-                              }
-                              if (!RegExp(r'\d').hasMatch(value)) {
-                                return 'Password must contain at least one digit';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        SizedBox(height: 5,),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                          TextButton(
-                              onPressed: (){
-                                context.go("/forgetPassword");
+                                else  if (_formKey.currentState?.validate() ?? false) {
+                                  // sendEmail();
+                                };
                               },
-                              child: Text("Forgot password?",
+                              decoration: InputDecoration(
+                                //errorText: userAccountSearchErrorText,
+                                contentPadding: EdgeInsets.all(25),
+                                labelText: "Email",
+                                hintText: "Email",
+                                hintStyle: TextStyle(color: Colors.white),
+
+                                prefixIcon: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Icon(Icons.mail,
+                                      color: Colors.white
+                                  ),
+                                ),
+
+                                errorStyle: GoogleFonts.montserrat(
+                                    textStyle: Theme
+                                        .of(context)
+                                        .textTheme
+                                        .bodyLarge,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.redAccent),
+
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.white,width: 4),
+                                    borderRadius: BorderRadius.circular(0)),
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.white,),
+                                    borderRadius: BorderRadius.circular(15)),
+                                disabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.white),
+                                    borderRadius: BorderRadius.circular(15)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.white,width: 2 ),
+                                    borderRadius: BorderRadius.circular(0)),
+                                labelStyle: GoogleFonts.montserrat(
+                                    textStyle: Theme
+                                        .of(context)
+                                        .textTheme
+                                        .bodyLarge,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.white),
+                              ),
+                            ),
+                          ),
+                          // SizedBox(height: 10,),
+                          // Padding(
+                          //   padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                          //   child: TextFormField(
+                          //     // maxLines: null,
+                          //     controller: passwordcontroller,
+                          //     cursorColor: Colors.white,
+                          //     style: GoogleFonts.montserrat(
+                          //         textStyle: Theme
+                          //             .of(context)
+                          //             .textTheme
+                          //             .bodyLarge,
+                          //         fontWeight: FontWeight.w400,
+                          //         color: Colors.white),
+                          //     onFieldSubmitted:  (value) {
+                          //       if(loginTextEditingcontroller.text.isEmpty || passwordcontroller.text.isEmpty){
+                          //         if(loginTextEditingcontroller.text.isEmpty){
+                          //           toastification.show(context: context,
+                          //               title: Text('enter email'),
+                          //               autoCloseDuration: Duration(milliseconds: 2500),
+                          //               alignment: Alignment.center,
+                          //               backgroundColor: Colors.red,
+                          //               foregroundColor: Colors.white,
+                          //               icon: Icon(Icons.error, color: Colors.white,),
+                          //               animationDuration: Duration(milliseconds: 1000),
+                          //               showProgressBar: false
+                          //           );
+                          //         }
+                          //         else if(passwordcontroller.text.isEmpty){
+                          //           toastification.show(context: context,
+                          //               title: Text('enter password'),
+                          //               autoCloseDuration: Duration(milliseconds: 2500),
+                          //               alignment: Alignment.center,
+                          //               backgroundColor: Colors.red,
+                          //               foregroundColor: Colors.white,
+                          //               icon: Icon(Icons.error, color: Colors.white,),
+                          //               animationDuration: Duration(milliseconds: 1000),
+                          //               showProgressBar: false
+                          //           );
+                          //         }
+                          //       }
+                          //       else if (_formKey.currentState?.validate() ?? false) {
+                          //         sendEmail();
+                          //       };
+                          //     },
+                          //     obscureText: loginRegisterProvider.isVisible,
+                          //     obscuringCharacter: "*",
+                          //     decoration: InputDecoration(
+                          //       //errorText: userAccountSearchErrorText,
+                          //       contentPadding: EdgeInsets.all(25),
+                          //       labelText: "Password",
+                          //       hintText: "Password",
+                          //       hintStyle: TextStyle(color: Colors.white),
+                          //       prefixIcon: Padding(
+                          //         padding: const EdgeInsets.all(8.0),
+                          //         child: Icon(Icons.password,
+                          //             color: Colors.white
+                          //         ),
+                          //       ),
+                          //       suffixIcon: Padding(
+                          //         padding: const EdgeInsets.all(8.0),
+                          //         child: IconButton(
+                          //           icon: Icon(
+                          //             loginRegisterProvider.isVisible ? Icons.visibility : Icons.visibility_off,
+                          //           ),
+                          //           onPressed: loginRegisterProvider.toggleVisibility,
+                          //         ),
+                          //       ),
+                          //       errorStyle: GoogleFonts.montserrat(
+                          //           textStyle: Theme
+                          //               .of(context)
+                          //               .textTheme
+                          //               .bodyLarge,
+                          //           fontWeight: FontWeight.w400,
+                          //           color: Colors.redAccent),
+                          //       focusedBorder: OutlineInputBorder(
+                          //           borderSide: BorderSide(color: Colors.white,width: 4),
+                          //           borderRadius: BorderRadius.circular(0)),
+                          //       border: OutlineInputBorder(
+                          //           borderSide: BorderSide(color: Colors.white,),
+                          //           borderRadius: BorderRadius.circular(15)),
+                          //       disabledBorder: OutlineInputBorder(
+                          //           borderSide: BorderSide(color: Colors.white),
+                          //           borderRadius: BorderRadius.circular(15)),
+                          //       enabledBorder: OutlineInputBorder(
+                          //           borderSide: BorderSide(color: Colors.white,width: 2 ),
+                          //           borderRadius: BorderRadius.circular(0)),
+                          //       labelStyle: GoogleFonts.montserrat(
+                          //           textStyle: Theme
+                          //               .of(context)
+                          //               .textTheme
+                          //               .bodyLarge,
+                          //           fontWeight: FontWeight.w400,
+                          //           color: Colors.white),
+                          //     ),
+                          //     validator: (value) {
+                          //       if (value == null || value.isEmpty) {
+                          //         return 'Please enter your password';
+                          //       }
+                          //       if (value.length < 8) {
+                          //         return 'Password must be at least 8 characters';
+                          //       }
+                          //       if (!RegExp(r'\d').hasMatch(value)) {
+                          //         return 'Password must contain at least one digit';
+                          //       }
+                          //       return null;
+                          //     },
+                          //   ),
+                          // ),
+                          SizedBox(height: 5,),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                onPressed: (){
+                                  context.go("/userlogin");
+                                },
+                                child: Text("Login?",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w900,fontSize: 15),
-                              ),
-                          )
-                        ],),
-                        SizedBox(height: 25,),
+                                ),
+                              )
+                            ],),
+                          SizedBox(height: 25,),
 
-                        Center(
-                          child: InkWell(
-                            onTap: (){
-                              if (_formKey.currentState?.validate() ?? false) {
-                                sendEmail();
-                              }
-                            },
-                            child: Container(
-                              height: 60,
-                              width: 200,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(color: Colors.black,blurRadius: 10,),
-                                  ]
-                              ),
+                          Center(
+                            child: InkWell(
+                              onTap: (){
+                                if (_formKey.currentState?.validate() ?? false) {
+                                  // sendEmail();
+                                }
+                              },
+                              child: Container(
+                                height: 60,
+                                width: 200,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(color: Colors.black,blurRadius: 10,),
+                                    ]
+                                ),
 
-                              child: Center(
-                                child: Text("Login",
-                                  style: TextStyle(color: Colors.blue,fontWeight: FontWeight.w900,fontSize: 15),
+                                child: Center(
+                                  child: Text("Get password",
+                                    style: TextStyle(color: Colors.blue,fontWeight: FontWeight.w900,fontSize: 15),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            );
-          }
+                  ],
+                ),
+              );
+            }
         ),
       ),
     );
@@ -708,24 +708,24 @@ class _UserLoginPageState extends State<UserLoginPage> {
                 ),
               ],
             ),
-/// ere@gmail.com
+            /// ere@gmail.com
             actions: [
               SizedBox(
-              width: 320.0,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.black,
-                ),
-                onPressed: () {
-                  message == "Something went wrong" ? Navigator.pop(context) : context.go("/userRegister");
+                width: 320.0,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.black,
+                  ),
+                  onPressed: () {
+                    message == "Something went wrong" ? Navigator.pop(context) : context.go("/userRegister");
 
-                },
-                child: Text(
-                  "Okay",
-                  style: TextStyle(color: Colors.white),
+                  },
+                  child: Text(
+                    "Okay",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
-              ),
-            )
+              )
             ],
           );
         });

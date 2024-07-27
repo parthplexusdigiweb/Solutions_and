@@ -33,10 +33,12 @@ class _SolutionsLandingScreenState extends State<SolutionsLandingScreen> {
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.7),
           borderRadius: BorderRadius.circular(20),
+
           // image: DecorationImage(
           //   image: NetworkImage("https://e0.pxfuel.com/wallpapers/1/408/desktop-wallpaper-expo-2020-dubai-live-from-the-opening-ceremony.jpg"),
           //   fit: BoxFit.cover,
           // ),
+
         ),
         child: Center(
           child: Container(

@@ -25,6 +25,7 @@ import 'package:thrivers/core/constants.dart';
 import 'package:thrivers/core/progress_dialog.dart';
 import 'package:thrivers/model/challenges_table_model.dart';
 import 'package:thrivers/model/soluton_table_model.dart';
+import 'package:thrivers/widget/progressbar_widget.dart';
 import 'package:toastification/toastification.dart';
 import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
@@ -1823,7 +1824,7 @@ Thank you for being open to understanding me better and for considering my reque
 
                                                           About_Me_Label = widget.aboutMeData['About_Me_Label'];
                                                           ProgressDialog.show(context, "Previewing", Icons.picture_as_pdf);
-                                                          Uint8List pdfBytes = await makePdf(challengesList, solutionsList );
+                                                          Uint8List pdfBytes = await makePdf(challengesList, solutionsList);
                                                           showDialog(
                                                               context: context,
                                                               builder: (BuildContext context) {
@@ -1867,13 +1868,15 @@ Thank you for being open to understanding me better and for considering my reque
                                                                         build: (format) => pdfBytes,
                                                                       ),
                                                                     ));
-                                                              });
+                                                              }
+                                                              );
 
                                                           // }
                                                           // else{
                                                           //   _navigateToTab(4);
                                                           //   await showAddAddAboutMeDialogBox();
                                                           // }
+
                                                         },
                                                         child: Container(
                                                           padding: EdgeInsets.all(10),
@@ -2141,119 +2144,141 @@ Thank you for being open to understanding me better and for considering my reque
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Expanded(
-                                            child: InkWell(
-                                              onTap: () async {
-                                                QuerySnapshot querySnapshotss = await FirebaseFirestore.instance
-                                                    .collection('AboutMe')
-                                                    .where('Email', isEqualTo: aboutMeData.get("Email"))
-                                                    .where('isPPS', isEqualTo: false)
-                                                    .where('AB_Status', isNotEqualTo: "Submitted")
-                                                    .where('isOS', isEqualTo: true)
-                                                    .get();
-                                                // final abc =   querySnapshots.docs.first;
-                                                // print("abccccc; ${abc['AB_id']}");
-                                                // print("abccccc; ${abc['AB_id'].runtimeType}");
-                                                // var AB_id = abc['AB_id'] + 1;
+                                            child: Consumer<PreviewProvider>(
+                                                builder: (c,previewProvider, _) {
+                                                  return InkWell(
+                                                    onTap: () async {
+                                                      // await _previewProvider.updateloader(true);
+                                                      // print("updateloader 1");
+                                                      //
+                                                      // print("previewProvider.loader : ${previewProvider.getloader}");
+                                                      //
+                                                      // if(previewProvider.getloader == true) {
+                                                      //   loadingView(previewProvider.getloader);
+                                                      // };
 
-                                                // await widget.duplicateDocument(context,documentId,AB_id);
+                                                      ProgressDialog.show(context, "", Icons.edit);
 
-                                                if(querySnapshotss.docs.isEmpty){
-                                                  print("aboutMeData.get; ${aboutMeData.get("AB_id")}");
-                                                  // showDuplicateDialogBox(aboutMeData.id);
+                                                      QuerySnapshot querySnapshotss = await FirebaseFirestore.instance
+                                                          .collection('AboutMe')
+                                                          .where('Email', isEqualTo: aboutMeData.get("Email"))
+                                                          .where('isPPS', isEqualTo: false)
+                                                          .where('AB_Status', isNotEqualTo: "Submitted")
+                                                          .where('isOS', isEqualTo: true)
+                                                          .get();
 
-                                                  QuerySnapshot querySnapshots = await FirebaseFirestore.instance
-                                                      .collection('AboutMe')
-                                                      .orderBy('AB_id', descending: true)
-                                                      .limit(1)
-                                                      .get();
-                                                  final abc = querySnapshots.docs.first;
-                                                  print("abccccc; ${abc['AB_id']}");
-                                                  print("abccccc; ${abc['AB_id'].runtimeType}");
-                                                  var AB_id = abc['AB_id'] + 1;
+                                                      // final abc =   querySnapshots.docs.first;
+                                                      // print("abccccc; ${abc['AB_id']}");
+                                                      // print("abccccc; ${abc['AB_id'].runtimeType}");
+                                                      // var AB_id = abc['AB_id'] + 1;
 
-                                                  var createdAt = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                                                      // await widget.duplicateDocument(context,documentId,AB_id);
 
-                                                  QuerySnapshot count =  await FirebaseFirestore.instance
-                                                      .collection('AboutMe')
-                                                      .where('Email', isEqualTo: aboutMeData.get("Email"))
-                                                      .where('isPPS', isEqualTo: false)
-                                                      .where('isOS', isEqualTo: true)
-                                                      .get();
+                                                      if(querySnapshotss.docs.isEmpty){
+                                                        print("aboutMeData.get; ${aboutMeData.get("AB_id")}");
+                                                        // showDuplicateDialogBox(aboutMeData.id);
 
-                                                  print("count: ${count.size}");
-                                                  int total = count.size + 1;
+                                                        QuerySnapshot querySnapshots = await FirebaseFirestore.instance
+                                                            .collection('AboutMe')
+                                                            .orderBy('AB_id', descending: true)
+                                                            .limit(1)
+                                                            .get();
+                                                        final abc = querySnapshots.docs.first;
+                                                        print("abccccc; ${abc['AB_id']}");
+                                                        print("abccccc; ${abc['AB_id'].runtimeType}");
+                                                        var AB_id = abc['AB_id'] + 1;
 
-                                                  String name = "";
-                                                  if(count.size==0){
-                                                    name = "$createdAt ${aboutMeData.get("User_Name")}_Official Submission.pdf";
-                                                  }
-                                                  else{
-                                                    name = "$createdAt ${aboutMeData.get("User_Name")}_Official Submission(${count.size + 1}).pdf";
-                                                  }
-                                                  setState(() {
-                                                    duplicatePPStoOS(context, aboutMeData.id, AB_id, name,aboutMeData.get("Employer"),aboutMeData.get("Line_Manager"));
-                                                    // Navigator.pop(ctx);
-                                                  });
-                                                  // Navigator.pop(ctx);
-                                                  DuplicatePurposetextController.clear();
-                                                }
+                                                        var createdAt = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
-                                                else if(querySnapshotss.docs.isNotEmpty){
-                                                  _previewProvider.OSeditchallengess.clear();
-                                                  _previewProvider.OSeditsolutions.clear();
-                                                  challengesListForOs.clear();
-                                                  solutionsListForOs.clear();
-                                                  _previewProvider.PreviewChallengesList.clear();
-                                                  _previewProvider.PreviewSolutionStillNeeded.clear();
-                                                  _previewProvider.PreviewSolutionMyResposibilty.clear();
-                                                  _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
-                                                  _previewProvider.PreviewSolutionNiceToHave.clear();
-                                                  _previewProvider.PreviewSolutionMustHave.clear();
-                                                  print("PPS list Cleared");
-                                                  print("OS List Adding now");
-                                                  _previewProvider.OSEditChallengeList(querySnapshotss.docs.first["Challenges"]);
-                                                  _previewProvider.OSEditChallengeListadd(challengesListForOs);
-                                                  _previewProvider.OSEditChallengeListadd(_previewProvider.PreviewChallengesList);
-                                                  _previewProvider.OSEditSolutionList(querySnapshotss.docs.first["Solutions"]);
-                                                  _previewProvider.OSEditSolutionListadd(solutionsListForOs);
-                                                  _previewProvider.OSEditSolutionProvideradd(_previewProvider.PreviewSolutionMyResposibilty);
-                                                  _previewProvider.OSEditSolutionInPlaceadd(_previewProvider.PreviewSolutionStillNeeded,
-                                                      _previewProvider.PreviewSolutionNotNeededAnyMore, _previewProvider.PreviewSolutionNiceToHave, _previewProvider.PreviewSolutionMustHave);
+                                                        QuerySnapshot count =  await FirebaseFirestore.instance
+                                                            .collection('AboutMe')
+                                                            .where('Email', isEqualTo: aboutMeData.get("Email"))
+                                                            .where('isPPS', isEqualTo: false)
+                                                            .where('isOS', isEqualTo: true)
+                                                            .get();
 
+                                                        print("count: ${count.size}");
+                                                        int total = count.size + 1;
 
-                                                 await showEditOSDialogBox(querySnapshotss.docs.first);
-                                                 await _previewProvider.getDataForOs(querySnapshotss.docs.first);
-                                                }
-                                              },
-                                              child: Container(
-                                                padding: EdgeInsets.all(10),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  border: Border.all(color:primaryColorOfApp, width: 1.0),
-                                                  borderRadius: BorderRadius.circular(10.0),
-                                                ),
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                  children: [
-                                                    // Icon(Icons.article,color: Colors.black,size: 30,),
-                                                    Icon(Icons.edit,color: Colors.black,size: 25,),
-                                                    SizedBox(width: 5,),
+                                                        String name = "";
+                                                        if(count.size==0){
+                                                          name = "$createdAt ${aboutMeData.get("User_Name")}_Official Submission.pdf";
+                                                        }
+                                                        else{
+                                                          name = "$createdAt ${aboutMeData.get("User_Name")}_Official Submission(${count.size + 1}).pdf";
+                                                        }
+                                                        // _previewProvider.updateloader(false);
+                                                        // print("updateloader 2");
+                                                        setState(() {
+                                                          duplicatePPStoOS(context, aboutMeData.id, AB_id, name,aboutMeData.get("Employer"),aboutMeData.get("Line_Manager"));
+                                                          // Navigator.pop(ctx);
+                                                        });
+                                                        // Navigator.pop(ctx);
+                                                        DuplicatePurposetextController.clear();
+                                                        ProgressDialog.hide();
 
-                                                    Expanded(
-                                                      child: Text(
-                                                        // 'Solutions',
-                                                        'Edit',
-                                                        overflow: TextOverflow.ellipsis,
-                                                        style: GoogleFonts.montserrat(
-                                                            textStyle:
-                                                            Theme.of(context).textTheme.titleMedium,
-                                                            color: Colors.black),
+                                                      }
+
+                                                      else if(querySnapshotss.docs.isNotEmpty){
+                                                        _previewProvider.OSeditchallengess.clear();
+                                                        _previewProvider.OSeditsolutions.clear();
+                                                        challengesListForOs.clear();
+                                                        solutionsListForOs.clear();
+                                                        _previewProvider.PreviewChallengesList.clear();
+                                                        _previewProvider.PreviewSolutionStillNeeded.clear();
+                                                        _previewProvider.PreviewSolutionMyResposibilty.clear();
+                                                        _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
+                                                        _previewProvider.PreviewSolutionNiceToHave.clear();
+                                                        _previewProvider.PreviewSolutionMustHave.clear();
+                                                        print("PPS list Cleared");
+                                                        print("OS List Adding now");
+                                                        _previewProvider.OSEditChallengeList(querySnapshotss.docs.first["Challenges"]);
+                                                        _previewProvider.OSEditChallengeListadd(challengesListForOs);
+                                                        _previewProvider.OSEditChallengeListadd(_previewProvider.PreviewChallengesList);
+                                                        _previewProvider.OSEditSolutionList(querySnapshotss.docs.first["Solutions"]);
+                                                        _previewProvider.OSEditSolutionListadd(solutionsListForOs);
+                                                        _previewProvider.OSEditSolutionProvideradd(_previewProvider.PreviewSolutionMyResposibilty);
+                                                        _previewProvider.OSEditSolutionInPlaceadd(_previewProvider.PreviewSolutionStillNeeded,
+                                                            _previewProvider.PreviewSolutionNotNeededAnyMore, _previewProvider.PreviewSolutionNiceToHave, _previewProvider.PreviewSolutionMustHave);
+
+                                                        // _previewProvider.updateloader(false);
+                                                        // print("updateloader 3");
+                                                        await showEditOSDialogBox(querySnapshotss.docs.first);
+                                                        await _previewProvider.getDataForOs(querySnapshotss.docs.first);
+                                                        ProgressDialog.hide();
+                                                      }
+
+                                                    },
+                                                    child: Container(
+                                                      padding: EdgeInsets.all(10),
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        border: Border.all(color:primaryColorOfApp, width: 1.0),
+                                                        borderRadius: BorderRadius.circular(10.0),
+                                                      ),
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                        children: [
+                                                          // Icon(Icons.article,color: Colors.black,size: 30,),
+                                                          Icon(Icons.edit,color: Colors.black,size: 25,),
+                                                          SizedBox(width: 5,),
+
+                                                          Expanded(
+                                                            child: Text(
+                                                              // 'Solutions',
+                                                              'Edit',
+                                                              overflow: TextOverflow.ellipsis,
+                                                              style: GoogleFonts.montserrat(
+                                                                  textStyle:
+                                                                  Theme.of(context).textTheme.titleMedium,
+                                                                  color: Colors.black),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
+                                                  );
+                                                }),
                                           ),
                                           Icon(Icons.sync, size: 40),
                                           Expanded(
@@ -2333,10 +2358,10 @@ Thank you for being open to understanding me better and for considering my reque
 
                                                       ProgressDialog.show(context, "Previewing", Icons.picture_as_pdf);
                                                       Uint8List pdfBytes = await _previewProvider.OSPdf(challengesListForOs, solutionsListForOs);
+                                                      ProgressDialog.hide();
                                                       showDialog(
                                                           context: context,
                                                           builder: (BuildContext context) {
-                                                            ProgressDialog.hide();
                                                             return  AlertDialog(
                                                                 icon: Row(
                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -2381,7 +2406,7 @@ Thank you for being open to understanding me better and for considering my reque
                                                     }
                                                     else{
                                                       toastification.show(context: context,
-                                                          title: Text('Already submitted. Create New one'),
+                                                          title: Text('Create New one'),
                                                           autoCloseDuration: Duration(milliseconds: 2500),
                                                           alignment: Alignment.center,
                                                           backgroundColor: Colors.green,
@@ -3787,7 +3812,7 @@ Thank you for being open to understanding me better and for considering my reque
                                                                       content: SizedBox(
                                                                         width: double.maxFinite,
                                                                         child: PdfPreview(
-                                                                          maxPageWidth: MediaQuery.of(context).size.width * .6,
+                                                                          maxPageWidth: MediaQuery.of(context).size.width * .4,
                                                                           allowSharing: false,
                                                                           canChangeOrientation: false,
                                                                           canChangePageFormat: false,
@@ -3804,143 +3829,242 @@ Thank you for being open to understanding me better and for considering my reque
                                                           },
                                                           icon: Icon(Icons.visibility,)),
 
-                                                      IconButton(
-                                                          iconSize: 25,
-                                                          color: primaryColorOfApp,
-                                                          onPressed: () async {
+                                                      InkWell(
+                                                        onTap: () async {
 
-                                                            // AboutMeLabeltextController.clear();
-                                                            // mycircumstancesController.clear();
-                                                            // MystrengthsController.clear();
-                                                            // myOrganisationController.clear();
-                                                            // myOrganisation2Controller.clear();
-                                                            // selectedEmail = null;
-                                                            // searchEmailcontroller.clear();
-                                                            // nameController.clear();
-                                                            // employerController.clear();
-                                                            // divisionOrSectionController.clear();
-                                                            // RoleController.clear();
-                                                            // LocationController.clear();
-                                                            // EmployeeNumberController.clear();
-                                                            // LineManagerController.clear();
-                                                            // AboutMeLabeltextController.clear();
-                                                            // AboutMeDatetextController.clear();
-                                                            // AboutMeUseFulInfotextController.clear();
-                                                            // AboutMeDescriptiontextController.clear();
+                                                          showDialog(context: context, builder: ((context) {
+                                                            return AlertDialog(
+                                                              shape: RoundedRectangleBorder(
+                                                                borderRadius: BorderRadius.circular(15),
+                                                              ),
+                                                              actionsAlignment: MainAxisAlignment.center,
+                                                                title: Row(
+                                                                  children: [
+                                                                    Icon(Icons.warning_rounded, color: Colors.deepPurple, size: 60),
+                                                                    SizedBox(width: 20),
+                                                                    Expanded(
+                                                                      child: Column(
+                                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                                        mainAxisSize: MainAxisSize.min,
+                                                                        children: [
+                                                                          Text(
+                                                                            'You are about to start a fresh using this version',
+                                                                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                                                              fontWeight: FontWeight.bold,
+                                                                              color: Colors.deepPurple,
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(height: 10),
+                                                                          Text(
+                                                                            "Do you want to proceed?",
+                                                                            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                                                                              fontSize: 16.0,
+                                                                              color: Colors.black54,
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              actions: [
+                                                                Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                  children: [
+                                                                    Expanded(
+                                                                      child: InkWell(
+                                                                      onTap:  () async {
+
+                                                                        Map<String, dynamic> AboutMEDatas = {
+                                                                      // 'AB_id': ids,
+                                                                      'Email': dataList[i]['Email'],
+                                                                      'User_Name': dataList[i]['User_Name'],
+                                                                      'Employer': dataList[i]['Employer'],
+                                                                      'Division_or_Section': dataList[i]['Division_or_Section'],
+                                                                      'Role': dataList[i]['Role'],
+                                                                      'Location': dataList[i]['Location'],
+                                                                      'Employee_Number': dataList[i]['Employee_Number'],
+                                                                      'Line_Manager': dataList[i]['Line_Manager'],
+                                                                      'isPPS': true,
+                                                                      'isOS': false,
+                                                                      // 'About_Me_Label': "${DateFormat('yyyy-MM-dd').format(DateTime.now())} ${userData['UserName']}_Personal Private Summary.pdf",
+                                                                      'About_Me_Label': "PPS",
+                                                                      'Purpose_of_report': dataList[i]['Purpose_of_report'],
+                                                                      'Purpose': "Others" ,
+                                                                      'AB_Description' : dataList[i]['AB_Description'],
+                                                                      // 'AB_Date' : DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                                                                      'AB_Useful_Info' : "",
+                                                                      'AB_Attachment' : "",
+                                                                      'AB_Status' : "main",
+                                                                      'My_Circumstance': dataList[i]['My_Circumstance'],
+                                                                      'My_Strength': dataList[i]['My_Strength'],
+                                                                      'My_Organisation': dataList[i]['My_Organisation'],
+                                                                      'My_Challenges_Organisation': dataList[i]['My_Challenges_Organisation'],
+                                                                      'Solutions': dataList[i]['Solutions'],
+                                                                      'Challenges': dataList[i]['Challenges'],
+                                                                      "Created_By": dataList[i]['User_Name'],
+                                                                      "Created_Date": DateFormat('yyyy-MM-dd, HH:mm:ss').format(DateTime.now()),
+                                                                      "Modified_By": dataList[i]['User_Name'],
+                                                                      "Modified_Date": DateFormat('yyyy-MM-dd, HH:mm:ss').format(DateTime.now()),
+                                                                      "Report_sent_to": dataList[i]['Report_sent_to'],
+                                                                      "Report_sent_to_cc": dataList[i]['Report_sent_to_cc'],
+                                                                      // Add other fields as needed
+                                                                                                                                    };
+
+                                                                        QuerySnapshot querySnapshots = await  FirebaseFirestore.instance.collection('AboutMe')
+                                                                        .where("Email", isEqualTo: widget.AdminName)
+                                                                        .where("isPPS", isEqualTo: true)
+                                                                        .where("AB_Status", isEqualTo: "main")
+                                                                        .limit(1).get();
+
+                                                                        if(querySnapshots.docs.isNotEmpty){
+                                                                      print("Make current calling");
+                                                                      ProgressDialog.show(context, "Make current",Icons.update);
+                                                                      // setState(() async {
+                                                                      await ApiRepository().updateAboutMe(AboutMEDatas, querySnapshots.docs.first.id);
+                                                                      widget.refreshPage();
+                                                                      // });
+
+
+                                                                      AboutMeLabeltextController.clear();
+                                                                      mycircumstancesController.clear();
+                                                                      MystrengthsController.clear();
+                                                                      myOrganisationController.clear();
+                                                                      myOrganisation2Controller.clear();
+                                                                      selectedEmail = null;
+                                                                      searchEmailcontroller.clear();
+                                                                      nameController.clear();
+                                                                      employerController.clear();
+                                                                      divisionOrSectionController.clear();
+                                                                      RoleController.clear();
+                                                                      LocationController.clear();
+                                                                      EmployeeNumberController.clear();
+                                                                      LineManagerController.clear();
+                                                                      AboutMeLabeltextController.clear();
+                                                                      AboutMeDatetextController.clear();
+                                                                      AboutMeUseFulInfotextController.clear();
+                                                                      AboutMeDescriptiontextController.clear();
+
+                                                                      _userAboutMEProvider.editchallengess.clear();
+                                                                      _userAboutMEProvider.editsolutionss.clear();
+                                                                      challengesList.clear();
+                                                                      solutionsList.clear();
+                                                                      _previewProvider.PreviewChallengesList.clear();
+                                                                      _previewProvider.PreviewSolutionStillNeeded.clear();
+                                                                      _previewProvider.PreviewSolutionMyResposibilty.clear();
+                                                                      _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
+                                                                      _previewProvider.PreviewSolutionNiceToHave.clear();
+                                                                      _previewProvider.PreviewSolutionMustHave.clear();
+                                                                      print("PPS list Cleared");
+                                                                      print("OS List Adding now");
+                                                                      _userAboutMEProvider.EditChallengeList(dataList[i]["Challenges"]);
+                                                                      _userAboutMEProvider.EditChallengeListadd(challengesList);
+                                                                      _userAboutMEProvider.EditChallengeListadd(_previewProvider.PreviewChallengesList);
+                                                                      _userAboutMEProvider.EditSolutionList(dataList[i]["Solutions"]);
+                                                                      _userAboutMEProvider.EditSolutionListadd(solutionsList);
+                                                                      _userAboutMEProvider.EditSolutionProvideradd(_previewProvider.PreviewSolutionMyResposibilty);
+                                                                      _userAboutMEProvider.EditSolutionInPlaceadd(_previewProvider.PreviewSolutionStillNeeded,
+                                                                          _previewProvider.PreviewSolutionNotNeededAnyMore, _previewProvider.PreviewSolutionNiceToHave, _previewProvider.PreviewSolutionMustHave);
+
+                                                                      nameController.text = dataList[i]["User_Name"];
+                                                                      employerController.text = dataList[i]["Employer"];
+                                                                      divisionOrSectionController.text = dataList[i]["Division_or_Section"];
+                                                                      RoleController.text = dataList[i]["Role"];
+                                                                      LocationController.text = dataList[i]["Location"];
+                                                                      EmployeeNumberController.text = dataList[i]["Employee_Number"];
+                                                                      LineManagerController.text = dataList[i]["Line_Manager"];
+                                                                      AboutMeLabeltextController.text = dataList[i]["About_Me_Label"];
+                                                                      mycircumstancesController.text = dataList[i]["My_Circumstance"];
+                                                                      MystrengthsController.text = dataList[i]["My_Strength"];
+                                                                      myOrganisationController.text = dataList[i]["My_Organisation"];
+                                                                      myOrganisation2Controller.text = dataList[i]["My_Challenges_Organisation"];
+                                                                      AboutMeDescriptiontextController.text = dataList[i]["AB_Description"];
+                                                                      selectedEmail = dataList[i]["Email"];
+                                                                      searchEmailcontroller.text = dataList[i]["Email"];
+                                                                      About_Me_Label = dataList[i]["About_Me_Label"];
+                                                                      ProgressDialog.hide();
+
+                                                                        }
+
+                                                                        // widget.showReportViewPageDialogBox(dataList[i]);
+                                                                        Navigator.pop(context);
+                                                                      },
+                                                                        child: Container(
+                                                                            padding: EdgeInsets.symmetric(vertical: 12),
+                                                                            width: double.infinity,
+                                                                          decoration: BoxDecoration(
+                                                                            color: Colors.deepPurple,
+                                                                            borderRadius: BorderRadius.circular(5),
+                                                                          ),
+                                                                        child: Center(
+                                                                          child: Text("Yes",style: TextStyle(color: Colors.white,
+                                                                            fontSize: 16,
+                                                                            fontWeight: FontWeight.bold,),),
+                                                                        )
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(width: 16),
+                                                                    Expanded(
+                                                                      child: InkWell(
+                                                                        onTap : (){
+                                                                          Navigator.pop(context);
+                                                                        },
+                                                                        child: Container(
+                                                                            padding: EdgeInsets.symmetric(vertical: 12),
+
+                                                                            width: double.infinity,
+                                                                            decoration: BoxDecoration(
+                                                                              color: Colors.black,
+                                                                              borderRadius: BorderRadius.circular(5),
+                                                                            ),
+                                                                            child: Center(
+                                                                              child: Text("No",style: TextStyle(color: Colors.white,
+                                                                                fontSize: 16,
+                                                                                fontWeight: FontWeight.bold,),),
+                                                                            )
+
+                                                                        ),
+                                                                      ),
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            );
+                                                          }));
+                                                          // AboutMeLabeltextController.clear();
+                                                          // mycircumstancesController.clear();
+                                                          // MystrengthsController.clear();
+                                                          // myOrganisationController.clear();
+                                                          // myOrganisation2Controller.clear();
+                                                          // selectedEmail = null;
+                                                          // searchEmailcontroller.clear();
+                                                          // nameController.clear();
+                                                          // employerController.clear();
+                                                          // divisionOrSectionController.clear();
+                                                          // RoleController.clear();
+                                                          // LocationController.clear();
+                                                          // EmployeeNumberController.clear();
+                                                          // LineManagerController.clear();
+                                                          // AboutMeLabeltextController.clear();
+                                                          // AboutMeDatetextController.clear();
+                                                          // AboutMeUseFulInfotextController.clear();
+                                                          // AboutMeDescriptiontextController.clear();
 //
 
-                                                            Map<String, dynamic> AboutMEDatas = {
-                                                              // 'AB_id': ids,
-                                                              'Email': dataList[i]['Email'],
-                                                              'User_Name': dataList[i]['User_Name'],
-                                                              'Employer': dataList[i]['Employer'],
-                                                              'Division_or_Section': dataList[i]['Division_or_Section'],
-                                                              'Role': dataList[i]['Role'],
-                                                              'Location': dataList[i]['Location'],
-                                                              'Employee_Number': dataList[i]['Employee_Number'],
-                                                              'Line_Manager': dataList[i]['Line_Manager'],
-                                                              'isPPS': true,
-                                                              'isOS': false,
-                                                              // 'About_Me_Label': "${DateFormat('yyyy-MM-dd').format(DateTime.now())} ${userData['UserName']}_Personal Private Summary.pdf",
-                                                              'About_Me_Label': "PPS",
-                                                              'Purpose_of_report': dataList[i]['Purpose_of_report'],
-                                                              'Purpose': "Others" ,
-                                                              'AB_Description' : dataList[i]['AB_Description'],
-                                                              // 'AB_Date' : DateFormat('yyyy-MM-dd').format(DateTime.now()),
-                                                              'AB_Useful_Info' : "",
-                                                              'AB_Attachment' : "",
-                                                              'AB_Status' : "main",
-                                                              'My_Circumstance': dataList[i]['My_Circumstance'],
-                                                              'My_Strength': dataList[i]['My_Strength'],
-                                                              'My_Organisation': dataList[i]['My_Organisation'],
-                                                              'My_Challenges_Organisation': dataList[i]['My_Challenges_Organisation'],
-                                                              'Solutions': dataList[i]['Solutions'],
-                                                              'Challenges': dataList[i]['Challenges'],
-                                                              "Created_By": dataList[i]['User_Name'],
-                                                              "Created_Date": DateFormat('yyyy-MM-dd, HH:mm:ss').format(DateTime.now()),
-                                                              "Modified_By": dataList[i]['User_Name'],
-                                                              "Modified_Date": DateFormat('yyyy-MM-dd, HH:mm:ss').format(DateTime.now()),
-                                                              "Report_sent_to": dataList[i]['Report_sent_to'],
-                                                              "Report_sent_to_cc": dataList[i]['Report_sent_to_cc'],
-                                                              // Add other fields as needed
-                                                            };
 
-                                                            QuerySnapshot querySnapshots = await  FirebaseFirestore.instance.collection('AboutMe')
-                                                                .where("Email", isEqualTo: widget.AdminName)
-                                                                .where("isPPS", isEqualTo: true)
-                                                                .where("AB_Status", isEqualTo: "main")
-                                                                .limit(1).get();
-
-                                                            if(querySnapshots.docs.isNotEmpty){
-                                                              print("Make current calling");
-                                                              ProgressDialog.show(context, "Make current",Icons.update);
-                                                              // setState(() async {
-                                                                await ApiRepository().updateAboutMe(AboutMEDatas, querySnapshots.docs.first.id);
-                                                                widget.refreshPage();
-                                                              // });
-
-
-                                                              AboutMeLabeltextController.clear();
-                                                              mycircumstancesController.clear();
-                                                              MystrengthsController.clear();
-                                                              myOrganisationController.clear();
-                                                              myOrganisation2Controller.clear();
-                                                              selectedEmail = null;
-                                                              searchEmailcontroller.clear();
-                                                              nameController.clear();
-                                                              employerController.clear();
-                                                              divisionOrSectionController.clear();
-                                                              RoleController.clear();
-                                                              LocationController.clear();
-                                                              EmployeeNumberController.clear();
-                                                              LineManagerController.clear();
-                                                              AboutMeLabeltextController.clear();
-                                                              AboutMeDatetextController.clear();
-                                                              AboutMeUseFulInfotextController.clear();
-                                                              AboutMeDescriptiontextController.clear();
-
-                                                              _userAboutMEProvider.editchallengess.clear();
-                                                              _userAboutMEProvider.editsolutionss.clear();
-                                                              challengesList.clear();
-                                                              solutionsList.clear();
-                                                              _previewProvider.PreviewChallengesList.clear();
-                                                              _previewProvider.PreviewSolutionStillNeeded.clear();
-                                                              _previewProvider.PreviewSolutionMyResposibilty.clear();
-                                                              _previewProvider.PreviewSolutionNotNeededAnyMore.clear();
-                                                              _previewProvider.PreviewSolutionNiceToHave.clear();
-                                                              _previewProvider.PreviewSolutionMustHave.clear();
-                                                              print("PPS list Cleared");
-                                                              print("OS List Adding now");
-                                                              _userAboutMEProvider.EditChallengeList(dataList[i]["Challenges"]);
-                                                              _userAboutMEProvider.EditChallengeListadd(challengesList);
-                                                              _userAboutMEProvider.EditChallengeListadd(_previewProvider.PreviewChallengesList);
-                                                              _userAboutMEProvider.EditSolutionList(dataList[i]["Solutions"]);
-                                                              _userAboutMEProvider.EditSolutionListadd(solutionsList);
-                                                              _userAboutMEProvider.EditSolutionProvideradd(_previewProvider.PreviewSolutionMyResposibilty);
-                                                              _userAboutMEProvider.EditSolutionInPlaceadd(_previewProvider.PreviewSolutionStillNeeded,
-                                                                  _previewProvider.PreviewSolutionNotNeededAnyMore, _previewProvider.PreviewSolutionNiceToHave, _previewProvider.PreviewSolutionMustHave);
-
-                                                                  nameController.text = dataList[i]["User_Name"];
-                                                                  employerController.text = dataList[i]["Employer"];
-                                                                  divisionOrSectionController.text = dataList[i]["Division_or_Section"];
-                                                                  RoleController.text = dataList[i]["Role"];
-                                                                  LocationController.text = dataList[i]["Location"];
-                                                                  EmployeeNumberController.text = dataList[i]["Employee_Number"];
-                                                                  LineManagerController.text = dataList[i]["Line_Manager"];
-                                                                  AboutMeLabeltextController.text = dataList[i]["About_Me_Label"];
-                                                                  mycircumstancesController.text = dataList[i]["My_Circumstance"];
-                                                                  MystrengthsController.text = dataList[i]["My_Strength"];
-                                                                  myOrganisationController.text = dataList[i]["My_Organisation"];
-                                                                  myOrganisation2Controller.text = dataList[i]["My_Challenges_Organisation"];
-                                                                  AboutMeDescriptiontextController.text = dataList[i]["AB_Description"];
-                                                                  selectedEmail = dataList[i]["Email"];
-                                                                  searchEmailcontroller.text = dataList[i]["Email"];
-                                                              About_Me_Label = dataList[i]["About_Me_Label"];
-                                                              ProgressDialog.hide();
-                                                            }
-                                                            // widget.showReportViewPageDialogBox(dataList[i]);
-                                                          },
-                                                          icon: Icon(Icons.edit_note,)),
+                                                        },
+                                                        child: Container(
+                                                            // iconSize: 25,
+                                                          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                                                          decoration: BoxDecoration(
+                                                            border: Border.all(color: Colors.black,width: 2),
+                                                            borderRadius: BorderRadius.circular(5),
+                                                          ),
+                                                            // color: primaryColorOfApp,
+                                                            child: Icon(Icons.arrow_upward_rounded,size: 15,color: Colors.black,weight: 100,)
+                                                        ),
+                                                      ),
 
                                                       (dataList[i]['AB_Status'].toString()!="-") ?
                                                       IconButton(
@@ -10185,8 +10309,8 @@ Thank you for being open to understanding me better and for considering my reque
                                         content: SizedBox(
                                           width: double.maxFinite,
                                           child: PdfPreview(
-                                            // maxPageWidth: MediaQuery.of(context).size.width * .6,
-                                            maxPageWidth: double.maxFinite,
+                                            maxPageWidth: MediaQuery.of(context).size.width * .4,
+                                            // maxPageWidth: double.maxFinite,
                                             allowSharing: false,
                                             canChangeOrientation: false,
                                             canChangePageFormat: false,
@@ -12836,573 +12960,768 @@ Thank you for being open to understanding me better and for considering my reque
   print("Error generating PDF 4: $e");
   }
 
-    (SolutiontableRows1.isNotEmpty) ? pdf.addPage(
-      pw.MultiPage(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
-        pageFormat: PdfPageFormat.a4,
-        header: (context) {
-          return pw.Image(image);
-        },
-        footer: (context) {
-          return pw.Column(
-              children: [
-                pw.Image(image),
-                pw.SizedBox(height: 5,),
+    List<List<pw.Widget>> paginatedContent = paginateContent(SolutiontableRows1, 7); // Example: 20 items per page
+    for (int i = 0; i < paginatedContent.length; i++) {
+      pdf.addPage(
+        pw.MultiPage(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          pageFormat: PdfPageFormat.a4,
+          header: (context) {
+            return pw.Image(image);
+          },
+          footer: (context) {
+            return pw.Column(
+                children: [
+                  pw.Image(image),
+                  pw.SizedBox(height: 5,),
 
-                pw.Padding(
-                  padding: pw.EdgeInsets.symmetric(horizontal: 30),
-                  child:  pw.Row(
-                      mainAxisAlignment: pw.MainAxisAlignment.center,
-                      children: [
-                        pw.Text("${nameController.text}: my confidential preview summary",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+                  pw.Padding(
+                    padding: pw.EdgeInsets.symmetric(horizontal: 30),
+                    child:  pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Text("${nameController.text}: my confidential preview summary",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
-                        pw.SizedBox(width: 70,),
+                          pw.SizedBox(width: 70,),
 
-                        pw.Text("${AboutMeDatetextController.text}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+                          pw.Text("${AboutMeDatetextController.text}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
-                        pw.SizedBox(width: 120,),
+                          pw.SizedBox(width: 120,),
 
-                        pw.Text("Page ${context.pageNumber} of ${context.pagesCount}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+                          pw.Text("Page ${context.pageNumber} of ${context.pagesCount}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
-                      ]
+                        ]
+                    ),
                   ),
-                ),
 
 
 
-                pw.SizedBox(height: 15,),
+                  pw.SizedBox(height: 15,),
 
-              ]
-          );
-        },
-        margin: pw.EdgeInsets.all(0),
-        build: (context) {
-          return [
-            pw.Container(
-              padding: pw.EdgeInsets.all(5),
-              margin: pw.EdgeInsets.symmetric(horizontal: 30),
-              width: double.maxFinite,
-              decoration: pw.BoxDecoration(
-                border: pw.Border.all(color: PdfColors.black),
-                color: PdfColor.fromInt(0xffd9e2f3),
-              ),
-              child: pw.Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${employerController.text}",
-                  style: pw.TextStyle(font: headingfont1,fontSize: 18, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
-              ),
-            ),
-
-            pw.SizedBox(height: 20,),
-            //pw.Padding(padding: pw.EdgeInsets.all(20)),
-
-            pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                child: pw.Text("Here are things that can help me, for which I can and want to take",
-                    style: pw.TextStyle(font: headingfont1,fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),)
-                )),
-
-            // pw.SizedBox(height: 10,),
-
-            (SolutiontableRows1.isNotEmpty) ? pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                child: pw.Text("Personal Responsibility",
-                    style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
-                )) : pw.SizedBox(),
-
-            (SolutiontableRows1.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
-
-            (SolutiontableRows1.isNotEmpty) ?  pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-              child: pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.start,
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Column(
-                      mainAxisAlignment: pw.MainAxisAlignment.start,
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Container(
-                          // padding: pw.EdgeInsets.all(10),
-                          width: 175,
-
-                          // height: 100,
-                          // decoration: pw.BoxDecoration(
-                          //   border: pw.Border.all(color: PdfColors.black),
-                          // ),
-                          child: pw.Text("Things I already or will do to help myself:",
-                            style: pw.TextStyle(
-                              font: headingfont1,
-                              fontWeight: pw.FontWeight.bold,
-                              fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
-                            ),
-                          ),
-                        ),
-
-
-
-                        pw.SizedBox(height: 10,),
-
-                        pw.Image(myresponsibility,width: 70, height:70)
-                      ],
-                    ),
-
+                ]
+            );
+          },
+          margin: pw.EdgeInsets.all(0),
+          build: (context) {
+            return [
+              pw.Wrap(
+                  children:[
                     pw.Container(
-                      padding: pw.EdgeInsets.all(10),
-                      margin: pw.EdgeInsets.only(right: 30, left: 19.5),
-                      width: 340,
-                      constraints: pw.BoxConstraints(
-                        minHeight: 140,
-                      ),
-                      // height: 100,
+                      padding: pw.EdgeInsets.all(5),
+                      margin: pw.EdgeInsets.symmetric(horizontal: 30),
+                      width: double.maxFinite,
                       decoration: pw.BoxDecoration(
                         border: pw.Border.all(color: PdfColors.black),
+                        color: PdfColor.fromInt(0xffd9e2f3),
                       ),
-                      child: pw.Column(children: [...SolutiontableRows1]),
+                      child: pw.Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${employerController.text}",
+                          style: pw.TextStyle(font: headingfont1,fontSize: 18, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                      ),
                     ),
+
+                    pw.Padding(
+                        padding: const pw.EdgeInsets.symmetric(vertical: 30,),
+                        child: pw.SizedBox()
+                    ),
+                    //pw.Padding(padding: pw.EdgeInsets.all(20)),
+
+                    pw.Padding(
+                        padding: const pw.EdgeInsets.symmetric(horizontal: 30,),
+                        child: pw.Text("Here are things that can help me, for which I can and want to take",
+                            style: pw.TextStyle(font: headingfont1,fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),)
+                        )),
+
+
+                    (SolutiontableRows1.isNotEmpty) ? pw.Padding(
+                        padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                        child: pw.Text("Personal Responsibility",
+                            style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                        )) : pw.SizedBox(),
+
+                    (SolutiontableRows1.isNotEmpty) ? pw.SizedBox(height: 40,) : pw.SizedBox(),
+
+                    (SolutiontableRows1.isNotEmpty) ?  pw.Padding(
+                      padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                      child: pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.start,
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            pw.Column(
+                              mainAxisAlignment: pw.MainAxisAlignment.start,
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
+                              children: [
+                                pw.Container(
+                                  // padding: pw.EdgeInsets.all(10),
+                                  width: 175,
+
+                                  // height: 100,
+                                  // decoration: pw.BoxDecoration(
+                                  //   border: pw.Border.all(color: PdfColors.black),
+                                  // ),
+                                  child: pw.Text("Things I already or will do to help myself:",
+                                    style: pw.TextStyle(
+                                      font: headingfont1,
+                                      fontWeight: pw.FontWeight.bold,
+                                      fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                                    ),
+                                  ),
+                                ),
+
+
+
+                                pw.SizedBox(height: 10,),
+
+                                pw.Image(myresponsibility,width: 70, height:70)
+                              ],
+                            ),
+
+                            pw.Container(
+                              padding: pw.EdgeInsets.all(10),
+                              margin: pw.EdgeInsets.only(right: 30, left: 19.5),
+                              width: 340,
+                              constraints: pw.BoxConstraints(
+                                minHeight: 140,
+                              ),
+                              // height: 100,
+                              decoration: pw.BoxDecoration(
+                                border: pw.Border.all(color: PdfColors.black),
+                              ),
+                              child: pw.Column(children: paginatedContent[i]),
+                            ),
+                          ]
+                      ),
+                    ) : pw.SizedBox(),
+
+                    (SolutiontableRows1.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+
+
+
                   ]
-              ),
-            ) : pw.SizedBox(),
+              )];
+          },
+        ),
+      );
+      ;}
 
-            (SolutiontableRows1.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+    List<List<pw.Widget>> paginatedContent1 = paginateContent(SolutiontableRows2, 7); // Example: 20 items per page
+    for (int i = 0; i < paginatedContent1.length; i++) {
+      pdf.addPage(
+        pw.MultiPage(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          pageFormat: PdfPageFormat.a4,
+          header: (context) {
+            return pw.Image(image);
+          },
+          footer: (context) {
+            return pw.Column(
+                children: [
+                  pw.Image(image),
+                  pw.SizedBox(height: 5,),
 
+                  pw.Padding(
+                    padding: pw.EdgeInsets.symmetric(horizontal: 30),
+                    child:  pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Text("${nameController.text}: my confidential preview summary",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
+                          pw.SizedBox(width: 70,),
 
-          ];
-        },
-      ),
-    ) : pw.SizedBox();
+                          pw.Text("${AboutMeDatetextController.text}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
-    (SolutiontableRows2.isNotEmpty||SolutiontableRows3.isNotEmpty) ?  pdf.addPage(
-      pw.MultiPage(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
-        pageFormat: PdfPageFormat.a4,
-        header: (context) {
-          return pw.Image(image);
-        },
-        footer: (context) {
-          return pw.Column(
-              children: [
-                pw.Image(image),
-                pw.SizedBox(height: 5,),
+                          pw.SizedBox(width: 120,),
 
-                pw.Padding(
-                  padding: pw.EdgeInsets.symmetric(horizontal: 30),
-                  child:  pw.Row(
-                      mainAxisAlignment: pw.MainAxisAlignment.center,
-                      children: [
-                        pw.Text("${nameController.text}: my confidential preview summary",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+                          pw.Text("Page ${context.pageNumber} of ${context.pagesCount}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
-                        pw.SizedBox(width: 70,),
-
-                        pw.Text("${AboutMeDatetextController.text}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
-
-                        pw.SizedBox(width: 120,),
-
-                        pw.Text("Page ${context.pageNumber} of ${context.pagesCount}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
-
-                      ]
+                        ]
+                    ),
                   ),
-                ),
 
 
 
-                pw.SizedBox(height: 15,),
+                  pw.SizedBox(height: 15,),
 
-              ]
-          );
-        },
-        margin: pw.EdgeInsets.all(0),
-        build: (context) {
-          return [
-            pw.Container(
-              padding: pw.EdgeInsets.all(5),
-              margin: pw.EdgeInsets.symmetric(horizontal: 30),
-              width: double.maxFinite,
-              decoration: pw.BoxDecoration(
-                border: pw.Border.all(color: PdfColors.black),
-                color: PdfColor.fromInt(0xffd9e2f3),
-              ),
-              child: pw.Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${employerController.text}",
-                  style: pw.TextStyle(font: headingfont1,fontSize: 18, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
-              ),
-            ),
-
-            pw.SizedBox(height: 20,),
-            //pw.Padding(padding: pw.EdgeInsets.all(20)),
-
-            pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                child: pw.Text("Here are things that can help me, which I want to",
-                    style: pw.TextStyle(font: headingfont1,fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),)
-                )),
-
-            // pw.SizedBox(height: 10,),
-
-
-            (SolutiontableRows2.isNotEmpty) ? pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                child: pw.Text("Request from my Employer",
-                    style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
-                )) : pw.SizedBox(),
-
-            (SolutiontableRows2.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
-
-            (SolutiontableRows2.isNotEmpty) ? pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                child: pw.Text("My request of ${employerController.text}",
-                    style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
-                )) : pw.SizedBox(),
-
-            (SolutiontableRows2.isNotEmpty) ? pw.SizedBox(height: 15,) : pw.SizedBox(),
-
-            (SolutiontableRows2.isNotEmpty) ?  pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-              child: pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.start,
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Column(
-                      mainAxisAlignment: pw.MainAxisAlignment.start,
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Container(
-                          // padding: pw.EdgeInsets.all(10),
-                          width: 175,
-
-                          // height: 100,
-                          // decoration: pw.BoxDecoration(
-                          //   border: pw.Border.all(color: PdfColors.black),
-                          // ),
-                          child: pw.Text("${employerController.text} already provides the following assistance to me, which I’d like if possible to continue to receive",
-                            style: pw.TextStyle(
-                              font: headingfont1,
-                              fontWeight: pw.FontWeight.bold,
-                              fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
-                            ),
-                          ),
-                        ),
-
-
-
-                        pw.SizedBox(height: 10,),
-
-                        pw.Image(request1,width: 70, height:70)
-                      ],
-                    ),
-
+                ]
+            );
+          },
+          margin: pw.EdgeInsets.all(0),
+          build: (context) {
+            return [
+              pw.Wrap(
+                  children:[
                     pw.Container(
-                      padding: pw.EdgeInsets.all(10),
-                      margin: pw.EdgeInsets.only(right: 30, left: 19.5),
-                      width: 340,
-                      constraints: pw.BoxConstraints(
-                        minHeight: 140,
-                      ),
-                      // height: 100,
+                      padding: pw.EdgeInsets.all(5),
+                      margin: pw.EdgeInsets.symmetric(horizontal: 30),
+                      width: double.maxFinite,
                       decoration: pw.BoxDecoration(
                         border: pw.Border.all(color: PdfColors.black),
+                        color: PdfColor.fromInt(0xffd9e2f3),
                       ),
-                      child: pw.Column(children: [...SolutiontableRows2]),
+                      child: pw.Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${employerController.text}",
+                          style: pw.TextStyle(font: headingfont1,fontSize: 18, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                      ),
                     ),
-                  ]
-              ),
-            ) : pw.SizedBox(),
+                    pw.Padding(
+                        padding: const pw.EdgeInsets.symmetric(vertical: 30,),
+                        child: pw.SizedBox()
+                    ),
+                    pw.Padding(
+                        padding: const pw.EdgeInsets.symmetric(horizontal: 30,),
+                        child: pw.Text("Here are things that can help me that I wish to discuss",
+                            style: pw.TextStyle(font: headingfont1,fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),)
+                        )),
 
-            (SolutiontableRows2.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+                    // pw.SizedBox(height: 10,),
 
 
-            (SolutiontableRows3.isNotEmpty) ?  pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-              child: pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.start,
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
                     pw.Column(
-                      mainAxisAlignment: pw.MainAxisAlignment.start,
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Container(
-                          // padding: pw.EdgeInsets.all(10),
-                          width: 175,
+                        mainAxisAlignment: pw.MainAxisAlignment.start,
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          (SolutiontableRows2.isNotEmpty) ? pw.Padding(
+                              padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                              child: pw.Text("requesting from my employer",
+                                  style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                              )) : pw.SizedBox(),
 
-                          // height: 100,
-                          // decoration: pw.BoxDecoration(
-                          //   border: pw.Border.all(color: PdfColors.black),
-                          // ),
-                          child: pw.Text("I’m asking ${employerController.text} whether it is possible to start providing for me:",
-                            style: pw.TextStyle(
-                              font: headingfont1,
-                              fontWeight: pw.FontWeight.bold,
-                              fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                          (SolutiontableRows2.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+
+                          (SolutiontableRows2.isNotEmpty) ? pw.Padding(
+                              padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                              child: pw.Text("My request of ${employerController.text}",
+                                  style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                              )) : pw.SizedBox(),
+
+                          (SolutiontableRows2.isNotEmpty) ? pw.SizedBox(height: 15,) : pw.SizedBox(),
+
+                          (SolutiontableRows2.isNotEmpty) ?  pw.Padding(
+                            padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                            child: pw.Row(
+                                mainAxisAlignment: pw.MainAxisAlignment.start,
+                                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                                children: [
+                                  pw.Column(
+                                    mainAxisAlignment: pw.MainAxisAlignment.start,
+                                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                                    children: [
+                                      pw.Container(
+                                        // padding: pw.EdgeInsets.all(10),
+                                        width: 175,
+
+                                        // height: 100,
+                                        // decoration: pw.BoxDecoration(
+                                        //   border: pw.Border.all(color: PdfColors.black),
+                                        // ),
+                                        child: pw.Text("${employerController.text} already provides the following assistance to me, which I’d like if possible to continue to receive",
+                                          style: pw.TextStyle(
+                                            font: headingfont1,
+                                            fontWeight: pw.FontWeight.bold,
+                                            fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                                          ),
+                                        ),
+                                      ),
+
+
+
+                                      pw.SizedBox(height: 10,),
+
+                                      pw.Image(request1,width: 70, height:70)
+                                    ],
+                                  ),
+
+                                  pw.Container(
+                                    padding: pw.EdgeInsets.all(10),
+                                    margin: pw.EdgeInsets.only(right: 30, left: 19.5),
+                                    width: 340,
+                                    constraints: pw.BoxConstraints(
+                                      minHeight: 140,
+                                    ),
+                                    // height: 100,
+                                    decoration: pw.BoxDecoration(
+                                      border: pw.Border.all(color: PdfColors.black),
+                                    ),
+                                    child: pw.Column(children: paginatedContent1[i]),
+                                  ),
+                                ]
                             ),
-                          ),
-                        ),
+                          ) : pw.SizedBox(),
 
-
-
-                        pw.SizedBox(height: 10,),
-
-                        pw.Image(request2,width: 70, height:70)
-                      ],
+                          (SolutiontableRows2.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+                        ]
                     ),
 
-                    pw.Container(
-                      padding: pw.EdgeInsets.all(10),
-                      margin: pw.EdgeInsets.only(right: 30, left: 19.5),
-                      width: 340,
-                      constraints: pw.BoxConstraints(
-                        minHeight: 140,
-                      ),
-                      // height: 100,
-                      decoration: pw.BoxDecoration(
-                        border: pw.Border.all(color: PdfColors.black),
-                      ),
-                      child: pw.Column(children: [...SolutiontableRows3]),
-                    ),
                   ]
               ),
-            ) : pw.SizedBox(),
+            ];
+          },
+        ),
+      );
+    }
 
-            (SolutiontableRows3.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+    List<List<pw.Widget>> paginatedContent2 = paginateContent(SolutiontableRows3, 7); // Example: 20 items per page
+    for (int i = 0; i < paginatedContent2.length; i++) {
+      pdf.addPage(
+        pw.MultiPage(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          pageFormat: PdfPageFormat.a4,
+          header: (context) {
+            return pw.Image(image);
+          },
+          footer: (context) {
+            return pw.Column(
+                children: [
+                  pw.Image(image),
+                  pw.SizedBox(height: 5,),
 
-          ];
-        },
-      ),
-    ) : pw.SizedBox();
+                  pw.Padding(
+                    padding: pw.EdgeInsets.symmetric(horizontal: 30),
+                    child:  pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Text("${nameController.text}: my confidential preview summary",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
-    (SolutiontableRows4.isNotEmpty||SolutiontableRows5.isNotEmpty) ? pdf.addPage(
-      pw.MultiPage(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
-        pageFormat: PdfPageFormat.a4,
-        header: (context) {
-          return pw.Image(image);
-        },
-        footer: (context) {
-          return pw.Column(
-              children: [
-                pw.Image(image),
-                pw.SizedBox(height: 5,),
+                          pw.SizedBox(width: 70,),
 
-                pw.Padding(
-                  padding: pw.EdgeInsets.symmetric(horizontal: 30),
-                  child:  pw.Row(
-                      mainAxisAlignment: pw.MainAxisAlignment.center,
-                      children: [
-                        pw.Text("${nameController.text}: my confidential preview summary",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+                          pw.Text("${AboutMeDatetextController.text}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
-                        pw.SizedBox(width: 70,),
+                          pw.SizedBox(width: 120,),
 
-                        pw.Text("${AboutMeDatetextController.text}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+                          pw.Text("Page ${context.pageNumber} of ${context.pagesCount}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
-                        pw.SizedBox(width: 120,),
-
-                        pw.Text("Page ${context.pageNumber} of ${context.pagesCount}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
-
-                      ]
+                        ]
+                    ),
                   ),
+
+
+
+                  pw.SizedBox(height: 15,),
+
+                ]
+            );
+          },
+          margin: pw.EdgeInsets.all(0),
+          build: (context) {
+            return [
+              pw.Container(
+                padding: pw.EdgeInsets.all(5),
+                margin: pw.EdgeInsets.symmetric(horizontal: 30),
+                width: double.maxFinite,
+                decoration: pw.BoxDecoration(
+                  border: pw.Border.all(color: PdfColors.black),
+                  color: PdfColor.fromInt(0xffd9e2f3),
                 ),
-
-
-
-                pw.SizedBox(height: 15,),
-
-              ]
-          );
-        },
-        margin: pw.EdgeInsets.all(0),
-        build: (context) {
-          // List<pw.Widget> SolutiontableRows4 =  generateSolutionsNoNicetohaveWidgets(dataList2,headingfont1,bodyfont1);
-          // List<pw.Widget> SolutiontableRows5 =  generateSolutionsMustHaveWidgets(dataList2,headingfont1,bodyfont1);
-          return [
-            (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.Container(
-              padding: pw.EdgeInsets.all(5),
-              margin: pw.EdgeInsets.symmetric(horizontal: 30),
-              width: double.maxFinite,
-              decoration: pw.BoxDecoration(
-                border: pw.Border.all(color: PdfColors.black),
-                color: PdfColor.fromInt(0xffd9e2f3),
+                child: pw.Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${employerController.text}",
+                    style: pw.TextStyle(font: headingfont1,fontSize: 18, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                ),
               ),
-              child: pw.Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${employerController.text}",
-                  style: pw.TextStyle(font: headingfont1,fontSize: 18, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
-              ),
-            ) : pw.SizedBox(),
 
-            (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 20,) : pw.SizedBox(),
-            //pw.Padding(padding: pw.EdgeInsets.all(20)),
+              pw.SizedBox(height: 20,),
+              //pw.Padding(padding: pw.EdgeInsets.all(20)),
 
-            (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                child: pw.Text("Here are things that can help me, for which I can and want to take",
-                    style: pw.TextStyle(font: headingfont1,fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),)
-                )) : pw.SizedBox(),
+              pw.Wrap(
+                  children:[
+                    (SolutiontableRows3.isNotEmpty) ?  pw.Padding(
+                      padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                      child: pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.start,
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            pw.Column(
+                              mainAxisAlignment: pw.MainAxisAlignment.start,
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
+                              children: [
+                                pw.Container(
+                                  // padding: pw.EdgeInsets.all(10),
+                                  width: 175,
 
-            (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+                                  // height: 100,
+                                  // decoration: pw.BoxDecoration(
+                                  //   border: pw.Border.all(color: PdfColors.black),
+                                  // ),
+                                  child: pw.Text("I’m asking ${employerController.text} whether it is possible to start providing for me:",
+                                    style: pw.TextStyle(
+                                      font: headingfont1,
+                                      fontWeight: pw.FontWeight.bold,
+                                      fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                                    ),
+                                  ),
+                                ),
 
 
-            (SolutiontableRows4.isNotEmpty) ? pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                child: pw.Text("request from my employer",
-                    style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
-                )) : pw.SizedBox(),
 
-            (SolutiontableRows4.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+                                pw.SizedBox(height: 10,),
 
-            (SolutiontableRows4.isNotEmpty) ? pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                child: pw.Text("My request of ${employerController.text}",
-                    style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
-                )) : pw.SizedBox(),
-
-            (SolutiontableRows4.isNotEmpty) ? pw.SizedBox(height: 15,) : pw.SizedBox(),
-
-            (SolutiontableRows4.isNotEmpty) ?  pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-              child: pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.start,
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Column(
-                      mainAxisAlignment: pw.MainAxisAlignment.start,
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Container(
-                          // padding: pw.EdgeInsets.all(10),
-                          width: 175,
-
-                          // height: 100,
-                          // decoration: pw.BoxDecoration(
-                          //   border: pw.Border.all(color: PdfColors.black),
-                          // ),
-                          child: pw.Text("I’m asking ${employerController.text} to start providing for me but they are not essential:",
-                            style: pw.TextStyle(
-                              font: headingfont1,
-                              fontWeight: pw.FontWeight.bold,
-                              fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                                pw.Image(request2,width: 70, height:70)
+                              ],
                             ),
-                          ),
-                        ),
 
-
-
-                        pw.SizedBox(height: 10,),
-
-                        pw.Image(myresponsibility,width: 70, height:70)
-                      ],
-                    ),
-
-                    pw.Container(
-                      padding: pw.EdgeInsets.all(10),
-                      margin: pw.EdgeInsets.only(right: 30, left: 19.5),
-                      width: 340,
-                      constraints: pw.BoxConstraints(
-                        minHeight: 140,
-                      ),
-                      // height: 100,
-                      decoration: pw.BoxDecoration(
-                        border: pw.Border.all(color: PdfColors.black),
-                      ),
-                      child: pw.Column(children: [...SolutiontableRows4]),
-                    ),
-                  ]
-              ),
-            ) : pw.SizedBox(),
-
-            (SolutiontableRows4.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
-
-
-            (SolutiontableRows5.isNotEmpty) ?  pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-              child: pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.start,
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Column(
-                      mainAxisAlignment: pw.MainAxisAlignment.start,
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Container(
-                          // padding: pw.EdgeInsets.all(10),
-                          width: 175,
-
-                          // height: 100,
-                          // decoration: pw.BoxDecoration(
-                          //   border: pw.Border.all(color: PdfColors.black),
-                          // ),
-                          child: pw.Text("${employerController.text} already provides for me but are not needed anymore:",
-                            style: pw.TextStyle(
-                              font: headingfont1,
-                              fontWeight: pw.FontWeight.bold,
-                              fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                            pw.Container(
+                              padding: pw.EdgeInsets.all(10),
+                              margin: pw.EdgeInsets.only(right: 30, left: 19.5),
+                              width: 340,
+                              constraints: pw.BoxConstraints(
+                                minHeight: 140,
+                              ),
+                              // height: 100,
+                              decoration: pw.BoxDecoration(
+                                border: pw.Border.all(color: PdfColors.black),
+                              ),
+                              child: pw.Column(children: paginatedContent2[i]),
                             ),
-                          ),
-                        ),
-
-
-
-                        pw.SizedBox(height: 10,),
-
-                        pw.Image(myresponsibility,width: 70, height:70)
-                      ],
-                    ),
-
-                    pw.Container(
-                      padding: pw.EdgeInsets.all(10),
-                      margin: pw.EdgeInsets.only(right: 30, left: 19.5),
-                      width: 340,
-                      constraints: pw.BoxConstraints(
-                        minHeight: 140,
+                          ]
                       ),
-                      // height: 100,
-                      decoration: pw.BoxDecoration(
-                        border: pw.Border.all(color: PdfColors.black),
-                      ),
-                      child: pw.Column(children: [...SolutiontableRows5]),
-                    ),
-                  ]
+                    ) : pw.SizedBox(),
+
+                    (SolutiontableRows3.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),]
               ),
-            ) : pw.SizedBox(),
 
-            (SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
 
-            // pw.Padding(
-            //     padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-            //     // child:  pw.Text("My requests include workplace accommodations that I view as reasonable adjustments under the Equality Act 2010",
-            //     child:  pw.Text("https://assets.publishing.service.gov.uk/media/5a7b346d40f0b66a2fc05dc5/Equality_Act_2010_-_Duty_on_employers_to_make_reasonable_adjustments_for....pdf",
-            //         style: pw.TextStyle(font: bodyfont1,fontSize: 14,)
-            //     )),
+            ];
+          },
+        ),
+      );
+    }
 
-            pw.Padding(
+    List<List<pw.Widget>> paginatedContent3 = paginateContent(SolutiontableRows4, 7); // Example: 20 items per page
+    for (int i = 0; i < paginatedContent3.length; i++) {
+      pdf.addPage(
+        pw.MultiPage(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          pageFormat: PdfPageFormat.a4,
+          header: (context) {
+            return pw.Image(image);
+          },
+          footer: (context) {
+            return pw.Column(
+                children: [
+                  pw.Image(image),
+                  pw.SizedBox(height: 5,),
+
+                  pw.Padding(
+                    padding: pw.EdgeInsets.symmetric(horizontal: 30),
+                    child:  pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Text("${nameController.text}: my confidential preview summary",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                          pw.SizedBox(width: 70,),
+
+                          pw.Text("${AboutMeDatetextController.text}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                          pw.SizedBox(width: 120,),
+
+                          pw.Text("Page ${context.pageNumber} of ${context.pagesCount}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                        ]
+                    ),
+                  ),
+
+
+
+                  pw.SizedBox(height: 15,),
+
+                ]
+            );
+          },
+          margin: pw.EdgeInsets.all(0),
+          build: (context) {
+            // List<pw.Widget> SolutiontableRows4 =  generateSolutionsNoNicetohaveWidgets(dataList2,headingfont1,bodyfont1);
+            // List<pw.Widget> SolutiontableRows5 =  generateSolutionsMustHaveWidgets(dataList2,headingfont1,bodyfont1);
+            return [
+              (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.Container(
+                padding: pw.EdgeInsets.all(5),
+                margin: pw.EdgeInsets.symmetric(horizontal: 30),
+                width: double.maxFinite,
+                decoration: pw.BoxDecoration(
+                  border: pw.Border.all(color: PdfColors.black),
+                  color: PdfColor.fromInt(0xffd9e2f3),
+                ),
+                child: pw.Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${employerController.text}",
+                    style: pw.TextStyle(font: headingfont1,fontSize: 18, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                ),
+              ) : pw.SizedBox(),
+
+              (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 20,) : pw.SizedBox(),
+              //pw.Padding(padding: pw.EdgeInsets.all(20)),
+
+              (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.Padding(
+                  padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                  child: pw.Text("Here are things that can help me, for which I can and want to take",
+                      style: pw.TextStyle(font: headingfont1,fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),)
+                  )) : pw.SizedBox(),
+
+              (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+
+
+              (SolutiontableRows4.isNotEmpty) ? pw.Padding(
+                  padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                  child: pw.Text("request from my employer",
+                      style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                  )) : pw.SizedBox(),
+
+              (SolutiontableRows4.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+
+              (SolutiontableRows4.isNotEmpty) ? pw.Padding(
+                  padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                  child: pw.Text("My request of ${employerController.text}",
+                      style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                  )) : pw.SizedBox(),
+
+              (SolutiontableRows4.isNotEmpty) ? pw.SizedBox(height: 15,) : pw.SizedBox(),
+
+              (SolutiontableRows4.isNotEmpty) ?  pw.Padding(
                 padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                // child:  pw.Text("My requests include workplace accommodations that I view as reasonable adjustments under the Equality Act 2010",
-                child: pw.RichText(
-                  text: pw.TextSpan(
-                    style: pw.TextStyle(font: bodyfont1),
+                child: pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.start,
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
-                      pw.TextSpan(
-                        text: 'My requests include workplace accommodations that I view as ',
-                      ),
-                      pw.WidgetSpan(
-                        child: pw.UrlLink(
-                          destination: 'https://assets.publishing.service.gov.uk/media/5a7b346d40f0b66a2fc05dc5/Equality_Act_2010_-_Duty_on_employers_to_make_reasonable_adjustments_for....pdf',
-                          child: pw.Text(
-                            'reasonable adjustments',
-                            style: pw.TextStyle(
-                              color: PdfColors.blue,
-                              decoration: pw.TextDecoration.underline,
+                      pw.Column(
+                        mainAxisAlignment: pw.MainAxisAlignment.start,
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Container(
+                            // padding: pw.EdgeInsets.all(10),
+                            width: 175,
+
+                            // height: 100,
+                            // decoration: pw.BoxDecoration(
+                            //   border: pw.Border.all(color: PdfColors.black),
+                            // ),
+                            child: pw.Text("I’m asking ${employerController.text} to start providing for me but they are not essential:",
+                              style: pw.TextStyle(
+                                font: headingfont1,
+                                fontWeight: pw.FontWeight.bold,
+                                fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                              ),
                             ),
                           ),
+
+
+
+                          pw.SizedBox(height: 10,),
+
+                          pw.Image(myresponsibility,width: 70, height:70)
+                        ],
+                      ),
+
+                      pw.Container(
+                        padding: pw.EdgeInsets.all(10),
+                        margin: pw.EdgeInsets.only(right: 30, left: 19.5),
+                        width: 340,
+                        constraints: pw.BoxConstraints(
+                          minHeight: 140,
                         ),
+                        // height: 100,
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border.all(color: PdfColors.black),
+                        ),
+                        child: pw.Column(children: paginatedContent3[i]),
                       ),
-                      pw.TextSpan(
-                        text: ' under the Equality Act 2010.',
+                    ]
+                ),
+              ) : pw.SizedBox(),
+
+              (SolutiontableRows4.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+
+
+
+            ];
+          },
+        ),
+      );
+    }
+
+    try {
+      List<List<pw.Widget>> paginatedContent4 = paginateContent(SolutiontableRows5, 5); // Example: 20 items per page
+      for (int i = 0; i < paginatedContent4.length; i++) {
+        pdf.addPage(
+          pw.MultiPage(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            pageFormat: PdfPageFormat.a4,
+            header: (context) {
+              return pw.Image(image);
+            },
+            footer: (context) {
+              return pw.Column(
+                  children: [
+                    pw.Image(image),
+                    pw.SizedBox(height: 5,),
+
+                    pw.Padding(
+                      padding: pw.EdgeInsets.symmetric(horizontal: 30),
+                      child:  pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.center,
+                          children: [
+                            pw.Text("${nameController.text}: my confidential preview summary",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                            pw.SizedBox(width: 70,),
+
+                            pw.Text("${AboutMeDatetextController.text}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                            pw.SizedBox(width: 120,),
+
+                            pw.Text("Page ${context.pageNumber} of ${context.pagesCount}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                          ]
                       ),
-                    ],
+                    ),
+
+
+
+                    pw.SizedBox(height: 15,),
+
+                  ]
+              );
+            },
+            margin: pw.EdgeInsets.all(0),
+            build: (context) {
+              // List<pw.Widget> SolutiontableRows4 =  generateSolutionsNoNicetohaveWidgets(dataList2,headingfont1,bodyfont1);
+              // List<pw.Widget> SolutiontableRows5 =  generateSolutionsMustHaveWidgets(dataList2,headingfont1,bodyfont1);
+              return [
+                (SolutiontableRows5.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.Container(
+                  padding: pw.EdgeInsets.all(5),
+                  margin: pw.EdgeInsets.symmetric(horizontal: 30),
+                  width: double.maxFinite,
+                  decoration: pw.BoxDecoration(
+                    border: pw.Border.all(color: PdfColors.black),
+                    color: PdfColor.fromInt(0xffd9e2f3),
                   ),
-                )),
+                  child: pw.Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${employerController.text}",
+                      style: pw.TextStyle(font: headingfont1,fontSize: 18, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                  ),
+                ) : pw.SizedBox(),
 
-          ];
-        },
-      ),
-    ) : pw.SizedBox();
+                (SolutiontableRows5.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 20,) : pw.SizedBox(),
+                //pw.Padding(padding: pw.EdgeInsets.all(20)),
 
+                (SolutiontableRows5.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.Padding(
+                    padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                    child: pw.Text("Here are things that can help me, for which I can and want to take",
+                        style: pw.TextStyle(font: headingfont1,fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),)
+                    )) : pw.SizedBox(),
+
+                (SolutiontableRows5.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+
+
+                (SolutiontableRows5.isNotEmpty) ? pw.Padding(
+                    padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                    child: pw.Text("request from my employer",
+                        style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                    )) : pw.SizedBox(),
+
+                (SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+
+                (SolutiontableRows5.isNotEmpty) ? pw.Padding(
+                    padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                    child: pw.Text("My request of ${employerController.text}",
+                        style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                    )) : pw.SizedBox(),
+
+                (SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 15,) : pw.SizedBox(),
+
+                (SolutiontableRows5.isNotEmpty) ?  pw.Padding(
+                  padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                  child: pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.start,
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Column(
+                          mainAxisAlignment: pw.MainAxisAlignment.start,
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            pw.Container(
+                              // padding: pw.EdgeInsets.all(10),
+                              width: 175,
+
+                              // height: 100,
+                              // decoration: pw.BoxDecoration(
+                              //   border: pw.Border.all(color: PdfColors.black),
+                              // ),
+                              child: pw.Text("${employerController.text} already provides for me but are not needed anymore:",
+                                style: pw.TextStyle(
+                                  font: headingfont1,
+                                  fontWeight: pw.FontWeight.bold,
+                                  fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                                ),
+                              ),
+                            ),
+
+
+
+                            pw.SizedBox(height: 10,),
+
+                            pw.Image(myresponsibility,width: 70, height:70)
+                          ],
+                        ),
+
+                        pw.Container(
+                          padding: pw.EdgeInsets.all(10),
+                          margin: pw.EdgeInsets.only(right: 30, left: 19.5),
+                          width: 340,
+                          constraints: pw.BoxConstraints(
+                            minHeight: 140,
+                          ),
+                          // height: 100,
+                          decoration: pw.BoxDecoration(
+                            border: pw.Border.all(color: PdfColors.black),
+                          ),
+                          child: pw.Column(children: paginatedContent4[i]),
+                        ),
+                      ]
+                  ),
+                ) : pw.SizedBox(),
+
+                (SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+
+                // pw.Padding(
+                //     padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                //     // child:  pw.Text("My requests include workplace accommodations that I view as reasonable adjustments under the Equality Act 2010",
+                //     child:  pw.Text("https://assets.publishing.service.gov.uk/media/5a7b346d40f0b66a2fc05dc5/Equality_Act_2010_-_Duty_on_employers_to_make_reasonable_adjustments_for....pdf",
+                //         style: pw.TextStyle(font: bodyfont1,fontSize: 14,)
+                //     )),
+
+                // (context.pageNumber == context.pagesCount ) ?
+                pw.Padding(
+                    padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                    // child:  pw.Text("My requests include workplace accommodations that I view as reasonable adjustments under the Equality Act 2010",
+                    child: pw.RichText(
+                      text: pw.TextSpan(
+                        style: pw.TextStyle(font: bodyfont1),
+                        children: [
+                          pw.TextSpan(
+                            text: 'My requests include workplace accommodations that I view as ',
+                          ),
+                          pw.WidgetSpan(
+                            child: pw.UrlLink(
+                              destination: 'https://assets.publishing.service.gov.uk/media/5a7b346d40f0b66a2fc05dc5/Equality_Act_2010_-_Duty_on_employers_to_make_reasonable_adjustments_for....pdf',
+                              child: pw.Text(
+                                'reasonable adjustments',
+                                style: pw.TextStyle(
+                                    color: PdfColors.blue,
+                                    decoration: pw.TextDecoration.underline,
+                                    font: bodyfont1
+                                ),
+                              ),
+                            ),
+                          ),
+                          pw.TextSpan(
+                            text: ' under the Equality Act 2010.',
+                          ),
+                        ],
+                      ),
+                    )
+                )
+                // : pw.SizedBox()
+
+
+              ];
+            },
+          ),
+        );
+      }
+    } catch (e) {
+      print("Error generating PDF 5: $e");
+    }
     return pdf.save();
   }
 
@@ -18294,6 +18613,8 @@ Thank you for being open to understanding me better and for considering my reque
 
                                 int indexToUpdate = challengesList.indexWhere((element) => element['id'] == Id);
 
+                                print("indexToUpdate: ${indexToUpdate}");
+
                                 if (indexToUpdate != -1) {
                                   // Create a new solutionData to update the existing one
                                   Map<String, dynamic> updatedSolutionData = {
@@ -18320,13 +18641,15 @@ Thank you for being open to understanding me better and for considering my reque
                                     'Potential Strengths': PotentialStrengths,
                                     'Hidden Strengths': HiddenStrengths,
                                     'Impact_on_me': NotesController.text,
-                                    'Attachment_link': userAboutMEProvider.downloadURL==null ? Attachment != null ? Attachment : "" : userAboutMEProvider.downloadURL,
-                                    'Attachment': userAboutMEProvider.aadhar== null ? Attachment != null ? Attachment : "" : userAboutMEProvider.aadhar
+                                    'Attachment_link': userAboutMEProvider.downloadURL ?? (Attachment != null ? Attachment : ""),
+                                    'Attachment': userAboutMEProvider.aadhar ?? (Attachment != null ? Attachment : "")
                                   };
 
                                   // challengesList[indexToUpdate] = updatedSolutionData;
+
                                   userAboutMEProvider.updateconfirmList(challengesList,indexToUpdate,updatedSolutionData);
-                                  userAboutMEProvider.updateconfirmList(_previewProvider.PreviewChallengesList,indexToUpdate,updatedSolutionData);
+                                  // userAboutMEProvider.updateconfirmList(_previewProvider.PreviewChallengesList,indexToUpdate,updatedSolutionData);
+                                  print("updated challengesList.");
                                 } else {
                                   print("Id not found in challengesList.");
                                 }
@@ -19506,7 +19829,8 @@ Thank you for being open to understanding me better and for considering my reque
                                   // print("solutionsList length after edit: ${solutionsList.length}");
                                   // userAboutMEProvider.updateconfirmList(solutionsList, indexToUpdate, solutionData);
 
-                                  solutionsList.add(solutionData);
+                                  // solutionsList.add(solutionData);
+                                  userAboutMEProvider.updateconfirmList(solutionsList,indexToUpdate,solutionData);
                                   userAboutMEProvider.updatenewprovider(solutionData["Provider"], solutionData["id"]);
                                   userAboutMEProvider.updatenewInplace(solutionData["InPlace"], solutionData["id"]);
                                 }
@@ -19517,6 +19841,7 @@ Thank you for being open to understanding me better and for considering my reque
 
 
                                 userAboutMEProvider.updateNotesByIdSolutions(userAboutMEProvider.editsolutionss,Id,NotesController.text,userAboutMEProvider.selectedInPlace,userAboutMEProvider.selectedProvider);
+                                // userAboutMEProvider.updateNotesByIdSolutions(solutionsList,Id,NotesController.text,userAboutMEProvider.selectedInPlace,userAboutMEProvider.selectedProvider);
 
                                 widget.refreshPage();
 
@@ -21489,7 +21814,7 @@ Thank you for being open to understanding me better and for considering my reque
                                           // SizedBox(height: 10),
 
                                           Container(
-                                            height: 180,
+                                            height:  MediaQuery.of(context).size.height * 0.19,
                                             child: Consumer<UniversalListProvider>(
                                               builder: (context, provider, child) {
                                                   // List<DocumentSnapshot<Object?>>? relatedSolutions = snapshot.data;
@@ -21566,217 +21891,242 @@ Thank you for being open to understanding me better and for considering my reque
                                                             print("challengesData Keywords: ${challengesData['Keywords']}");
                                                             return Container(
                                                               margin: EdgeInsets.symmetric(horizontal: 15),
-                                                              padding: EdgeInsets.symmetric(horizontal: 12,vertical: 6),
-                                                              width: MediaQuery.of(context).size.width * 0.17,
+                                                              padding: EdgeInsets.only(left: 12,right: 12,bottom: 16,top: 6),
+                                                              width: MediaQuery.of(context).size.width * 0.19,
+                                                              height: MediaQuery.of(context).size.height * 0.08,
                                                               decoration: BoxDecoration(
                                                                 border: Border.all(color: Colors.orange, width : 2),
                                                                 borderRadius: BorderRadius.circular(20),
                                                               ),
                                                               child: SingleChildScrollView(
                                                                 child: Column(
-                                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                  children: [
-                                                                    Row(
-                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                                                      children: [
-                                                                        Flexible(
-                                                                          child: Text("${challengesData['Label']}",
-                                                                              maxLines: 2,
-                                                                              style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                                                                                  fontSize: 15,
-                                                                                  color: Colors.black)),
-                                                                        ),
-                                                                        // InkWell(
-                                                                        //   onTap: (){
-                                                                        //     _userAboutMEProvider.isRecommendedAddedChallenge(true,  relatedChallenges![i]);
-                                                                        //   },
-                                                                        //   child: Container(
-                                                                        //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                                                        //     width: MediaQuery.of(context).size.width * .05,
-                                                                        //     // width: MediaQuery.of(context).size.width * .15,
-                                                                        //
-                                                                        //     // height: 60,
-                                                                        //     decoration: BoxDecoration(
-                                                                        //       color:Colors.blue ,
-                                                                        //       border: Border.all(
-                                                                        //           color:Colors.blue ,
-                                                                        //           width: 1.0),
-                                                                        //       borderRadius: BorderRadius.circular(8.0),
-                                                                        //     ),
-                                                                        //     child: Center(
-                                                                        //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                                                        //       child: Text(
-                                                                        //         'Add',
-                                                                        //         style: GoogleFonts.montserrat(
-                                                                        //           textStyle:
-                                                                        //           Theme
-                                                                        //               .of(context)
-                                                                        //               .textTheme
-                                                                        //               .titleSmall,
-                                                                        //           fontWeight: FontWeight.bold,
-                                                                        //           color:Colors.white ,
-                                                                        //         ),
-                                                                        //       ),
-                                                                        //     ),
-                                                                        //   ),
-                                                                        // ),
-
-                                                                        Row(
-                                                                          children: [
-                                                                            IconButton(
-                                                                                onPressed: (){
-                                                                                  userAboutMEProvider.updateEditChallengePreview(
-                                                                                      challengesData['Label'],
-                                                                                      challengesData['Description'],
-                                                                                      challengesData['Final_description'],
-                                                                                      challengesData['Impact'],
-                                                                                      challengesData['Keywords'],
-                                                                                      challengesData['tags'],
-                                                                                      challengesData['id'],
-                                                                                      isTrueOrFalse,
-                                                                                      challengesData,
-                                                                                    false,
-                                                                                    challengesData['Impacts_to_Coworkers'],
-                                                                                    challengesData['Impacts_to_employee'],
-                                                                                    challengesData['Negative_impacts_to_organisation'],
-                                                                                    challengesData['Related_challenges_tags'],
-                                                                                    challengesData['Suggested_solutions_tags'],
-                                                                                  );
-                                                                                  _universalListProvider.filterChallenges(challengesData['tags']);
-                                                                                  _universalListProvider.filterSolutions(challengesData['tags']);
-                                                                                },
-                                                                                icon: Icon(Icons.visibility, color: Colors.blue,)
-                                                                            ),
-                                                                            SizedBox(width: 5,),
-                                                                            (userAboutMEProvider.isEditChallengeListAdded[challengesData['id']] == true) ?
-                                                                            Text(
-                                                                              'Added',
-                                                                              style: GoogleFonts.montserrat(
-                                                                                textStyle:
-                                                                                Theme
-                                                                                    .of(context)
-                                                                                    .textTheme
-                                                                                    .titleSmall,
-                                                                                fontStyle: FontStyle.italic,
-                                                                                color:Colors.green ,
-                                                                              ),
-                                                                            ) : InkWell(
-                                                                              onTap: (){
-                                                                                // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
-                                                                                userAboutMEProvider.EditRecommendedChallengeAdd(true, relatedChallenges![i]);
-                                                                                toastification.show(context: context,
-                                                                                    title: Text('${challengesData['Label']} added to basket'),
-                                                                                    autoCloseDuration: Duration(milliseconds: 2500),
-                                                                                    alignment: Alignment.center,
-                                                                                    backgroundColor: Colors.green,
-                                                                                    foregroundColor: Colors.white,
-                                                                                    icon: Icon(Icons.check_circle, color: Colors.white,),
-                                                                                    animationDuration: Duration(milliseconds: 1000),
-                                                                                    showProgressBar: false
-                                                                                );
-
-                                                                              },
-                                                                              child: Icon(Icons.add_circle, color: Colors.blue,),
-                                                                              // child: Container(
-                                                                              //   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                                                              //   width: MediaQuery.of(context).size.width * .05,
-                                                                              //   // width: MediaQuery.of(context).size.width * .15,
-                                                                              //
-                                                                              //   // height: 60,
-                                                                              //   decoration: BoxDecoration(
-                                                                              //     color:Colors.blue ,
-                                                                              //     border: Border.all(
-                                                                              //         color:Colors.blue ,
-                                                                              //         width: 1.0),
-                                                                              //     borderRadius: BorderRadius.circular(8.0),
-                                                                              //   ),
-                                                                              //   child: Center(
-                                                                              //     // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                                                              //     child: Text(
-                                                                              //       'Add',
-                                                                              //       style: GoogleFonts.montserrat(
-                                                                              //         textStyle:
-                                                                              //         Theme
-                                                                              //             .of(context)
-                                                                              //             .textTheme
-                                                                              //             .titleSmall,
-                                                                              //         fontWeight: FontWeight.bold,
-                                                                              //         color:Colors.white ,
-                                                                              //       ),
-                                                                              //     ),
-                                                                              //   ),
-                                                                              // ),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-
-                                                                      ],
-                                                                    ),
-                                                                    SizedBox(height: 5,),
-
-                                                                    // Text("${challengesData['Label']}",
-                                                                    //     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                                                                    //         fontSize: 18,
-                                                                    //         color: Colors.black)),
-
-                                                                    Text("${challengesData['Final_description']}",
-                                                                        maxLines: 2,
-                                                                        style: GoogleFonts.montserrat(
-                                                                            fontSize: 15,
-                                                                            color: Colors.black)),
-
-                                                                    SizedBox(height: 5,),
-
-                                                                    Align(
-                                                                      alignment: Alignment.bottomLeft,
-                                                                      child: Wrap(
-                                                                        spacing: 10,
-                                                                        runSpacing: 10,
-                                                                        crossAxisAlignment: WrapCrossAlignment.start,
-                                                                        alignment: WrapAlignment.start,
-                                                                        runAlignment: WrapAlignment.start,
-                                                                        children: matchedTags.map<Widget>((item){
-                                                                          return InkWell(
-                                                                            child: Container(
-                                                                              height: 30,
-                                                                              // width: 200,
-                                                                              padding: EdgeInsets.all(8),
-                                                                              decoration: BoxDecoration(
-                                                                                  borderRadius: BorderRadius.circular(15),
-                                                                                  // color: Colors.teal
-                                                                                  gradient: LinearGradient(colors: [
-                                                                                    Color(0xe7e4dfee),
-                                                                                    Color(0xffe5d5fc),
-                                                                                  ]),
-                                                                                  color: Colors.grey
-                                                                              ),
-                                                                              child: Row(
-                                                                                mainAxisSize: MainAxisSize.min,
-                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                children: [
-                                                                                  GradientText(item,
-                                                                                    style: TextStyle(
-                                                                                      fontWeight: FontWeight.w700,
-                                                                                      fontSize: 10,
-                                                                                      // color: Colors.white,
-                                                                                    ),
-                                                                                    gradientType: GradientType.linear,
-                                                                                    colors: [
-                                                                                      Colors.purple,
-                                                                                      Colors.deepPurple,
-                                                                                    ],
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                            ),
-                                                                          );
-                                                                        }).toList() as List<Widget>,
+                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                                    children: [
+                                                                      Flexible(
+                                                                        child: Text("${challengesData['Label']}",
+                                                                            maxLines: 1,
+                                                                            style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                                                                fontSize: 15,
+                                                                                color: Colors.black)),
                                                                       ),
+                                                                      // InkWell(
+                                                                      //   onTap: (){
+                                                                      //     _userAboutMEProvider.isRecommendedAddedChallenge(true,  relatedChallenges![i]);
+                                                                      //   },
+                                                                      //   child: Container(
+                                                                      //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                      //     width: MediaQuery.of(context).size.width * .05,
+                                                                      //     // width: MediaQuery.of(context).size.width * .15,
+                                                                      //
+                                                                      //     // height: 60,
+                                                                      //     decoration: BoxDecoration(
+                                                                      //       color:Colors.blue ,
+                                                                      //       border: Border.all(
+                                                                      //           color:Colors.blue ,
+                                                                      //           width: 1.0),
+                                                                      //       borderRadius: BorderRadius.circular(8.0),
+                                                                      //     ),
+                                                                      //     child: Center(
+                                                                      //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                      //       child: Text(
+                                                                      //         'Add',
+                                                                      //         style: GoogleFonts.montserrat(
+                                                                      //           textStyle:
+                                                                      //           Theme
+                                                                      //               .of(context)
+                                                                      //               .textTheme
+                                                                      //               .titleSmall,
+                                                                      //           fontWeight: FontWeight.bold,
+                                                                      //           color:Colors.white ,
+                                                                      //         ),
+                                                                      //       ),
+                                                                      //     ),
+                                                                      //   ),
+                                                                      // ),
+                                                                
+                                                                      Row(
+                                                                        children: [
+                                                                          IconButton(
+                                                                              onPressed: (){
+                                                                                userAboutMEProvider.updateEditChallengePreview(
+                                                                                    challengesData['Label'],
+                                                                                    challengesData['Description'],
+                                                                                    challengesData['Final_description'],
+                                                                                    challengesData['Impact'],
+                                                                                    challengesData['Keywords'],
+                                                                                    challengesData['tags'],
+                                                                                    challengesData['id'],
+                                                                                    isTrueOrFalse,
+                                                                                    challengesData,
+                                                                                  false,
+                                                                                  challengesData['Impacts_to_Coworkers'],
+                                                                                  challengesData['Impacts_to_employee'],
+                                                                                  challengesData['Negative_impacts_to_organisation'],
+                                                                                  challengesData['Related_challenges_tags'],
+                                                                                  challengesData['Suggested_solutions_tags'],
+                                                                                );
+                                                                                _universalListProvider.filterChallenges(challengesData['tags']);
+                                                                                _universalListProvider.filterSolutions(challengesData['tags']);
+                                                                              },
+                                                                              icon: Icon(Icons.visibility, color: Colors.blue,)
+                                                                          ),
+                                                                          SizedBox(width: 5,),
+                                                                          (userAboutMEProvider.isEditChallengeListAdded[challengesData['id']] == true) ?
+                                                                          Text(
+                                                                            'Added',
+                                                                            style: GoogleFonts.montserrat(
+                                                                              textStyle:
+                                                                              Theme
+                                                                                  .of(context)
+                                                                                  .textTheme
+                                                                                  .titleSmall,
+                                                                              fontStyle: FontStyle.italic,
+                                                                              color:Colors.green ,
+                                                                            ),
+                                                                          ) : InkWell(
+                                                                            onTap: (){
+                                                                              // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
+                                                                              userAboutMEProvider.EditRecommendedChallengeAdd(true, relatedChallenges![i]);
+                                                                              toastification.show(context: context,
+                                                                                  title: Text('${challengesData['Label']} added to basket'),
+                                                                                  autoCloseDuration: Duration(milliseconds: 2500),
+                                                                                  alignment: Alignment.center,
+                                                                                  backgroundColor: Colors.green,
+                                                                                  foregroundColor: Colors.white,
+                                                                                  icon: Icon(Icons.check_circle, color: Colors.white,),
+                                                                                  animationDuration: Duration(milliseconds: 1000),
+                                                                                  showProgressBar: false
+                                                                              );
+                                                                
+                                                                            },
+                                                                            child: Icon(Icons.add_circle, color: Colors.blue,),
+                                                                            // child: Container(
+                                                                            //   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                            //   width: MediaQuery.of(context).size.width * .05,
+                                                                            //   // width: MediaQuery.of(context).size.width * .15,
+                                                                            //
+                                                                            //   // height: 60,
+                                                                            //   decoration: BoxDecoration(
+                                                                            //     color:Colors.blue ,
+                                                                            //     border: Border.all(
+                                                                            //         color:Colors.blue ,
+                                                                            //         width: 1.0),
+                                                                            //     borderRadius: BorderRadius.circular(8.0),
+                                                                            //   ),
+                                                                            //   child: Center(
+                                                                            //     // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                            //     child: Text(
+                                                                            //       'Add',
+                                                                            //       style: GoogleFonts.montserrat(
+                                                                            //         textStyle:
+                                                                            //         Theme
+                                                                            //             .of(context)
+                                                                            //             .textTheme
+                                                                            //             .titleSmall,
+                                                                            //         fontWeight: FontWeight.bold,
+                                                                            //         color:Colors.white ,
+                                                                            //       ),
+                                                                            //     ),
+                                                                            //   ),
+                                                                            // ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                
+                                                                    ],
+                                                                  ),
+                                                                  // SizedBox(height: 5,),
+                                                                
+                                                                  // Text("${challengesData['Label']}",
+                                                                  //     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                                                  //         fontSize: 18,
+                                                                  //         color: Colors.black)),
+                                                                
+                                                                  Text("${challengesData['Final_description']}",
+                                                                      maxLines: 2,
+                                                                      style: GoogleFonts.montserrat(
+                                                                          fontSize: 15,
+                                                                          color: Colors.black)),
+                                                                
+                                                                  SizedBox(height: 5,),
+                                                                
+                                                                
+                                                                  Align(
+                                                                    alignment: Alignment.bottomLeft,
+                                                                    child: Wrap(
+                                                                      spacing: 10,
+                                                                      runSpacing: 10,
+                                                                      crossAxisAlignment: WrapCrossAlignment.end,
+                                                                      alignment: WrapAlignment.end,
+                                                                      runAlignment: WrapAlignment.end,
+                                                                      children: [
+                                                                        ...matchedTags.take(2).map<Widget>((item) =>
+                                                                    Container(
+                                                                      height: 25,
+                                                                      // width: 200,
+                                                                      padding: EdgeInsets.all(5),
+                                                                      decoration: BoxDecoration(
+                                                                          borderRadius: BorderRadius.circular(15),
+                                                                          // color: Colors.teal
+                                                                          gradient: LinearGradient(colors: [
+                                                                            Color(0xe7e4dfee),
+                                                                            Color(0xffe5d5fc),
+                                                                          ]),
+                                                                          color: Colors.grey
+                                                                      ),
+                                                                      child: GradientText("${item}",
+                                                                              style: TextStyle(
+                                                                                fontWeight: FontWeight.w700,
+                                                                                fontSize: 10,
+                                                                              ),
+                                                                              gradientType: GradientType.linear,
+                                                                              colors: [Colors.purple, Colors.deepPurple],
+                                                                            ),
                                                                     ),
-
-                                                                  ],
+                                                                        ).toList(),
+                                                                        if (matchedTags.length > 2)
+                                                                          InkWell(
+                                                                            onTap: () {
+                                                                              // Handle "more" button click;
+                                                                            },
+                                                                            child: Text(
+                                                                              '...more (${matchedTags.length - 2})',
+                                                                              style: TextStyle(
+                                                                                color: Colors.blue,
+                                                                                fontSize: 12,
+                                                                                fontWeight: FontWeight.bold,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                      ]
+                                                                      // children: matchedTags.map<Widget>((item){
+                                                                      //   return Row(
+                                                                      //     mainAxisSize: MainAxisSize.min,
+                                                                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                      //     children: [
+                                                                      //       GradientText(item,
+                                                                      //         style: TextStyle(
+                                                                      //           fontWeight: FontWeight.w700,
+                                                                      //           fontSize: 10,
+                                                                      //           // color: Colors.white,
+                                                                      //         ),
+                                                                      //         gradientType: GradientType.linear,
+                                                                      //         colors: [
+                                                                      //           Colors.purple,
+                                                                      //           Colors.deepPurple,
+                                                                      //         ],
+                                                                      //       ),
+                                                                      //     ],
+                                                                      //   );
+                                                                      // }).toList() as List<Widget>,
+                                                                    ),
+                                                                  ),
+                                                                ],
                                                                 ),
                                                               ),
                                                             );
@@ -21802,7 +22152,7 @@ Thank you for being open to understanding me better and for considering my reque
                                   padding: EdgeInsets.all(15),
                                   decoration: BoxDecoration(
                                       border: Border.all(color: Colors.green, width: 4),
-                                      borderRadius: BorderRadius.circular(20)
+                                      borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: SingleChildScrollView(
                                     child: Column(
@@ -21811,12 +22161,12 @@ Thank you for being open to understanding me better and for considering my reque
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
                                         Container(
-                                          height: 180 ,
+                                          // height: 205 ,
+                                          height:  MediaQuery.of(context).size.height * 0.22,
                                           width: MediaQuery.of(context).size.width,
                                           child:  Consumer<UniversalListProvider>(
                                             builder: (context, provider, child) {
                                               var relatedSolutions = provider.getRelatedSolutionList;
-
                                               return Column(
                                                   mainAxisAlignment: MainAxisAlignment.start,
                                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -21878,13 +22228,18 @@ Thank you for being open to understanding me better and for considering my reque
                                                         itemBuilder: (c, i) {
                                                           // relatedSolutionlength = relatedSolutions?.length;
                                                           // print("relatedSolutionlength: $relatedSolutionlength");
+
                                                           var solutionData = relatedSolutions[i];
+                                                          var matchedTags = solutionData['matchedTags'] ?? [];
+
                                                           print("solutionData: ${solutionData}");
                                                           return Container(
                                                             margin: EdgeInsets.symmetric(horizontal: 15),
                                                             padding: EdgeInsets.all(12),
                                                             // width: 330,
-                                                            width: MediaQuery.of(context).size.width * 0.17,
+                                                            // width: MediaQuery.of(context).size.width * 0.17,
+                                                            width: MediaQuery.of(context).size.width * 0.19,
+                                                            // height: MediaQuery.of(context).size.height * 0.08,
                                                             decoration: BoxDecoration(
                                                               border: Border.all(color: Colors.green,width : 2),
                                                               borderRadius: BorderRadius.circular(20),
@@ -22045,6 +22400,80 @@ Thank you for being open to understanding me better and for considering my reque
                                                                       style: GoogleFonts.montserrat(
                                                                           fontSize: 15,
                                                                           color: Colors.black)),
+
+                                                                  SizedBox(height: 5,),
+
+                                                                  Align(
+                                                                    alignment: Alignment.bottomLeft,
+                                                                    child: Wrap(
+                                                                        spacing: 10,
+                                                                        runSpacing: 10,
+                                                                        crossAxisAlignment: WrapCrossAlignment.end,
+                                                                        alignment: WrapAlignment.end,
+                                                                        runAlignment: WrapAlignment.end,
+                                                                        children: [
+                                                                          ...matchedTags.take(2).map<Widget>((item) =>
+                                                                              Container(
+                                                                                height: 25,
+                                                                                // width: 200,
+                                                                                padding: EdgeInsets.all(5),
+                                                                                decoration: BoxDecoration(
+                                                                                    borderRadius: BorderRadius.circular(15),
+                                                                                    // color: Colors.teal
+                                                                                    gradient: LinearGradient(colors: [
+                                                                                      Color(0xe7e4dfee),
+                                                                                      Color(0xffe5d5fc),
+                                                                                    ]),
+                                                                                    color: Colors.grey
+                                                                                ),
+                                                                                child: GradientText("${item}",
+                                                                                  style: TextStyle(
+                                                                                    fontWeight: FontWeight.w700,
+                                                                                    fontSize: 10,
+                                                                                  ),
+                                                                                  gradientType: GradientType.linear,
+                                                                                  colors: [Colors.purple, Colors.deepPurple],
+                                                                                ),
+                                                                              ),
+                                                                          ).toList(),
+                                                                          if (matchedTags.length > 2)
+                                                                            InkWell(
+                                                                              onTap: () {
+                                                                                // Handle "more" button click;
+                                                                              },
+                                                                              child: Text(
+                                                                                '...more (${matchedTags.length - 2})',
+                                                                                style: TextStyle(
+                                                                                  color: Colors.blue,
+                                                                                  fontSize: 12,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                        ]
+                                                                      // children: matchedTags.map<Widget>((item){
+                                                                      //   return Row(
+                                                                      //     mainAxisSize: MainAxisSize.min,
+                                                                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                      //     children: [
+                                                                      //       GradientText(item,
+                                                                      //         style: TextStyle(
+                                                                      //           fontWeight: FontWeight.w700,
+                                                                      //           fontSize: 10,
+                                                                      //           // color: Colors.white,
+                                                                      //         ),
+                                                                      //         gradientType: GradientType.linear,
+                                                                      //         colors: [
+                                                                      //           Colors.purple,
+                                                                      //           Colors.deepPurple,
+                                                                      //         ],
+                                                                      //       ),
+                                                                      //     ],
+                                                                      //   );
+                                                                      // }).toList() as List<Widget>,
+                                                                    ),
+                                                                  ),
+
                                                                 ],
                                                               ),
                                                             ),
@@ -22754,7 +23183,8 @@ Thank you for being open to understanding me better and for considering my reque
 
 
                                           Container(
-                                            height: 180,
+                                            // height: 180,
+                                            height:  MediaQuery.of(context).size.height * 0.21,
                                             child: Consumer<UniversalListProvider>(
                                               builder: (context, provider, child) {
                                                 var relatedSolutions = provider.getRelatedSolutionList;
@@ -22820,6 +23250,8 @@ Thank you for being open to understanding me better and for considering my reque
                                                             // relatedSolutionlength = relatedSolutions?.length;
                                                             // print("relatedSolutionlength: $relatedSolutionlength");
                                                             var solutionData = relatedSolutions[i];
+                                                            var matchedTags = solutionData['matchedTags'] ?? [];
+
                                                             print("solutionData: ${solutionData}");
                                                             return Container(
                                                               margin: EdgeInsets.symmetric(horizontal: 15),
@@ -22979,6 +23411,84 @@ Thank you for being open to understanding me better and for considering my reque
                                                                         style: GoogleFonts.montserrat(
                                                                             fontSize: 15,
                                                                             color: Colors.black)),
+
+                                                                    SizedBox(height: 5,),
+
+                                                                    Align(
+                                                                      alignment: Alignment.bottomLeft,
+                                                                      child: SingleChildScrollView(
+                                                                        scrollDirection: Axis.horizontal,
+                                                                        child: Row(
+                                                                            // spacing: 10,
+                                                                            // runSpacing: 10,
+                                                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                                            // runAlignment: WrapAlignment.end,
+                                                                            children: [
+                                                                              ...matchedTags.take(2).map<Widget>((item) =>
+                                                                                  Container(
+                                                                                    height: 25,
+                                                                                    margin: EdgeInsets.only(right: 5),
+                                                                                    // width: 200,
+                                                                                    padding: EdgeInsets.all(5),
+                                                                                    decoration: BoxDecoration(
+                                                                                        borderRadius: BorderRadius.circular(15),
+                                                                                        // color: Colors.teal
+                                                                                        gradient: LinearGradient(colors: [
+                                                                                          Color(0xe7e4dfee),
+                                                                                          Color(0xffe5d5fc),
+                                                                                        ]),
+                                                                                        color: Colors.grey
+                                                                                    ),
+                                                                                    child: GradientText("${item}",
+                                                                                      style: TextStyle(
+                                                                                        fontWeight: FontWeight.w700,
+                                                                                        fontSize: 10,
+                                                                                      ),
+                                                                                      gradientType: GradientType.linear,
+                                                                                      colors: [Colors.purple, Colors.deepPurple],
+                                                                                    ),
+                                                                                  ),
+                                                                              ).toList(),
+                                                                              if (matchedTags.length > 2)
+                                                                                InkWell(
+                                                                                  onTap: () {
+                                                                                    // Handle "more" button click;
+                                                                                  },
+                                                                                  child: Text(
+                                                                                    '...more (${matchedTags.length - 2})',
+                                                                                    style: TextStyle(
+                                                                                      color: Colors.blue,
+                                                                                      fontSize: 12,
+                                                                                      fontWeight: FontWeight.bold,
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                            ]
+                                                                          // children: matchedTags.map<Widget>((item){
+                                                                          //   return Row(
+                                                                          //     mainAxisSize: MainAxisSize.min,
+                                                                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                          //     children: [
+                                                                          //       GradientText(item,
+                                                                          //         style: TextStyle(
+                                                                          //           fontWeight: FontWeight.w700,
+                                                                          //           fontSize: 10,
+                                                                          //           // color: Colors.white,
+                                                                          //         ),
+                                                                          //         gradientType: GradientType.linear,
+                                                                          //         colors: [
+                                                                          //           Colors.purple,
+                                                                          //           Colors.deepPurple,
+                                                                          //         ],
+                                                                          //       ),
+                                                                          //     ],
+                                                                          //   );
+                                                                          // }).toList() as List<Widget>,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+
                                                                   ],
                                                                 ),
                                                               ),
@@ -23220,7 +23730,8 @@ Thank you for being open to understanding me better and for considering my reque
                                         // ),
                                         // SizedBox(height: 20,),
                                         Container(
-                                          height: 180 ,
+                                          // height: 180 ,
+                                          height:  MediaQuery.of(context).size.height * 0.21,
                                           width: MediaQuery.of(context).size.width,
                                           child: Consumer<UniversalListProvider>(
                                             builder: (context, provider, child) {
@@ -23231,7 +23742,7 @@ Thank you for being open to understanding me better and for considering my reque
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     Padding(
-                                                      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+                                                      padding: const EdgeInsets.symmetric(horizontal: 15.0, ),
                                                       child: Row(
                                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                         children: [
@@ -23276,6 +23787,7 @@ Thank you for being open to understanding me better and for considering my reque
                                                         ],
                                                       ),
                                                     ),
+                                                    SizedBox(height: 5,),
                                                     Flexible(
                                                       child: ListView.builder(
                                                         scrollDirection: Axis.horizontal,
@@ -23286,6 +23798,8 @@ Thank you for being open to understanding me better and for considering my reque
                                                           // relatedSolutionlength = relatedChallenges?.length;
                                                           // print("relatedSolutionlength: $relatedSolutionlength");
                                                           var challengesData = relatedChallenges[i];
+                                                          var matchedTags = challengesData['matchedTags'] ?? [];
+
                                                           print("solutionData: ${challengesData}");
                                                           return Container(
                                                             margin: EdgeInsets.symmetric(horizontal: 15),
@@ -23461,6 +23975,83 @@ Thank you for being open to understanding me better and for considering my reque
                                                                       style: GoogleFonts.montserrat(
                                                                           fontSize: 15,
                                                                           color: Colors.black)),
+
+                                                                  SizedBox(height: 5,),
+
+                                                                  Align(
+                                                                    alignment: Alignment.bottomLeft,
+                                                                    child:  SingleChildScrollView(
+                                                                      scrollDirection: Axis.horizontal,
+                                                                      child: Row(
+                                                                        // spacing: 10,
+                                                                        // runSpacing: 10,
+                                                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                                          // runAlignment: WrapAlignment.end,
+                                                                          children: [
+                                                                            ...matchedTags.take(2).map<Widget>((item) =>
+                                                                                Container(
+                                                                                  height: 25,
+                                                                                  // width: 200,
+                                                                                  padding: EdgeInsets.all(5),
+                                                                                  decoration: BoxDecoration(
+                                                                                      borderRadius: BorderRadius.circular(15),
+                                                                                      // color: Colors.teal
+                                                                                      gradient: LinearGradient(colors: [
+                                                                                        Color(0xe7e4dfee),
+                                                                                        Color(0xffe5d5fc),
+                                                                                      ]),
+                                                                                      color: Colors.grey
+                                                                                  ),
+                                                                                  child: GradientText("${item}",
+                                                                                    style: TextStyle(
+                                                                                      fontWeight: FontWeight.w700,
+                                                                                      fontSize: 10,
+                                                                                    ),
+                                                                                    gradientType: GradientType.linear,
+                                                                                    colors: [Colors.purple, Colors.deepPurple],
+                                                                                  ),
+                                                                                ),
+                                                                            ).toList(),
+                                                                            if (matchedTags.length > 2)
+                                                                              InkWell(
+                                                                                onTap: () {
+                                                                                  // Handle "more" button click;
+                                                                                },
+                                                                                child: Text(
+                                                                                  '...more (${matchedTags.length - 2})',
+                                                                                  style: TextStyle(
+                                                                                    color: Colors.blue,
+                                                                                    fontSize: 12,
+                                                                                    fontWeight: FontWeight.bold,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                          ]
+                                                                        // children: matchedTags.map<Widget>((item){
+                                                                        //   return Row(
+                                                                        //     mainAxisSize: MainAxisSize.min,
+                                                                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                        //     children: [
+                                                                        //       GradientText(item,
+                                                                        //         style: TextStyle(
+                                                                        //           fontWeight: FontWeight.w700,
+                                                                        //           fontSize: 10,
+                                                                        //           // color: Colors.white,
+                                                                        //         ),
+                                                                        //         gradientType: GradientType.linear,
+                                                                        //         colors: [
+                                                                        //           Colors.purple,
+                                                                        //           Colors.deepPurple,
+                                                                        //         ],
+                                                                        //       ),
+                                                                        //     ],
+                                                                        //   );
+                                                                        // }).toList() as List<Widget>,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+
                                                                 ],
                                                               ),
                                                             ),
@@ -23922,6 +24513,7 @@ Thank you for being open to understanding me better and for considering my reque
 }
 
 ///
+
 // Widget PreviewPage(aboutMeData){
 //   // List<dynamic> challengesData = aboutMeData['Challenges'];
 //   // for (var challengeData in challengesData) {

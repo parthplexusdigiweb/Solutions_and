@@ -124,45 +124,111 @@ class _BrevoScreenState extends State<BrevoScreen> {
                     ),
 
 
-                    Padding(
-                      padding: EdgeInsets.all(20),
-                      child: InkWell(
-                        onTap: () async {
-                          ////ApiRepository().updateSecurityPINFor(userAccountId,newPinTextEditingController.text);
+                    Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(20),
+                          child: InkWell(
+                            onTap: () async {
+                              ////ApiRepository().updateSecurityPINFor(userAccountId,newPinTextEditingController.text);
 
-                          ProgressDialog.show(context, "Updating API key\nfor Brevo", Icons.key);
-                          DocumentReference documentReference = FirebaseFirestore.instance.collection('Brevo').doc("4u6D48cqxOelszc3vg5i");
+                              ProgressDialog.show(context, "Updating API key\nfor Brevo", Icons.key);
+                              DocumentReference documentReference = FirebaseFirestore.instance.collection('Brevo').doc("4u6D48cqxOelszc3vg5i");
 
-                          // Perform the update operation
-                          await documentReference.update({
-                            'APIKey': brevoApiKeyTextEditingController.text,
-                            // Add more fields if needed
-                          });
-                          ProgressDialog.hide();
-                        },
-                        child: Container(
-                          width: 200,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color:Colors.blue,
-                            border: Border.all(
+                              // Perform the update operation
+                              await documentReference.update({
+                                'APIKey': brevoApiKeyTextEditingController.text,
+                                // Add more fields if needed
+                              });
+                              ProgressDialog.hide();
+                            },
+                            child: Container(
+                              width: 200,
+                              height: 60,
+                              decoration: BoxDecoration(
                                 color:Colors.blue,
-                                width: 2.0),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Update',
-                              style: GoogleFonts.montserrat(
-                                  textStyle:
-                                  Theme.of(context).textTheme.titleSmall,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
+                                border: Border.all(
+                                    color:Colors.blue,
+                                    width: 2.0),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Update',
+                                  style: GoogleFonts.montserrat(
+                                      textStyle:
+                                      Theme.of(context).textTheme.titleSmall,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                              ),
                             ),
+
                           ),
                         ),
-
-                      ),
+                        // Padding(
+                        //   padding: EdgeInsets.all(20),
+                        //   child: InkWell(
+                        //     onTap: () async {
+                        //       ApiRepository().updateAllDocumentsInCollection();
+                        //       ProgressDialog.hide();
+                        //     },
+                        //     child: Container(
+                        //       width: 200,
+                        //       height: 60,
+                        //       decoration: BoxDecoration(
+                        //         color:Colors.blue,
+                        //         border: Border.all(
+                        //             color:Colors.blue,
+                        //             width: 2.0),
+                        //         borderRadius: BorderRadius.circular(10.0),
+                        //       ),
+                        //       child: Center(
+                        //         child: Text(
+                        //           'add new parameter',
+                        //           style: GoogleFonts.montserrat(
+                        //               textStyle:
+                        //               Theme.of(context).textTheme.titleSmall,
+                        //               fontWeight: FontWeight.bold,
+                        //               color: Colors.white),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //
+                        //   ),
+                        // ),
+                        // Padding(
+                        //   padding: EdgeInsets.all(20),
+                        //   child: InkWell(
+                        //     onTap: () async {
+                        //       ApiRepository().deleteParameterFromAllDocuments("Liked_challenges");
+                        //       ProgressDialog.hide();
+                        //     },
+                        //     child: Container(
+                        //       width: 200,
+                        //       height: 60,
+                        //       decoration: BoxDecoration(
+                        //         color:Colors.blue,
+                        //         border: Border.all(
+                        //             color:Colors.blue,
+                        //             width: 2.0),
+                        //         borderRadius: BorderRadius.circular(10.0),
+                        //       ),
+                        //       child: Center(
+                        //         child: Text(
+                        //           'delete parameter',
+                        //           style: GoogleFonts.montserrat(
+                        //               textStyle:
+                        //               Theme.of(context).textTheme.titleSmall,
+                        //               fontWeight: FontWeight.bold,
+                        //               color: Colors.white),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //
+                        //   ),
+                        // ),
+                      ],
                     ),
 
                   ],

@@ -796,6 +796,49 @@ class ApiRepository{
 
    }
 
+  void updateAllDocumentsInCollection() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    // Define the new parameters you want to add
+    Map<String, dynamic> newParameters = {
+      'Liked_challenges': [], // Replace with your actual data
+      'Liked_solutions': [], // Replace with your actual data
+      // 'Password': "Solutions2024", // Replace with your actual data
+
+    };
+
+    try {
+      // Retrieve all documents from the collection
+      QuerySnapshot querySnapshot = await firestore.collection('collection_Name').get();
+
+      // Loop through each document and update it
+      for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+        await firestore.collection('collection_Name').doc(doc.id).update(newParameters);
+      }
+      print('All documents updated successfully');
+    } catch (e) {
+      print('Error updating documents: $e');
+    }
+  }
+
+  void deleteParameterFromAllDocuments(String parameterToDelete) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    try {
+      // Retrieve all documents from the collection
+      QuerySnapshot querySnapshot = await firestore.collection('Categories').get();
+
+      // Loop through each document and delete the specified parameter
+      for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+        await firestore.collection('Categories').doc(doc.id).update({
+          parameterToDelete: FieldValue.delete(),
+        });
+      }
+      print('Parameter deleted successfully from all documents');
+    } catch (e) {
+      print('Error deleting parameter from documents: $e');
+    }
+  }
 
   //Check if user exists else show regsitration UI
 

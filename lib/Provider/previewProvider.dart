@@ -735,6 +735,61 @@ class PreviewProvider with ChangeNotifier{
     notifyListeners();
   }
 
+  Future<pw.MemoryImage> loadImage(String assetPath) async {
+    final imageByteData = await rootBundle.load(assetPath);
+
+    final imageUint8List = imageByteData.buffer
+        .asUint8List(imageByteData.offsetInBytes, imageByteData.lengthInBytes);
+
+    return pw.MemoryImage(imageUint8List);
+  }
+
+  pw.Widget generateTextList(String myStrength, bodyfont1) {
+    // Split the text by bullet points
+    List<String> lines = myStrength.split('• ').where((line) => line.isNotEmpty).toList();
+
+    // Create the list of widgets
+    List<pw.Widget> widgets = lines.map((line) =>  pw.Padding(
+        padding: const pw.EdgeInsets.only(bottom : 5),
+        child: pw.Row(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            pw.Text('•   ', style: pw.TextStyle(font: bodyfont1,fontSize: 12)),
+            pw.Expanded(
+              child: pw.Text(
+                line.trim(),
+                style: pw.TextStyle(font: bodyfont1,fontSize: 12),
+              ),
+            ),
+          ],
+        ))
+    ).toList();
+
+    return pw.Container(
+      padding: pw.EdgeInsets.all(10.0),
+      child: pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: widgets,
+      ),
+    );
+  }
+
+  List<List<pw.Widget>> paginateContent(List<pw.Widget> content, int itemsPerPage) {
+    List<List<pw.Widget>> paginated = [];
+    int pageCount = (content.length / itemsPerPage).ceil();
+
+    for (int i = 0; i < pageCount; i++) {
+      int startIndex = i * itemsPerPage;
+      int endIndex = (i + 1) * itemsPerPage;
+      if (endIndex > content.length) {
+        endIndex = content.length;
+      }
+      paginated.add(content.sublist(startIndex, endIndex));
+    }
+
+    return paginated;
+  }
+
 
 
   Future<Uint8List> OSPdf(List<Map<String, dynamic>> dataList, List<Map<String, dynamic>> dataList2) async {
@@ -753,14 +808,14 @@ class PreviewProvider with ChangeNotifier{
 
     final image = pw.MemoryImage(imageUint8List);
 
-    // final circumstance = await loadImage('assets/images/circumstance.png');
-    // final challenges = await loadImage('assets/images/challenges.png');
-    // final myrole = await loadImage('assets/images/myrole.png');
-    // final liked = await loadImage('assets/images/liked.png');
-    // final disliked = await loadImage('assets/images/disliked.png');
-    // final myresponsibility = await loadImage('assets/images/myresponsibility.png');
-    // final request1 = await loadImage('assets/images/request1.png');
-    // final request2 = await loadImage('assets/images/request2.png');
+    final circumstance = await loadImage('assets/images/circumstance.png');
+    final challenges = await loadImage('assets/images/challenges.png');
+    final myrole = await loadImage('assets/images/myrole.png');
+    final liked = await loadImage('assets/images/liked.png');
+    final disliked = await loadImage('assets/images/disliked.png');
+    final myresponsibility = await loadImage('assets/images/myresponsibility.png');
+    final request1 = await loadImage('assets/images/request1.png');
+    final request2 = await loadImage('assets/images/request2.png');
 
     final customBgColor = PdfColor.fromInt(0xFFD9E2F3);
     final customFontColor = PdfColor.fromInt(0xFF4478D4);
@@ -1148,138 +1203,526 @@ class PreviewProvider with ChangeNotifier{
                   border: pw.Border.all(color: PdfColors.black),
                   color: PdfColor.fromInt(0xffd9e2f3),
                 ),
-                child: pw.Text("My Basic data:",
-                    style: pw.TextStyle(font: headingfont1,fontSize: 18, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                child: pw.Text(
+                  "About me:",
+                  style: pw.TextStyle(
+                    font: headingfont1,
+                    fontSize: 18,
+                    color: PdfColor.fromInt(0xFF4472c4),
+                    fontWeight: pw.FontWeight.bold,
+                  ),
                 ),
               ),
 
-             pw.Container(
-                  padding: pw.EdgeInsets.all(5),
-              margin: pw.EdgeInsets.symmetric(horizontal: 30),
-              width: double.maxFinite,
-              child: pw.Column(
-                children: [
-                  pw.SizedBox(height: 15,),
-
-                  pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.start,
-                    children: [
-                      pw.Container(
-                        width: 130,
-                        child: pw.Text(
-                          "Name: ",
+              pw.SizedBox(height: 20),
+              pw.Padding(
+                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                child: pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.start,
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Column(
+                      mainAxisAlignment: pw.MainAxisAlignment.start,
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text(
+                          "Me and my circumstances:",
                           style: pw.TextStyle(
                             font: headingfont1,
                             fontWeight: pw.FontWeight.bold,
+                            fontSize: 14,
+                            color: PdfColor.fromInt(0xFF4472c4),
                           ),
                         ),
+                        pw.SizedBox(height: 10),
+                        pw.Image(circumstance, width: 70, height: 70),
+                      ],
+                    ),
+                    pw.Container(
+                      padding: pw.EdgeInsets.all(10),
+                      margin: pw.EdgeInsets.symmetric(horizontal: 30),
+                      width: 340,
+                      constraints: pw.BoxConstraints(minHeight: 130),
+                      decoration: pw.BoxDecoration(
+                        border: pw.Border.all(color: PdfColors.black),
                       ),
-                      pw.Text(
-                        "${name}",
-                        style: pw.TextStyle(font: bodyfont1),
-                      ),
-                    ],
-                  ),
-
-                  pw.SizedBox(height: 15,),
-
-                  pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.start,
-                    children: [
-                      pw.Container(
-                        width: 130,
-                        child: pw.Text(
-                          "Role: ",
-                          style: pw.TextStyle(
-                            font: headingfont1,
-                            fontWeight: pw.FontWeight.bold,
+                      child: generateTextList("$mycircumstance", bodyfont1),
+                    ),
+                  ],
+                ),
+              ),
+              pw.SizedBox(height: 20),
+              pw.Padding(
+                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                child: pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.start,
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Column(
+                      mainAxisAlignment: pw.MainAxisAlignment.start,
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Container(
+                          width: 175,
+                          child: pw.Text(
+                            "My strengths that I want to have the opportunity to use in my role:",
+                            style: pw.TextStyle(
+                              font: headingfont1,
+                              fontWeight: pw.FontWeight.bold,
+                              fontSize: 14,
+                              color: PdfColor.fromInt(0xFF4472c4),
+                            ),
                           ),
                         ),
+                        pw.SizedBox(height: 10),
+                        pw.Image(myrole, width: 70, height: 70),
+                      ],
+                    ),
+                    pw.Container(
+                      padding: pw.EdgeInsets.all(10),
+                      margin: pw.EdgeInsets.only(right: 30, left: 19.5),
+                      width: 340,
+                      constraints: pw.BoxConstraints(minHeight: 130),
+                      decoration: pw.BoxDecoration(
+                        border: pw.Border.all(color: PdfColors.black),
                       ),
-                      pw.Text(
-                        "${role}",
-                        style: pw.TextStyle(font: bodyfont1),
-                      ),
-                    ],
-                  ),
-
-                  pw.SizedBox(height: 15,),
-
-                  pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.start,
-                    children: [
-                      pw.Container(
-                        width: 130,
-                        child: pw.Text(
-                          "Location: ",
-                          style: pw.TextStyle(
-                            font: headingfont1,
-                            fontWeight: pw.FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      pw.Text(
-                        "${location}",
-                        style: pw.TextStyle(font: bodyfont1),
-                      ),
-                    ],
-                  ),
-
-                  pw.SizedBox(height: 15,),
-
-                  pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.start,
-                    children: [
-                      pw.Container(
-                        width: 130,
-                        child: pw.Text(
-                          "Employee number: ",
-                          style: pw.TextStyle(
-                            font: headingfont1,
-                            fontWeight: pw.FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      pw.Text(
-                        "${employeeNumber}",
-                        style: pw.TextStyle(font: bodyfont1),
-                      ),
-                    ],
-                  ),
-
-                  pw.SizedBox(height: 15,),
-
-                  pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.start,
-                    children: [
-                      pw.Container(
-                        width: 130,
-                        child: pw.Text(
-                          "Team Leader: ",
-                          style: pw.TextStyle(
-                            font: headingfont1,
-                            fontWeight: pw.FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      pw.Text(
-                        "${linemanager}",
-                        style: pw.TextStyle(font: bodyfont1),
-                      ),
-                    ],
-                  ),
-                ]
-              )
-             )
+                      child: generateTextList("${mystrength}", bodyfont1),
+                    ),
+                  ],
+                ),
+              ),
             ];
           },));
 
-    pdf.addPage(
+    try {
+      List<pw.Widget> ChallengetableRows = generateChallengeWidgets(dataList, headingfont1, bodyfont1);
 
+      List<List<pw.Widget>> paginatedContentt = paginateContent(ChallengetableRows, 10); // Example: 20 items per page
+      for (int i = 0; i < paginatedContentt.length; i++) {
+        pdf.addPage(
+          pw.MultiPage(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            pageFormat: PdfPageFormat.a4,
+            header: (context) {
+              return pw.Image(image);
+            },
+            footer: (context) {
+              return pw.Column(
+                  children: [
+                    pw.Image(image),
+                    pw.SizedBox(height: 5,),
+
+                    pw.Padding(
+                      padding: pw.EdgeInsets.symmetric(horizontal: 30),
+                      child:  pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.center,
+                          children: [
+                            pw.Text("${name}: for discussion with ${linemanager}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                            pw.SizedBox(width: 70,),
+
+                            pw.Text("${DateFormat('dd MMMM yyyy').format(DateTime.now())}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                            pw.SizedBox(width: 120,),
+
+                            pw.Text("Page ${context.pageNumber} of ${context.pagesCount}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                          ]
+                      ),
+                    ),
+
+
+
+                    pw.SizedBox(height: 15,),
+
+                  ]
+              );
+            },
+            margin: pw.EdgeInsets.all(0),
+            build: (context) {
+              return [
+                pw.Wrap(
+                    children: [
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                        child: pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.start,
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            pw.Column(
+                              mainAxisAlignment: pw.MainAxisAlignment.start,
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
+                              children: [
+                                pw.Container(
+                                  width: 175,
+                                  child: pw.Text(
+                                    "Things I find challenging in life that make it harder for me to perform my best:",
+                                    style: pw.TextStyle(
+                                      font: headingfont1,
+                                      fontWeight: pw.FontWeight.bold,
+                                      fontSize: 14,
+                                      color: PdfColor.fromInt(0xFF4472c4),
+                                    ),
+                                  ),
+                                ),
+                                pw.SizedBox(height: 10),
+                                pw.Image(challenges, width: 70, height: 70),
+                              ],
+                            ),
+                            pw.Container(
+                              padding: pw.EdgeInsets.all(10),
+                              margin: pw.EdgeInsets.only(right: 30, left: 19.5),
+                              width: 340,
+                              constraints: pw.BoxConstraints(minHeight: 300),
+                              decoration: pw.BoxDecoration(
+                                border: pw.Border.all(color: PdfColors.black),
+                              ),
+                              child: pw.Column(children: paginatedContentt[i]),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ]
+                ),
+
+              ];
+            },
+          ),
+        );
+      }
+    } catch (e) {
+      print("Error generating PDF 3: $e");
+    }
+
+
+    try {
+
+      pdf.addPage(
+          pw.MultiPage(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              pageFormat: PdfPageFormat.a4,
+              header: (context) {
+                return pw.Image(image);
+              },
+              footer: (context) {
+                return pw.Column(
+                    children: [
+                      pw.Image(image),
+                      pw.SizedBox(height: 5,),
+
+                      pw.Padding(
+                        padding: pw.EdgeInsets.symmetric(horizontal: 30),
+                        child:  pw.Row(
+                            mainAxisAlignment: pw.MainAxisAlignment.center,
+                            children: [
+                              pw.Text("${name}: for discussion with ${linemanager}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                              pw.SizedBox(width: 70,),
+
+                              pw.Text("${DateFormat('dd MMMM yyyy').format(DateTime.now())}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                              pw.SizedBox(width: 120,),
+
+                              pw.Text("Page ${context.pageNumber} of ${context.pagesCount}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                            ]
+                        ),
+                      ),
+
+
+
+                      pw.SizedBox(height: 15,),
+
+                    ]
+                );
+              },
+              margin: pw.EdgeInsets.all(0),
+              build: ( context) {
+                return [
+                  pw.Container(
+                    padding: pw.EdgeInsets.all(5),
+                    margin: pw.EdgeInsets.symmetric(horizontal: 30),
+                    width: double.maxFinite,
+                    decoration: pw.BoxDecoration(
+                      border: pw.Border.all(color: PdfColors.black),
+                      color: PdfColor.fromInt(0xffd9e2f3),
+                    ),
+                    child: pw.Text("What I find helps and hinders me in my workplace environment:",
+                        style: pw.TextStyle(font: headingfont1,fontSize: 18, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                    ),
+                  ),
+
+                  pw.SizedBox(height: 25,),
+                  //pw.Padding(padding: pw.EdgeInsets.all(20)),
+
+                  pw.Padding(
+                    padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                    child: pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.start,
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Column(
+                            mainAxisAlignment: pw.MainAxisAlignment.start,
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Container(
+                                // padding: pw.EdgeInsets.all(10),
+                                width: 175,
+
+                                // height: 100,
+                                // decoration: pw.BoxDecoration(
+                                //   border: pw.Border.all(color: PdfColors.black),
+                                // ),
+                                child: pw.Text("What I value about ${editemployer} and workplace environment that helps me perform to my best: ",
+                                  style: pw.TextStyle(
+                                    font: headingfont1,
+                                    fontWeight: pw.FontWeight.bold,
+                                    fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                                  ),
+                                ),
+                              ),
+
+
+
+                              pw.SizedBox(height: 10,),
+
+                              pw.Image(liked,width: 70, height:70)
+                            ],
+                          ),
+
+                          pw.Container(
+                              padding: pw.EdgeInsets.all(10),
+                              margin: pw.EdgeInsets.only(right: 30, left: 19.5),
+                              width: 340,
+                              constraints: pw.BoxConstraints(
+                                minHeight: 140,
+                              ),
+                              // height: 100,
+                              decoration: pw.BoxDecoration(
+                                border: pw.Border.all(color: PdfColors.black),
+                              ),
+                              child: generateTextList(myorganization, bodyfont1)
+                            // pw.Text("${myOrganisationController.text}",
+                            //     style: pw.TextStyle(font: bodyfont1,fontSize: 12)
+                            // ),
+                          ),
+                        ]
+                    ),
+                  ),
+
+                  pw.SizedBox(height: 50,),
+
+                  pw.Padding(
+                    padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                    child: pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.start,
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Column(
+                            mainAxisAlignment: pw.MainAxisAlignment.start,
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Container(
+                                // padding: pw.EdgeInsets.all(10),
+                                width: 175,
+
+                                // height: 100,
+                                // decoration: pw.BoxDecoration(
+                                //   border: pw.Border.all(color: PdfColors.black),
+                                // ),
+                                child: pw.Text("What I find challenging about ${editemployer} and the workplace environment that makes it harder for me to perform my best: ",
+                                  style: pw.TextStyle(
+                                    font: headingfont1,
+                                    fontWeight: pw.FontWeight.bold,
+                                    fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                                  ),
+                                ),
+                              ),
+
+
+
+                              pw.SizedBox(height: 10,),
+
+                              pw.Image(disliked,width: 70, height:70)
+                            ],
+                          ),
+
+                          pw.Container(
+                              padding: pw.EdgeInsets.all(10),
+                              margin: pw.EdgeInsets.only(right: 30, left: 19.5),
+                              width: 340,
+                              constraints: pw.BoxConstraints(
+                                minHeight: 140,
+                              ),
+                              // height: 100,
+                              decoration: pw.BoxDecoration(
+                                border: pw.Border.all(color: PdfColors.black),
+                              ),
+                              child: generateTextList(mychallenge, bodyfont1)
+                            // pw.Text("${myOrganisation2Controller.text}",
+                            //     style: pw.TextStyle(font: bodyfont1,fontSize: 12)
+                            // ),
+                          ),
+                        ]
+                    ),
+                  ),
+
+                ];
+              })
+      );
+    } catch (e) {
+      print("Error generating PDF 4: $e");
+    }
+
+    List<List<pw.Widget>> paginatedContent = paginateContent(SolutiontableRows1, 7); // Example: 20 items per page
+    for (int i = 0; i < paginatedContent.length; i++) {
+      pdf.addPage(
+      pw.MultiPage(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        pageFormat: PdfPageFormat.a4,
+        header: (context) {
+          return pw.Image(image);
+        },
+        footer: (context) {
+          return pw.Column(
+              children: [
+                pw.Image(image),
+                pw.SizedBox(height: 5,),
+
+                pw.Padding(
+                  padding: pw.EdgeInsets.symmetric(horizontal: 30),
+                  child:  pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.center,
+                      children: [
+                        pw.Text("${name}: for discussion with ${linemanager}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                        pw.SizedBox(width: 70,),
+
+                        pw.Text("${DateFormat('dd MMMM yyyy').format(DateTime.now())}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                        pw.SizedBox(width: 120,),
+
+                        pw.Text("Page ${context.pageNumber} of ${context.pagesCount}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                      ]
+                  ),
+                ),
+
+
+
+                pw.SizedBox(height: 15,),
+
+              ]
+          );
+        },
+        margin: pw.EdgeInsets.all(0),
+        build: (context) {
+          return [
+            pw.Wrap(
+              children:[
+            pw.Container(
+              padding: pw.EdgeInsets.all(5),
+              margin: pw.EdgeInsets.symmetric(horizontal: 30),
+              width: double.maxFinite,
+              decoration: pw.BoxDecoration(
+                border: pw.Border.all(color: PdfColors.black),
+                color: PdfColor.fromInt(0xffd9e2f3),
+              ),
+              child: pw.Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${editemployer}",
+                  style: pw.TextStyle(font: headingfont1,fontSize: 18, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+              ),
+            ),
+
+          pw.Padding(
+          padding: const pw.EdgeInsets.symmetric(vertical: 30,),
+          child: pw.SizedBox()
+          ),
+            //pw.Padding(padding: pw.EdgeInsets.all(20)),
+
+            pw.Padding(
+                padding: const pw.EdgeInsets.symmetric(horizontal: 30,),
+                child: pw.Text("Here are things that can help me, for which I can and want to take",
+                    style: pw.TextStyle(font: headingfont1,fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),)
+                )),
+
+
+            (SolutiontableRows1.isNotEmpty) ? pw.Padding(
+                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                child: pw.Text("Personal Responsibility",
+                    style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                )) : pw.SizedBox(),
+
+            (SolutiontableRows1.isNotEmpty) ? pw.SizedBox(height: 40,) : pw.SizedBox(),
+
+            (SolutiontableRows1.isNotEmpty) ?  pw.Padding(
+              padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+              child: pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.start,
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Column(
+                      mainAxisAlignment: pw.MainAxisAlignment.start,
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Container(
+                          // padding: pw.EdgeInsets.all(10),
+                          width: 175,
+
+                          // height: 100,
+                          // decoration: pw.BoxDecoration(
+                          //   border: pw.Border.all(color: PdfColors.black),
+                          // ),
+                          child: pw.Text("Things I already or will do to help myself:",
+                            style: pw.TextStyle(
+                              font: headingfont1,
+                              fontWeight: pw.FontWeight.bold,
+                              fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                            ),
+                          ),
+                        ),
+
+
+
+                        pw.SizedBox(height: 10,),
+
+                        pw.Image(myresponsibility,width: 70, height:70)
+                      ],
+                    ),
+
+                    pw.Container(
+                      padding: pw.EdgeInsets.all(10),
+                      margin: pw.EdgeInsets.only(right: 30, left: 19.5),
+                      width: 340,
+                      constraints: pw.BoxConstraints(
+                        minHeight: 140,
+                      ),
+                      // height: 100,
+                      decoration: pw.BoxDecoration(
+                        border: pw.Border.all(color: PdfColors.black),
+                      ),
+                      child: pw.Column(children: paginatedContent[i]),
+                    ),
+                  ]
+              ),
+            ) : pw.SizedBox(),
+
+            (SolutiontableRows1.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+
+
+
+          ]
+            )];
+        },
+      ),
+    );
+      ;}
+
+    List<List<pw.Widget>> paginatedContent1 = paginateContent(SolutiontableRows2, 7); // Example: 20 items per page
+    for (int i = 0; i < paginatedContent1.length; i++) {
+      pdf.addPage(
         pw.MultiPage(
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           pageFormat: PdfPageFormat.a4,
-          margin: pw.EdgeInsets.all(0),
           header: (context) {
             return pw.Image(image);
           },
@@ -1315,10 +1758,164 @@ class PreviewProvider with ChangeNotifier{
                 ]
             );
           },
+          margin: pw.EdgeInsets.all(0),
           build: (context) {
-            List<pw.Widget> ChallengetableRows = generateChallengeWidgets(dataList,headingfont1,bodyfont1);
             return [
+              pw.Wrap(
+                  children:[
+                    pw.Container(
+                      padding: pw.EdgeInsets.all(5),
+                      margin: pw.EdgeInsets.symmetric(horizontal: 30),
+                      width: double.maxFinite,
+                      decoration: pw.BoxDecoration(
+                        border: pw.Border.all(color: PdfColors.black),
+                        color: PdfColor.fromInt(0xffd9e2f3),
+                      ),
+                      child: pw.Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${editemployer}",
+                          style: pw.TextStyle(font: headingfont1,fontSize: 18, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                      ),
+                    ),
+                    pw.Padding(
+                        padding: const pw.EdgeInsets.symmetric(vertical: 30,),
+                        child: pw.SizedBox()
+                    ),
+                    pw.Padding(
+                        padding: const pw.EdgeInsets.symmetric(horizontal: 30,),
+                        child: pw.Text("Here are things that can help me that I wish to discuss",
+                            style: pw.TextStyle(font: headingfont1,fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),)
+                        )),
 
+                    // pw.SizedBox(height: 10,),
+
+
+                    pw.Column(
+                        mainAxisAlignment: pw.MainAxisAlignment.start,
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        (SolutiontableRows2.isNotEmpty) ? pw.Padding(
+                            padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                            child: pw.Text("requesting from my employer",
+                                style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                            )) : pw.SizedBox(),
+
+                        (SolutiontableRows2.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+
+                        (SolutiontableRows2.isNotEmpty) ? pw.Padding(
+                            padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                            child: pw.Text("My request of ${editemployer}",
+                                style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                            )) : pw.SizedBox(),
+
+                        (SolutiontableRows2.isNotEmpty) ? pw.SizedBox(height: 15,) : pw.SizedBox(),
+
+                        (SolutiontableRows2.isNotEmpty) ?  pw.Padding(
+                          padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                          child: pw.Row(
+                              mainAxisAlignment: pw.MainAxisAlignment.start,
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
+                              children: [
+                                pw.Column(
+                                  mainAxisAlignment: pw.MainAxisAlignment.start,
+                                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                                  children: [
+                                    pw.Container(
+                                      // padding: pw.EdgeInsets.all(10),
+                                      width: 175,
+
+                                      // height: 100,
+                                      // decoration: pw.BoxDecoration(
+                                      //   border: pw.Border.all(color: PdfColors.black),
+                                      // ),
+                                      child: pw.Text("${editemployer} already provides the following assistance to me, which I’d like if possible to continue to receive",
+                                        style: pw.TextStyle(
+                                          font: headingfont1,
+                                          fontWeight: pw.FontWeight.bold,
+                                          fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                                        ),
+                                      ),
+                                    ),
+
+
+
+                                    pw.SizedBox(height: 10,),
+
+                                    pw.Image(request1,width: 70, height:70)
+                                  ],
+                                ),
+
+                                pw.Container(
+                                  padding: pw.EdgeInsets.all(10),
+                                  margin: pw.EdgeInsets.only(right: 30, left: 19.5),
+                                  width: 340,
+                                  constraints: pw.BoxConstraints(
+                                    minHeight: 140,
+                                  ),
+                                  // height: 100,
+                                  decoration: pw.BoxDecoration(
+                                    border: pw.Border.all(color: PdfColors.black),
+                                  ),
+                                  child: pw.Column(children: paginatedContent1[i]),
+                                ),
+                              ]
+                          ),
+                        ) : pw.SizedBox(),
+
+                        (SolutiontableRows2.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+                      ]
+                    ),
+
+                    ]
+              ),
+            ];
+          },
+        ),
+      );
+    }
+
+    List<List<pw.Widget>> paginatedContent2 = paginateContent(SolutiontableRows3, 7); // Example: 20 items per page
+    for (int i = 0; i < paginatedContent2.length; i++) {
+      pdf.addPage(
+        pw.MultiPage(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          pageFormat: PdfPageFormat.a4,
+          header: (context) {
+            return pw.Image(image);
+          },
+          footer: (context) {
+            return pw.Column(
+                children: [
+                  pw.Image(image),
+                  pw.SizedBox(height: 5,),
+
+                  pw.Padding(
+                    padding: pw.EdgeInsets.symmetric(horizontal: 30),
+                    child:  pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Text("${name}: for discussion with ${linemanager}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                          pw.SizedBox(width: 70,),
+
+                          pw.Text("${DateFormat('dd MMMM yyyy').format(DateTime.now())}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                          pw.SizedBox(width: 120,),
+
+                          pw.Text("Page ${context.pageNumber} of ${context.pagesCount}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                        ]
+                    ),
+                  ),
+
+
+
+                  pw.SizedBox(height: 15,),
+
+                ]
+            );
+          },
+          margin: pw.EdgeInsets.all(0),
+          build: (context) {
+            return [
               pw.Container(
                 padding: pw.EdgeInsets.all(5),
                 margin: pw.EdgeInsets.symmetric(horizontal: 30),
@@ -1327,362 +1924,418 @@ class PreviewProvider with ChangeNotifier{
                   border: pw.Border.all(color: PdfColors.black),
                   color: PdfColor.fromInt(0xffd9e2f3),
                 ),
-                child: pw.Text("About Me",
+                child: pw.Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${editemployer}",
                     style: pw.TextStyle(font: headingfont1,fontSize: 18, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
                 ),
               ),
 
-
-
-              pw.SizedBox(height: 10,),
-
-              pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                child:pw.Text("Me and my circumstances:",
-                  style: pw.TextStyle(
-                    font: headingfont1,
-                    fontWeight: pw.FontWeight.bold,
-                    fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
-                  ),
-                ),
-              ),
-              pw.SizedBox(height: 10,),
-
-              pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                child:pw.Text("${mycircumstance}",
-                  style: pw.TextStyle(font: bodyfont1,fontSize: 12,
-                      decorationStyle: pw.TextDecorationStyle.double),
-                ),
-              ),
-
               pw.SizedBox(height: 20,),
+              //pw.Padding(padding: pw.EdgeInsets.all(20)),
 
-              pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                child:pw.Text("My strengths that I want to have the opportunity to use in my role:",
-                  style: pw.TextStyle(
-                    font: headingfont1,
-                    fontWeight: pw.FontWeight.bold,
-                    fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
-                  ),
-                ),
+              pw.Wrap(
+                  children:[
+                    (SolutiontableRows3.isNotEmpty) ?  pw.Padding(
+                    padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                    child: pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.start,
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Column(
+                            mainAxisAlignment: pw.MainAxisAlignment.start,
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Container(
+                                // padding: pw.EdgeInsets.all(10),
+                                width: 175,
+
+                                // height: 100,
+                                // decoration: pw.BoxDecoration(
+                                //   border: pw.Border.all(color: PdfColors.black),
+                                // ),
+                                child: pw.Text("I’m asking ${editemployer} whether it is possible to start providing for me:",
+                                  style: pw.TextStyle(
+                                    font: headingfont1,
+                                    fontWeight: pw.FontWeight.bold,
+                                    fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                                  ),
+                                ),
+                              ),
+
+
+
+                              pw.SizedBox(height: 10,),
+
+                              pw.Image(request2,width: 70, height:70)
+                            ],
+                          ),
+
+                          pw.Container(
+                            padding: pw.EdgeInsets.all(10),
+                            margin: pw.EdgeInsets.only(right: 30, left: 19.5),
+                            width: 340,
+                            constraints: pw.BoxConstraints(
+                              minHeight: 140,
+                            ),
+                            // height: 100,
+                            decoration: pw.BoxDecoration(
+                              border: pw.Border.all(color: PdfColors.black),
+                            ),
+                            child: pw.Column(children: paginatedContent2[i]),
+                          ),
+                        ]
+                    ),
+                  ) : pw.SizedBox(),
+
+                    (SolutiontableRows3.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),]
               ),
 
-              pw.SizedBox(height: 10,),
-
-              pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                child:pw.Text("${mystrength}",
-                  style: pw.TextStyle(font: bodyfont1,fontSize: 12,
-                      decorationStyle: pw.TextDecorationStyle.double),
-                ),
-              ),
-
-              pw.SizedBox(height: 20,),
-
-              pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                child:pw.Text("Things I find challenging in life that make it harder for me to perform my best:",
-                  style: pw.TextStyle(
-                    font: headingfont1,
-                    fontWeight: pw.FontWeight.bold,
-                    fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
-                  ),
-                ),
-              ),
-
-              pw.SizedBox(height: 10,),
-              pw.Padding(
-                  padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-              child: pw.Column(
-                children: [...ChallengetableRows]
-              )
-              ),
-              pw.SizedBox(height: 20,),
-
-              pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                child:pw.Text("What I value about $editemployer and the workplace environment that helps me perform my best: ",
-                  style: pw.TextStyle(
-                    font: headingfont1,
-                    fontWeight: pw.FontWeight.bold,
-                    fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
-                  ),
-                ),
-              ),
-
-              pw.SizedBox(height: 10,),
-
-              pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                child:pw.Text("${myorganization}",
-                  style: pw.TextStyle(font: bodyfont1,fontSize: 12,
-                      decorationStyle: pw.TextDecorationStyle.double),
-                ),
-              ),
-
-              pw.SizedBox(height: 20,),
-
-              pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                child:pw.Text("What I find challenging about $editemployer and the workplace environment that make it harder for me to perform my best:",
-                  style: pw.TextStyle(
-                    font: headingfont1,
-                    fontWeight: pw.FontWeight.bold,
-                    fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
-                  ),
-                ),
-              ),
-
-              pw.SizedBox(height: 10,),
-
-              pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                child:pw.Text("${mychallenge}",
-                  style: pw.TextStyle(font: bodyfont1,fontSize: 12,
-                      decorationStyle: pw.TextDecorationStyle.double),
-                ),
-              ),
 
             ];
-          },));
+          },
+        ),
+      );
+    }
 
-
-    (SolutiontableRows1.isNotEmpty) ? pdf.addPage(
-      pw.MultiPage(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
-        pageFormat: PdfPageFormat.a4,
-        margin: pw.EdgeInsets.all(0),
-        header: (context) {
-          return pw.Image(image);
-        },
-        footer: (context) {
-          return pw.Column(
-              children: [
-                pw.Image(image),
-                pw.SizedBox(height: 5,),
-
-                pw.Padding(
-                  padding: pw.EdgeInsets.symmetric(horizontal: 30),
-                  child:  pw.Row(
-                      mainAxisAlignment: pw.MainAxisAlignment.center,
-                      children: [
-                        pw.Text("${name}: for discussion with ${linemanager}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
-
-                        pw.SizedBox(width: 70,),
-
-                        pw.Text("${DateFormat('dd MMMM yyyy').format(DateTime.now())}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
-
-                        pw.SizedBox(width: 120,),
-
-                        pw.Text("Page ${context.pageNumber} of ${context.pagesCount}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
-
-                      ]
-                  ),
-                ),
-
-
-
-                pw.SizedBox(height: 15,),
-
-              ]
-          );
-        },
-        build: (context) {
-          return [
-            pw.Container(
-              padding: pw.EdgeInsets.all(5),
-              margin: pw.EdgeInsets.symmetric(horizontal: 30),
-              width: double.maxFinite,
-              decoration: pw.BoxDecoration(
-                border: pw.Border.all(color: PdfColors.black),
-                color: PdfColor.fromInt(0xffd9e2f3),
-              ),
-              child: pw.Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${editemployer}",
-                  style: pw.TextStyle(font: headingfont1,fontSize: 18, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
-              ),
-            ),
-
-            pw.SizedBox(height: 20,),
-            //pw.Padding(padding: pw.EdgeInsets.all(20)),
-
-
-            (SolutiontableRows1.isNotEmpty) ? pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                child: pw.Text("Personal Responsibility",
-                    style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
-                )) : pw.SizedBox(),
-
-            (SolutiontableRows1.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
-
-            (SolutiontableRows1.isNotEmpty) ?  pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-              child: pw.Column(
-                mainAxisAlignment: pw.MainAxisAlignment.start,
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
+    List<List<pw.Widget>> paginatedContent3 = paginateContent(SolutiontableRows4, 7); // Example: 20 items per page
+    for (int i = 0; i < paginatedContent3.length; i++) {
+      pdf.addPage(
+        pw.MultiPage(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          pageFormat: PdfPageFormat.a4,
+          header: (context) {
+            return pw.Image(image);
+          },
+          footer: (context) {
+            return pw.Column(
                 children: [
-                  pw.Text("Things I already or will do to help myself:",
-                    style: pw.TextStyle(
-                      font: headingfont1,
-                      fontWeight: pw.FontWeight.bold,
-                      fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                  pw.Image(image),
+                  pw.SizedBox(height: 5,),
+
+                  pw.Padding(
+                    padding: pw.EdgeInsets.symmetric(horizontal: 30),
+                    child:  pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Text("${name}: for discussion with ${linemanager}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                          pw.SizedBox(width: 70,),
+
+                          pw.Text("${DateFormat('dd MMMM yyyy').format(DateTime.now())}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                          pw.SizedBox(width: 120,),
+
+                          pw.Text("Page ${context.pageNumber} of ${context.pagesCount}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                        ]
                     ),
                   ),
-                  pw.SizedBox(height: 10,),
 
-                  ...SolutiontableRows1
+
+
+                  pw.SizedBox(height: 15,),
+
                 ]
-              )
-
-            ) : pw.SizedBox(),
-
-            (SolutiontableRows1.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
-
-
-
-          ];
-        },
-      ),
-    ) : pw.SizedBox();
-
-    (SolutiontableRows2.isNotEmpty||SolutiontableRows3.isNotEmpty) ?  pdf.addPage(
-      pw.MultiPage(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
-        pageFormat: PdfPageFormat.a4,
-        margin: pw.EdgeInsets.all(0),
-        build: (context) {
-          return [
-
-
-            (SolutiontableRows2.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
-
-            (SolutiontableRows2.isNotEmpty) ? pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                child: pw.Text("My request of ${editemployer}",
-                    style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
-                )) : pw.SizedBox(),
-
-            (SolutiontableRows2.isNotEmpty) ? pw.SizedBox(height: 15,) : pw.SizedBox(),
-
-            (SolutiontableRows2.isNotEmpty) ?  pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-              child: pw.Column(
-                  children: [
-                    pw.Text("$editemployer already provides the following assistance to me, which I’d like if possible to continue to receive:",
-                      style: pw.TextStyle(
-                        font: headingfont1,
-                        fontWeight: pw.FontWeight.bold,
-                        fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
-                      ),
-                    ),
-                    pw.SizedBox(height: 10,),
-                    ...SolutiontableRows2
-                  ]
-              )
-            ) : pw.SizedBox(),
-
-            (SolutiontableRows2.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
-
-
-            (SolutiontableRows3.isNotEmpty) ?  pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-              child:pw.Column(
-                  children: [
-                    pw.Text("Here is what I’m asking $editemployer whether it’s possible to start providing for me: ",
-                      style: pw.TextStyle(
-                        font: headingfont1,
-                        fontWeight: pw.FontWeight.bold,
-                        fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
-                      ),
-                    ),
-                    pw.SizedBox(height: 10,),
-
-                    ...SolutiontableRows3
-                  ]
-              )
-            ) : pw.SizedBox(),
-
-            (SolutiontableRows3.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
-
-            (SolutiontableRows4.isNotEmpty) ?  pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                child:pw.Column(
-                    children: [
-                      pw.Text("Here is what I’m asking $editemployer whether it’s possible to start providing for me: ",
-                        style: pw.TextStyle(
-                          font: headingfont1,
-                          fontWeight: pw.FontWeight.bold,
-                          fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
-                        ),
-                      ),
-                      pw.SizedBox(height: 10,),
-
-                      ...SolutiontableRows4
-                    ]
-                )
-            ) : pw.SizedBox(),
-
-            (SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
-
-            (SolutiontableRows5.isNotEmpty) ?  pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                child:pw.Column(
-                    children: [
-                      pw.Text("Here is what I’m asking $editemployer whether it’s possible to start providing for me: ",
-                        style: pw.TextStyle(
-                          font: headingfont1,
-                          fontWeight: pw.FontWeight.bold,
-                          fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
-                        ),
-                      ),
-                      pw.SizedBox(height: 10,),
-                      ...SolutiontableRows5
-                    ]
-                )
-            ) : pw.SizedBox(),
-
-            (SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
-          ];
-        },
-        header: (context) {
-          return pw.Image(image);
-        },
-        footer: (context) {
-          return pw.Column(
-              children: [
-                pw.Image(image),
-                pw.SizedBox(height: 5,),
-
-                pw.Padding(
-                  padding: pw.EdgeInsets.symmetric(horizontal: 30),
-                  child:  pw.Row(
-                      mainAxisAlignment: pw.MainAxisAlignment.center,
-                      children: [
-                        pw.Text("${name}: for discussion with ${linemanager}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
-
-                        pw.SizedBox(width: 70,),
-
-                        pw.Text("${DateFormat('dd MMMM yyyy').format(DateTime.now())}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
-
-                        pw.SizedBox(width: 120,),
-
-                        pw.Text("Page ${context.pageNumber} of ${context.pagesCount}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
-
-                      ]
-                  ),
+            );
+          },
+          margin: pw.EdgeInsets.all(0),
+          build: (context) {
+            // List<pw.Widget> SolutiontableRows4 =  generateSolutionsNoNicetohaveWidgets(dataList2,headingfont1,bodyfont1);
+            // List<pw.Widget> SolutiontableRows5 =  generateSolutionsMustHaveWidgets(dataList2,headingfont1,bodyfont1);
+            return [
+              (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.Container(
+                padding: pw.EdgeInsets.all(5),
+                margin: pw.EdgeInsets.symmetric(horizontal: 30),
+                width: double.maxFinite,
+                decoration: pw.BoxDecoration(
+                  border: pw.Border.all(color: PdfColors.black),
+                  color: PdfColor.fromInt(0xffd9e2f3),
                 ),
+                child: pw.Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${editemployer}",
+                    style: pw.TextStyle(font: headingfont1,fontSize: 18, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                ),
+              ) : pw.SizedBox(),
+
+              (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 20,) : pw.SizedBox(),
+              //pw.Padding(padding: pw.EdgeInsets.all(20)),
+
+              (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.Padding(
+                  padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                  child: pw.Text("Here are things that can help me, for which I can and want to take",
+                      style: pw.TextStyle(font: headingfont1,fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),)
+                  )) : pw.SizedBox(),
+
+              (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+
+
+              (SolutiontableRows4.isNotEmpty) ? pw.Padding(
+                  padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                  child: pw.Text("request from my employer",
+                      style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                  )) : pw.SizedBox(),
+
+              (SolutiontableRows4.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+
+              (SolutiontableRows4.isNotEmpty) ? pw.Padding(
+                  padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                  child: pw.Text("My request of ${editemployer}",
+                      style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                  )) : pw.SizedBox(),
+
+              (SolutiontableRows4.isNotEmpty) ? pw.SizedBox(height: 15,) : pw.SizedBox(),
+
+              (SolutiontableRows4.isNotEmpty) ?  pw.Padding(
+                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                child: pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.start,
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Column(
+                        mainAxisAlignment: pw.MainAxisAlignment.start,
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Container(
+                            // padding: pw.EdgeInsets.all(10),
+                            width: 175,
+
+                            // height: 100,
+                            // decoration: pw.BoxDecoration(
+                            //   border: pw.Border.all(color: PdfColors.black),
+                            // ),
+                            child: pw.Text("I’m asking ${editemployer} to start providing for me but they are not essential:",
+                              style: pw.TextStyle(
+                                font: headingfont1,
+                                fontWeight: pw.FontWeight.bold,
+                                fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                              ),
+                            ),
+                          ),
 
 
 
-                pw.SizedBox(height: 15,),
+                          pw.SizedBox(height: 10,),
 
-              ]
-          );
-        },
-      ),
-    ) : pw.SizedBox();
+                          pw.Image(myresponsibility,width: 70, height:70)
+                        ],
+                      ),
 
+                      pw.Container(
+                        padding: pw.EdgeInsets.all(10),
+                        margin: pw.EdgeInsets.only(right: 30, left: 19.5),
+                        width: 340,
+                        constraints: pw.BoxConstraints(
+                          minHeight: 140,
+                        ),
+                        // height: 100,
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border.all(color: PdfColors.black),
+                        ),
+                        child: pw.Column(children: paginatedContent3[i]),
+                      ),
+                    ]
+                ),
+              ) : pw.SizedBox(),
+
+              (SolutiontableRows4.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+
+
+
+            ];
+          },
+        ),
+      );
+    }
+
+    try {
+      List<List<pw.Widget>> paginatedContent4 = paginateContent(SolutiontableRows5, 5); // Example: 20 items per page
+    for (int i = 0; i < paginatedContent4.length; i++) {
+      pdf.addPage(
+        pw.MultiPage(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          pageFormat: PdfPageFormat.a4,
+          header: (context) {
+            return pw.Image(image);
+          },
+          footer: (context) {
+            return pw.Column(
+                children: [
+                  pw.Image(image),
+                  pw.SizedBox(height: 5,),
+
+                  pw.Padding(
+                    padding: pw.EdgeInsets.symmetric(horizontal: 30),
+                    child:  pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Text("${name}: for discussion with ${linemanager}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                          pw.SizedBox(width: 70,),
+
+                          pw.Text("${DateFormat('dd MMMM yyyy').format(DateTime.now())}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                          pw.SizedBox(width: 120,),
+
+                          pw.Text("Page ${context.pageNumber} of ${context.pagesCount}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+
+                        ]
+                    ),
+                  ),
+
+
+
+                  pw.SizedBox(height: 15,),
+
+                ]
+            );
+          },
+          margin: pw.EdgeInsets.all(0),
+          build: (context) {
+            // List<pw.Widget> SolutiontableRows4 =  generateSolutionsNoNicetohaveWidgets(dataList2,headingfont1,bodyfont1);
+            // List<pw.Widget> SolutiontableRows5 =  generateSolutionsMustHaveWidgets(dataList2,headingfont1,bodyfont1);
+            return [
+              (SolutiontableRows5.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.Container(
+                padding: pw.EdgeInsets.all(5),
+                margin: pw.EdgeInsets.symmetric(horizontal: 30),
+                width: double.maxFinite,
+                decoration: pw.BoxDecoration(
+                  border: pw.Border.all(color: PdfColors.black),
+                  color: PdfColor.fromInt(0xffd9e2f3),
+                ),
+                child: pw.Text("Actions and adjustments that I’ve identified can help me perform to my best in my role for ${editemployer}",
+                    style: pw.TextStyle(font: headingfont1,fontSize: 18, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                ),
+              ) : pw.SizedBox(),
+
+              (SolutiontableRows5.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 20,) : pw.SizedBox(),
+              //pw.Padding(padding: pw.EdgeInsets.all(20)),
+
+              (SolutiontableRows5.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.Padding(
+                  padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                  child: pw.Text("Here are things that can help me, for which I can and want to take",
+                      style: pw.TextStyle(font: headingfont1,fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),)
+                  )) : pw.SizedBox(),
+
+              (SolutiontableRows5.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+
+
+              (SolutiontableRows5.isNotEmpty) ? pw.Padding(
+                  padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                  child: pw.Text("request from my employer",
+                      style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                  )) : pw.SizedBox(),
+
+              (SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+
+              (SolutiontableRows5.isNotEmpty) ? pw.Padding(
+                  padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                  child: pw.Text("My request of ${editemployer}",
+                      style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
+                  )) : pw.SizedBox(),
+
+              (SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 15,) : pw.SizedBox(),
+
+              (SolutiontableRows5.isNotEmpty) ?  pw.Padding(
+                padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                child: pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.start,
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Column(
+                        mainAxisAlignment: pw.MainAxisAlignment.start,
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Container(
+                            // padding: pw.EdgeInsets.all(10),
+                            width: 175,
+
+                            // height: 100,
+                            // decoration: pw.BoxDecoration(
+                            //   border: pw.Border.all(color: PdfColors.black),
+                            // ),
+                            child: pw.Text("${editemployer} already provides for me but are not needed anymore:",
+                              style: pw.TextStyle(
+                                font: headingfont1,
+                                fontWeight: pw.FontWeight.bold,
+                                fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),
+                              ),
+                            ),
+                          ),
+
+
+
+                          pw.SizedBox(height: 10,),
+
+                          pw.Image(myresponsibility,width: 70, height:70)
+                        ],
+                      ),
+
+                      pw.Container(
+                        padding: pw.EdgeInsets.all(10),
+                        margin: pw.EdgeInsets.only(right: 30, left: 19.5),
+                        width: 340,
+                        constraints: pw.BoxConstraints(
+                          minHeight: 140,
+                        ),
+                        // height: 100,
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border.all(color: PdfColors.black),
+                        ),
+                        child: pw.Column(children: paginatedContent4[i]),
+                      ),
+                    ]
+                ),
+              ) : pw.SizedBox(),
+
+              (SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+
+              // pw.Padding(
+              //     padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+              //     // child:  pw.Text("My requests include workplace accommodations that I view as reasonable adjustments under the Equality Act 2010",
+              //     child:  pw.Text("https://assets.publishing.service.gov.uk/media/5a7b346d40f0b66a2fc05dc5/Equality_Act_2010_-_Duty_on_employers_to_make_reasonable_adjustments_for....pdf",
+              //         style: pw.TextStyle(font: bodyfont1,fontSize: 14,)
+              //     )),
+
+              // (context.pageNumber == context.pagesCount ) ?
+              pw.Padding(
+                  padding: const pw.EdgeInsets.symmetric(horizontal: 30),
+                  // child:  pw.Text("My requests include workplace accommodations that I view as reasonable adjustments under the Equality Act 2010",
+                  child: pw.RichText(
+                    text: pw.TextSpan(
+                      style: pw.TextStyle(font: bodyfont1),
+                      children: [
+                        pw.TextSpan(
+                          text: 'My requests include workplace accommodations that I view as ',
+                        ),
+                        pw.WidgetSpan(
+                          child: pw.UrlLink(
+                            destination: 'https://assets.publishing.service.gov.uk/media/5a7b346d40f0b66a2fc05dc5/Equality_Act_2010_-_Duty_on_employers_to_make_reasonable_adjustments_for....pdf',
+                            child: pw.Text(
+                              'reasonable adjustments',
+                              style: pw.TextStyle(
+                                color: PdfColors.blue,
+                                decoration: pw.TextDecoration.underline,
+                                  font: bodyfont1
+                              ),
+                            ),
+                          ),
+                        ),
+                        pw.TextSpan(
+                          text: ' under the Equality Act 2010.',
+                        ),
+                      ],
+                    ),
+                  )
+              )
+                  // : pw.SizedBox()
+
+
+            ];
+          },
+        ),
+      );
+    }
+  } catch (e) {
+  print("Error generating PDF 5: $e");
+  }
     return pdf.save();
   }
 
@@ -2346,61 +2999,58 @@ class PreviewProvider with ChangeNotifier{
             //   ),
             // ),
 
-            pw.Padding(
-                padding: pw.EdgeInsets.only(bottom: 10.0, right: 20,),
-                child: pw.Container(
-                  padding: const pw.EdgeInsets.all(8),
-                  child: pw.Row(
-                    crossAxisAlignment: pw.CrossAxisAlignment.start,
-                    children: [
-                      pw.Text('• ',
-                        style: pw.TextStyle(
-                          font: bodyfont1,
-                        ),),
-                      // pw.SizedBox(width: 8),
-                      pw.Expanded(
-                        child: pw.Column(
-                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+            pw.Container(
+              padding: const pw.EdgeInsets.all(8),
+              child: pw.Row(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Text('• ',
+                    style: pw.TextStyle(
+                      font: bodyfont1,
+                    ),),
+                  // pw.SizedBox(width: 8),
+                  pw.Expanded(
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Row(
                           children: [
-                            pw.Row(
-                              children: [
-                                pw.Expanded(
-                                  child: pw.RichText(
-                                    maxLines: 4,
-                                    overflow: pw.TextOverflow.span,
-                                    text: pw.TextSpan(
-                                      children: [
-                                        pw.TextSpan(
-                                          text: '${solution['Label']}',
-                                          style: pw.TextStyle(
-                                            font: headingfont1,
-                                            fontWeight: pw.FontWeight.bold,
-                                          ),
-                                        ),
-                                        pw.TextSpan(
-                                          text: ' - ${solution['Final_description']}\n',
-                                          style: pw.TextStyle(
-                                            fontWeight: pw.FontWeight.normal,
-                                            font: bodyfont1,
-                                          ),
-                                        ),
-                                        pw.TextSpan(
-                                          text: '${solution['AboutMe_Notes']}',
-                                          style: pw.TextStyle(
-                                              color: PdfColors.grey, font: bodyfont1),
-                                        ),
-                                      ],
+                            pw.Expanded(
+                              child: pw.RichText(
+                                maxLines: 4,
+                                overflow: pw.TextOverflow.span,
+                                text: pw.TextSpan(
+                                  children: [
+                                    pw.TextSpan(
+                                      text: '${solution['Label']}',
+                                      style: pw.TextStyle(
+                                        font: headingfont1,
+                                        fontWeight: pw.FontWeight.bold,
+                                      ),
                                     ),
-                                  ),),
-                              ],
-                            ),
+                                    pw.TextSpan(
+                                      text: ' - ${solution['Final_description']}\n',
+                                      style: pw.TextStyle(
+                                        fontWeight: pw.FontWeight.normal,
+                                        font: bodyfont1,
+                                      ),
+                                    ),
+                                    pw.TextSpan(
+                                      text: '${solution['AboutMe_Notes']}',
+                                      style: pw.TextStyle(
+                                          color: PdfColors.grey, font: bodyfont1),
+                                    ),
+                                  ],
+                                ),
+                              ),),
                           ],
                         ),
-                      ),
-
-                    ],
+                      ],
+                    ),
                   ),
-                )
+
+                ],
+              ),
             ),
           ],
         );
@@ -2409,5 +3059,14 @@ class PreviewProvider with ChangeNotifier{
     }
 
     return widgets;
+  }
+
+  bool loader = false;
+  bool get getloader  => loader ;
+
+  updateloader(bool){
+    loader = bool;
+    print("loader: $loader");
+    notifyListeners();
   }
 }

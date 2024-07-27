@@ -62,8 +62,13 @@ class UniversalListProvider with ChangeNotifier{
     // Apply your filtering logic here
     relatedSolutionList = UniversalSolutionsdata.where((challenge) {
       // return (challenge['tags'] as List).any((tag) => tags.contains(tag));
-      return (challenge['Related_solution_tags'] as List).any((tag) => tags.contains(tag));
+      // return (challenge['Related_solution_tags'] as List).any((tag) => tags.contains(tag));
           // || (challenge['Keywords'] as List).any((keyword) => keywords.contains(keyword));
+      var hasMatch = (challenge['Related_solution_tags'] as List).any((tag) => tags.contains(tag));
+      if (hasMatch) {
+        challenge['matchedTags'] = challenge['Related_solution_tags'].where((tag) => tags.contains(tag)).toList();
+      }
+      return hasMatch;
     }).toList();
     notifyListeners();
   }

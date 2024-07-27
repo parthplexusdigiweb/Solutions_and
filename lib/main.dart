@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:thrivers/Provider/AddKeywordsProvider.dart';
 import 'package:thrivers/Provider/LoginAuthProvider.dart';
+import 'package:thrivers/Provider/RegisterAndLoginProvider.dart';
 import 'package:thrivers/Provider/UniversalListProvider.dart';
 import 'package:thrivers/Provider/provider_for_challenges.dart';
 import 'package:thrivers/Provider/userAboutMeProvider.dart';
@@ -21,6 +22,7 @@ import 'package:thrivers/screens/new%20added%20screens/NewSolutionsLandingScreen
 import 'package:thrivers/screens/new%20added%20screens/UserAboutMePage.dart';
 import 'package:thrivers/screens/new%20added%20screens/UserLoginPage.dart';
 import 'package:thrivers/screens/new%20added%20screens/UserRegisterPage.dart';
+import 'package:thrivers/screens/new%20added%20screens/forgetPasswordScreen.dart';
 import 'package:thrivers/screens/not%20used%20screen/landingscreen.dart';
 import 'package:thrivers/screens/not%20used%20screen/loginscreen.dart';
 import 'package:thrivers/screens/new%20added%20screens/SuperAdminLoginScreen.dart';
@@ -73,6 +75,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => PreviewProvider()),
         ChangeNotifierProvider(create: (_) => UniversalListProvider()),
         ChangeNotifierProvider(create: (_) => UserSession()),
+        ChangeNotifierProvider(create: (_) => LoginRegisterProvider()),
       ],
         child: const MyApp())
       );
@@ -243,6 +246,11 @@ final GoRouter _router = GoRouter(
 
         ),
 
+        GoRoute(
+          path: 'forgetPassword',
+          builder: (context, state) => ForgetPasswrdScreen(),
+        ),
+
       ],
     ),
   ],
@@ -292,6 +300,11 @@ final GoRouter _newrouter = GoRouter(
               );
             },
           ),
+          GoRoute(
+            path: 'forgetPassword',
+            builder: (context, state) => ForgetPasswrdScreen(),
+          ),
+
         ]
     ),
 
