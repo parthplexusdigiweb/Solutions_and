@@ -8,12 +8,12 @@ class loadingView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: isLoading ? Colors.black : null,
+      color: isLoading ? Colors.white : null,
       height: double.infinity,
       child: isLoading
           ? const Center(
               child: SpinKitThreeBounce(
-              color: Colors.black54,
+              color: Colors.blue,
               size: 25.0,
             ))
           : Container(),

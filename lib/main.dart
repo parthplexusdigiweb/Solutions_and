@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:thrivers/Provider/AddKeywordsProvider.dart';
+import 'package:thrivers/Provider/AdminSolutionListProvider.dart';
 import 'package:thrivers/Provider/LoginAuthProvider.dart';
 import 'package:thrivers/Provider/RegisterAndLoginProvider.dart';
 import 'package:thrivers/Provider/UniversalListProvider.dart';
@@ -33,6 +34,7 @@ import 'package:url_strategy/url_strategy.dart';
 
 import 'Network/FirebaseApi.dart';
 import 'Network/my_http_overrides.dart';
+import 'Provider/AboutMeProvider.dart';
 import 'Provider/previewProvider.dart';
 import 'firebase_options.dart';
 
@@ -41,6 +43,7 @@ import 'dart:io';
 SharedPreferences? sharedPreferences;
 
 bool? isloggedIn;
+var emailId;
 
 Future<Widget>? _cachedAdminScreen;
 
@@ -76,6 +79,8 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => UniversalListProvider()),
         ChangeNotifierProvider(create: (_) => UserSession()),
         ChangeNotifierProvider(create: (_) => LoginRegisterProvider()),
+        ChangeNotifierProvider(create: (_) => AboutMeProvider()),
+        ChangeNotifierProvider(create: (_) => SolutionsListProvider()),
       ],
         child: const MyApp())
       );
@@ -93,11 +98,18 @@ Future<Widget> _buildAdminScreen() async {
   }
 }
 
+Future<Map<String, dynamic>> _getStoredPreferences() async {
+  final prefs = await SharedPreferences.getInstance();
+   isloggedIn = prefs.getBool('isLoggedIn') ?? false;
+   emailId = prefs.getString('emailId') ?? '';
+  return {'isLoggedIn': isloggedIn, 'emailId': emailId};
+}
+
+
 
 /// The route configuration.
 final GoRouter _router = GoRouter(
   // initialLocation: '/admin',
-
   routes: <RouteBase>[
     GoRoute(
       path: '/',
@@ -233,7 +245,38 @@ final GoRouter _router = GoRouter(
                 );
               },
             ),
-          ]
+            // GoRoute(
+            //     path: 'home',
+            //     builder: (BuildContext context, GoRouterState state) {
+            //       return  UserAboutMePage(isClientLogeddin: true, emailId: "fenilpatel120501@gmail.com");
+            //     }),
+            GoRoute(
+              path: 'home',
+              builder: (BuildContext context, GoRouterState state) {
+                return FutureBuilder(
+                  future: _getStoredPreferences(),
+                  builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else {
+                      final bool isClientLoggedIn = snapshot.data?['isLoggedIn'] ?? false;
+                      final String emailId = snapshot.data?['emailId'] ?? '';
+
+                      if (isClientLoggedIn) {
+                        return UserAboutMePage(isClientLogeddin: isClientLoggedIn, emailId: emailId);
+                      } else {
+                        Future.microtask(() => context.go('/userlogin'));
+                        return SizedBox.shrink(); // Empty widget while navigating
+                      }
+                      // return UserAboutMePage(isClientLogeddin: isClientLoggedIn, emailId: emailId);
+                    }
+                  },
+                );
+              },
+            ),
+          ],
         ),
 
         GoRoute(
@@ -254,64 +297,89 @@ final GoRouter _router = GoRouter(
       ],
     ),
   ],
+
 );
 
 final GoRouter _newrouter = GoRouter(
-  initialLocation: 'admin',
-  routes: [
+  // initialLocation: '/',
+  routes: <RouteBase>[
     GoRoute(
-        path: '/admin',
-        builder: (context, state) => SuperAdminLoginScreen(),
-        routes: [
-          GoRoute(
-            path: '/dashboard',
-            builder: (context, state) => NewHomeScreenTabs(),
-          ),
-          GoRoute(
-            path: 'report',
-            builder: (context, state) => AdminAboutMePage(),
-          ),
-          GoRoute(
-            path: 'solutions',
-            builder: (context, state) => AddThriversScreen(),
-          ),
-          GoRoute(
-            path: 'challenges',
-            builder: (context, state) => AddChallengesScreen(),
-          ),
-        ]
+      path: '/',
+      builder: (BuildContext context, GoRouterState state) {
+        return SolutionsLandingScreen();
+      },
     ),
     GoRoute(
-        path: '/userlogin',
-        builder: (context, state) => UserLoginPage(),
-        routes: [
-          GoRoute(
-            path: 'dashboard',
-            builder: (BuildContext context, GoRouterState state) {
-              print(state.extra);
-              print(state.pathParameters);
-              print(state.uri.queryParameters['loginToken']);
-              final loginToken = state.uri.queryParameters['loginToken']!;
-              print("From RouteBase : "+loginToken);
-              bool isloggedIn = true;
-
-              return AuthenticateLogin(
-                loginToken: loginToken,
-              );
-            },
-          ),
-          GoRoute(
-            path: 'forgetPassword',
-            builder: (context, state) => ForgetPasswrdScreen(),
-          ),
-
-        ]
+      path: '/admin',
+      builder: (BuildContext context, GoRouterState state) {
+        return FutureBuilder<Widget>(
+          future: _cachedAdminScreen, // Ensure this future is correctly defined
+          builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            } else {
+              return snapshot.data ?? Container();
+            }
+          },
+        );
+      },
     ),
-
     GoRoute(
       path: '/userRegister',
-      builder: (context, state) => RegisterPage(),)
-    // Add other routes as needed
+      builder: (BuildContext context, GoRouterState state) {
+        return RegisterPage();
+      },
+    ),
+    GoRoute(
+      path: '/userLogin',
+      builder: (BuildContext context, GoRouterState state) {
+        return UserLoginPage();
+      },
+      routes: [
+        GoRoute(
+          path: 'authenticate',
+          builder: (BuildContext context, GoRouterState state) {
+            final loginToken = state.uri.queryParameters['loginToken'];
+            return AuthenticateLogin(loginToken: loginToken ?? '');
+          },
+        ),
+        GoRoute(
+          path: 'home',
+          builder: (BuildContext context, GoRouterState state) {
+            return FutureBuilder<Map<String, dynamic>>(
+              future: _getStoredPreferences(),
+              builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else {
+                  final bool isClientLoggedIn = snapshot.data?['isLoggedIn'] ?? false;
+                  final String emailId = snapshot.data?['emailId'] ?? '';
+                  if (isClientLoggedIn) {
+                    return UserAboutMePage(isClientLogeddin: isClientLoggedIn, emailId: emailId);
+                  } else {
+                    // Using Future.microtask to ensure navigation happens correctly
+                    Future.microtask(() => context.go('/userLogin'));
+                    return SizedBox.shrink();
+                  }
+                }
+              },
+            );
+          },
+        ),
+      ],
+    ),
+    GoRoute(
+      path: '/userhome',
+      builder: (BuildContext context, GoRouterState state) {
+        return UserAboutMePage(isClientLogeddin: true, emailId: "fenilpatel120501@gmail.com");
+      },
+    ),
+    GoRoute(
+      path: '/forgetPassword',
+      builder: (context, state) => ForgetPasswrdScreen(),
+    ),
   ],
 );
 
@@ -325,7 +393,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      routerConfig: _router,
+      routerConfig: _newrouter,
       scrollBehavior: MaterialScrollBehavior().copyWith(
         dragDevices: {PointerDeviceKind.mouse, PointerDeviceKind.touch, PointerDeviceKind.stylus, PointerDeviceKind.unknown},
       ),

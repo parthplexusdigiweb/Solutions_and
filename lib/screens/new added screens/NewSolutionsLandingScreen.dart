@@ -20,7 +20,7 @@ class _SolutionsLandingScreenState extends State<SolutionsLandingScreen> {
         backgroundColor: Colors.grey.withOpacity(0),
         centerTitle: true,
         // title: Text("THRIVERS", style: GoogleFonts.montserrat(
-        title: Text("Solution Inclusion", style: GoogleFonts.montserrat(
+        title: Text("SOLUTION INCLUSION", style: GoogleFonts.montserrat(
             textStyle: Theme.of(context).textTheme.headlineLarge,
             fontWeight: FontWeight.bold,
             color: Colors.black),),

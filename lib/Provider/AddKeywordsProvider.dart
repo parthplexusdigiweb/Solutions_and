@@ -79,8 +79,6 @@ class AddKeywordProvider with ChangeNotifier{
     notifyListeners();
   }
 
-
-
   getdatasearch() async {
     querySnapshotsss = await productsCollection.get();
     docssssss  = querySnapshotsss?.docs;
@@ -145,9 +143,6 @@ class AddKeywordProvider with ChangeNotifier{
     loadDataForPageSearchFilter(search);
     notifyListeners();
   }
-
-
-
 
 
   Future<void> loadDataForPageSearchFilter(search) async   {
@@ -285,7 +280,6 @@ class AddKeywordProvider with ChangeNotifier{
   }
 
 
-
   void loadDataForPageFilter(int page,mainkey, keywordArray) {
 
     _isLoadingMore = true;
@@ -334,6 +328,7 @@ class AddKeywordProvider with ChangeNotifier{
     ProviderEditTags = tags;
     // notifyListeners();
   }
+
   void newaddProviderEditTagsList(tags){
     ProviderEditTags = tags;
     notifyListeners();
@@ -343,6 +338,7 @@ class AddKeywordProvider with ChangeNotifier{
     keywordsssss.removeRange(0, keywordsssss.length);
     notifyListeners();
   }
+
   void ProviderTagsclear(){
     ProviderTags.removeRange(0, ProviderTags.length);
     notifyListeners();
@@ -361,7 +357,6 @@ class AddKeywordProvider with ChangeNotifier{
     }
     notifyListeners();
   }
-
 
   void addChip(tags) {
     if (tags.isNotEmpty && !chips.contains(tags)) {
@@ -418,12 +413,14 @@ class AddKeywordProvider with ChangeNotifier{
     // print("After removal: $ProviderTags");
     notifyListeners();
   }
+
   void removesearchtags(item) {
     // print("Before removal: $searchbytag");
     searchbytag.remove(item);
     // print("After removal: $searchbytag");
     notifyListeners();
   }
+
   void removesearchcat(item) {
     // print("Before removal: $searchbycategory");
     searchbycategory.remove(item);
@@ -659,15 +656,6 @@ class AddKeywordProvider with ChangeNotifier{
   }
 
   List<String> newKeyValues = [];
-
-
-
-
-
-
-
-
-
 
 
 

@@ -24,6 +24,9 @@ class ChallengesModel {
   var NegativeImpactToOrganisation;
   var RelatedChallengesTag;
   var SuggestedChallengesTag;
+  var LinkedSolution;
+  var newLinkedSolution;
+  var OSD;
   bool isConfirmed; // Add a boolean for confirmation status
   bool isChecked; // Add a boolean for confirmation status
 
@@ -58,6 +61,9 @@ class ChallengesModel {
     this.NegativeImpactToOrganisation,
     this.RelatedChallengesTag,
     this.SuggestedChallengesTag,
+    this.LinkedSolution,
+    this.newLinkedSolution,
+    this.OSD,
     this.isConfirmed = false, // Default to false for not confirmed
     this.isChecked = false, // Default to false for not confirmed
     // required this.attachments,

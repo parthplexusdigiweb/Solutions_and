@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:thrivers/model/challenges_table_model.dart';
+import 'package:thrivers/model/soluton_table_model.dart';
 
 class UniversalListProvider with ChangeNotifier{
   List<Map<String, dynamic>> UniversalChallengesdata = [];
@@ -39,21 +41,26 @@ class UniversalListProvider with ChangeNotifier{
   void filterChallengess(List<dynamic> tags) {
     // Apply your filtering logic here
     relatedChallengesList = UniversalChallengesdata.where((challenge) {
-      // return (challenge['tags'] as List).any((tag) => tags.contains(tag));
-      return (challenge['Related_challenges_tags'] as List).any((tag) => tags.contains(tag));
+      return (challenge['tags'] as List).any((tag) => tags.contains(tag));
+      // return (challenge['Related_challenges_tags'] as List).any((tag) => tags.contains(tag));
           // || (challenge['Keywords'] as List).any((keyword) => keywords.contains(keyword));
     }).toList();
     notifyListeners();
   }
 
+
   void filterChallenges(List<dynamic> tags) {
+    print("tagstags: ${tags}");
     relatedChallengesList = UniversalChallengesdata.where((challenge) {
-      var hasMatch = (challenge['Related_challenges_tags'] as List).any((tag) => tags.contains(tag));
+      var hasMatch = (challenge['tags'] as List).any((tag) => tags.contains(tag));
+      // var hasMatch = (challenge['Related_challenges_tags'] as List).any((tag) => tags.contains(tag));
       if (hasMatch) {
-        challenge['matchedTags'] = challenge['Related_challenges_tags'].where((tag) => tags.contains(tag)).toList();
+        challenge['matchedTags'] = challenge['tags'].where((tag) => tags.contains(tag)).toList();
+        // challenge['matchedTags'] = challenge['Related_challenges_tags'].where((tag) => tags.contains(tag)).toList();
       }
       return hasMatch;
     }).toList();
+    print("relatedChallengesList: ${relatedChallengesList}");
     notifyListeners();
   }
 
@@ -61,12 +68,14 @@ class UniversalListProvider with ChangeNotifier{
   void filterSolutions(List<dynamic> tags) {
     // Apply your filtering logic here
     relatedSolutionList = UniversalSolutionsdata.where((challenge) {
-      // return (challenge['tags'] as List).any((tag) => tags.contains(tag));
-      // return (challenge['Related_solution_tags'] as List).any((tag) => tags.contains(tag));
-          // || (challenge['Keywords'] as List).any((keyword) => keywords.contains(keyword));
-      var hasMatch = (challenge['Related_solution_tags'] as List).any((tag) => tags.contains(tag));
+
+      var hasMatch = (challenge['tags'] as List).any((tag) => tags.contains(tag));
+      // var hasMatch = (challenge['Related_solution_tags'] as List).any((tag) => tags.contains(tag));
+      // var hasMatch = (challenge['Label'] as List).any((tag) => tags.contains(tag));
       if (hasMatch) {
-        challenge['matchedTags'] = challenge['Related_solution_tags'].where((tag) => tags.contains(tag)).toList();
+        challenge['matchedTags'] = challenge['tags'].where((tag) => tags.contains(tag)).toList();
+        // challenge['matchedTags'] = challenge['Related_solution_tags'].where((tag) => tags.contains(tag)).toList();
+        // challenge['matchedTags'] = challenge['Label'].where((tag) => tags.contains(tag)).toList();
       }
       return hasMatch;
     }).toList();
@@ -75,7 +84,7 @@ class UniversalListProvider with ChangeNotifier{
 
   Future<void> fetchUniversalChallengesData() async {
     try {
-      QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('Challenges').get();
+      QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('Challenges').orderBy("id").get();
       UniversalChallengesdata = snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
       filteredChallengesData = UniversalChallengesdata;
       print("UniversalChallengesdata: ${UniversalChallengesdata.length}");
@@ -87,7 +96,7 @@ class UniversalListProvider with ChangeNotifier{
 
   Future<void> fetchUniversalSolutionsdata() async {
     try {
-      QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('Thrivers').get();
+      QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('Thrivers').orderBy("id").get();
       UniversalSolutionsdata = snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
       filteredSolutionsData = UniversalSolutionsdata;
       print("fetchUniversalSolutionsdata: ${UniversalSolutionsdata.length}");
@@ -343,6 +352,54 @@ class UniversalListProvider with ChangeNotifier{
     notifyListeners();
 
     return combinedResults.toList();
+  }
+
+  Map<int, bool> isEditSolutionListAdded = {};
+  List<ChallengesModel> editsolutionss = [];
+
+  void EditRecommendedSolutionAdd(bool value, SolutionDetails) {
+    if (isEditSolutionListAdded[SolutionDetails['id']] != value) {
+      // Checkbox is checked, add to the list
+      editsolutionss.add(SolutionModel(
+        id: SolutionDetails['id'],
+        label: SolutionDetails['Label'],
+        description: SolutionDetails['Description'],
+        notes: SolutionDetails['Notes'],
+        Source: SolutionDetails['Source'],
+        Status: SolutionDetails['Thirver Status'],
+        tags: SolutionDetails['tags'],
+        CreatedBy: SolutionDetails['Created By'],
+        CreatedDate: SolutionDetails['Created Date'],
+        ModifiedBy: SolutionDetails['Modified By'],
+        ModifiedDate: SolutionDetails['Modified Date'],
+        OriginalDescription: SolutionDetails['Original Description'],
+        Impact: SolutionDetails['Impact'],
+        Final_description: SolutionDetails['Final_description'],
+        Category: SolutionDetails['Category'],
+        Keywords: SolutionDetails['Keywords'],
+        Help: SolutionDetails['Helps'],
+        PositiveImpactstoEmployee: SolutionDetails['Positive_impacts_to_employee'],
+        PositiveImpactstoOrganisation: SolutionDetails['Positive_impacts_to_organisation'],
+        RelatedSolutionsTags: SolutionDetails['Related_solution_tags'],
+        SuggestedChallengesTags: SolutionDetails['Suggested_challenges_tags'],
+      ));
+      isEditSolutionListAdded[SolutionDetails['id']] = value;
+
+      print("selectedrecommendedChallenges: ${editsolutionss.first.id}");
+
+      print("EditRecommendedChallengeAdd: $isEditSolutionListAdded");
+    }
+
+
+    notifyListeners();
+
+  }
+
+  void removeedittags(item) {
+    // print("Before removal: $ProviderEditTags");
+    editchallengess.remove(item);
+    // print("After removal: $ProviderEditTags");
+    notifyListeners();
   }
 
 

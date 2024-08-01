@@ -28,7 +28,7 @@ class ForgetPasswrdScreen extends StatefulWidget {
 
 class _ForgetPasswrdScreenState extends State<ForgetPasswrdScreen> {
 
-  TextEditingController loginTextEditingcontroller = TextEditingController();
+  TextEditingController emailcontroller = TextEditingController();
   // TextEditingController passwordcontroller = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -41,7 +41,8 @@ class _ForgetPasswrdScreenState extends State<ForgetPasswrdScreen> {
       //   title: Text('Login Page'),
       // ),
       appBar: AppBar(
-        backgroundColor: Color(0xff0B0B0B),
+        // backgroundColor: Color(0xff0B0B0B),
+        backgroundColor: Colors.blue,
         leading: Text(""),
         centerTitle: true,
         title: InkWell(
@@ -156,7 +157,7 @@ class _ForgetPasswrdScreenState extends State<ForgetPasswrdScreen> {
                             padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
                             child: TextField(
                               // maxLines: null,
-                              controller: loginTextEditingcontroller,
+                              controller: emailcontroller,
                               cursorColor: Colors.white,
                               style: GoogleFonts.montserrat(
                                   textStyle: Theme
@@ -166,8 +167,8 @@ class _ForgetPasswrdScreenState extends State<ForgetPasswrdScreen> {
                                   fontWeight: FontWeight.w400,
                                   color: Colors.white),
                               onSubmitted: (value) {
-                                if(loginTextEditingcontroller.text.isEmpty ){
-                                  if(loginTextEditingcontroller.text.isEmpty){
+                                if(emailcontroller.text.isEmpty ){
+                                  if(emailcontroller.text.isEmpty){
                                     toastification.show(context: context,
                                         title: Text('enter email'),
                                         autoCloseDuration: Duration(milliseconds: 2500),
@@ -357,7 +358,7 @@ class _ForgetPasswrdScreenState extends State<ForgetPasswrdScreen> {
                                 onPressed: (){
                                   context.go("/userlogin");
                                 },
-                                child: Text("Login?",
+                                child: Text("Already login?",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w900,fontSize: 15),
@@ -369,9 +370,7 @@ class _ForgetPasswrdScreenState extends State<ForgetPasswrdScreen> {
                           Center(
                             child: InkWell(
                               onTap: (){
-                                if (_formKey.currentState?.validate() ?? false) {
-                                  // sendEmail();
-                                }
+                                getpassword();
                               },
                               child: Container(
                                 height: 60,
@@ -404,13 +403,223 @@ class _ForgetPasswrdScreenState extends State<ForgetPasswrdScreen> {
     );
   }
 
-  void sendEmail()  async {
+  Future<void> getpassword() async {
+    if(!emailcontroller.text.trim().isValidEmail()){
+      // showEmptyAlert2(context,"Enter a Valid Email","${emailcontroller.text.trim()} is not a valid email address","${emailcontroller.text}","Retype Email Address");
+      NewAlertBox(context, "Enter a Valid Email", '${emailcontroller.text.trim()} is not a valid email address', "Retype Email Address",);
+    }
+    else {
+      print("inside else:");
+      ProgressDialog.show(context, "Logging in\n${emailcontroller.text}", Icons.ice_skating);
+
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection(
+        'Users').
+    where('email', isEqualTo: emailcontroller.text.trim()).get();
+    if (querySnapshot.docs.isNotEmpty) {
+      print("inside querySnapshot: ${querySnapshot.docs.first.get("email")}");
+      print("inside Password: ${querySnapshot.docs.first.get("Password")}");
+
+      var password = querySnapshot.docs.first.get("Password");
+
+      bool isLoginSuccessful = await ApiRepository().getPasswordMail(
+          emailcontroller.text.toString(), password);
+
+      ProgressDialog.hide();
+      if (isLoginSuccessful) {
+        // showEmptyAlert(context,"Email Sent\nSuccessfully\nYou Will Receive a link to login\nto your dashboard in your email",Icons.mark_email_read_outlined, Colors.green);
+        // Navigator.pushReplacement(
+        //   context,
+        //   // MaterialPageRoute(builder: (context) =>  HomeScreenTabs()),
+        //   MaterialPageRoute(builder: (context) =>  NewHomeScreenTabs()),
+        // );
+        showDialog(
+          context: context,
+          barrierColor: Colors.black87,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              actionsAlignment: MainAxisAlignment.center,
+              content: Container(
+                padding: EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.check_circle,
+                      color: Colors.green,
+                      size: 60,
+                    ),
+                    SizedBox(width: 20),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            "Email Sent Successfully",
+                            style: Theme
+                                .of(context)
+                                .textTheme
+                                .headlineSmall
+                                ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.email,
+                                color: Theme
+                                    .of(context)
+                                    .primaryColor,
+                              ),
+                              SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  emailcontroller.text,
+                                  style: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .labelMedium
+                                      ?.copyWith(),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "You will receive a link to login to your dashboard in your email",
+                            style: Theme
+                                .of(context)
+                                .textTheme
+                                .labelMedium
+                                ?.copyWith(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      "Okay",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        showEmptyAlert(context, "Something went wrong",
+            '', Icons.error, Colors.red);
+      }
+    }
+    else {
+      ProgressDialog.hide();
+      NewAlertBox(context, "Email does not exist", 'First, register your email to login', "Okay",);
+    }
+  }
+  }
+
+  void NewAlertBox(BuildContext ctx, String title, String content, String buttontxt1,) {
+    showDialog(
+      context: ctx,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          actionsAlignment: MainAxisAlignment.center,
+          title: Row(
+            children: [
+              Icon(Icons.warning_rounded, color: Colors.deepPurple, size: 60),
+              SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(title,
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.deepPurple,
+                      ),
+                    ),
+                    if (content.isNotEmpty)
+                      SizedBox(height: 10),
+                    if (content.isNotEmpty)
+                      Text(content,
+                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          fontSize: 16.0,
+                          color: Colors.black54,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                if (buttontxt1.isNotEmpty)  Expanded(
+                  child: InkWell(
+                    onTap:  () async {
+                      if(title == "Email does not exist"){
+                        context.go('/userRegister');
+                      }
+                      else Navigator.pop(context);
+                    },
+                    child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.deepPurple,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Center(
+                          child: Text(buttontxt1,style: TextStyle(color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,),),
+                        )
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void sendEmail() async {
     final prefs = await SharedPreferences.getInstance();
     isloggedIn = await prefs.setBool('isLoggedIn', true);
     print("setBoolisloggedIn: $isloggedIn");
-    if(loginTextEditingcontroller.text.isEmpty){showEmptyAlert2(context,"Enter Email to Login","","","OK");}
-    else  if(!loginTextEditingcontroller.text.trim().isValidEmail()){
-      showEmptyAlert2(context,"Enter a Valid Email","${loginTextEditingcontroller.text.trim()} is not a valid email address","${loginTextEditingcontroller.text}","Retype Email Address");
+    if(emailcontroller.text.isEmpty){showEmptyAlert2(context,"Enter Email to Login","","","OK");}
+    else  if(!emailcontroller.text.trim().isValidEmail()){
+      showEmptyAlert2(context,"Enter a Valid Email","${emailcontroller.text.trim()} is not a valid email address","${emailcontroller.text}","Retype Email Address");
       // showDialog(
       //     context: context,
       //     barrierColor: Colors.black87,
@@ -476,14 +685,14 @@ class _ForgetPasswrdScreenState extends State<ForgetPasswrdScreen> {
     else {
       print("inside else:");
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Users').
-      where('email', isEqualTo: loginTextEditingcontroller.text.trim()).get();
+      where('email', isEqualTo: emailcontroller.text.trim()).get();
       if (querySnapshot.docs.isNotEmpty) {
 
         print("inside querySnapshot: ${querySnapshot.docs.first.get("email")}");
 
-        ProgressDialog.show(context, "Logging in\n${loginTextEditingcontroller.text}", Icons.ice_skating);
+        ProgressDialog.show(context, "Logging in\n${emailcontroller.text}", Icons.ice_skating);
 
-        QuerySnapshot newquerySnapshot = await FirebaseFirestore.instance.collection('Users').where('email', isEqualTo: loginTextEditingcontroller.text).where('isPPS', isEqualTo: false).limit(1).get();
+        QuerySnapshot newquerySnapshot = await FirebaseFirestore.instance.collection('Users').where('email', isEqualTo: emailcontroller.text).where('isPPS', isEqualTo: false).limit(1).get();
 
         if(newquerySnapshot.docs.isNotEmpty){
 
@@ -505,7 +714,7 @@ class _ForgetPasswrdScreenState extends State<ForgetPasswrdScreen> {
           }
           Map<String, dynamic> AboutMEDatas = {
             'AB_id': ids,
-            'Email': loginTextEditingcontroller.text,
+            'Email': emailcontroller.text,
             'User_Name': userData['UserName'],
             'Employer': userData['Employer'],
             'Division_or_Section': userData['Division_or_Section'],
@@ -548,8 +757,8 @@ class _ForgetPasswrdScreenState extends State<ForgetPasswrdScreen> {
           var documentId = await ApiRepository().createAboutMe(AboutMEDatas);
         }
         ///
-        // bool isLoginSuccessful = await ApiRepository().sendLoginMail(loginTextEditingcontroller.text);
-        bool isLoginSuccessful = true;
+        bool isLoginSuccessful = await ApiRepository().sendLoginMail(emailcontroller.text);
+        // bool isLoginSuccessful = true;
         ///
         // bool isLoginSuccessful = true;
         // isloggedIn = true;
@@ -605,7 +814,7 @@ class _ForgetPasswrdScreenState extends State<ForgetPasswrdScreen> {
                                 SizedBox(width: 10),
                                 Expanded(
                                   child: Text(
-                                    loginTextEditingcontroller.text,
+                                    emailcontroller.text,
                                     style: Theme.of(context)
                                         .textTheme
                                         .labelMedium
@@ -805,7 +1014,7 @@ class _ForgetPasswrdScreenState extends State<ForgetPasswrdScreen> {
                 ),
                 onPressed: () {
                   Navigator.pop(context);
-                  loginTextEditingcontroller.clear();
+                  emailcontroller.clear();
                 },
                 child: Text(
                   message3,
@@ -818,7 +1027,5 @@ class _ForgetPasswrdScreenState extends State<ForgetPasswrdScreen> {
       },
     );
   }
-
-
 
 }

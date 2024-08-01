@@ -21,6 +21,8 @@ import 'package:thrivers/screens/new%20added%20screens/UserLoginPage.dart';
 import 'package:thrivers/screens/not%20used%20screen/DashboardCommonWidgets.dart';
 import 'package:thrivers/screens/userLoginAboutME/UserLogedInAboutMePage.dart';
 
+import '../../widget/progressbar_widget.dart';
+
 
 class UserAboutMePage extends StatefulWidget {
 
@@ -39,6 +41,7 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
   SideMenuController sideMenu = SideMenuController();
 
   TextEditingController nameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   TextEditingController employerController = TextEditingController();
   TextEditingController divisionOrSectionController = TextEditingController();
   TextEditingController RoleController = TextEditingController();
@@ -53,8 +56,13 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
   late  UserAboutMEProvider _userAboutMEProvider;
   late  PreviewProvider _userPreviewProvider;
 
-  var UserName, userdocs;
+  bool isVisible = false;
 
+  void toggleVisibility() {
+    setState(() {
+      isVisible = !isVisible;
+    });
+  }
 
 
   Future<void> _initSharedPreferences() async {
@@ -68,6 +76,12 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
     print("userEmail: $loginToken");
   }
 
+  Future<Map<String, dynamic>> _getStoredPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    isloggedIn = prefs.getBool('isLoggedIn') ?? false;
+     emailId = prefs.getString('emailId') ?? '';
+    return {'isLoggedIn': isloggedIn, 'emailId': emailId};
+  }
 
 
   Future<void> _logout() async {
@@ -118,152 +132,261 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
     _addKeywordProvider = Provider.of<AddKeywordProvider>(context, listen: false);
     _userAboutMEProvider = Provider.of<UserAboutMEProvider>(context, listen: false);
     _userPreviewProvider = Provider.of<PreviewProvider>(context, listen: false);
-    _loadDataForPage(_currentPage);
+    // _loadDataForPage(_currentPage);
     super.initState();
+    isVisible = !isVisible;
+    _getStoredPreferences();
     _fetchUserData();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {});
+    // WidgetsBinding.instance!.addPostFrameCallback((_) {});
       // _initSharedPreferences();
   }
 
 
   _fetchUserData() async {
+    _userPreviewProvider.updateloginloader(false);
+    print("widget.emailId; ${widget.emailId}");
     QuerySnapshot userData = await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: widget.emailId).get();
     print("userData; ${userData.docs.first['UserName']}");
+    print("UserEmail; ${userData.docs.first['email']}");
     print("userData.docs:  ${userData.docs.first.id}");
 
-    userdocs = await userData.docs.first.id;
-    UserName = await userData.docs.first['UserName'];
+    _userPreviewProvider.userdocsUpdate(userData.docs.first.id);
+    _userPreviewProvider.UserNameUpdate(userData.docs.first['UserName']);
+    _userPreviewProvider.UserEmailUpdate(userData.docs.first['email']);
+    // _userPreviewProvider.userdocs = await userData.docs.first.id;
+    // _userPreviewProvider.UserName = await userData.docs.first['UserName'];
+    // _userPreviewProvider.UserEmail = await userData.docs.first['email'];
     nameController.text = await userData.docs.first['UserName'];
+    passwordController.text = await userData.docs.first['Password'];
     employerController.text = await userData.docs.first['Employer'];
     divisionOrSectionController.text = await userData.docs.first['Division_or_Section'];
     RoleController.text = await userData.docs.first['Role'];
     LocationController.text = await userData.docs.first['Location'];
     EmployeeNumberController.text = await userData.docs.first['Employee_Number'];
     LineManagerController.text = await userData.docs.first['Line_Manager'];
-    }
+    _userPreviewProvider.updateloginloader(true);
+  }
 
     @override
     Widget build(BuildContext context) {
-      return Scaffold(
-        // appBar: DashboardCommonWidgets().CommonAppBar(context,true,false,false,emailID: widget.emailId,showSettings: widget.isClientLogeddin,showLogout: true),
-        // appBar: DashboardCommonWidgets().CommonAppBar(context,true,true,true,emailID: "fenilpatel120501@gmail.com",showSettings: true,showLogout: true),
-        onDrawerChanged: (isOpened) {
+      return Consumer<PreviewProvider>(
+          builder: (c,previewProvider, _){
+            return previewProvider.getloginloader == false ? loadingView(previewProvider.getloginloader) : Scaffold(
+              // appBar: DashboardCommonWidgets().CommonAppBar(context,true,false,false,emailID: widget.emailId,showSettings: widget.isClientLogeddin,showLogout: true),
+              // appBar: DashboardCommonWidgets().CommonAppBar(context,true,true,true,emailID: "fenilpatel120501@gmail.com",showSettings: true,showLogout: true),
+                onDrawerChanged: (isOpened) {
 
-        },
-        // key: _scaffoldKey,
-        drawerEnableOpenDragGesture: true ,
-        drawerDragStartBehavior: DragStartBehavior.start,
-        // appBar:AppHelper().CustomAppBar(context),
-        drawerScrimColor: Colors.black26,
-        // drawer: Drawer(
-        //   elevation: 50,
-        //   child: ListView(
-        //     children: [
-        //       SideMenuScreen(),
-        //     ],
-        //   ),
-        // ),
-        appBar: AppBar(
-          leading: InkWell(
-            onTap: (){
-              showDialog(
-                  context: context,
-                  builder: (context) => Consumer<PreviewProvider>(
-                    builder: (c,previewProvider, _){
-                      return AlertDialog(
-                        title: Text('Logout Confirmation'),
-                        content: Text('Are you sure you want to log out?'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop(); // Close the dialog
-                            },
-                            child: Text('Cancel'),
-                          ),
-                          TextButton(
-                            onPressed: () async {
-                              // Navigator.pop(context);
-                              // print("Dialog closed");
-                              // setState(() {
-                              //   logout(context);
-                              // });
-                              // context.go('/userLogin');
-                              previewProvider.userlogout(context);
-                              print("Navigated to login screen"); // Debugging: Check if navigation is triggered
-                            },
-                            child: Text('Logout'),
-                          ),
-                        ],
-                      );},
-                  )
-              );
-            },
-            child: Container(
-              child: Row(
-                children: [
-                  SizedBox(width: 5,),
-                  Icon(Icons.logout,color: Colors.white),
-                  SizedBox(width: 5,),
-                  Text("Logout",style: GoogleFonts.montserrat(
-                  textStyle: Theme.of(context).textTheme.bodyLarge,
-                fontWeight: FontWeight.w600,
-                color: Colors.white),
-                  )
-              ],),
-            ),
-          ),
-          leadingWidth: MediaQuery.of(context).size.width * .1,
-          backgroundColor: Colors.blue,
-          centerTitle: true,
-          title: Text("Solution Inclusion", style: GoogleFonts.montserrat(
-              textStyle: Theme.of(context).textTheme.headlineLarge,
-              fontWeight: FontWeight.bold,
-              color: Colors.white),),
-          actions: [
-            Row(
-              children: [
-                CircleAvatar(
-                  backgroundImage: NetworkImage("https://st3.depositphotos.com/19428878/36416/v/450/depositphotos_364169666-stock-illustration-default-avatar-profile-icon-vector.jpg"),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: UserName==null || widget.emailId==null ? CircularProgressIndicator(color: Colors.white,) : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("${UserName},",style: TextStyle(color: Colors.white),),
-                      Text("${widget.emailId}",style: TextStyle(color: Colors.white),),
-                    ],
-                  ),
-                ),
-                SizedBox(width: 15,)
-              ],
-            ),
+                },
+                // key: _scaffoldKey,
+                drawerEnableOpenDragGesture: true ,
+                drawerDragStartBehavior: DragStartBehavior.start,
+                // appBar:AppHelper().CustomAppBar(context),
+                drawerScrimColor: Colors.black26,
+                // drawer: Drawer(
+                //   elevation: 50,
+                //   child: ListView(
+                //     children: [
+                //       SideMenuScreen(),
+                //     ],
+                //   ),
+                // ),
+                appBar: AppBar(
+                  leading: InkWell(
+                    onTap: (){
+                      showDialog(
+                          context: context,
+                          builder: (context) => Consumer<PreviewProvider>(
+                            builder: (c,previewProvider, _){
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                actionsAlignment: MainAxisAlignment.center,
+                                title: Row(
+                                  children: [
+                                    Icon(Icons.warning_rounded, color: Colors.deepPurple, size: 60),
+                                    SizedBox(width: 20),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            'Logout Confirmation',
+                                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.deepPurple,
+                                            ),
+                                          ),
+                                          SizedBox(height: 10),
+                                          Text(
+                                            "Are you sure you want to log out?",
+                                            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                                              fontSize: 16.0,
+                                              color: Colors.black54,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                actions: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Expanded(
+                                        child: InkWell(
+                                          onTap:  () async {
+                                            // Navigator.pop(context);
+                                            // print("Dialog closed");
+                                            // setState(() {
+                                            //   logout(context);
+                                            // });
+                                            // context.go('/userLogin');
+                                            previewProvider.userlogout(context);
+                                            print("Navigated to login screen"); // Debugging: Check if navigation is triggered
+                                          },
+                                          child: Container(
+                                              padding: EdgeInsets.symmetric(vertical: 12),
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                color: Colors.deepPurple,
+                                                borderRadius: BorderRadius.circular(5),
+                                              ),
+                                              child: Center(
+                                                child: Text("Log out",style: TextStyle(color: Colors.white,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,),),
+                                              )
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 16),
+                                      Expanded(
+                                        child: InkWell(
+                                          onTap : (){
+                                            Navigator.pop(context);
+                                          },
+                                          child: Container(
+                                              padding: EdgeInsets.symmetric(vertical: 12),
 
-          ],
-        ),
-        body:Consumer<PreviewProvider>(
-            builder: (c,previewProvider, _){
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: PageView(
-                      physics: NeverScrollableScrollPhysics(),
-                      controller: page,
-                      children: [
-                        // DashBoardScreen(),
-                        // EmployeePageView(),
-                        // UserLogedInAboutMePage(AdminName: widget.emailId,Pagejump: false, sideMenu: sideMenu),
-                        UserLogedInAboutMePage(AdminName: widget.emailId,tabindex: previewProvider.tabindex, sideMenu: sideMenu),
-                        AboutMEScreen(),
-                        // UserLogedInAboutMePage(AdminName: widget.emailId,),
-                      ],
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                color: Colors.black,
+                                                borderRadius: BorderRadius.circular(5),
+                                              ),
+                                              child: Center(
+                                                child: Text("Cancel",style: TextStyle(color: Colors.white,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,),),
+                                              )
+
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              );
+                              // return AlertDialog(
+                              //   title: Text('Logout Confirmation'),
+                              //   content: Text('Are you sure you want to log out?'),
+                              //   actions: [
+                              //     TextButton(
+                              //       onPressed: () {
+                              //         Navigator.of(context).pop(); // Close the dialog
+                              //       },
+                              //       child: Text('Cancel'),
+                              //     ),
+                              //     TextButton(
+                              //       onPressed: () async {
+                              //         // Navigator.pop(context);
+                              //         // print("Dialog closed");
+                              //         // setState(() {
+                              //         //   logout(context);
+                              //         // });
+                              //         // context.go('/userLogin');
+                              //         previewProvider.userlogout(context);
+                              //         print("Navigated to login screen"); // Debugging: Check if navigation is triggered
+                              //       },
+                              //       child: Text('Logout'),
+                              //     ),
+                              //   ],
+                              // );
+                              },
+                          )
+                      );
+                    },
+                    child: Container(
+                      child: Row(
+                        children: [
+                          SizedBox(width: 5,),
+                          Icon(Icons.logout,color: Colors.white),
+                          SizedBox(width: 5,),
+                          Text("Logout",style: GoogleFonts.montserrat(
+                              textStyle: Theme.of(context).textTheme.bodyLarge,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white),
+                          )
+                        ],),
                     ),
                   ),
-                ],
-              );
-            })
-    );
+                  leadingWidth: MediaQuery.of(context).size.width * .1,
+                  backgroundColor: Colors.blue,
+                  centerTitle: true,
+                  title: Text("Solution Inclusion", style: GoogleFonts.montserrat(
+                      textStyle: Theme.of(context).textTheme.headlineLarge,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),),
+                  actions: [
+                    InkWell(
+                      onTap: (){
+                        page.jumpToPage(1);
+                      },
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: NetworkImage("https://st3.depositphotos.com/19428878/36416/v/450/depositphotos_364169666-stock-illustration-default-avatar-profile-icon-vector.jpg"),
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: previewProvider.UserName==null || previewProvider.UserEmail==null ? CircularProgressIndicator(color: Colors.white,): Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("${previewProvider.UserName},",style: TextStyle(color: Colors.white),),
+                                  Text("${previewProvider.UserEmail}",style: TextStyle(color: Colors.white),),
+                                ],
+                              )
+                          ),
+                          SizedBox(width: 15,)
+                        ],
+                      ),
+                    ),
+
+                  ],
+                ),
+                body: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: PageView(
+                        physics: NeverScrollableScrollPhysics(),
+                        controller: page,
+                        children: [
+                          // DashBoardScreen(),
+                          // EmployeePageView(),
+                          // UserLogedInAboutMePage(AdminName: widget.emailId,Pagejump: false, sideMenu: sideMenu),
+                          UserLogedInAboutMePage(AdminName: widget.emailId,tabindex: previewProvider.tabindex, sideMenu: sideMenu),
+                          AboutMEScreen(previewProvider.userdocs),
+                          // UserLogedInAboutMePage(AdminName: widget.emailId,),
+                        ],
+                      ),
+                    ),
+                  ],
+                )
+            );
+          });
   }
 
   Widget EmployeePageView(){
@@ -1207,7 +1330,7 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
     );
   }
 
-  Widget AboutMEScreen(){
+  Widget AboutMEScreen(userdocs){
     return Scaffold(
       // key: _scaffoldKey,
       backgroundColor: Colors.grey.withOpacity(0.2),
@@ -1225,15 +1348,31 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("My Details:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.headlineMedium,)),
-              SizedBox(height: 10,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("My Details:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.headlineMedium,)),
+                  InkWell(
+                    onTap: (){
+                      page.jumpToPage(0);
+                    },
+                      child: Container(child: Row(
+                        children: [
+                          Icon(Icons.arrow_back_ios),
+                          SizedBox(width: 2,),
+                          Text("Back", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.headlineSmall,)),
+                        ],
+                      ))),
+                ],
+              ),
+              // SizedBox(height: 10,),
               Divider(),
               SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
+                    /// --- NAME
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
                       child: Text("Name:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
@@ -1278,7 +1417,71 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
                             color: Colors.black),
                       ),
                     ),
-                    // SizedBox(height: 10,),
+
+                    /// --- PASSWORD
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                      child: Text("Password:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
+                    ),
+                    TextFormField(
+                      controller: passwordController,
+
+                      // cursorColor: primaryColorOfApp,
+                      onChanged: (value) {
+
+                      },
+                      style: GoogleFonts.montserrat(
+                          textStyle: Theme
+                              .of(context)
+                              .textTheme
+                              .bodyLarge,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black),
+                      obscureText: isVisible,
+                      obscuringCharacter: "*",
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(10),
+                        // labelText: "Name",
+                        hintText: "Name",
+
+                        errorStyle: GoogleFonts.montserrat(
+                            textStyle: Theme
+                                .of(context)
+                                .textTheme
+                                .bodyLarge,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.redAccent),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black),
+                            borderRadius: BorderRadius.circular(15)),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black12),
+                            borderRadius: BorderRadius.circular(15)),
+                        suffixIcon: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: InkWell(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Icon(
+                                isVisible ? Icons.visibility : Icons.visibility_off,
+                              ),
+                            ),
+                            onTap: toggleVisibility,
+                          ),
+                        ),
+                        labelStyle: GoogleFonts.montserrat(
+                            textStyle: Theme
+                                .of(context)
+                                .textTheme
+                                .bodyLarge,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black),
+                      ),
+                    ),
+
+                    /// --- Employer
+
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
                       child: Text("Employer:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
@@ -1323,7 +1526,9 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
                             color: Colors.black),
                       ),
                     ),
-                    // SizedBox(height: 10,),
+
+                    /// --- Division or section
+
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
                       child: Text("Division or section:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
@@ -1368,7 +1573,9 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
                             color: Colors.black),
                       ),
                     ),
-                    // SizedBox(height: 10,),
+
+                    /// --- Role
+
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
                       child: Text("Role:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
@@ -1413,7 +1620,9 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
                             color: Colors.black),
                       ),
                     ),
-                    // SizedBox(height: 10,),
+
+                    /// --- Location
+
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
                       child: Text("Location:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
@@ -1458,7 +1667,9 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
                             color: Colors.black),
                       ),
                     ),
-                    // SizedBox(height: 10,),
+
+                    /// --- Employee number
+
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
                       child: Text("Employee number:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
@@ -1503,7 +1714,9 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
                             color: Colors.black),
                       ),
                     ),
-                    // SizedBox(height: 10,),
+
+                    /// --- Line manager
+
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
                       child: Text("Line manager:", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.titleSmall,)),
@@ -1548,13 +1761,15 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
                             color: Colors.black),
                       ),
                     ),
-                    SizedBox(height: 20,),
+
+                    SizedBox(height: 10,),
                     InkWell(
                       onTap: () async {
                         // sideMenu.changePage(2);
                         ProgressDialog.show(context, "Updating User Details", Icons.update);
                         await ApiRepository().updateUserDetail({
                           "UserName": nameController.text,
+                          "Password": passwordController.text,
                           "Employer": employerController.text,
                           "Division_or_Section": divisionOrSectionController.text,
                           "Role": RoleController.text,
@@ -1597,7 +1812,7 @@ class _UserAboutMePageState extends State<UserAboutMePage> {
                       },
                       child: Container(
                         // margin: EdgeInsets.all(10),
-                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 4),
                         decoration: BoxDecoration(
                           color: Colors.blue,
                           border: Border.all(color:Colors.blue, width: 1.0),

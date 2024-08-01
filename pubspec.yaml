@@ -50,7 +50,7 @@ dependencies:
   slidable_bar: ^1.1.1
   easy_sidemenu: ^0.4.1+1
   shared_preferences: ^2.0.15
-  go_router: ^13.0.0
+  go_router:
   url_strategy: ^0.2.0
   multi_dropdown:
   flutter_quill: ^9.1.1

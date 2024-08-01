@@ -21,6 +21,7 @@ import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:multi_select_flutter/util/multi_select_list_type.dart';
 import 'package:provider/provider.dart';
 import 'package:thrivers/Provider/AddKeywordsProvider.dart';
+import 'package:thrivers/Provider/AdminSolutionListProvider.dart';
 import 'package:thrivers/screens/addthriverscreen.dart';
 import '../Network/FirebaseApi.dart';
 import '../core/apphelper.dart';
@@ -56,8 +57,6 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
 
   var selectedValue; // Variable to store the selected value
 
-  List<Map> dataItems = [];
-  List<DocumentSnapshot> documentss = [];
 
   List<String> listOfUserToAdd = [];
   TextEditingController thriverNameTextEditingController = TextEditingController();
@@ -84,7 +83,6 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
 
   List<String> categories = [];
 
-  String? userAccountSearchErrorText;
   var newselectedValue, editsourceValue, editstatusvalue;
   List<dynamic> editKeywordssss = [];
   List<dynamic> edittags = [];
@@ -100,43 +98,23 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
   TextEditingController searchTextbyCKEditingController = TextEditingController();
 
 
-  List<String> suggestions = [];
-
-
-
-  List<String> mySelectedUsers = [];
-
-  List<DocumentReference> challengesDocRefs = [];
-  List<DocumentReference> solutionsDocRefs = [];
 
   bool showTreeView = false;
 
   bool showTagView = false;
 
-  static List<Animal> _animals = [];
-  final _items = _animals
-      .map((animal) => MultiSelectItem<Animal>(animal, animal.name))
-      .toList();
-  //List<Animal> _selectedAnimals = [];
-  List<Animal> _selectedAnimals2 = [];
-  List<Animal> _selectedAnimals3 = [];
-  //List<Animal> _selectedAnimals4 = [];
-  List<Animal> _selectedAnimals5 = [];
+
 
   List<Map<String, dynamic>> treeListData = [];
 
 
   List<Map<String, dynamic>> initialTreeData = [];
 
-  List<String> challanges = [];
-  List<String> solutions = [];
-  List<DocumentReference> challangeDocRefs = [];
 
 
   List<String> fieldNames = [];
   List<String> selectedFieldNames = [];
   List<String> categoriesStringList = [];
-  List<String> subcategories = [];
 
   QuillController _controller = QuillController.basic();
   QuillController _editcontroller = QuillController.basic();
@@ -151,12 +129,8 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
   TextEditingController searchbyCatcontroller = TextEditingController();
   TextEditingController searchbyTagcontroller = TextEditingController();
   late final AddKeywordProvider _addKeywordProvider;
+  late final SolutionsListProvider _solutionsListProvider;
 
-  DocumentSnapshot? _lastDocument;
-  var _lastindex =0;
-
-  bool _isLoadingMore = false;
-  int _perPage = 10;
 
 
 
@@ -513,6 +487,8 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
     // KeywordServices();
     newSelectCategories();
     _addKeywordProvider = Provider.of<AddKeywordProvider>(context, listen: false);
+    _solutionsListProvider = Provider.of<SolutionsListProvider>(context, listen: false);
+    _solutionsListProvider.fetchSolutionsdataList();
     // _addKeywordProvider.getcategoryAndKeywords();
     _addKeywordProvider.newgetSource();
     _addKeywordProvider.newgetThriversStatus();
@@ -1275,7 +1251,8 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                       ),
                     );
                   },
-                ) : showTagView ? FutureBuilder(
+                ) : showTagView ?
+                FutureBuilder(
                   future: fetchbytags(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -1373,6 +1350,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                                       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                                       physics: NeverScrollableScrollPhysics(), // Disable scrolling
                                       shrinkWrap: true,
+                                      // itemCount: addKeywordProvider.paginatedSolutionsDataList.length,
                                       itemCount: addKeywordProvider.documents.length,
                                       separatorBuilder: (BuildContext context, int index) {
                                         return Divider();
@@ -1380,6 +1358,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                                       itemBuilder: (BuildContext context, int index) {
                                         // print("after search documentssssssss: ${addKeywordProvider.documents}");
 
+                                        // return ThriversListTile(addKeywordProvider.paginatedSolutionsDataList[index], index, addKeywordProvider.paginatedSolutionsDataList);
                                         return ThriversListTile(addKeywordProvider.documents[index], index, addKeywordProvider.documents);
                                       },
                                     ),
@@ -1391,6 +1370,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
 
                             SizedBox(height: 20),
 
+                            // (addKeywordProvider.paginatedSolutionsDataList.isEmpty) ?
                             (addKeywordProvider.documents.isEmpty) ?
 
                             Container() :
@@ -1653,10 +1633,17 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                   // thriversDetails.reference,thriversDetails.id, thriversDetails['Label'], thriversDetails['Description'], thriversDetails['Category']
                   // ,thriversDetails['Keywords'],thriversDetails['Created Date'],thriversDetails['Created By'],thriversDetails['tags'],thriversDetails['Modified By']
                   // ,thriversDetails['Modified Date'],thriversDetails['id']
+                  ///
                   ViewSolutionDialog(thriverDocument.reference, thriverDocument.id,
                       thriverDocument['Label'], thriverDocument['Description'], thriverDocument['Category'],
                       thriverDocument['Keywords'], thriverDocument['Created Date'], thriverDocument['Created By'],
                       thriverDocument['tags'], thriverDocument['Modified By'], thriverDocument['Modified Date'], thriverDocument['id']);
+                  ///
+                  // ViewSolutionDialog(
+                  //    thriverDocument['Label'], thriverDocument['Description'], thriverDocument['Category'],
+                  //   thriverDocument['Keywords'], thriverDocument['Created Date'], thriverDocument['Created By'], thriverDocument['tags'], thriverDocument['Modified By'],
+                  //   thriverDocument['Modified Date'], thriverDocument['id'],thriverDocument['Original Description'],thriverDocument['Source'],thriverDocument['Thirver Status'],
+                  // );
                 },
                   child: Text(thriverName, style: TextStyle(color: Colors.black))),
             ),
@@ -1703,15 +1690,22 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
           thriverNodes.add(
             ListTile(
               title: InkWell(
-                onTap: (){
-                  // thriversDetails.reference,thriversDetails.id, thriversDetails['Label'], thriversDetails['Description'], thriversDetails['Category']
-                  // ,thriversDetails['Keywords'],thriversDetails['Created Date'],thriversDetails['Created By'],thriversDetails['tags'],thriversDetails['Modified By']
-                  // ,thriversDetails['Modified Date'],thriversDetails['id']
-                  ViewSolutionDialog(thriverDocument.reference, thriverDocument.id,
-                      thriverDocument['Label'], thriverDocument['Description'], thriverDocument['Category'],
-                      thriverDocument['Keywords'], thriverDocument['Created Date'], thriverDocument['Created By'],
-                      thriverDocument['tags'], thriverDocument['Modified By'], thriverDocument['Modified Date'], thriverDocument['id']);
-                },
+                  onTap: (){
+                    // thriversDetails.reference,thriversDetails.id, thriversDetails['Label'], thriversDetails['Description'], thriversDetails['Category']
+                    // ,thriversDetails['Keywords'],thriversDetails['Created Date'],thriversDetails['Created By'],thriversDetails['tags'],thriversDetails['Modified By']
+                    // ,thriversDetails['Modified Date'],thriversDetails['id']
+                    ///
+                    ViewSolutionDialog(thriverDocument.reference, thriverDocument.id,
+                        thriverDocument['Label'], thriverDocument['Description'], thriverDocument['Category'],
+                        thriverDocument['Keywords'], thriverDocument['Created Date'], thriverDocument['Created By'],
+                        thriverDocument['tags'], thriverDocument['Modified By'], thriverDocument['Modified Date'], thriverDocument['id']);
+                    ///
+                    // ViewSolutionDialog(
+                    //    thriverDocument['Label'], thriverDocument['Description'], thriverDocument['Category'],
+                    //   thriverDocument['Keywords'], thriverDocument['Created Date'], thriverDocument['Created By'], thriverDocument['tags'], thriverDocument['Modified By'],
+                    //   thriverDocument['Modified Date'], thriverDocument['id'],thriverDocument['Original Description'],thriverDocument['Source'],thriverDocument['Thirver Status'],
+                    // );
+                  },
                   child: Text(thriverName, style: TextStyle(color: Colors.black))),
             ),
           );
@@ -1759,7 +1753,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
     );
   }
 
-  Widget ThriversListTile(DocumentSnapshot<Object?> thriversDetails, i, documentsss) {
+  Widget ThriversListTile(thriversDetails, i, documentsss) {
 
     // print("thriversDetails");
     // print(thriversDetails.data());
@@ -1888,11 +1882,17 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
             flex: 3,
             child: InkWell(
               onTap: () {
-                ViewSolutionDialog(
-                    thriversDetails.reference, thriversDetails.id, thriversDetails['Label'], thriversDetails['Description'], thriversDetails['Category'],
-                    thriversDetails['Keywords'], thriversDetails['Created Date'], thriversDetails['Created By'], thriversDetails['tags'], thriversDetails['Modified By'],
-                    thriversDetails['Modified Date'], thriversDetails['id']
-                );
+                ViewSolutionDialog(thriversDetails.reference, thriversDetails.id,
+                    thriversDetails['Label'], thriversDetails['Description'], thriversDetails['Category'],
+                    thriversDetails['Keywords'], thriversDetails['Created Date'], thriversDetails['Created By'],
+                    thriversDetails['tags'], thriversDetails['Modified By'], thriversDetails['Modified Date'], thriversDetails['id']);
+
+                ///
+                // ViewSolutionDialog(
+                //     thriversDetails['Label'], thriversDetails['Description'], thriversDetails['Category'],
+                //     thriversDetails['Keywords'], thriversDetails['Created Date'], thriversDetails['Created By'], thriversDetails['tags'], thriversDetails['Modified By'],
+                //     thriversDetails['Modified Date'], thriversDetails['id'],thriversDetails['Original Description'],thriversDetails['Source'],thriversDetails['Thirver Status'],
+                // );
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -5395,7 +5395,6 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                                                           ),
                                                         ),
 
-
                                                         SizedBox(height: 16),
 
                                                         Consumer<AddKeywordProvider>(
@@ -5444,6 +5443,8 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                                                               );
 
                                                             }),
+
+                                                        SizedBox(height: 16),
 
                                                         Padding(
 
@@ -5508,6 +5509,311 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                                                           ),
                                                         ),
 
+                                                        /// MOST RELEVANT CHALLENGES
+                                                        Padding(
+                                                          padding: const EdgeInsets.all(10.0),
+                                                          child: TypeAheadField(
+                                                            noItemsFoundBuilder: (c){
+                                                              return Container(
+                                                                  child: Padding(
+                                                                    padding: const EdgeInsets.all(15.0),
+                                                                    child: Text("Add Tag: '${edittagscontroller.text}'",style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),
+                                                                    ),
+                                                                  )
+                                                              );
+                                                            },
+                                                            direction: AxisDirection.up,
+                                                            suggestionsBoxDecoration: SuggestionsBoxDecoration(
+                                                                scrollbarTrackAlwaysVisible: true,
+                                                                scrollbarThumbAlwaysVisible: true,
+                                                                hasScrollbar: true,
+                                                                borderRadius: BorderRadius.circular(5),
+                                                                // color: Colors.white,
+                                                                constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.3, )
+                                                            ),
+                                                            suggestionsCallback: (value) async {
+                                                              return await TagServices.getSuggestions(value);
+                                                            },
+
+                                                            itemBuilder: (context, String suggestion) {
+                                                              return Container(
+                                                                // color: Colors.black,
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets.all(15.0),
+                                                                  child: Text(suggestion,style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),),
+                                                                ),
+                                                              );
+                                                            },
+                                                            onSuggestionSelected: (String suggestion) {
+                                                              print("Im selectedf $suggestion" );
+                                                              print("Im selectedf ${tagscontroller.text}" );
+                                                              // setState(() {
+                                                              edittagscontroller.text = suggestion;
+                                                              _addKeywordProvider.addtags(edittagscontroller.text.toString(),edittags);
+                                                              edittagscontroller.clear();
+
+                                                              // });
+                                                            },
+                                                            textFieldConfiguration: TextFieldConfiguration(
+                                                              controller: edittagscontroller,
+                                                              onSubmitted: (text) {
+                                                                _addKeywordProvider.addtags(text,edittags);
+                                                                edittagscontroller.clear();
+                                                                // print("tags: $tags");
+                                                              },
+                                                              style: GoogleFonts.poppins(
+                                                                textStyle: Theme.of(context).textTheme.bodyLarge,
+                                                                color: Colors.black,
+                                                                fontWeight: FontWeight.w400,fontStyle: FontStyle.normal,
+                                                              ),
+                                                              decoration: InputDecoration(
+                                                                //errorText: userAccountSearchErrorText,
+                                                                contentPadding: EdgeInsets.all(25),
+                                                                labelText: "MOST RELEVANT CHALLENGES",
+                                                                hintText: "MOST RELEVANT CHALLENGES",
+                                                                prefixIcon: Padding(
+                                                                  padding: const EdgeInsets.all(8.0),
+                                                                  child: Icon(Icons.tag,color: primaryColorOfApp,),
+                                                                ),
+                                                                suffixIcon: IconButton(
+                                                                  icon: Icon(Icons.add, size: 20, color: primaryColorOfApp,),
+                                                                  onPressed: () {
+                                                                    _addKeywordProvider.addtags(edittagscontroller.text.toString(),edittags);
+                                                                    edittagscontroller.clear();
+
+                                                                  },
+                                                                ),
+                                                                errorStyle: GoogleFonts.montserrat(
+                                                                    textStyle: Theme
+                                                                        .of(context)
+                                                                        .textTheme
+                                                                        .bodyLarge,
+                                                                    fontWeight: FontWeight.w400,
+                                                                    color: Colors.redAccent),
+
+                                                                focusedBorder: OutlineInputBorder(
+                                                                    borderSide: BorderSide(color: Colors.black),
+                                                                    borderRadius: BorderRadius.circular(15)),
+                                                                border: OutlineInputBorder(
+                                                                    borderSide: BorderSide(color: Colors.black12),
+                                                                    borderRadius: BorderRadius.circular(15)),
+                                                                //hintText: "e.g Abouzied",
+                                                                labelStyle: GoogleFonts.montserrat(
+                                                                    textStyle: Theme
+                                                                        .of(context)
+                                                                        .textTheme
+                                                                        .bodyLarge,
+                                                                    fontWeight: FontWeight.w400,
+                                                                    color: Colors.black),
+                                                              ),
+
+                                                            ),
+                                                          ),
+                                                        ),
+
+                                                        SizedBox(height: 16),
+
+                                                        Consumer<AddKeywordProvider>(
+                                                            builder: (c,addKeywordProvider, _){
+                                                              return Padding(
+                                                                padding: const EdgeInsets.only(left: 15.0),
+                                                                child: Align(
+                                                                  alignment: Alignment.centerLeft,
+                                                                  child: Wrap(
+                                                                    spacing: 10,
+                                                                    runSpacing: 10,
+                                                                    crossAxisAlignment: WrapCrossAlignment.start,
+                                                                    alignment: WrapAlignment.start,
+                                                                    runAlignment: WrapAlignment.start,
+                                                                    children: addKeywordProvider.ProviderEditTags.map((item){
+                                                                      return Container(
+                                                                        height: 50,
+                                                                        // width: 200,
+                                                                        padding: EdgeInsets.all(8),
+                                                                        decoration: BoxDecoration(
+                                                                            borderRadius: BorderRadius.circular(15),
+                                                                            color: Colors.blue
+                                                                        ),
+                                                                        child: Row(
+                                                                          mainAxisSize: MainAxisSize.min,
+                                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                          children: [
+                                                                            Text(item, style: TextStyle(
+                                                                                fontWeight: FontWeight.w700
+                                                                            ),),
+                                                                            IconButton(
+                                                                                onPressed: (){
+                                                                                  // setState(() {
+                                                                                  addKeywordProvider.removeedittags(item);
+                                                                                  edittags.remove(item);
+                                                                                  // });
+                                                                                },
+                                                                                icon: Icon(Icons.close,size: 20, color: Colors.white,)
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      );
+                                                                    }).toList(),
+                                                                  ),
+                                                                ),
+                                                              );
+
+                                                            }),
+
+                                                        SizedBox(height: 16),
+
+                                                       /// MOST RELEVANT SOLUTIONS
+                                                        Padding(
+                                                          padding: const EdgeInsets.all(10.0),
+                                                          child: TypeAheadField(
+                                                            noItemsFoundBuilder: (c){
+                                                              return Container(
+                                                                  child: Padding(
+                                                                    padding: const EdgeInsets.all(15.0),
+                                                                    child: Text("Add Tag: '${edittagscontroller.text}'",style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),
+                                                                    ),
+                                                                  )
+                                                              );
+                                                            },
+                                                            direction: AxisDirection.up,
+                                                            suggestionsBoxDecoration: SuggestionsBoxDecoration(
+                                                                scrollbarTrackAlwaysVisible: true,
+                                                                scrollbarThumbAlwaysVisible: true,
+                                                                hasScrollbar: true,
+                                                                borderRadius: BorderRadius.circular(5),
+                                                                // color: Colors.white,
+                                                                constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.3, )
+                                                            ),
+                                                            suggestionsCallback: (value) async {
+                                                              return await TagServices.getSuggestions(value);
+                                                            },
+
+                                                            itemBuilder: (context, String suggestion) {
+                                                              return Container(
+                                                                // color: Colors.black,
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets.all(15.0),
+                                                                  child: Text(suggestion,style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),),
+                                                                ),
+                                                              );
+                                                            },
+                                                            onSuggestionSelected: (String suggestion) {
+                                                              print("Im selectedf $suggestion" );
+                                                              print("Im selectedf ${tagscontroller.text}" );
+                                                              // setState(() {
+                                                              edittagscontroller.text = suggestion;
+                                                              _addKeywordProvider.addtags(edittagscontroller.text.toString(),edittags);
+                                                              edittagscontroller.clear();
+
+                                                              // });
+                                                            },
+                                                            textFieldConfiguration: TextFieldConfiguration(
+                                                              controller: edittagscontroller,
+                                                              onSubmitted: (text) {
+                                                                _addKeywordProvider.addtags(text,edittags);
+                                                                edittagscontroller.clear();
+                                                                // print("tags: $tags");
+                                                              },
+                                                              style: GoogleFonts.poppins(
+                                                                textStyle: Theme.of(context).textTheme.bodyLarge,
+                                                                color: Colors.black,
+                                                                fontWeight: FontWeight.w400,fontStyle: FontStyle.normal,
+                                                              ),
+                                                              decoration: InputDecoration(
+                                                                //errorText: userAccountSearchErrorText,
+                                                                contentPadding: EdgeInsets.all(25),
+                                                                labelText: "MOST RELEVANT SOLUTIONS",
+                                                                hintText: "MOST RELEVANT SOLUTIONS",
+                                                                prefixIcon: Padding(
+                                                                  padding: const EdgeInsets.all(8.0),
+                                                                  child: Icon(Icons.tag,color: primaryColorOfApp,),
+                                                                ),
+                                                                suffixIcon: IconButton(
+                                                                  icon: Icon(Icons.add, size: 20, color: primaryColorOfApp,),
+                                                                  onPressed: () {
+                                                                    _addKeywordProvider.addtags(edittagscontroller.text.toString(),edittags);
+                                                                    edittagscontroller.clear();
+
+                                                                  },
+                                                                ),
+                                                                errorStyle: GoogleFonts.montserrat(
+                                                                    textStyle: Theme
+                                                                        .of(context)
+                                                                        .textTheme
+                                                                        .bodyLarge,
+                                                                    fontWeight: FontWeight.w400,
+                                                                    color: Colors.redAccent),
+
+                                                                focusedBorder: OutlineInputBorder(
+                                                                    borderSide: BorderSide(color: Colors.black),
+                                                                    borderRadius: BorderRadius.circular(15)),
+                                                                border: OutlineInputBorder(
+                                                                    borderSide: BorderSide(color: Colors.black12),
+                                                                    borderRadius: BorderRadius.circular(15)),
+                                                                //hintText: "e.g Abouzied",
+                                                                labelStyle: GoogleFonts.montserrat(
+                                                                    textStyle: Theme
+                                                                        .of(context)
+                                                                        .textTheme
+                                                                        .bodyLarge,
+                                                                    fontWeight: FontWeight.w400,
+                                                                    color: Colors.black),
+                                                              ),
+
+                                                            ),
+                                                          ),
+                                                        ),
+
+                                                        SizedBox(height: 16),
+
+                                                        Consumer<AddKeywordProvider>(
+                                                            builder: (c,addKeywordProvider, _){
+                                                              return Padding(
+                                                                padding: const EdgeInsets.only(left: 15.0),
+                                                                child: Align(
+                                                                  alignment: Alignment.centerLeft,
+                                                                  child: Wrap(
+                                                                    spacing: 10,
+                                                                    runSpacing: 10,
+                                                                    crossAxisAlignment: WrapCrossAlignment.start,
+                                                                    alignment: WrapAlignment.start,
+                                                                    runAlignment: WrapAlignment.start,
+                                                                    children: addKeywordProvider.ProviderEditTags.map((item){
+                                                                      return Container(
+                                                                        height: 50,
+                                                                        // width: 200,
+                                                                        padding: EdgeInsets.all(8),
+                                                                        decoration: BoxDecoration(
+                                                                            borderRadius: BorderRadius.circular(15),
+                                                                            color: Colors.blue
+                                                                        ),
+                                                                        child: Row(
+                                                                          mainAxisSize: MainAxisSize.min,
+                                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                          children: [
+                                                                            Text(item, style: TextStyle(
+                                                                                fontWeight: FontWeight.w700
+                                                                            ),),
+                                                                            IconButton(
+                                                                                onPressed: (){
+                                                                                  // setState(() {
+                                                                                  addKeywordProvider.removeedittags(item);
+                                                                                  edittags.remove(item);
+                                                                                  // });
+                                                                                },
+                                                                                icon: Icon(Icons.close,size: 20, color: Colors.white,)
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      );
+                                                                    }).toList(),
+                                                                  ),
+                                                                ),
+                                                              );
+
+                                                            }),
+
+                                                        SizedBox(height: 16),
 
                                                       ]
                                                   ),
@@ -5530,21 +5836,25 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
   }
 
   void ViewSolutionDialog(documentReference,Id, Label, Description, newvalues, keywords, createdat,createdby,tags, modifiedBy,modifiedDate,insideId) {
-
+  // void ViewSolutionDialog( Label, Description, newvalues, keywords, createdat,createdby,tags, modifiedBy,modifiedDate,insideId,OriginalDescription,Source,Status) {
 
     DateTime dateTime = createdat.toDate();
 
-
     final DateFormat formatter = DateFormat("MMMM d, yyyy 'at' h:mm:ss a 'UTC'Z");
 
-
     String formattedDate = formatter.format(dateTime);
-
 
     List<TextEditingController> textControllers = [];
     for(int i=0;i<6;i++){
       textControllers.add(TextEditingController());
     }
+
+    // editKeywordssss = keywords;
+    // edittags = tags;
+    //
+    // _addKeywordProvider.addkeywordsList(editKeywordssss);
+    // _addKeywordProvider.addProviderEditTagsList(edittags);
+
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -5620,7 +5930,538 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                 content:   SizedBox(
                     width: double.maxFinite,
                     //height: MediaQuery.of(context).size.height*0.5,
-                    child:  StatefulBuilder(
+                    // child: Padding(
+                    //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    //   child: Row(
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: [
+                    //       Flexible(
+                    //         flex: 2,
+                    //         child: Container(
+                    //           height: 600,
+                    //           padding: EdgeInsets.all(20),
+                    //           decoration: BoxDecoration(
+                    //               border: Border.all(color: Colors.grey),
+                    //               borderRadius: BorderRadius.circular(20)
+                    //           ),
+                    //           child: SingleChildScrollView(
+                    //             child: Column(
+                    //                 crossAxisAlignment: CrossAxisAlignment.start,
+                    //                 mainAxisSize: MainAxisSize.min,
+                    //                 children: <Widget>[
+                    //
+                    //                   (Source==""|| Source==null) ? Container() :  Row(
+                    //                     mainAxisAlignment: MainAxisAlignment.start,
+                    //                     crossAxisAlignment: CrossAxisAlignment.start,
+                    //                     children: [
+                    //                       Text("Source: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                    //                       Text(Source, style: TextStyle(fontSize: 20,),),
+                    //
+                    //                     ],
+                    //                   ),
+                    //                   SizedBox(height: 10,),
+                    //                   (Status==""|| Status==null) ? Container() :  Row(
+                    //                     mainAxisAlignment: MainAxisAlignment.start,
+                    //                     crossAxisAlignment: CrossAxisAlignment.start,
+                    //                     children: [
+                    //                       Text("Solution Status: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                    //                       Text(Status, style: TextStyle(fontSize: 20, ),),
+                    //
+                    //                     ],
+                    //                   ),
+                    //                   SizedBox(height: 10,),
+                    //                   (Label==""|| Label==null) ? Container() : Row(
+                    //                     children: [
+                    //                       Text("Label: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                    //                       Text(Label, style: TextStyle(fontSize: 20, ),),
+                    //                     ],
+                    //                   ),
+                    //                   SizedBox(height: 10,),
+                    //                   (OriginalDescription==""|| OriginalDescription==null) ? Container() :  Row(
+                    //                     mainAxisAlignment: MainAxisAlignment.start,
+                    //                     crossAxisAlignment: CrossAxisAlignment.start,
+                    //                     children: [
+                    //                       Text("Original Description: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                    //                       Flexible(child: Text(OriginalDescription, style: TextStyle(fontSize: 20, ), maxLines: null,)),
+                    //                     ],
+                    //                   ),
+                    //                   SizedBox(height: 10,),
+                    //                   (Description==""|| Description==null) ? Container() : Row(
+                    //                     mainAxisAlignment: MainAxisAlignment.start,
+                    //                     crossAxisAlignment: CrossAxisAlignment.start,
+                    //                     children: [
+                    //                       Text("Description: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                    //                       Flexible(child: Text(Description, style: TextStyle(fontSize: 20, ), maxLines: null,)),
+                    //                     ],
+                    //                   ),
+                    //
+                    //                   SizedBox(height: 20,),
+                    //
+                    //
+                    //
+                    //                   (_addKeywordProvider.keywords==""|| _addKeywordProvider.keywords==null||_addKeywordProvider.keywords.isEmpty) ? Container() :     Row(
+                    //                     mainAxisAlignment: MainAxisAlignment.start,
+                    //                     crossAxisAlignment: CrossAxisAlignment.start,
+                    //                     children: [
+                    //                       Text("Category: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                    //                       Consumer<AddKeywordProvider>(
+                    //                           builder: (c,addKeywordProvider, _){
+                    //                             return Padding(
+                    //                               padding: const EdgeInsets.only(left: 15.0),
+                    //                               child: Align(
+                    //                                 alignment: Alignment.centerLeft,
+                    //                                 child: Wrap(
+                    //                                   spacing: 10,
+                    //                                   runSpacing: 10,
+                    //                                   crossAxisAlignment: WrapCrossAlignment.start,
+                    //                                   alignment: WrapAlignment.start,
+                    //                                   runAlignment: WrapAlignment.start,
+                    //                                   children: addKeywordProvider.keywords.map((item){
+                    //                                     print("item: $item");
+                    //                                     print("addKeywordProvider.keywords: ${addKeywordProvider.keywords}");
+                    //                                     return Container(
+                    //                                       height: 50,
+                    //                                       // width: 200,
+                    //                                       margin: EdgeInsets.only(bottom: 10),
+                    //                                       padding: EdgeInsets.all(8),
+                    //                                       decoration: BoxDecoration(
+                    //                                           borderRadius: BorderRadius.circular(15),
+                    //                                           color: Colors.blue
+                    //                                       ),
+                    //                                       child: Row(
+                    //                                         mainAxisSize: MainAxisSize.min,
+                    //                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //                                         children: [
+                    //                                           Text(item, style: TextStyle(
+                    //                                               fontWeight: FontWeight.w700
+                    //                                           ),),
+                    //                                         ],
+                    //                                       ),
+                    //                                     );
+                    //                                   }).toList(),
+                    //                                 ),
+                    //                               ),
+                    //                             );
+                    //                           }),
+                    //                     ],
+                    //                   ),
+                    //
+                    //                   SizedBox(height: 10),
+                    //
+                    //                   (_addKeywordProvider.ProviderEditTags==""|| _addKeywordProvider.ProviderEditTags==null||_addKeywordProvider.ProviderEditTags.isEmpty) ? Container() :  Row(
+                    //                     mainAxisAlignment: MainAxisAlignment.start,
+                    //                     crossAxisAlignment: CrossAxisAlignment.start,
+                    //                     children: [
+                    //                       Text("Tags: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                    //
+                    //                       Expanded(
+                    //                         child: Consumer<AddKeywordProvider>(
+                    //                             builder: (c,addKeywordProvider, _){
+                    //                               return Padding(
+                    //                                 padding: const EdgeInsets.only(left: 15.0),
+                    //                                 child: Align(
+                    //                                   alignment: Alignment.centerLeft,
+                    //                                   child: Wrap(
+                    //                                     spacing: 10,
+                    //                                     runSpacing: 10,
+                    //                                     crossAxisAlignment: WrapCrossAlignment.start,
+                    //                                     alignment: WrapAlignment.start,
+                    //                                     runAlignment: WrapAlignment.start,
+                    //                                     children: addKeywordProvider.ProviderEditTags.map((item){
+                    //                                       return Container(
+                    //                                         height: 50,
+                    //                                         // width: 200,
+                    //                                         padding: EdgeInsets.all(8),
+                    //                                         decoration: BoxDecoration(
+                    //                                             borderRadius: BorderRadius.circular(15),
+                    //                                             color: Colors.blue
+                    //                                         ),
+                    //                                         child: Row(
+                    //                                           mainAxisSize: MainAxisSize.min,
+                    //                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //                                           children: [
+                    //                                             Text(item, style: TextStyle(
+                    //                                                 fontWeight: FontWeight.w700
+                    //                                             ),),
+                    //                                           ],
+                    //                                         ),
+                    //                                       );
+                    //                                     }).toList(),
+                    //                                   ),
+                    //                                 ),
+                    //                               );
+                    //
+                    //                             }),
+                    //                       ),
+                    //                     ],
+                    //                   ),
+                    //
+                    //                 ]
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       SizedBox(width: 5,),
+                    //       Flexible(
+                    //         flex: 1,
+                    //         child: Container(
+                    //           height: 600,
+                    //           padding: EdgeInsets.all(15),
+                    //           decoration: BoxDecoration(
+                    //               border: Border.all(color: Colors.grey),
+                    //               borderRadius: BorderRadius.circular(20)
+                    //           ),
+                    //           child: SingleChildScrollView(
+                    //             child: Column(
+                    //               mainAxisAlignment: MainAxisAlignment.start,
+                    //               crossAxisAlignment: CrossAxisAlignment.start,
+                    //               mainAxisSize: MainAxisSize.max,
+                    //               children: [
+                    //                 Container(
+                    //                   height: 270 ,
+                    //                   child: FutureBuilder(
+                    //                     future: getRelatedSolutions(tags, keywords),
+                    //                     builder: (context, snapshot) {
+                    //                       if (snapshot.connectionState == ConnectionState.waiting) {
+                    //                         return Container(
+                    //                             width: 470,
+                    //                             child: Container(
+                    //                                 height: 20, // Adjust the height as needed
+                    //                                 width: 20,
+                    //                                 child: Center(
+                    //                                     child: CircularProgressIndicator()
+                    //                                 )
+                    //                             )
+                    //                         ); // Display a loading indicator while fetching data
+                    //                       } else if (snapshot.hasError) {
+                    //                         return Text('Error: ${snapshot.error}');
+                    //                       } else {
+                    //                         // List<DocumentSnapshot<Object?>>? relatedSolutions = snapshot.data;
+                    //                         List<DocumentSnapshot<Map<String, dynamic>>>? relatedSolutions = snapshot.data?.cast<DocumentSnapshot<Map<String, dynamic>>>();
+                    //
+                    //                         // print("relatedSolutions: $relatedSolutions");
+                    //
+                    //                         return Column(
+                    //                           mainAxisAlignment: MainAxisAlignment.start,
+                    //                           crossAxisAlignment: CrossAxisAlignment.start,
+                    //                           children: [
+                    //                             Padding(
+                    //                               padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+                    //                               child: Text("Related Solutions (${relatedSolutions?.length})",
+                    //                                   style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                    //                                       fontSize: 20,
+                    //                                       color: Colors.black)
+                    //                               ),
+                    //                             ),
+                    //                             Expanded(
+                    //                               child: ListView.builder(
+                    //                                 scrollDirection: Axis.horizontal,
+                    //                                 shrinkWrap: true,
+                    //                                 itemCount: relatedSolutions?.length,
+                    //                                 itemBuilder: (c, i) {
+                    //                                   relatedSolutionlength = relatedSolutions?.length;
+                    //                                   print("relatedSolutionlength: $relatedSolutionlength");
+                    //                                   var solutionData = relatedSolutions?[i].data() as Map<String, dynamic>;
+                    //                                   print("solutionData: ${solutionData}");
+                    //                                   return Container(
+                    //                                     margin: EdgeInsets.symmetric(horizontal: 15),
+                    //                                     padding: EdgeInsets.all(12),
+                    //                                     width: 470,
+                    //                                     decoration: BoxDecoration(
+                    //                                       border: Border.all(color: Colors.black),
+                    //                                       borderRadius: BorderRadius.circular(20),
+                    //                                     ),
+                    //                                     child: SingleChildScrollView(
+                    //                                       child: Column(
+                    //                                         mainAxisAlignment: MainAxisAlignment.start,
+                    //                                         crossAxisAlignment: CrossAxisAlignment.start,
+                    //                                         children: [
+                    //                                           Text("SH0${solutionData['id']}.",
+                    //                                               style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                    //                                                   fontSize: 20,
+                    //                                                   color: Colors.black)),
+                    //                                           Text("${solutionData['Label']}",
+                    //                                               style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                    //                                                   fontSize: 25,
+                    //                                                   color: Colors.black)),
+                    //                                           Text("${solutionData['Description']}",
+                    //                                               maxLines: 3,
+                    //                                               style: GoogleFonts.montserrat(
+                    //                                                   fontSize: 15,
+                    //                                                   color: Colors.black)),
+                    //                                           SizedBox(height: 5,),
+                    //                                           Text("Tags :",
+                    //                                               style: GoogleFonts.montserrat(
+                    //                                                   fontWeight: FontWeight.bold,
+                    //                                                   fontSize: 15,
+                    //                                                   color: Colors.black)),
+                    //                                           Align(
+                    //                                             alignment: Alignment.centerLeft,
+                    //                                             child: Wrap(
+                    //                                               spacing: 10,
+                    //                                               runSpacing: 5,
+                    //                                               crossAxisAlignment: WrapCrossAlignment.start,
+                    //                                               alignment: WrapAlignment.start,
+                    //                                               runAlignment: WrapAlignment.start,
+                    //                                               children: (solutionData['tags'] as List<dynamic>).map<Widget>((item){
+                    //                                                 print("solutionDataitem: $item");
+                    //                                                 print("solutionData['tags']: ${solutionData['tags']}");
+                    //                                                 return Container(
+                    //                                                   height: 35,
+                    //                                                   // width: 200,
+                    //                                                   margin: EdgeInsets.only(bottom: 2),
+                    //                                                   padding: EdgeInsets.all(6),
+                    //                                                   decoration: BoxDecoration(
+                    //                                                       borderRadius: BorderRadius.circular(15),
+                    //                                                       color: Colors.blue
+                    //                                                   ),
+                    //                                                   child: Row(
+                    //                                                     mainAxisSize: MainAxisSize.min,
+                    //                                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //                                                     children: [
+                    //                                                       Text("${item}", style: TextStyle(
+                    //                                                           fontWeight: FontWeight.w700,
+                    //                                                           fontSize: 14
+                    //                                                       ),),
+                    //                                                     ],
+                    //                                                   ),
+                    //                                                 );
+                    //                                               }).toList(),
+                    //                                             ),
+                    //                                           ),
+                    //
+                    //                                           SizedBox(height: 5,),
+                    //
+                    //                                           Text("Category :",
+                    //                                               style: GoogleFonts.montserrat(
+                    //                                                   fontWeight: FontWeight.bold,
+                    //                                                   fontSize: 15,
+                    //                                                   color: Colors.black)),
+                    //                                           Align(
+                    //                                             alignment: Alignment.centerLeft,
+                    //                                             child: Wrap(
+                    //                                               spacing: 10,
+                    //                                               runSpacing: 5,
+                    //                                               crossAxisAlignment: WrapCrossAlignment.start,
+                    //                                               alignment: WrapAlignment.start,
+                    //                                               runAlignment: WrapAlignment.start,
+                    //                                               children: (solutionData['Keywords'] as List<dynamic>).map<Widget>((item){
+                    //                                                 print("solutionDataitem: $item");
+                    //                                                 print("solutionData['Keywords']: ${solutionData['Keywords']}");
+                    //                                                 return Container(
+                    //                                                   height: 35,
+                    //                                                   // width: 200,
+                    //                                                   margin: EdgeInsets.only(bottom: 2),
+                    //                                                   padding: EdgeInsets.all(6),
+                    //                                                   decoration: BoxDecoration(
+                    //                                                       borderRadius: BorderRadius.circular(15),
+                    //                                                       color: Colors.blue
+                    //                                                   ),
+                    //                                                   child: Row(
+                    //                                                     mainAxisSize: MainAxisSize.min,
+                    //                                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //                                                     children: [
+                    //                                                       Text("${item}", style: TextStyle(
+                    //                                                           fontWeight: FontWeight.w700,
+                    //                                                           fontSize: 14
+                    //                                                       ),),
+                    //                                                     ],
+                    //                                                   ),
+                    //                                                 );
+                    //                                               }).toList(),
+                    //                                             ),
+                    //                                           )
+                    //                                         ],
+                    //                                       ),
+                    //                                     ),
+                    //                                   );
+                    //                                 },
+                    //                               ),
+                    //                             ),
+                    //                           ],
+                    //                         );
+                    //                       }
+                    //                     },
+                    //                   ),
+                    //                 ),
+                    //
+                    //                 SizedBox(height: 20,),
+                    //                 Container(
+                    //                   height: 270 ,
+                    //                   child: FutureBuilder(
+                    //                     future: getRelatedChallenges(tags, keywords),
+                    //                     builder: (context, snapshot) {
+                    //                       if (snapshot.connectionState == ConnectionState.waiting) {
+                    //                         return Container(
+                    //                             width: 470,
+                    //                             child: Container(
+                    //                                 height: 20, // Adjust the height as needed
+                    //                                 width: 20,
+                    //                                 child: Center(
+                    //                                     child: CircularProgressIndicator()
+                    //                                 )
+                    //                             )
+                    //                         ); // Display a loading indicator while fetching data
+                    //                       } else if (snapshot.hasError) {
+                    //                         return Text('Error: ${snapshot.error}');
+                    //                       } else {
+                    //                         // List<DocumentSnapshot<Object?>>? relatedSolutions = snapshot.data;
+                    //                         List<DocumentSnapshot<Map<String, dynamic>>>? relatedChallenges = snapshot.data?.cast<DocumentSnapshot<Map<String, dynamic>>>();
+                    //
+                    //                         // print("relatedSolutions: $relatedSolutions");
+                    //
+                    //                         return Column(
+                    //                           mainAxisAlignment: MainAxisAlignment.start,
+                    //                           crossAxisAlignment: CrossAxisAlignment.start,
+                    //                           children: [
+                    //                             Padding(
+                    //                               padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+                    //                               child: Text("Related Challenges (${relatedChallenges?.length})",
+                    //                                   style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                    //                                       fontSize: 20,
+                    //                                       color: Colors.black)
+                    //                               ),
+                    //                             ),
+                    //                             Expanded(
+                    //                               child: ListView.builder(
+                    //                                 scrollDirection: Axis.horizontal,
+                    //                                 shrinkWrap: true,
+                    //                                 itemCount: relatedChallenges?.length,
+                    //                                 itemBuilder: (c, i) {
+                    //                                   relatedSolutionlength = relatedChallenges?.length;
+                    //                                   print("relatedSolutionlength: $relatedSolutionlength");
+                    //                                   var challengesData = relatedChallenges?[i].data() as Map<String, dynamic>;
+                    //                                   print("solutionData: ${challengesData}");
+                    //                                   return Container(
+                    //                                     margin: EdgeInsets.symmetric(horizontal: 15),
+                    //                                     padding: EdgeInsets.all(12),
+                    //                                     width: 470,
+                    //                                     decoration: BoxDecoration(
+                    //                                       border: Border.all(color: Colors.black),
+                    //                                       borderRadius: BorderRadius.circular(20),
+                    //                                     ),
+                    //                                     child: SingleChildScrollView(
+                    //                                       child: Column(
+                    //                                         mainAxisAlignment: MainAxisAlignment.start,
+                    //                                         crossAxisAlignment: CrossAxisAlignment.start,
+                    //                                         children: [
+                    //                                           Text("CH0${challengesData['id']}.",
+                    //                                               style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                    //                                                   fontSize: 20,
+                    //                                                   color: Colors.black)),
+                    //                                           Text("${challengesData['Label']}",
+                    //                                               style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                    //                                                   fontSize: 25,
+                    //                                                   color: Colors.black)),
+                    //                                           Text("${challengesData['Description']}",
+                    //                                               maxLines: 3,
+                    //                                               style: GoogleFonts.montserrat(
+                    //                                                   fontSize: 15,
+                    //                                                   color: Colors.black)),
+                    //                                           SizedBox(height: 5,),
+                    //                                           Text("Tags :",
+                    //                                               style: GoogleFonts.montserrat(
+                    //                                                   fontWeight: FontWeight.bold,
+                    //                                                   fontSize: 15,
+                    //                                                   color: Colors.black)),
+                    //                                           Align(
+                    //                                             alignment: Alignment.centerLeft,
+                    //                                             child: Wrap(
+                    //                                               spacing: 10,
+                    //                                               runSpacing: 5,
+                    //                                               crossAxisAlignment: WrapCrossAlignment.start,
+                    //                                               alignment: WrapAlignment.start,
+                    //                                               runAlignment: WrapAlignment.start,
+                    //                                               children: (challengesData['tags'] as List<dynamic>).map<Widget>((item){
+                    //                                                 print("solutionDataitem: $item");
+                    //                                                 print("solutionData['tags']: ${challengesData['tags']}");
+                    //                                                 return Container(
+                    //                                                   height: 35,
+                    //                                                   // width: 200,
+                    //                                                   margin: EdgeInsets.only(bottom: 2),
+                    //                                                   padding: EdgeInsets.all(6),
+                    //                                                   decoration: BoxDecoration(
+                    //                                                       borderRadius: BorderRadius.circular(15),
+                    //                                                       color: Colors.blue
+                    //                                                   ),
+                    //                                                   child: Row(
+                    //                                                     mainAxisSize: MainAxisSize.min,
+                    //                                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //                                                     children: [
+                    //                                                       Text("${item}", style: TextStyle(
+                    //                                                           fontWeight: FontWeight.w700,
+                    //                                                           fontSize: 14
+                    //                                                       ),),
+                    //                                                     ],
+                    //                                                   ),
+                    //                                                 );
+                    //                                               }).toList(),
+                    //                                             ),
+                    //                                           ),
+                    //
+                    //                                           SizedBox(height: 5,),
+                    //
+                    //                                           Text("Category :",
+                    //                                               style: GoogleFonts.montserrat(
+                    //                                                   fontWeight: FontWeight.bold,
+                    //                                                   fontSize: 15,
+                    //                                                   color: Colors.black)),
+                    //                                           Align(
+                    //                                             alignment: Alignment.centerLeft,
+                    //                                             child: Wrap(
+                    //                                               spacing: 10,
+                    //                                               runSpacing: 5,
+                    //                                               crossAxisAlignment: WrapCrossAlignment.start,
+                    //                                               alignment: WrapAlignment.start,
+                    //                                               runAlignment: WrapAlignment.start,
+                    //                                               children: (challengesData['Keywords'] as List<dynamic>).map<Widget>((item){
+                    //                                                 print("solutionDataitem: $item");
+                    //                                                 print("solutionData['Keywords']: ${challengesData['Keywords']}");
+                    //                                                 return Container(
+                    //                                                   height: 35,
+                    //                                                   // width: 200,
+                    //                                                   margin: EdgeInsets.only(bottom: 2),
+                    //                                                   padding: EdgeInsets.all(6),
+                    //                                                   decoration: BoxDecoration(
+                    //                                                       borderRadius: BorderRadius.circular(15),
+                    //                                                       color: Colors.blue
+                    //                                                   ),
+                    //                                                   child: Row(
+                    //                                                     mainAxisSize: MainAxisSize.min,
+                    //                                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //                                                     children: [
+                    //                                                       Text("${item}", style: TextStyle(
+                    //                                                           fontWeight: FontWeight.w700,
+                    //                                                           fontSize: 14
+                    //                                                       ),),
+                    //                                                     ],
+                    //                                                   ),
+                    //                                                 );
+                    //                                               }).toList(),
+                    //                                             ),
+                    //                                           )
+                    //                                         ],
+                    //                                       ),
+                    //                                     ),
+                    //                                   );
+                    //                                 },
+                    //                               ),
+                    //                             ),
+                    //                           ],
+                    //                         );
+                    //                       }
+                    //                     },
+                    //                   ),
+                    //                 ),
+                    //               ],
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    child: StatefulBuilder(
                         builder: (context,innerState) {
                           return FutureBuilder(
                               future: fetchDetails(documentReference),
@@ -5675,14 +6516,14 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     mainAxisSize: MainAxisSize.min,
                                                     children: <Widget>[
-                                                                                    
+
                                                       (Source==""|| Source==null) ? Container() :  Row(
                                                         mainAxisAlignment: MainAxisAlignment.start,
                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
                                                           Text("Source: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
                                                           Text(Source, style: TextStyle(fontSize: 20,),),
-                                                                                    
+
                                                         ],
                                                       ),
                                                       SizedBox(height: 10,),
@@ -5692,7 +6533,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                                                         children: [
                                                           Text("Solution Status: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
                                                           Text(Status, style: TextStyle(fontSize: 20, ),),
-                                                                                    
+
                                                         ],
                                                       ),
                                                       SizedBox(height: 10,),
@@ -5720,11 +6561,11 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                                                           Flexible(child: Text(Description, style: TextStyle(fontSize: 20, ), maxLines: null,)),
                                                         ],
                                                       ),
-                                                                                    
+
                                                       SizedBox(height: 20,),
-                                                                                    
-                                                                                    
-                                                                                    
+
+
+
                                                       (_addKeywordProvider.keywords==""|| _addKeywordProvider.keywords==null||_addKeywordProvider.keywords.isEmpty) ? Container() :     Row(
                                                         mainAxisAlignment: MainAxisAlignment.start,
                                                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -5771,15 +6612,15 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                                                               }),
                                                         ],
                                                       ),
-                                                                                    
+
                                                       SizedBox(height: 10),
-                                                                                    
+
                                                       (_addKeywordProvider.ProviderEditTags==""|| _addKeywordProvider.ProviderEditTags==null||_addKeywordProvider.ProviderEditTags.isEmpty) ? Container() :  Row(
                                                         mainAxisAlignment: MainAxisAlignment.start,
                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
                                                           Text("Tags: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
-                                                                                    
+
                                                           Expanded(
                                                             child: Consumer<AddKeywordProvider>(
                                                                 builder: (c,addKeywordProvider, _){
@@ -5816,12 +6657,12 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                                                                       ),
                                                                     ),
                                                                   );
-                                                            
+
                                                                 }),
                                                           ),
                                                         ],
                                                       ),
-                                                                                    
+
                                                     ]
                                                 ),
                                               ),

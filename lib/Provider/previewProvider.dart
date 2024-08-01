@@ -18,6 +18,8 @@ import 'package:thrivers/model/soluton_table_model.dart';
 class PreviewProvider with ChangeNotifier{
   var name, email, employer,editemployer, division, role, location, employeeNumber, linemanager, title, mycircumstance, mystrength, myorganization, mychallenge,ABDescription, Osdate;
 
+  var UserName, UserEmail, userdocs;
+
   List<Map<String, dynamic>> PreviewChallengesList = [];
   List<Map<String, dynamic>> PreviewSolutionList = [];
   List<Map<String, dynamic>> PreviewSolutionMyResposibilty = [];
@@ -32,7 +34,17 @@ class PreviewProvider with ChangeNotifier{
 
   int tabindex = 0;
 
-   pagechange(index) {
+  bool loginloader = false;
+  bool get getloginloader  => loginloader ;
+
+  updateloginloader(bool){
+    loginloader = bool;
+    print("loginloader: $loginloader");
+    // notifyListeners();
+  }
+
+
+  pagechange(index) {
       tabindex = index;
       notifyListeners();
   }
@@ -41,6 +53,20 @@ class PreviewProvider with ChangeNotifier{
       ccEmails.add({'name': name, 'email': email, "datetime":  DateFormat('yyyy-MM-dd, HH:mm:ss').format(DateTime.now())});
       // ccNames.add(name);
       notifyListeners();
+  }
+
+  userdocsUpdate(value){
+    userdocs = value;
+    notifyListeners();
+  }
+
+  UserNameUpdate(value){
+    UserName = value;
+    notifyListeners();
+  }
+  UserEmailUpdate(value){
+    UserEmail = value;
+    notifyListeners();
   }
 
 
@@ -79,7 +105,9 @@ class PreviewProvider with ChangeNotifier{
     // widget.isClientLogeddin = false;
     final prefs = await SharedPreferences.getInstance();
     isloggedIn = await prefs.setBool('isLoggedIn', false);
+    emailId.clear();
     print("setBoolisloggedIn: $isloggedIn");
+    print("emailId: $emailId");
 
     // Optionally, redirect to the login page or another page
     // Navigator.of(context).pushReplacement(

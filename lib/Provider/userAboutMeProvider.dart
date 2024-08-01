@@ -508,7 +508,7 @@ class UserAboutMEProvider with ChangeNotifier{
   Future<Set<DocumentSnapshot<Object?>>> getRelatedSolutions(List<dynamic> tags, List<dynamic> keywords) async {
     CollectionReference solutionsCollection = FirebaseFirestore.instance.collection('Thrivers');
 
-    isLoadingMore = false;
+    // isLoadingMore = false;
     List<QuerySnapshot> allQueries = [];
 
     print("search tagsss: $tags");
@@ -561,7 +561,7 @@ class UserAboutMEProvider with ChangeNotifier{
     print("getRelatedSolutions: ${combinedSolutionsResults}");
     print("getRelatedSolutions: ${combinedSolutionsResults.length}");
 
-    isLoadingMore = true;
+    // isLoadingMore = true;
     return combinedSolutionsResults;
   }
 
@@ -2100,6 +2100,12 @@ class UserAboutMEProvider with ChangeNotifier{
 
   bool isLoadingMore = false;
   bool get isLoadingMoree => isLoadingMore;
+
+  updateisLoadingMoree(value){
+    isLoadingMore = value;
+    print("isLoadingMoree: ${isLoadingMoree}");
+    notifyListeners();
+  }
 
   Future<void> searchchallenges(search) async   {
 

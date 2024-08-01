@@ -17,6 +17,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
 import 'package:thrivers/Network/FirebaseApi.dart';
+import 'package:thrivers/Provider/AboutMeProvider.dart';
 import 'package:thrivers/Provider/AddKeywordsProvider.dart';
 import 'package:thrivers/Provider/previewProvider.dart';
 import 'package:thrivers/Provider/provider_for_challenges.dart';
@@ -27,6 +28,7 @@ import 'package:thrivers/model/challenges_table_model.dart';
 import 'package:thrivers/model/soluton_table_model.dart';
 import 'package:thrivers/screens/EditAboutMePage.dart';
 import 'package:thrivers/screens/userLoginAboutME/UserLogedInEditAboutMePage.dart';
+import 'package:thrivers/widget/progressbar_widget.dart';
 import 'package:toastification/toastification.dart';
 
 
@@ -90,6 +92,8 @@ class _UserLogedInAboutMePageState extends State<UserLogedInAboutMePage> with Ti
   late final ChallengesProvider _challengesProvider;
 
   late final PreviewProvider _previewProvider;
+
+  late final AboutMeProvider _aboutMeProvider;
 
   List<SolutionModel> solutions = [];
   List<ChallengesModel> Challenges = [];
@@ -214,6 +218,8 @@ Date
     _userAboutMEProvider = Provider.of<UserAboutMEProvider>(context, listen: false);
     _challengesProvider = Provider.of<ChallengesProvider>(context, listen: false);
     _previewProvider = Provider.of<PreviewProvider>(context, listen: false);
+    _aboutMeProvider = Provider.of<AboutMeProvider>(context, listen: false);
+    _aboutMeProvider.fetchAboutMeDocument(widget.AdminName);
     _addKeywordProvider.loadDataForPage(_addKeywordProvider.currentPage);
     _challengesProvider.loadDataForPage(_challengesProvider.currentPage);
     // _loadDataForChallengesPage(_currentPage);
@@ -302,51 +308,87 @@ Date
   //     // body: AboutMEScreen(),
   //   );
   // }
+  ///
+  // Widget build(BuildContext context) {
+  //   print("isRepeating");
+  //   return FutureBuilder<DocumentSnapshot>(
+  //     // future: getFirstDraftDocument(),
+  //     future: _futureFirstDraftDocument,
+  //     builder: (context, snapshot) {
+  //       if (snapshot.connectionState == ConnectionState.waiting) {
+  //         return Center(child: CircularProgressIndicator());
+  //       } else if (snapshot.hasError) {
+  //         print("Error: ${snapshot.error}");
+  //         return Center(child: Text("Error: ${snapshot.error}"));
+  //       } else if (!snapshot.hasData || snapshot.data == null) {
+  //         return Center(child: Text("No draft document found"));
+  //       } else {
+  //         // if (widget.Pagejump) {
+  //         //   // Navigate to the third page in the PageView
+  //         //   WidgetsBinding.instance?.addPostFrameCallback((_) {
+  //         //     page.jumpToPage(3);
+  //         //   });
+  //         // }
+  //         return  Consumer<AboutMeProvider>(
+  //           builder: (c,aboutMeProvider, _){
+  //             return PageView(
+  //               controller: page,
+  //               physics: NeverScrollableScrollPhysics(),
+  //               children: [
+  //                 // EmployeePageView(),
+  //                 // MyLibrary(),
+  //                 // MyReportScreen(),
+  //                 UserLogedInEditAboutMEScreen(
+  //                     aboutMeData:  snapshot.data!,
+  //                     refreshPage: refreshPage,
+  //                     showAddAddAboutMeDialogBox: showAddAddAboutMeDialogBox,
+  //                     showReportViewPageDialogBox: showReportViewPageDialogBox,
+  //                     AdminName: widget.AdminName,
+  //                     tabindex: widget.tabindex,
+  //                     duplicateDocument: duplicateDocument,
+  //                     page: page),
+  //               ],
+  //             );
+  //           });
+  //       }
+  //     },
+  //   );
+  // }
+  ///
   Widget build(BuildContext context) {
     print("isRepeating");
-    return FutureBuilder<DocumentSnapshot>(
-      // future: getFirstDraftDocument(),
-      future: _futureFirstDraftDocument,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          print("Error: ${snapshot.error}");
-          return Center(child: Text("Error: ${snapshot.error}"));
-        } else if (!snapshot.hasData || snapshot.data == null) {
-          return Center(child: Text("No draft document found"));
-        } else {
-          // if (widget.Pagejump) {
-          //   // Navigate to the third page in the PageView
-          //   WidgetsBinding.instance?.addPostFrameCallback((_) {
-          //     page.jumpToPage(3);
-          //   });
-          // }
-          return  Consumer<PreviewProvider>(
-            builder: (c,previewProvider, _){
-              return PageView(
-                controller: page,
-                physics: NeverScrollableScrollPhysics(),
-                children: [
-                  // EmployeePageView(),
-                  // MyLibrary(),
-                  // MyReportScreen(),
-                  UserLogedInEditAboutMEScreen(
-                      aboutMeData:  snapshot.data!,
-                      refreshPage: refreshPage,
-                      showAddAddAboutMeDialogBox: showAddAddAboutMeDialogBox,
-                      showReportViewPageDialogBox: showReportViewPageDialogBox,
-                      AdminName: widget.AdminName,
-                      tabindex: widget.tabindex,
-                      duplicateDocument: duplicateDocument,
-                      page: page),
-                ],
-              );
-            });
-        }
-      },
-    );
+    return Consumer<AboutMeProvider>(
+              builder: (c,aboutMeProvider, _){
+                if (aboutMeProvider.isLoading) {
+                  return Center(child: loadingView(aboutMeProvider.isLoading));
+                  return Center(child: CircularProgressIndicator());
+                } else if (aboutMeProvider.errorMessage.isNotEmpty) {
+                  return Center(child: Text("Error: ${aboutMeProvider.errorMessage}"));
+                } else if (aboutMeProvider.aboutMeDocument == null) {
+                  return Center(child: Text("No draft document found"));
+                } else{
+                  return PageView(
+                    controller: page,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: [
+                      // EmployeePageView(),
+                      // MyLibrary(),
+                      // MyReportScreen(),
+                      UserLogedInEditAboutMEScreen(
+                          aboutMeData:  aboutMeProvider.aboutMeDocument!,
+                          refreshPage: refreshPage,
+                          showAddAddAboutMeDialogBox: showAddAddAboutMeDialogBox,
+                          showReportViewPageDialogBox: showReportViewPageDialogBox,
+                          AdminName: widget.AdminName,
+                          tabindex: widget.tabindex,
+                          duplicateDocument: duplicateDocument,
+                          page: page),
+                    ],
+                  );
+                }
+              });
   }
+
   Widget AboutMEScreen(){
     return Scaffold(
       backgroundColor: Colors.grey.withOpacity(0.2),

@@ -23,6 +23,7 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   TextEditingController emailTextEditingController = TextEditingController();
+  TextEditingController passwordTextEditingController = TextEditingController();
 
   // TextEditingController emailTextEditingController = TextEditingController();
   TextEditingController nameTextEditingController = TextEditingController();
@@ -36,6 +37,8 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController NotesController = TextEditingController();
   TextEditingController searchbyCatcontroller = TextEditingController();
   TextEditingController searchbyTagcontroller = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
 
   String whoYouAre = "Job Seeker";
 
@@ -58,10 +61,19 @@ class _RegisterPageState extends State<RegisterPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  bool isVisible = false;
+
+  void toggleVisibility() {
+    setState(() {
+      isVisible = !isVisible;
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    isVisible = !isVisible;
   }
 
 
@@ -101,6 +113,7 @@ class _RegisterPageState extends State<RegisterPage> {
           // 'User_uid': userCredential.user!.uid,
           'UserName': nameTextEditingController.text,
           'email': emailTextEditingController.text,
+          'Password': passwordTextEditingController.text,
           // 'Description': descriptionTextEditingController.text,
           'isPPS': true,
           'Employer': employerController.text,
@@ -202,7 +215,8 @@ class _RegisterPageState extends State<RegisterPage> {
       //   title: Text('Register Page'),
       // ),
       appBar: AppBar(
-        backgroundColor: Color(0xff0B0B0B),
+        // backgroundColor: Color(0xff0B0B0B),
+        backgroundColor: Colors.blue,
         leading: Text(""),
         centerTitle: true,
         title: InkWell(
@@ -214,7 +228,7 @@ class _RegisterPageState extends State<RegisterPage> {
             //   MaterialPageRoute(builder: (context) => ThriverLandingScreen()),
             // );
           },
-          child: Text("SOLUTIONS", style: GoogleFonts.montserrat(
+          child: Text("SOLUTION INCLUSION", style: GoogleFonts.montserrat(
               textStyle: Theme.of(context).textTheme.headlineLarge,
               fontWeight: FontWeight.bold,
               color: Colors.white),
@@ -268,612 +282,760 @@ class _RegisterPageState extends State<RegisterPage> {
         //
         // ],
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                height: MediaQuery.of(context).size.height * .85,
-                width: MediaQuery.of(context).size.width * .5,
-                decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(color: Colors.black,blurRadius: 10,),
-                    ]
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      SizedBox(height: 20,),
-                      Text('Register', style:GoogleFonts.montserrat(
-                          textStyle: Theme.of(context).textTheme.displayMedium,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                      ),
-                      SizedBox(height: 10,),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
-                        child: TextField(
-                          maxLines: null,
-                          controller: nameTextEditingController,
-                          cursorColor: Colors.white,
-                            
-                            
-                          style: GoogleFonts.montserrat(
-                              textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodyLarge,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white),
-                          decoration: InputDecoration(
-                            //errorText: userAccountSearchErrorText,
-                            contentPadding: EdgeInsets.all(10),
-                            labelText: "Name",
-                            hintText: "Name",
-                            hintStyle: TextStyle(color: Colors.white),
-                            
-                            prefixIcon: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(Icons.person,
-                                color: Colors.white
-                              ),
-                            ),
-                            
-                            errorStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.redAccent),
-                            
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white,width: 4),
-                                borderRadius: BorderRadius.circular(0)),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white,),
-                                borderRadius: BorderRadius.circular(15)),
-                            disabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                                borderRadius: BorderRadius.circular(15)),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white,width: 2 ),
-                                borderRadius: BorderRadius.circular(0)),
-                            labelStyle: GoogleFonts.montserrat(
+      body:  Form(
+        key: _formKey,
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: MediaQuery.of(context).size.height * .85,
+                  width: MediaQuery.of(context).size.width * .5,
+                  decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(color: Colors.black,blurRadius: 10,),
+                      ]
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(height: 20,),
+                        Text('Register', style:GoogleFonts.montserrat(
+                            textStyle: Theme.of(context).textTheme.displayMedium,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                        ),
+                        SizedBox(height: 10,),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                          child: TextField(
+                            maxLines: null,
+                            controller: nameTextEditingController,
+                            cursorColor: Colors.white,
+
+
+                            style: GoogleFonts.montserrat(
                                 textStyle: Theme
                                     .of(context)
                                     .textTheme
                                     .bodyLarge,
                                 fontWeight: FontWeight.w400,
                                 color: Colors.white),
+                            decoration: InputDecoration(
+                              //errorText: userAccountSearchErrorText,
+                              contentPadding: EdgeInsets.all(10),
+                              labelText: "Name",
+                              hintText: "Name",
+                              hintStyle: TextStyle(color: Colors.white),
+
+                              prefixIcon: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(Icons.person,
+                                  color: Colors.white
+                                ),
+                              ),
+
+                              errorStyle: GoogleFonts.montserrat(
+                                  textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .bodyLarge,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.redAccent),
+
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,width: 4),
+                                  borderRadius: BorderRadius.circular(0)),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,),
+                                  borderRadius: BorderRadius.circular(15)),
+                              disabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                  borderRadius: BorderRadius.circular(15)),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,width: 2 ),
+                                  borderRadius: BorderRadius.circular(0)),
+                              labelStyle: GoogleFonts.montserrat(
+                                  textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .bodyLarge,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white),
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
-                        child: TextField(
-                          maxLines: null,
-                          controller: emailTextEditingController,
-                          cursorColor: Colors.white,
-                            
-                            
-                          style: GoogleFonts.montserrat(
-                              textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodyLarge,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white),
-                          decoration: InputDecoration(
-                            
-                            //errorText: userAccountSearchErrorText,
-                            
-                            contentPadding: EdgeInsets.all(10),
-                            labelText: "Email",
-                            hintText: "Email",
-                            hintStyle: TextStyle(color: Colors.white),
-                            prefixIcon: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(Icons.mail,
-                                color: Colors.white
-                              ),
-                            ),
-                            errorStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.redAccent),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white,width: 4),
-                                borderRadius: BorderRadius.circular(0)),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white,),
-                                borderRadius: BorderRadius.circular(15)),
-                            disabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                                borderRadius: BorderRadius.circular(15)),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white,width: 2 ),
-                                borderRadius: BorderRadius.circular(0)),
-                            labelStyle: GoogleFonts.montserrat(
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                          child: TextField(
+                            maxLines: null,
+                            controller: emailTextEditingController,
+                            cursorColor: Colors.white,
+
+
+                            style: GoogleFonts.montserrat(
                                 textStyle: Theme
                                     .of(context)
                                     .textTheme
                                     .bodyLarge,
                                 fontWeight: FontWeight.w400,
                                 color: Colors.white),
+                            decoration: InputDecoration(
+
+                              //errorText: userAccountSearchErrorText,
+
+                              contentPadding: EdgeInsets.all(10),
+                              labelText: "Email",
+                              hintText: "Email",
+                              hintStyle: TextStyle(color: Colors.white),
+                              prefixIcon: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(Icons.mail,
+                                  color: Colors.white
+                                ),
+                              ),
+                              errorStyle: GoogleFonts.montserrat(
+                                  textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .bodyLarge,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.redAccent),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,width: 4),
+                                  borderRadius: BorderRadius.circular(0)),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,),
+                                  borderRadius: BorderRadius.circular(15)),
+                              disabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                  borderRadius: BorderRadius.circular(15)),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,width: 2 ),
+                                  borderRadius: BorderRadius.circular(0)),
+                              labelStyle: GoogleFonts.montserrat(
+                                  textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .bodyLarge,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white),
+                            ),
                           ),
                         ),
-                      ),
-                      // Padding(
-                      //   padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
-                      //   child: TextField(
-                      //     maxLines: 3,
-                      //     // controller: editoriginaltextEditingController,
-                      //     cursorColor: Colors.white,
-                      //     style: GoogleFonts.montserrat(
-                      //         textStyle: Theme
-                      //             .of(context)
-                      //             .textTheme
-                      //             .bodyLarge,
-                      //         fontWeight: FontWeight.w400,
-                      //         color: Colors.white),
-                      //     decoration: InputDecoration(
-                      //       //errorText: userAccountSearchErrorText,
-                      //       contentPadding: EdgeInsets.all(10),
-                      //       // labelText: "Email",
-                      //       hintText: "For what purpose? (Optional)",
-                      //       hintStyle: TextStyle(color: Colors.white, fontSize: 15),
-                      //       errorStyle: GoogleFonts.montserrat(
-                      //           textStyle: Theme
-                      //               .of(context)
-                      //               .textTheme
-                      //               .bodyLarge,
-                      //           fontWeight: FontWeight.w400,
-                      //           color: Colors.redAccent),
-                      //
-                      //       focusedBorder: OutlineInputBorder(
-                      //           borderSide: BorderSide(color: Colors.white,width: 4),
-                      //           borderRadius: BorderRadius.circular(0)),
-                      //       border: OutlineInputBorder(
-                      //           borderSide: BorderSide(color: Colors.white,),
-                      //           borderRadius: BorderRadius.circular(15)),
-                      //       disabledBorder: OutlineInputBorder(
-                      //           borderSide: BorderSide(color: Colors.white),
-                      //           borderRadius: BorderRadius.circular(15)),
-                      //       enabledBorder: OutlineInputBorder(
-                      //           borderSide: BorderSide(color: Colors.white,width: 2 ),
-                      //           borderRadius: BorderRadius.circular(0)),
-                      //       labelStyle: GoogleFonts.montserrat(
-                      //           textStyle: Theme
-                      //               .of(context)
-                      //               .textTheme
-                      //               .bodyLarge,
-                      //           fontWeight: FontWeight.w400,
-                      //           color: Colors.white),
-                      //     ),
-                      //   ),
-                      // ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
-                        child: TextField(
-                          controller: employerController,
-                          // cursorColor: primaryColorOfApp,
-                          onChanged: (value) {
-                  
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                          child: TextFormField(
+                            controller: passwordTextEditingController,
+                            cursorColor: Colors.white,
+                            style: GoogleFonts.montserrat(
+                                textStyle: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .bodyLarge,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white),
+                            obscureText: isVisible,
+                            obscuringCharacter: "*",
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.all(10),
+                              labelText: "Password",
+                              hintText: "Password",
+                              hintStyle: TextStyle(color: Colors.white),
+                              prefixIcon: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(Icons.password,
+                                  color: Colors.white
+                                ),
+                              ),
+                              suffixIcon: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: IconButton(
+                                  icon: Icon(
+                                    isVisible ? Icons.visibility_off : Icons.visibility, color: Colors.white,),
+                                  onPressed: toggleVisibility,
+                                ),
+                              ),
+                              errorStyle: GoogleFonts.montserrat(
+                                  textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .bodyLarge,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.redAccent),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,width: 4),
+                                  borderRadius: BorderRadius.circular(0)),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,),
+                                  borderRadius: BorderRadius.circular(15)),
+                              disabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                  borderRadius: BorderRadius.circular(15)),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,width: 2 ),
+                                  borderRadius: BorderRadius.circular(0)),
+                              labelStyle: GoogleFonts.montserrat(
+                                  textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .bodyLarge,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white),
+                            ),
+                            validator: (value){
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your password';
+                              }
+                              if (value.length < 8) {
+                                return 'Password must be at least 8 characters';
+                              }
+                              if (!RegExp(r'\d').hasMatch(value)) {
+                                return 'Password must contain at least one digit';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                        //   child: TextField(
+                        //     maxLines: 3,
+                        //     // controller: editoriginaltextEditingController,
+                        //     cursorColor: Colors.white,
+                        //     style: GoogleFonts.montserrat(
+                        //         textStyle: Theme
+                        //             .of(context)
+                        //             .textTheme
+                        //             .bodyLarge,
+                        //         fontWeight: FontWeight.w400,
+                        //         color: Colors.white),
+                        //     decoration: InputDecoration(
+                        //       //errorText: userAccountSearchErrorText,
+                        //       contentPadding: EdgeInsets.all(10),
+                        //       // labelText: "Email",
+                        //       hintText: "For what purpose? (Optional)",
+                        //       hintStyle: TextStyle(color: Colors.white, fontSize: 15),
+                        //       errorStyle: GoogleFonts.montserrat(
+                        //           textStyle: Theme
+                        //               .of(context)
+                        //               .textTheme
+                        //               .bodyLarge,
+                        //           fontWeight: FontWeight.w400,
+                        //           color: Colors.redAccent),
+                        //
+                        //       focusedBorder: OutlineInputBorder(
+                        //           borderSide: BorderSide(color: Colors.white,width: 4),
+                        //           borderRadius: BorderRadius.circular(0)),
+                        //       border: OutlineInputBorder(
+                        //           borderSide: BorderSide(color: Colors.white,),
+                        //           borderRadius: BorderRadius.circular(15)),
+                        //       disabledBorder: OutlineInputBorder(
+                        //           borderSide: BorderSide(color: Colors.white),
+                        //           borderRadius: BorderRadius.circular(15)),
+                        //       enabledBorder: OutlineInputBorder(
+                        //           borderSide: BorderSide(color: Colors.white,width: 2 ),
+                        //           borderRadius: BorderRadius.circular(0)),
+                        //       labelStyle: GoogleFonts.montserrat(
+                        //           textStyle: Theme
+                        //               .of(context)
+                        //               .textTheme
+                        //               .bodyLarge,
+                        //           fontWeight: FontWeight.w400,
+                        //           color: Colors.white),
+                        //     ),
+                        //   ),
+                        // ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                          child: TextField(
+                            controller: employerController,
+                            // cursorColor: primaryColorOfApp,
+                            onChanged: (value) {
+
+                            },
+
+                            style: GoogleFonts.montserrat(
+                                textStyle: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .bodyLarge,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white),
+                            cursorColor: Colors.white,
+                            decoration: InputDecoration(
+                              //errorText: userAccountSearchErrorText,
+                              contentPadding: EdgeInsets.all(10),
+                              prefixIcon: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(Icons.add_home_work,
+                                    color: Colors.white
+                                ),
+                              ),
+                              // labelText: "Email",
+                              hintText: "Employer",
+                              hintStyle: TextStyle(color: Colors.white, fontSize: 15),
+                              errorStyle: GoogleFonts.montserrat(
+                                  textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .bodyLarge,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.redAccent),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,width: 4),
+                                  borderRadius: BorderRadius.circular(0)),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,),
+                                  borderRadius: BorderRadius.circular(15)),
+                              disabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                  borderRadius: BorderRadius.circular(15)),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,width: 2 ),
+                                  borderRadius: BorderRadius.circular(0)),
+                              labelStyle: GoogleFonts.montserrat(
+                                  textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .bodyLarge,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                          child: TextField(
+                            controller: divisionOrSectionController,
+                            cursorColor: Colors.white,
+                            // cursorColor: primaryColorOfApp,
+                            onChanged: (value) {},
+                            style: GoogleFonts.montserrat(
+                                textStyle: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .bodyLarge,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white),
+                            decoration: InputDecoration(
+                              //errorText: userAccountSearchErrorText,
+                              contentPadding: EdgeInsets.all(10),
+                              prefixIcon: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(Icons.account_balance,
+                                    color: Colors.white
+                                ),
+                              ),
+
+                              // labelText: "Email",
+                              hintText: "Division or section",
+                              hintStyle: TextStyle(color: Colors.white, fontSize: 15),
+                              errorStyle: GoogleFonts.montserrat(
+                                  textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .bodyLarge,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.redAccent),
+
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,width: 4),
+                                  borderRadius: BorderRadius.circular(0)),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,),
+                                  borderRadius: BorderRadius.circular(15)),
+                              disabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                  borderRadius: BorderRadius.circular(15)),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,width: 2 ),
+                                  borderRadius: BorderRadius.circular(0)),
+                              labelStyle: GoogleFonts.montserrat(
+                                  textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .bodyLarge,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white),
+                            ),
+
+                          ),
+
+
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                          child: TextField(
+                            controller: RoleController,
+                            cursorColor: Colors.white,
+
+                            // cursorColor: primaryColorOfApp,
+                            onChanged: (value) {
+
+                            },
+                            style: GoogleFonts.montserrat(
+                                textStyle: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .bodyLarge,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white),
+                            decoration: InputDecoration(
+                              prefixIcon: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(Icons.task,
+                                    color: Colors.white
+                                ),
+                              ),
+                              contentPadding: EdgeInsets.all(10),
+                              // labelText: "Division or section:",
+                              hintText: "Role",
+                              hintStyle: TextStyle(color: Colors.white, fontSize: 15),
+                              errorStyle: GoogleFonts.montserrat(
+                                  textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .bodyLarge,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.redAccent),
+
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,width: 4),
+                                  borderRadius: BorderRadius.circular(0)),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,),
+                                  borderRadius: BorderRadius.circular(15)),
+                              disabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                  borderRadius: BorderRadius.circular(15)),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,width: 2 ),
+                                  borderRadius: BorderRadius.circular(0)),
+                              labelStyle: GoogleFonts.montserrat(
+                                  textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .bodyLarge,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white),
+                            ),
+                          ),
+
+
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                          child:  TextField(
+                            controller: LocationController,
+                            cursorColor: Colors.white,
+
+                            // cursorColor: primaryColorOfApp,
+                            onChanged: (value) {
+
+                            },
+                            style: GoogleFonts.montserrat(
+                                textStyle: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .bodyLarge,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white),
+                            decoration: InputDecoration(
+                              prefixIcon: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(Icons.location_history,
+                                    color: Colors.white
+                                ),
+                              ),
+                              contentPadding: EdgeInsets.all(10),
+                              // labelText: "Division or section:",
+                              hintText: "Location",
+                              hintStyle: TextStyle(color: Colors.white, fontSize: 15),
+                              errorStyle: GoogleFonts.montserrat(
+                                  textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .bodyLarge,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.redAccent),
+
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,width: 4),
+                                  borderRadius: BorderRadius.circular(0)),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,),
+                                  borderRadius: BorderRadius.circular(15)),
+                              disabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                  borderRadius: BorderRadius.circular(15)),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,width: 2 ),
+                                  borderRadius: BorderRadius.circular(0)),
+                              labelStyle: GoogleFonts.montserrat(
+                                  textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .bodyLarge,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white),
+                            ),
+                          ),
+
+
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                          child:   TextField(
+                            controller: EmployeeNumberController,
+                            cursorColor: Colors.white,
+
+                            // cursorColor: primaryColorOfApp,
+                            onChanged: (value) {
+
+                            },
+                            style: GoogleFonts.montserrat(
+                                textStyle: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .bodyLarge,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white),
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.all(10),
+                              prefixIcon: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(Icons.dialpad_rounded,
+                                    color: Colors.white
+                                ),
+                              ),
+                              // labelText: "Division or section:",
+                              hintText: "Employee number",
+                              hintStyle: TextStyle(color: Colors.white, fontSize: 15),
+                              errorStyle: GoogleFonts.montserrat(
+                                  textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .bodyLarge,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.redAccent),
+
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,width: 4),
+                                  borderRadius: BorderRadius.circular(0)),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,),
+                                  borderRadius: BorderRadius.circular(15)),
+                              disabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                  borderRadius: BorderRadius.circular(15)),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,width: 2 ),
+                                  borderRadius: BorderRadius.circular(0)),
+                              labelStyle: GoogleFonts.montserrat(
+                                  textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .bodyLarge,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white),
+                            ),
+                          ),
+
+
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                          child: TextField(
+                            controller: LineManagerController,
+                            cursorColor: Colors.white,
+
+                            // cursorColor: primaryColorOfApp,
+                            onChanged: (value) {
+
+                            },
+                            style: GoogleFonts.montserrat(
+                                textStyle: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .bodyLarge,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white),
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.all(10),
+                              // labelText: "Division or section:",
+                              hintText: "Line manager ",
+                              prefixIcon: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(Icons.manage_accounts,
+                                    color: Colors.white
+                                ),
+                              ),
+                              hintStyle: TextStyle(color: Colors.white, fontSize: 15),
+                              errorStyle: GoogleFonts.montserrat(
+                                  textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .bodyLarge,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.redAccent),
+
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,width: 4),
+                                  borderRadius: BorderRadius.circular(0)),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,),
+                                  borderRadius: BorderRadius.circular(15)),
+                              disabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                  borderRadius: BorderRadius.circular(15)),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,width: 2 ),
+                                  borderRadius: BorderRadius.circular(0)),
+                              labelStyle: GoogleFonts.montserrat(
+                                  textStyle: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .bodyLarge,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white),
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(height: 25,),
+
+                        InkWell(
+                          onTap: () async {
+                            if(nameTextEditingController.text.isEmpty||emailTextEditingController.text.isEmpty||passwordTextEditingController.text.isEmpty
+                                ||employerController.text.isEmpty ||divisionOrSectionController.text.isEmpty||RoleController.text.isEmpty
+                                ||LocationController.text.isEmpty ||EmployeeNumberController.text.isEmpty||LineManagerController.text.isEmpty){
+                              if(nameTextEditingController.text.isEmpty){NewAlertBox(context,"Enter your Name","","OK");}
+                              else if(emailTextEditingController.text.isEmpty){NewAlertBox(context,"Enter your Email to register","","OK");}
+                              else if(passwordTextEditingController.text.isEmpty){NewAlertBox(context,"Create your password to register","","OK");}
+                              else if(employerController.text.isEmpty){NewAlertBox(context,"Enter your employer","","OK");}
+                              else if(divisionOrSectionController.text.isEmpty){NewAlertBox(context,"Enter your division or section","","OK");}
+                              else if(RoleController.text.isEmpty){NewAlertBox(context,"Enter your role","","OK");}
+                              else if(LocationController.text.isEmpty){NewAlertBox(context,"Enter your location","","OK");}
+                              else if(EmployeeNumberController.text.isEmpty){NewAlertBox(context,"Enter your employee number","","OK");}
+                              else if(LineManagerController.text.isEmpty){NewAlertBox(context,"Enter your line manager","","OK");}
+                            }
+                            else if(!emailTextEditingController.text.trim().isValidEmail()){
+                              NewAlertBox(context,"Enter a Valid Email","${emailTextEditingController.text.trim()} is not a valid email address","Retype Email Address");
+                            }
+                            else if (_formKey.currentState?.validate() ?? false) {
+                              ProgressDialog.show(context, "Creating Your\nAccount", Icons.ice_skating);
+                              await registerUser();
+                              ProgressDialog.hide();
+                            }
                           },
-
-                          style: GoogleFonts.montserrat(
-                              textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodyLarge,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white),
-                          cursorColor: Colors.white,
-                          decoration: InputDecoration(
-                            //errorText: userAccountSearchErrorText,
-                            contentPadding: EdgeInsets.all(10),
-                            prefixIcon: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(Icons.add_home_work,
-                                  color: Colors.white
+                          child: Container(
+                            height: 60,
+                            width: 200,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(color: Colors.black,blurRadius: 10,),
+                                ]
+                            ),
+                            child: Center(
+                              child: Text("Create My Account",
+                              style: TextStyle(color: Colors.blue,fontWeight: FontWeight.w900,fontSize: 15),
                               ),
                             ),
-                            // labelText: "Email",
-                            hintText: "Employer",
-                            hintStyle: TextStyle(color: Colors.white, fontSize: 15),
-                            errorStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.redAccent),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white,width: 4),
-                                borderRadius: BorderRadius.circular(0)),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white,),
-                                borderRadius: BorderRadius.circular(15)),
-                            disabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                                borderRadius: BorderRadius.circular(15)),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white,width: 2 ),
-                                borderRadius: BorderRadius.circular(0)),
-                            labelStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
-                        child: TextField(
-                          controller: divisionOrSectionController,
-                          cursorColor: Colors.white,
-                          // cursorColor: primaryColorOfApp,
-                          onChanged: (value) {},
-                          style: GoogleFonts.montserrat(
-                              textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodyLarge,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white),
-                          decoration: InputDecoration(
-                            //errorText: userAccountSearchErrorText,
-                            contentPadding: EdgeInsets.all(10),
-                            prefixIcon: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(Icons.account_balance,
-                                  color: Colors.white
-                              ),
-                            ),
 
-                            // labelText: "Email",
-                            hintText: "Division or section",
-                            hintStyle: TextStyle(color: Colors.white, fontSize: 15),
-                            errorStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.redAccent),
+                        SizedBox(height: 25,),
 
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white,width: 4),
-                                borderRadius: BorderRadius.circular(0)),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white,),
-                                borderRadius: BorderRadius.circular(15)),
-                            disabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                                borderRadius: BorderRadius.circular(15)),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white,width: 2 ),
-                                borderRadius: BorderRadius.circular(0)),
-                            labelStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white),
-                          ),
-
-                        ),
-                  
-                  
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
-                        child: TextField(
-                          controller: RoleController,
-                          cursorColor: Colors.white,
-
-                          // cursorColor: primaryColorOfApp,
-                          onChanged: (value) {
-                  
-                          },
-                          style: GoogleFonts.montserrat(
-                              textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodyLarge,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white),
-                          decoration: InputDecoration(
-                            prefixIcon: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(Icons.task,
-                                  color: Colors.white
-                              ),
-                            ),
-                            contentPadding: EdgeInsets.all(10),
-                            // labelText: "Division or section:",
-                            hintText: "Role",
-                            hintStyle: TextStyle(color: Colors.white, fontSize: 15),
-                            errorStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.redAccent),
-
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white,width: 4),
-                                borderRadius: BorderRadius.circular(0)),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white,),
-                                borderRadius: BorderRadius.circular(15)),
-                            disabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                                borderRadius: BorderRadius.circular(15)),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white,width: 2 ),
-                                borderRadius: BorderRadius.circular(0)),
-                            labelStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white),
-                          ),
-                        ),
-                  
-                  
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
-                        child:  TextField(
-                          controller: LocationController,
-                          cursorColor: Colors.white,
-
-                          // cursorColor: primaryColorOfApp,
-                          onChanged: (value) {
-                  
-                          },
-                          style: GoogleFonts.montserrat(
-                              textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodyLarge,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white),
-                          decoration: InputDecoration(
-                            prefixIcon: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(Icons.location_history,
-                                  color: Colors.white
-                              ),
-                            ),
-                            contentPadding: EdgeInsets.all(10),
-                            // labelText: "Division or section:",
-                            hintText: "Location",
-                            hintStyle: TextStyle(color: Colors.white, fontSize: 15),
-                            errorStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.redAccent),
-
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white,width: 4),
-                                borderRadius: BorderRadius.circular(0)),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white,),
-                                borderRadius: BorderRadius.circular(15)),
-                            disabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                                borderRadius: BorderRadius.circular(15)),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white,width: 2 ),
-                                borderRadius: BorderRadius.circular(0)),
-                            labelStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white),
-                          ),
-                        ),
-                  
-                  
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
-                        child:   TextField(
-                          controller: EmployeeNumberController,
-                          cursorColor: Colors.white,
-
-                          // cursorColor: primaryColorOfApp,
-                          onChanged: (value) {
-                  
-                          },
-                          style: GoogleFonts.montserrat(
-                              textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodyLarge,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white),
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(10),
-                            prefixIcon: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(Icons.dialpad_rounded,
-                                  color: Colors.white
-                              ),
-                            ),
-                            // labelText: "Division or section:",
-                            hintText: "Employee number",
-                            hintStyle: TextStyle(color: Colors.white, fontSize: 15),
-                            errorStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.redAccent),
-
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white,width: 4),
-                                borderRadius: BorderRadius.circular(0)),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white,),
-                                borderRadius: BorderRadius.circular(15)),
-                            disabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                                borderRadius: BorderRadius.circular(15)),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white,width: 2 ),
-                                borderRadius: BorderRadius.circular(0)),
-                            labelStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white),
-                          ),
-                        ),
-                  
-                  
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
-                        child: TextField(
-                          controller: LineManagerController,
-                          cursorColor: Colors.white,
-
-                          // cursorColor: primaryColorOfApp,
-                          onChanged: (value) {
-                  
-                          },
-                          style: GoogleFonts.montserrat(
-                              textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodyLarge,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white),
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(10),
-                            // labelText: "Division or section:",
-                            hintText: "Line manager ",
-                            prefixIcon: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(Icons.manage_accounts,
-                                  color: Colors.white
-                              ),
-                            ),
-                            hintStyle: TextStyle(color: Colors.white, fontSize: 15),
-                            errorStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.redAccent),
-
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white,width: 4),
-                                borderRadius: BorderRadius.circular(0)),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white,),
-                                borderRadius: BorderRadius.circular(15)),
-                            disabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                                borderRadius: BorderRadius.circular(15)),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white,width: 2 ),
-                                borderRadius: BorderRadius.circular(0)),
-                            labelStyle: GoogleFonts.montserrat(
-                                textStyle: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white),
-                          ),
-                        ),
-                  
-                  
-                      ),
-
-                      SizedBox(height: 25,),
-                            
-                      InkWell(
-                        onTap: () async {
-                          if(nameTextEditingController.text.isEmpty||emailTextEditingController.text.isEmpty||employerController.text.isEmpty
-                              ||divisionOrSectionController.text.isEmpty||RoleController.text.isEmpty||LocationController.text.isEmpty
-                              ||EmployeeNumberController.text.isEmpty||LineManagerController.text.isEmpty){
-                            if(nameTextEditingController.text.isEmpty){showEmptyAlert2(context,"Enter Your Name","","","OK");}
-                            else if(emailTextEditingController.text.isEmpty){showEmptyAlert2(context,"Enter Your Email\nto register","","","OK");}
-                            else if(employerController.text.isEmpty){showEmptyAlert2(context,"Enter Your employer","","","OK");}
-                            else if(divisionOrSectionController.text.isEmpty){showEmptyAlert2(context,"Enter Your division\nor section","","","OK");}
-                            else if(RoleController.text.isEmpty){showEmptyAlert2(context,"Enter Your role","","","OK");}
-                            else if(LocationController.text.isEmpty){showEmptyAlert2(context,"Enter Your location","","","OK");}
-                            else if(EmployeeNumberController.text.isEmpty){showEmptyAlert2(context,"Enter Your employee number","","","OK");}
-                            else if(LineManagerController.text.isEmpty){showEmptyAlert2(context,"Enter Your line manager","","","OK");}
-                          }
-                          else  if(!emailTextEditingController.text.trim().isValidEmail()){
-                            showEmptyAlert2(context,"Enter a Valid Email","${emailTextEditingController.text.trim()} is not a valid email address",emailTextEditingController.text.toString(),"Retype Email Address");
-                          }
-                          else {
-                            ProgressDialog.show(context, "Creating Your\nAccount", Icons.ice_skating);
-                            await registerUser();
-                            ProgressDialog.hide();
-                          }
-                        },
-                        child: Container(
-                          height: 60,
-                          width: 200,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                BoxShadow(color: Colors.black,blurRadius: 10,),
-                              ]
-                          ),
-                          child: Center(
-                            child: Text("Create My Account",
-                            style: TextStyle(color: Colors.blue,fontWeight: FontWeight.w900,fontSize: 15),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 25,),
-
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
+  void NewAlertBox(BuildContext ctx, String title, String content, String buttontxt1,) {
+    showDialog(
+      context: ctx,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          actionsAlignment: MainAxisAlignment.center,
+          title: Row(
+            children: [
+              Icon(Icons.warning_rounded, color: Colors.deepPurple, size: 60),
+              SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(title,
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.deepPurple,
+                      ),
+                    ),
+                    if (content.isNotEmpty)
+                      SizedBox(height: 10),
+                    if (content.isNotEmpty)
+                      Text(content,
+                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          fontSize: 16.0,
+                          color: Colors.black54,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                if (buttontxt1.isNotEmpty)  Expanded(
+                  child: InkWell(
+                    onTap:  () async {
+                      if(title == "Email does not exist"){
+                        context.go('/userRegister');
+                      }
+                      else Navigator.pop(context);
+                    },
+                    child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.deepPurple,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Center(
+                          child: Text(buttontxt1,style: TextStyle(color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,),),
+                        )
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   void showEmptyAlert(context,message,IconData icon, Color? color) {
     showDialog(
