@@ -360,7 +360,8 @@ class UniversalListProvider with ChangeNotifier{
   void EditRecommendedSolutionAdd(bool value, SolutionDetails) {
     if (isEditSolutionListAdded[SolutionDetails['id']] != value) {
       // Checkbox is checked, add to the list
-      editsolutionss.add(SolutionModel(
+      editsolutionss.add(
+          SolutionModel(
         id: SolutionDetails['id'],
         label: SolutionDetails['Label'],
         description: SolutionDetails['Description'],
@@ -382,7 +383,8 @@ class UniversalListProvider with ChangeNotifier{
         PositiveImpactstoOrganisation: SolutionDetails['Positive_impacts_to_organisation'],
         RelatedSolutionsTags: SolutionDetails['Related_solution_tags'],
         SuggestedChallengesTags: SolutionDetails['Suggested_challenges_tags'],
-      ));
+      )
+      );
       isEditSolutionListAdded[SolutionDetails['id']] = value;
 
       print("selectedrecommendedChallenges: ${editsolutionss.first.id}");
