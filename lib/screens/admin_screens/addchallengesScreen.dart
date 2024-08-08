@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -17,9 +18,10 @@ import 'package:thrivers/Provider/AddKeywordsProvider.dart';
 import 'package:thrivers/Provider/UniversalListProvider.dart';
 import 'package:thrivers/Provider/provider_for_challenges.dart';
 import 'package:toastification/toastification.dart';
-import '../Network/FirebaseApi.dart';
-import '../core/constants.dart';
-import '../core/progress_dialog.dart';
+import 'package:toggle_switch/toggle_switch.dart';
+import '../../Network/FirebaseApi.dart';
+import '../../core/constants.dart';
+import '../../core/progress_dialog.dart';
 
 class Animal {
   final int id;
@@ -41,7 +43,7 @@ class AddChallengesScreen extends StatefulWidget {
   State<AddChallengesScreen> createState() => _AddChallengesScreenState();
 }
 
-class _AddChallengesScreenState extends State<AddChallengesScreen> {
+class _AddChallengesScreenState extends State<AddChallengesScreen>  {
 
   CollectionReference thriversCollection = FirebaseFirestore.instance.collection('Thrivers');
   CollectionReference challengesCollection = FirebaseFirestore.instance.collection('Challenges');
@@ -70,8 +72,7 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
   TextEditingController Notestextcontroller = TextEditingController();
 
 
-  List<Widget> nodes = [];
-  List<Widget> tagsnodes = [];
+  // List<Widget> nodes = [];
 
   List<String> categories = [];
 
@@ -106,8 +107,7 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
 
   List<DocumentReference> solutionsDocRefs = [];
 
-  bool showTreeView = false;
-  bool showTagView = false;
+
 
   static List<Animal> _animals = [];
 
@@ -514,11 +514,13 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
     Selectcategories();
     _challengeProvider.getSource();
     _challengeProvider.getChallengesStatus();
+    _challengeProvider.fetchAllChallenges();
     getChatgptSettingsApiKey();
-    _challengeProvider.loadDataForPage(_challengeProvider.currentPage);
-    _challengeProvider.getdatasearch();
+    // _challengeProvider.loadDataForPage(_challengeProvider.currentPage);
+    // _challengeProvider.getdatasearch();
     _challengeProvider.lengthOfdocument = null;
     _universalListProvider = Provider.of<UniversalListProvider>(context, listen: false);
+    _universalListProvider.fetchUniversalSolutionsdata();
 
     // _addKeywordProvider.getcategoryAndKeywords();
   }
@@ -921,7 +923,7 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
                                     children: [
                                       Container(
                                         padding:EdgeInsets.all(8),
-                                        width: MediaQuery.of(context).size.width*0.3,
+                                        width: MediaQuery.of(context).size.width*0.25,
                                         child: TextField(
                                           controller: searchTextbyCKEditingController,
                                           enableSuggestions: true,
@@ -945,7 +947,16 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
                                               //     .where('Name', isLessThanOrEqualTo: searchTextbyCKEditingController.text + '\uf8ff').snapshots();
                                             });
                                           },
-            
+                                          onSubmitted: (val){
+                                            if (searchTextbyCKEditingController.text != "") {
+                                              /// here you perform your search
+                                              _challengeProvider.loadDataForPageSearchFilter(searchTextbyCKEditingController.text.toString());
+                                            }
+                                            else {
+                                              _challengeProvider.loadDataForPage(1);
+                                              _challengeProvider.setFirstpageNo();
+                                            }
+                                          },
                                           decoration: InputDecoration(
                                             contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
                                             hintText: (challengesProvider.selectAllAny == "All") ? 'Search All Challenges By (Label, Original Description, Description, Category, Tags)' : "Search Thrivers By Any",
@@ -1039,566 +1050,639 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
                                   SizedBox(height: 35,)                      ],
                               );
                           }),
-            
+
+                      // SizedBox(width: MediaQuery.of(context).size.width * .01,),
+                      
                       Expanded(
-                        child: Container(
-                          height: 80,
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                // Container(width: MediaQuery.of(context).size.width*0.01,),
-
-                                InkWell(
-                                    onTap: (){
-                                      showTagView = !showTagView;
-                                      setState(() {});
-                                    },
-                                    child: (!showTagView)?FaIcon(FontAwesomeIcons.tag):FaIcon(FontAwesomeIcons.tags)),
-
-                                SizedBox(width: 30,),
-                                InkWell(
-                                    onTap: (){
-                                      showTreeView = !showTreeView;
-                                      setState(() {});
-                                    },
-                                    // child: (!showTreeView)?FaIcon(FontAwesomeIcons.folderTree):FaIcon(FontAwesomeIcons.list))),
-                                    child: (showTreeView)?FaIcon(FontAwesomeIcons.list):FaIcon(FontAwesomeIcons.folderTree)),
-                                SizedBox(width: 30,),
-                                InkWell(
-                                    onTap: (){
-                                      showAddChallengesDialogBox();
-                                    },
-                                    child: FaIcon(FontAwesomeIcons.add)),
-                                // Container(width: MediaQuery.of(context).size.width*0.01,),
-                              ],
-                            ),
-                          ),
-                        ),
+                        child:Consumer<ChallengesProvider>(
+                            builder: (c,challengesProvider, _){
+                              return Container(
+                                height: 80,
+                                child: Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      ///
+                                      Flexible(
+                                        child: ToggleSwitch(
+                                          // animate: true,
+                                          // changeOnTap: true,
+                                          initialLabelIndex: challengesProvider.currentToggleIndex,
+                                          totalSwitches: 3,
+                                          activeBgColor: [Colors.black],
+                                          labels: ['List', 'Tag', 'Category'],
+                                          onToggle: (index) {
+                                            print('switched to: $index');
+                                            // setState(() {
+                                            _challengeProvider.indexValue(index);
+                                            if (index == 1) {
+                                              _challengeProvider.TagView();
+                                              _challengeProvider.filterChallengesByTags(ViewChallengesDialog, showEditChallengesDialogBox);
+                                            } else if (index == 2) {
+                                              _challengeProvider.CategoryView();
+                                              _challengeProvider.filterChallengesByCategory(ViewChallengesDialog, showEditChallengesDialogBox);
+                                            } else if (index == 0){
+                                              _challengeProvider.listView();
+                                            }
+                                            // });
+                                          },
+                                        ),
+                                      ),
+                                      ///
+                                      // InkWell(
+                                      //     onTap: (){
+                                      //       showTagView = !showTagView;
+                                      //       _challengeProvider.filterChallengesByTags(ViewChallengesDialog,showEditChallengesDialogBox);
+                                      //       setState(() {});
+                                      //     },
+                                      //     // child: (!showTagView)?FaIcon(FontAwesomeIcons.tag):FaIcon(FontAwesomeIcons.tags)),
+                                      //     child: (showTagView)?Container(
+                                      //         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                      //         width: MediaQuery.of(context).size.width * .05,
+                                      //         height: MediaQuery.of(context).size.height * .035,
+                                      //         decoration: BoxDecoration(
+                                      //           color: Colors.black ,
+                                      //           borderRadius: BorderRadius.circular(8.0),
+                                      //         ), child: Center(child: Text("List View",style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600,fontSize: 12),))):
+                                      //     Container(
+                                      //         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                      //         width: MediaQuery.of(context).size.width * .05,
+                                      //         height: MediaQuery.of(context).size.height * .035,
+                                      //         decoration: BoxDecoration(
+                                      //           color: Colors.black ,
+                                      //           borderRadius: BorderRadius.circular(8.0),
+                                      //         ), child: Center(child: Text("Tag View",style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600,fontSize: 12))))
+                                      // ),
+                                      // SizedBox(width: 10,),
+                                      // InkWell(
+                                      //     onTap: (){
+                                      //       showTreeView = !showTreeView;
+                                      //       _challengeProvider.filterChallengesByCategory(ViewChallengesDialog,showEditChallengesDialogBox);
+                                      //       setState(() {});
+                                      //     },
+                                      //     // child: (!showTreeView)?FaIcon(FontAwesomeIcons.folderTree):FaIcon(FontAwesomeIcons.list))),
+                                      //     // child: (showTreeView)?FaIcon(FontAwesomeIcons.list):FaIcon(FontAwesomeIcons.folderTree)),
+                                      //     child: (showTreeView)?
+                                      //     Container(
+                                      //         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                      //         width: MediaQuery.of(context).size.width * .06,
+                                      //         height: MediaQuery.of(context).size.height * .035,
+                                      //         decoration: BoxDecoration(
+                                      //           color: Colors.black ,
+                                      //           borderRadius: BorderRadius.circular(8.0),
+                                      //         ), child: Center(child: Text("List View",style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600,fontSize: 12),))):
+                                      //     Container(
+                                      //         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                      //         width: MediaQuery.of(context).size.width * .06,
+                                      //         height: MediaQuery.of(context).size.height * .035,
+                                      //         decoration: BoxDecoration(
+                                      //           color: Colors.black ,
+                                      //           borderRadius: BorderRadius.circular(8.0),
+                                      //         ), child: Center(child: Text("Category View",style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600,fontSize: 12))))
+                                      // ),
+                                      ///
+                                      SizedBox(width: 20,),
+                                      Flexible(
+                                        child: InkWell(
+                                          onTap: (){
+                                              showAddChallengesDialogBox();
+                                            },
+                                          child: Container(
+                                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                width: MediaQuery.of(context).size.width * .1,
+                                                height: MediaQuery.of(context).size.height * .035,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.black ,
+                                                  borderRadius: BorderRadius.circular(8.0),
+                                                ), child: Center(child: Text("Add New Challenge",
+                                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600,fontSize: 12),
+                                              overflow: TextOverflow.ellipsis,
+                                            ))),
+                                        ),
+                                      ),
+                                      ///
+                                      // Container(width: MediaQuery.of(context).size.width*0.01,),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            })
                       ),
                     ],
                   ),
                 ),
-            
-                Container(
-                    height: MediaQuery.of(context).size.height * .65,
-                    margin: EdgeInsets.only(bottom:20, left: 20,right: 20),
-                    // decoration: BoxDecoration(
-                    //   color: Colors.white.withOpacity(0.7),
-                    //   borderRadius: BorderRadius.circular(20),
-                    // ),
-                    child:
-            
-            
-                    showTreeView?FutureBuilder(
-                      future: fetchDatasss(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return Container(
-                            child: Center(child: CircularProgressIndicator()),
-                          );
-                        }
-                        if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        }
-                        print("Hola");
-            
-                        return Container(
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: nodes.length,
-                            itemBuilder: (context, index) {
-                              return nodes[index];
+
+                Consumer<ChallengesProvider>(
+                    builder: (context, challengesProvider, child) {
+                      return Container(
+                          height: MediaQuery.of(context).size.height * .65,
+                          margin: EdgeInsets.only(bottom:20, left: 20,right: 20),
+                          // decoration: BoxDecoration(
+                          //   color: Colors.white.withOpacity(0.7),
+                          //   borderRadius: BorderRadius.circular(20),
+                          // ),
+                          child:
+
+
+                          challengesProvider.getshowTreeView ? Consumer<ChallengesProvider>(
+                            builder: (context, challengesProvider, child) {
+                              if (challengesProvider.isLoadingMore) {
+                                return Center(child: CircularProgressIndicator());
+                              }
+                              print("Hola");
+
+                              return Container(
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: challengesProvider.categorynodes.length,
+                                  itemBuilder: (context, index) {
+                                    return challengesProvider.categorynodes[index];
+                                  },
+                                ),
+                              );
                             },
-                          ),
-                        );
-                      },
-                    ) : showTagView ? FutureBuilder(
-                      future: fetchbytags(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return Container(
-                            child: Center(child: CircularProgressIndicator()),
-                          );
-                        }
-                        if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        }
+                          ) :
+                          challengesProvider.getshowTagView ? Consumer<ChallengesProvider>(
+                            builder: (context, challengesProvider, child) {
+                              if (challengesProvider.isLoadingMore) {
+                                return Center(child: CircularProgressIndicator());
+                              }
 
-                        // Reset the list of nodes
-                        // nodes.clear();
+                              // Reset the list of nodes
+                              // nodes.clear();
 
-                        print("tagsnodes");
-                        print(tagsnodes.length);
+                              print("tagsnodes");
+                              print(challengesProvider.tagsnodes.length);
 
-                        return Container(
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: tagsnodes.length,
-                            itemBuilder: (context, index) {
-                              return tagsnodes[index];
+                              return Container(
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: challengesProvider.tagsnodes.length,
+                                  itemBuilder: (context, index) {
+                                    return challengesProvider.tagsnodes[index];
+                                  },
+                                ),
+                              );
                             },
-                          ),
-                        );
-                      },
-                    ) :
-                    Consumer<ChallengesProvider>(
-                        builder: (c,challengesProvider, _){
-                          // addKeywordProvider.getcategoryAndKeywords();
-                          // addKeywordProvider.newgetSource();
-                          // addKeywordProvider.getThriversStatus();
-                          return
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                  child: Row(
+                          ) :
+                          Consumer<ChallengesProvider>(
+                              builder: (c,challengesProvider, _){
+                                // addKeywordProvider.getcategoryAndKeywords();
+                                // addKeywordProvider.newgetSource();
+                                // addKeywordProvider.getThriversStatus();
+                                return
+                                  Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      SizedBox(width: 10,),
-                                      Text("NO.",style: Theme.of(context).textTheme.titleMedium),
-                                      SizedBox(width: 20,),
-            
-                                      Expanded(
-                                        flex: 3,
-                                        child: Text("Label & Description",style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis),
-                                      ),
-                                      SizedBox(width: 20),
-            
-            
-                                      Expanded(
-                                        flex: 2,
-                                        child: Text("Original Description",style: Theme.of(context).textTheme.titleMedium),
-                                      ),
-            
-                                      SizedBox(width: 20),
-            
-                                      Expanded(
-                                        flex: 3,
-                                        child: Text('Category & Tags',style: Theme.of(context).textTheme.titleMedium,),
-                                      ),
-            
-                                      SizedBox(width: 80,),
-            
-            
-                                    ],
-                                  ),
-                                ),
-                                Divider(color: Colors.black,),
-            
-                                Expanded(
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      children: [
-                                        (challengesProvider.isLoadingMore) ?
-                                        Center(child: CircularProgressIndicator()) :
-            
-                                        ListView.separated(
-                                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                          physics: NeverScrollableScrollPhysics(), // Disable scrolling
-                                          shrinkWrap: true,
-                                          itemCount: challengesProvider.challengesdocuments.length,
-                                          separatorBuilder: (BuildContext context, int index) {
-                                            return Divider();
-                                          },
-                                          itemBuilder: (BuildContext context, int index) {
-                                            // int totalItems = documents.length;
-                                            // int totalPages = (totalItems / _perPage).ceil();
-                                            return ChallengesListTile(challengesProvider.challengesdocuments[index], index, challengesProvider.challengesdocuments);
-                                          },
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            SizedBox(width: 10,),
+                                            Text("NO.",style: Theme.of(context).textTheme.titleMedium),
+                                            SizedBox(width: 40,),
+
+                                            Expanded(
+                                              flex: 3,
+                                              child: Text("Label & Description",style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis),
+                                            ),
+                                            SizedBox(width: 20),
+
+
+                                            // Expanded(
+                                            //   flex: 2,
+                                            //   child: Text("Original Description",style: Theme.of(context).textTheme.titleMedium),
+                                            // ),
+
+                                            SizedBox(width: 20),
+
+                                            Expanded(
+                                              flex: 3,
+                                              child: Text('Category & Tags',style: Theme.of(context).textTheme.titleMedium,),
+                                            ),
+
+                                            SizedBox(width: 80,),
+
+
+                                          ],
                                         ),
-            
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                                      ),
+                                      Divider(color: Colors.black,),
 
-                                SizedBox(height: 20),
+                                      Expanded(
+                                        child: SingleChildScrollView(
+                                          child: Column(
+                                            children: [
+                                              (challengesProvider.isLoadingMore) ?
+                                              Center(child: CircularProgressIndicator()) :
+
+                                              ListView.separated(
+                                                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                                physics: NeverScrollableScrollPhysics(), // Disable scrolling
+                                                shrinkWrap: true,
+                                                itemCount: challengesProvider.challengesdocuments.length,
+                                                separatorBuilder: (BuildContext context, int index) {
+                                                  return Divider();
+                                                },
+                                                itemBuilder: (BuildContext context, int index) {
+                                                  // int totalItems = documents.length;
+                                                  // int totalPages = (totalItems / _perPage).ceil();
+                                                  return ChallengesListTile(challengesProvider.challengesdocuments[index], index, challengesProvider.challengesdocuments);
+                                                },
+                                              ),
+
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+
+                                      SizedBox(height: 20),
 
 
-                                (challengesProvider.challengesdocuments.isEmpty) ?
-                                Container() :
+                                      (challengesProvider.challengesdocuments.isEmpty) ?
+                                      Container() :
 
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    ElevatedButton(
-                                      onPressed: challengesProvider.loadFirstPage,
-                                      child: Text('1st page'),
-                                    ),
-                                    SizedBox(width: 10),
-                                    ElevatedButton(
-                                      onPressed: challengesProvider.loadPreviousPage,
-                                      child: Text('Previous'),
-                                    ),
-                                    SizedBox(width: 10),
-                                    Text('Page ${challengesProvider.currentPage} of ${challengesProvider.totalPages}'),
-                                    SizedBox(width: 10),
-                                    ElevatedButton(
-                                      onPressed: challengesProvider.loadNextPage,
-                                      child: Text('Next'),
-                                    ),
-                                    SizedBox(width: 10),
-                                    ElevatedButton(
-                                      onPressed: challengesProvider.loadLastPage,
-                                      child: Text('Last page'),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            );
-                        })
-            
-            //                   StreamBuilder(
-            //                     // FirebaseFirestore.instance
-            //                     //     .collection('users')
-            //                     //     .where('age', isGreaterThan: 20)
-            //                     //     .get()
-            //                     //     .then(...);
-            //                     //
-            //                     // .where('age', isGreaterThan: 20)
-            //                     // .get()
-            //                     stream: challengesCollection
-            //                         .where('Name', isGreaterThanOrEqualTo: textEditingController.text)
-            //                         .where('Name', isLessThanOrEqualTo: textEditingController.text + '\uf8ff').limit(10).snapshots(),
-            //                     builder: (ctx,AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-            //                       if (streamSnapshot.connectionState ==
-            //                           ConnectionState.waiting) {
-            //                         return Center(
-            //                             child: CircularProgressIndicator(
-            //                               //color: primaryColorOfApp,
-            //                             ));
-            //                       }
-            //
-            //                       documents = (streamSnapshot.data?.docs)??[];
-            //
-            //                       if (streamSnapshot.data == null || streamSnapshot.data!.docs.isEmpty) {
-            //                         print('No documents found in the stream.');
-            //                         return Center(child: Text("No Challenges is Added Yet", style: Theme.of(context).textTheme.displaySmall,));
-            //                       } else {
-            //                         documents = streamSnapshot.data!.docs;
-            //                         for (var doc in documents) {
-            //                           // Your logic here
-            //                           print('Document ID: ${doc.id}');
-            //                         }
-            //                       }
-            //
-            //
-            //
-            //
-            //                       //todo Documents list added to filterTitle
-            //                       String searchText = searchTextEditingController.text.toLowerCase();
-            //                       String searchTexts = searchTextbyCKEditingController.text.toLowerCase();
-            //                       // if (searchText.length > 0) {
-            //                       //   documents = documents.where((element) {
-            //                       //     return element.get('Name').toString().toLowerCase()
-            //                       //         .contains(searchText.toLowerCase());
-            //                       //   }).toList();
-            //                       // }
-            //                       // if (searchTexts.length > 0) {
-            //                       //   documents = documents.where((element) {
-            //                       //     return element
-            //                       //         .get('Category')
-            //                       //         .toString()
-            //                       //         .toLowerCase()
-            //                       //         .contains(searchTexts.toLowerCase());
-            //                       //   }).toList();
-            //                       // }
-            //                       // if (searchTexts.length > 0) {
-            //                       //   documents = documents.where((element) {
-            //                       //     return element
-            //                       //         .get('Keywords')
-            //                       //         .toString()
-            //                       //         .toLowerCase()
-            //                       //         .contains(searchTexts.toLowerCase());
-            //                       //   }).toList();
-            //                       // }
-            //                       ///
-            //                       // if (searchTexts.length > 0 || selectAllAny == "Any") {
-            //                       // documents = documents.where((element) {
-            //                       // print("documentssssssss: $documents");
-            //                       //
-            //                       // String category = element.get('tags').toString().toLowerCase();
-            //                       // String keywords = element.get('Keywords').toString().toLowerCase();
-            //                       //
-            //                       // return category.contains(searchTexts) || keywords.contains(searchTexts);
-            //                       // }).toList();
-            //                       // }
-            //                       //
-            //                       // if (searchTexts.length > 0 || selectAllAny=="All") {
-            //                       //   documents = documents.where((element) {
-            //                       //     String Name = element.get('Name').toString().toLowerCase();
-            //                       //     String Description = element.get('Description').toString().toLowerCase();
-            //                       //     String category = element.get('tags').toString().toLowerCase();
-            //                       //     String keywords = element.get('Keywords').toString().toLowerCase();
-            //                       //     return Name.contains(searchTexts) || Description.contains(searchTexts) || category.contains(searchTexts) || keywords.contains(searchTexts);
-            //                       //   }).toList();
-            //                       // }
-            //                       /// search<
-            //
-            //                       //                   if (searchTexts.isNotEmpty && (selectAllAny == "Any" || selectAllAny == "All")) {
-            // //                     documents = documents.where((element) {
-            // //                       String name = element.get('Name').toString().toLowerCase();
-            // //                       String description = element.get('Description').toString().toLowerCase();
-            // //                       String category = element.get('tags').toString().toLowerCase();
-            // //                       String keywords = element.get('Keywords').toString().toLowerCase();
-            // //                       String original = element.get('Original Description').toString().toLowerCase();
-            // //
-            // //                       if (selectAllAny == "Any") {
-            // //                         return category.contains(searchTexts) || keywords.contains(searchTexts);
-            // //                       } else if (selectAllAny == "All") {
-            // //                         return name.contains(searchTexts) ||
-            // //                             description.contains(searchTexts) ||
-            // //                             category.contains(searchTexts) ||
-            // //                             original.contains(searchTexts) ||
-            // //                             keywords.contains(searchTexts);
-            // //                       }
-            // //
-            // //                       return false; // Default case
-            // //                     }).toList();
-            // //
-            // //                     if (documents.isEmpty) {
-            // //
-            // //                       print('No data found in text: $searchTexts');
-            // //
-            // //                       return Center(child: Text("No data found in text $searchTexts"));
-            // //                       // Display a message when no data is found
-            // //                     }
-            // //                   }
-            //
-            //                       /// >search
-            //
-            //
-            //                       if (searchTexts.isNotEmpty && (selectAllAny == "Any" || selectAllAny == "All")) {
-            //                         List<String> searchWords = searchTexts.toLowerCase().split(' ');
-            //
-            //                         documents = documents.where((element) {
-            //                           String name = element.get('Name').toString().toLowerCase();
-            //                           String description = element.get('Description').toString().toLowerCase();
-            //                           String category = element.get('tags').toString().toLowerCase();
-            //                           String keywords = element.get('Keywords').toString().toLowerCase();
-            //                           String original = element.get('Original Description').toString().toLowerCase();
-            //
-            //                           if (selectAllAny == "Any") {
-            //                             return searchWords.any((word) =>
-            //                             name.contains(word) ||
-            //                                 description.contains(word) ||
-            //                                 category.contains(word) ||
-            //                                 original.contains(word) ||
-            //                                 keywords.contains(word));
-            //                           } else if (selectAllAny == "All") {
-            //                             return searchWords.every((word) =>
-            //                             name.contains(word) ||
-            //                                 description.contains(word) ||
-            //                                 category.contains(word) ||
-            //                                 original.contains(word) ||
-            //                                 keywords.contains(word));
-            //                           }
-            //
-            //                           return false; // Default case
-            //                         }).toList();
-            //
-            //                         if (documents.isEmpty) {
-            //                           // print('No data found for search text: $searchTexts');
-            //                           return Center(child: Text("No data found for search text $searchTexts"));
-            //                           // Display a message when no data is found
-            //                         }
-            //                       }
-            //
-            //                       if (_challengeProvider.searchbycategory.isNotEmpty || _challengeProvider.searchbytag.isNotEmpty) {
-            //
-            //                         // print("searchbycat_addKeywordProvider in stream after: ${_addKeywordProvider.searchbycategory} and ${_addKeywordProvider.searchbytag}");
-            //
-            //                         documents = documents.where((element) {
-            //                           List<String> Category = (element.get('Keywords') as List<dynamic>).whereType<String>().map((tag) => tag.toString()).toList();
-            //                           List<String> tags = (element.get('tags') as List<dynamic>).whereType<String>().map((tag) => tag.toString()).toList();
-            //
-            //
-            //                           // print('Tags in document: $Category');
-            //                           // print('Search tags: ${_addKeywordProvider.searchbycategory}');
-            //
-            //                           if(_challengeProvider.searchbycategory.isNotEmpty && _challengeProvider.searchbytag.isEmpty){
-            //                             // print("if");
-            //                             return _challengeProvider.searchbycategory.every((tag) => Category.contains(tag));
-            //                           }
-            //
-            //                           else if (_challengeProvider.searchbytag.isNotEmpty && _challengeProvider.searchbycategory.isEmpty){
-            //                             // print("else if");
-            //                             return _challengeProvider.searchbytag.every((tag) => tags.contains(tag));
-            //                           }
-            //
-            //                           else return _challengeProvider.searchbycategory.every((tag) => Category.contains(tag)) && _challengeProvider.searchbytag.every((tag) => tags.contains(tag));
-            //                         }).toList();
-            //
-            //                         if (documents.isEmpty) {
-            //                           // print('No data found for search text: ${_addKeywordProvider.searchbycategory.join('')} and ${_addKeywordProvider.searchbytag.join('')}');
-            //                           return Center(child: (_challengeProvider.searchbycategory.isNotEmpty && _challengeProvider.searchbytag.isEmpty) ?
-            //
-            //                           Text("No data found for ${_challengeProvider.searchbycategory.join(', ')}") :
-            //
-            //                           (_challengeProvider.searchbytag.isNotEmpty && _challengeProvider.searchbycategory.isEmpty) ?
-            //
-            //                           Text("No data found for ${_challengeProvider.searchbytag.join(', ')}") :
-            //
-            //                           Text("No data found for ${_challengeProvider.searchbycategory.join(', ')} and ${_challengeProvider.searchbytag.join(', ')}"));
-            //                           // Display a message when no data is found
-            //                         }
-            //                       }
-            //
-            //                       // if (_addKeywordProvider.searchbytag.isNotEmpty) {
-            //                       //
-            //                       //   print("searchbycat_addKeywordProvider in stream after: ${_addKeywordProvider.searchbytag}");
-            //                       //
-            //                       //   documents = documents.where((element) {
-            //                       //     List<String> tags = (element.get('tags') as List<dynamic>).whereType<String>().map((tag) => tag.toString()).toList();
-            //                       //     // String category = element.get('Keywords').toString().toLowerCase();
-            //                       //
-            //                       //     print('Tags in document: $tags');
-            //                       //     print('Search tags: ${_addKeywordProvider.searchbytag}');
-            //                       //
-            //                       //     return _addKeywordProvider.searchbytag.every((tag) => tags.contains(tag));
-            //                       //   }).toList();
-            //                       //
-            //                       //   if (documents.isEmpty) {
-            //                       //     print('No data found for search text: ${_addKeywordProvider.searchbytag}');
-            //                       //     return Center(child: Text("No data found for search text ${_addKeywordProvider.searchbytag}"));
-            //                       //     // Display a message when no data is found
-            //                       //   }
-            //                       // }
-            //
-            //
-            //                       documents.sort((a, b) {
-            //                         String idA = a['id'];
-            //                         // print("idA: $idA");
-            //                         String idB = b['id'];
-            //                         // print("idB: $idB");
-            //                         int? numericA = int.tryParse(idA.substring(2));
-            //                         int? numericB = int.tryParse(idB.substring(2));
-            //
-            //                         // If the conversion fails, default to comparing the strings
-            //                         if (numericA == null && numericB == null) {
-            //                           return idA.compareTo(idB);
-            //                         } else if (numericA == null) {
-            //                           return 1; // Place items with null numericA at the end
-            //                         } else if (numericB == null) {
-            //                           return -1; // Place items with null numericB at the end
-            //                         }
-            //
-            //                         return numericA.compareTo(numericB);
-            //                       });
-            //                       return Column(
-            //                         children: [
-            //                           SizedBox(height: 20,),
-            //                           Padding(
-            //                             padding: const EdgeInsets.all(8.0),
-            //                             child: Row(
-            //                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //                               children: [
-            //                                 Container(
-            //                                   width: MediaQuery.of(context).size.width*0.2,
-            //                                   child:Row(
-            //                                     children: [
-            //                                       SizedBox(width: 10,),
-            //                                       // Text(challengesDetails.id,style: Theme.of(context).textTheme.bodySmall),
-            //                                       Text("Sr.NO.",style: Theme.of(context).textTheme.titleMedium),
-            //                                       // Text("${challengesDetails['id']}",style: Theme.of(context).textTheme.bodySmall),
-            //                                       SizedBox(width: 20,),
-            //                                       Expanded(
-            //                                         child: Column(
-            //                                           mainAxisSize: MainAxisSize.min,
-            //                                           crossAxisAlignment: CrossAxisAlignment.start,
-            //                                           children: [
-            //
-            //                                             Text("Label & Description",style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis),
-            //
-            //                                             // SizedBox(height: 10),
-            //
-            //
-            //                                           ],
-            //                                         ),
-            //                                       ),
-            //                                     ],
-            //                                   ),
-            //                                 ),
-            //                                 SizedBox(width: 50),
-            //
-            //
-            //                                 Container(
-            //                                   width: MediaQuery.of(context).size.width*0.3,
-            //                                   child: Column(
-            //                                     mainAxisAlignment: MainAxisAlignment.start,
-            //                                     crossAxisAlignment: CrossAxisAlignment.start,
-            //                                     children: [
-            //                                       Text("Original Description",style: Theme.of(context).textTheme.titleMedium),
-            //                                     ],
-            //                                   ),
-            //                                 ),
-            //                                 Column(
-            //                                     children:[
-            //                                       Container(
-            //                                         width: MediaQuery.of(context).size.width*0.33,
-            //                                         child: Row(
-            //                                           mainAxisAlignment: MainAxisAlignment.start,
-            //                                           crossAxisAlignment: CrossAxisAlignment.start,
-            //                                           children: [
-            //                                             // Padding(
-            //                                             //   padding: const EdgeInsets.symmetric(vertical: 2.0),
-            //                                             //   child: Icon(Icons.tag,size: 16,),
-            //                                             // ),
-            //                                             // SizedBox(width: 5,),
-            //                                             // Expanded(child: Text(keys.toString(),style: Theme.of(context).textTheme.bodySmall, )),
-            //                                             Expanded(
-            //                                               child: Text('Category & Tags',style: Theme.of(context).textTheme.titleMedium,),
-            //                                             ),
-            //                                             // Expanded(child: Text("No Country",style: Theme.of(context).textTheme.bodySmall,overflow: TextOverflow.ellipsis,)),
-            //                                             // SizedBox(width: 10,),
-            //                                           ],
-            //                                         ),
-            //                                       ),
-            //
-            //                                       SizedBox(height: 10,),
-            //
-            //                                     ]
-            //                                 ),
-            //
-            //
-            //                               ],
-            //                             ),
-            //                           ),
-            //                           Divider(),
-            //                           Expanded(
-            //                             child: ListView.separated(
-            //                               // reverse: true,
-            //                               //  shrinkWrap: true,
-            //                               padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-            //                               physics: BouncingScrollPhysics(),
-            //                               // itemCount: documents.length,
-            //                               itemCount: documents.length > 30 ? 30 : documents.length,
-            //                               separatorBuilder: (BuildContext context, int index) {
-            //                                 return Divider();
-            //                               },
-            //                               itemBuilder: (BuildContext context, int index) {
-            //                                 //print('Images ${documents[index]['Images'].length}');
-            //                                 //todo Pass this time
-            //                                 // print("documents[index] : ${documents[index]}");
-            //                                 return Column(
-            //                                   children: [
-            //                                     ChallengesListTile(documents[index], index, documents),
-            //                                   ],
-            //                                 );
-            //
-            //                               },
-            //                             ),
-            //                           ),
-            //                         ],
-            //                       );
-            //
-            //                     },
-            //                   )
-                ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          ElevatedButton(
+                                            onPressed: challengesProvider.loadFirstPage,
+                                            child: Text('1st page'),
+                                          ),
+                                          SizedBox(width: 10),
+                                          ElevatedButton(
+                                            onPressed: challengesProvider.loadPreviousPage,
+                                            child: Text('Previous'),
+                                          ),
+                                          SizedBox(width: 10),
+                                          Text('Page ${challengesProvider.currentPage} of ${challengesProvider.totalPages}'),
+                                          SizedBox(width: 10),
+                                          ElevatedButton(
+                                            onPressed: challengesProvider.loadNextPage,
+                                            child: Text('Next'),
+                                          ),
+                                          SizedBox(width: 10),
+                                          ElevatedButton(
+                                            onPressed: challengesProvider.loadLastPage,
+                                            child: Text('Last page'),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  );
+                              })
+
+                        //                   StreamBuilder(
+                        //                     // FirebaseFirestore.instance
+                        //                     //     .collection('users')
+                        //                     //     .where('age', isGreaterThan: 20)
+                        //                     //     .get()
+                        //                     //     .then(...);
+                        //                     //
+                        //                     // .where('age', isGreaterThan: 20)
+                        //                     // .get()
+                        //                     stream: challengesCollection
+                        //                         .where('Name', isGreaterThanOrEqualTo: textEditingController.text)
+                        //                         .where('Name', isLessThanOrEqualTo: textEditingController.text + '\uf8ff').limit(10).snapshots(),
+                        //                     builder: (ctx,AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                        //                       if (streamSnapshot.connectionState ==
+                        //                           ConnectionState.waiting) {
+                        //                         return Center(
+                        //                             child: CircularProgressIndicator(
+                        //                               //color: primaryColorOfApp,
+                        //                             ));
+                        //                       }
+                        //
+                        //                       documents = (streamSnapshot.data?.docs)??[];
+                        //
+                        //                       if (streamSnapshot.data == null || streamSnapshot.data!.docs.isEmpty) {
+                        //                         print('No documents found in the stream.');
+                        //                         return Center(child: Text("No Challenges is Added Yet", style: Theme.of(context).textTheme.displaySmall,));
+                        //                       } else {
+                        //                         documents = streamSnapshot.data!.docs;
+                        //                         for (var doc in documents) {
+                        //                           // Your logic here
+                        //                           print('Document ID: ${doc.id}');
+                        //                         }
+                        //                       }
+                        //
+                        //
+                        //
+                        //
+                        //                       //todo Documents list added to filterTitle
+                        //                       String searchText = searchTextEditingController.text.toLowerCase();
+                        //                       String searchTexts = searchTextbyCKEditingController.text.toLowerCase();
+                        //                       // if (searchText.length > 0) {
+                        //                       //   documents = documents.where((element) {
+                        //                       //     return element.get('Name').toString().toLowerCase()
+                        //                       //         .contains(searchText.toLowerCase());
+                        //                       //   }).toList();
+                        //                       // }
+                        //                       // if (searchTexts.length > 0) {
+                        //                       //   documents = documents.where((element) {
+                        //                       //     return element
+                        //                       //         .get('Category')
+                        //                       //         .toString()
+                        //                       //         .toLowerCase()
+                        //                       //         .contains(searchTexts.toLowerCase());
+                        //                       //   }).toList();
+                        //                       // }
+                        //                       // if (searchTexts.length > 0) {
+                        //                       //   documents = documents.where((element) {
+                        //                       //     return element
+                        //                       //         .get('Keywords')
+                        //                       //         .toString()
+                        //                       //         .toLowerCase()
+                        //                       //         .contains(searchTexts.toLowerCase());
+                        //                       //   }).toList();
+                        //                       // }
+                        //                       ///
+                        //                       // if (searchTexts.length > 0 || selectAllAny == "Any") {
+                        //                       // documents = documents.where((element) {
+                        //                       // print("documentssssssss: $documents");
+                        //                       //
+                        //                       // String category = element.get('tags').toString().toLowerCase();
+                        //                       // String keywords = element.get('Keywords').toString().toLowerCase();
+                        //                       //
+                        //                       // return category.contains(searchTexts) || keywords.contains(searchTexts);
+                        //                       // }).toList();
+                        //                       // }
+                        //                       //
+                        //                       // if (searchTexts.length > 0 || selectAllAny=="All") {
+                        //                       //   documents = documents.where((element) {
+                        //                       //     String Name = element.get('Name').toString().toLowerCase();
+                        //                       //     String Description = element.get('Description').toString().toLowerCase();
+                        //                       //     String category = element.get('tags').toString().toLowerCase();
+                        //                       //     String keywords = element.get('Keywords').toString().toLowerCase();
+                        //                       //     return Name.contains(searchTexts) || Description.contains(searchTexts) || category.contains(searchTexts) || keywords.contains(searchTexts);
+                        //                       //   }).toList();
+                        //                       // }
+                        //                       /// search<
+                        //
+                        //                       //                   if (searchTexts.isNotEmpty && (selectAllAny == "Any" || selectAllAny == "All")) {
+                        // //                     documents = documents.where((element) {
+                        // //                       String name = element.get('Name').toString().toLowerCase();
+                        // //                       String description = element.get('Description').toString().toLowerCase();
+                        // //                       String category = element.get('tags').toString().toLowerCase();
+                        // //                       String keywords = element.get('Keywords').toString().toLowerCase();
+                        // //                       String original = element.get('Original Description').toString().toLowerCase();
+                        // //
+                        // //                       if (selectAllAny == "Any") {
+                        // //                         return category.contains(searchTexts) || keywords.contains(searchTexts);
+                        // //                       } else if (selectAllAny == "All") {
+                        // //                         return name.contains(searchTexts) ||
+                        // //                             description.contains(searchTexts) ||
+                        // //                             category.contains(searchTexts) ||
+                        // //                             original.contains(searchTexts) ||
+                        // //                             keywords.contains(searchTexts);
+                        // //                       }
+                        // //
+                        // //                       return false; // Default case
+                        // //                     }).toList();
+                        // //
+                        // //                     if (documents.isEmpty) {
+                        // //
+                        // //                       print('No data found in text: $searchTexts');
+                        // //
+                        // //                       return Center(child: Text("No data found in text $searchTexts"));
+                        // //                       // Display a message when no data is found
+                        // //                     }
+                        // //                   }
+                        //
+                        //                       /// >search
+                        //
+                        //
+                        //                       if (searchTexts.isNotEmpty && (selectAllAny == "Any" || selectAllAny == "All")) {
+                        //                         List<String> searchWords = searchTexts.toLowerCase().split(' ');
+                        //
+                        //                         documents = documents.where((element) {
+                        //                           String name = element.get('Name').toString().toLowerCase();
+                        //                           String description = element.get('Description').toString().toLowerCase();
+                        //                           String category = element.get('tags').toString().toLowerCase();
+                        //                           String keywords = element.get('Keywords').toString().toLowerCase();
+                        //                           String original = element.get('Original Description').toString().toLowerCase();
+                        //
+                        //                           if (selectAllAny == "Any") {
+                        //                             return searchWords.any((word) =>
+                        //                             name.contains(word) ||
+                        //                                 description.contains(word) ||
+                        //                                 category.contains(word) ||
+                        //                                 original.contains(word) ||
+                        //                                 keywords.contains(word));
+                        //                           } else if (selectAllAny == "All") {
+                        //                             return searchWords.every((word) =>
+                        //                             name.contains(word) ||
+                        //                                 description.contains(word) ||
+                        //                                 category.contains(word) ||
+                        //                                 original.contains(word) ||
+                        //                                 keywords.contains(word));
+                        //                           }
+                        //
+                        //                           return false; // Default case
+                        //                         }).toList();
+                        //
+                        //                         if (documents.isEmpty) {
+                        //                           // print('No data found for search text: $searchTexts');
+                        //                           return Center(child: Text("No data found for search text $searchTexts"));
+                        //                           // Display a message when no data is found
+                        //                         }
+                        //                       }
+                        //
+                        //                       if (_challengeProvider.searchbycategory.isNotEmpty || _challengeProvider.searchbytag.isNotEmpty) {
+                        //
+                        //                         // print("searchbycat_addKeywordProvider in stream after: ${_addKeywordProvider.searchbycategory} and ${_addKeywordProvider.searchbytag}");
+                        //
+                        //                         documents = documents.where((element) {
+                        //                           List<String> Category = (element.get('Keywords') as List<dynamic>).whereType<String>().map((tag) => tag.toString()).toList();
+                        //                           List<String> tags = (element.get('tags') as List<dynamic>).whereType<String>().map((tag) => tag.toString()).toList();
+                        //
+                        //
+                        //                           // print('Tags in document: $Category');
+                        //                           // print('Search tags: ${_addKeywordProvider.searchbycategory}');
+                        //
+                        //                           if(_challengeProvider.searchbycategory.isNotEmpty && _challengeProvider.searchbytag.isEmpty){
+                        //                             // print("if");
+                        //                             return _challengeProvider.searchbycategory.every((tag) => Category.contains(tag));
+                        //                           }
+                        //
+                        //                           else if (_challengeProvider.searchbytag.isNotEmpty && _challengeProvider.searchbycategory.isEmpty){
+                        //                             // print("else if");
+                        //                             return _challengeProvider.searchbytag.every((tag) => tags.contains(tag));
+                        //                           }
+                        //
+                        //                           else return _challengeProvider.searchbycategory.every((tag) => Category.contains(tag)) && _challengeProvider.searchbytag.every((tag) => tags.contains(tag));
+                        //                         }).toList();
+                        //
+                        //                         if (documents.isEmpty) {
+                        //                           // print('No data found for search text: ${_addKeywordProvider.searchbycategory.join('')} and ${_addKeywordProvider.searchbytag.join('')}');
+                        //                           return Center(child: (_challengeProvider.searchbycategory.isNotEmpty && _challengeProvider.searchbytag.isEmpty) ?
+                        //
+                        //                           Text("No data found for ${_challengeProvider.searchbycategory.join(', ')}") :
+                        //
+                        //                           (_challengeProvider.searchbytag.isNotEmpty && _challengeProvider.searchbycategory.isEmpty) ?
+                        //
+                        //                           Text("No data found for ${_challengeProvider.searchbytag.join(', ')}") :
+                        //
+                        //                           Text("No data found for ${_challengeProvider.searchbycategory.join(', ')} and ${_challengeProvider.searchbytag.join(', ')}"));
+                        //                           // Display a message when no data is found
+                        //                         }
+                        //                       }
+                        //
+                        //                       // if (_addKeywordProvider.searchbytag.isNotEmpty) {
+                        //                       //
+                        //                       //   print("searchbycat_addKeywordProvider in stream after: ${_addKeywordProvider.searchbytag}");
+                        //                       //
+                        //                       //   documents = documents.where((element) {
+                        //                       //     List<String> tags = (element.get('tags') as List<dynamic>).whereType<String>().map((tag) => tag.toString()).toList();
+                        //                       //     // String category = element.get('Keywords').toString().toLowerCase();
+                        //                       //
+                        //                       //     print('Tags in document: $tags');
+                        //                       //     print('Search tags: ${_addKeywordProvider.searchbytag}');
+                        //                       //
+                        //                       //     return _addKeywordProvider.searchbytag.every((tag) => tags.contains(tag));
+                        //                       //   }).toList();
+                        //                       //
+                        //                       //   if (documents.isEmpty) {
+                        //                       //     print('No data found for search text: ${_addKeywordProvider.searchbytag}');
+                        //                       //     return Center(child: Text("No data found for search text ${_addKeywordProvider.searchbytag}"));
+                        //                       //     // Display a message when no data is found
+                        //                       //   }
+                        //                       // }
+                        //
+                        //
+                        //                       documents.sort((a, b) {
+                        //                         String idA = a['id'];
+                        //                         // print("idA: $idA");
+                        //                         String idB = b['id'];
+                        //                         // print("idB: $idB");
+                        //                         int? numericA = int.tryParse(idA.substring(2));
+                        //                         int? numericB = int.tryParse(idB.substring(2));
+                        //
+                        //                         // If the conversion fails, default to comparing the strings
+                        //                         if (numericA == null && numericB == null) {
+                        //                           return idA.compareTo(idB);
+                        //                         } else if (numericA == null) {
+                        //                           return 1; // Place items with null numericA at the end
+                        //                         } else if (numericB == null) {
+                        //                           return -1; // Place items with null numericB at the end
+                        //                         }
+                        //
+                        //                         return numericA.compareTo(numericB);
+                        //                       });
+                        //                       return Column(
+                        //                         children: [
+                        //                           SizedBox(height: 20,),
+                        //                           Padding(
+                        //                             padding: const EdgeInsets.all(8.0),
+                        //                             child: Row(
+                        //                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //                               children: [
+                        //                                 Container(
+                        //                                   width: MediaQuery.of(context).size.width*0.2,
+                        //                                   child:Row(
+                        //                                     children: [
+                        //                                       SizedBox(width: 10,),
+                        //                                       // Text(challengesDetails.id,style: Theme.of(context).textTheme.bodySmall),
+                        //                                       Text("Sr.NO.",style: Theme.of(context).textTheme.titleMedium),
+                        //                                       // Text("${challengesDetails['id']}",style: Theme.of(context).textTheme.bodySmall),
+                        //                                       SizedBox(width: 20,),
+                        //                                       Expanded(
+                        //                                         child: Column(
+                        //                                           mainAxisSize: MainAxisSize.min,
+                        //                                           crossAxisAlignment: CrossAxisAlignment.start,
+                        //                                           children: [
+                        //
+                        //                                             Text("Label & Description",style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis),
+                        //
+                        //                                             // SizedBox(height: 10),
+                        //
+                        //
+                        //                                           ],
+                        //                                         ),
+                        //                                       ),
+                        //                                     ],
+                        //                                   ),
+                        //                                 ),
+                        //                                 SizedBox(width: 50),
+                        //
+                        //
+                        //                                 Container(
+                        //                                   width: MediaQuery.of(context).size.width*0.3,
+                        //                                   child: Column(
+                        //                                     mainAxisAlignment: MainAxisAlignment.start,
+                        //                                     crossAxisAlignment: CrossAxisAlignment.start,
+                        //                                     children: [
+                        //                                       Text("Original Description",style: Theme.of(context).textTheme.titleMedium),
+                        //                                     ],
+                        //                                   ),
+                        //                                 ),
+                        //                                 Column(
+                        //                                     children:[
+                        //                                       Container(
+                        //                                         width: MediaQuery.of(context).size.width*0.33,
+                        //                                         child: Row(
+                        //                                           mainAxisAlignment: MainAxisAlignment.start,
+                        //                                           crossAxisAlignment: CrossAxisAlignment.start,
+                        //                                           children: [
+                        //                                             // Padding(
+                        //                                             //   padding: const EdgeInsets.symmetric(vertical: 2.0),
+                        //                                             //   child: Icon(Icons.tag,size: 16,),
+                        //                                             // ),
+                        //                                             // SizedBox(width: 5,),
+                        //                                             // Expanded(child: Text(keys.toString(),style: Theme.of(context).textTheme.bodySmall, )),
+                        //                                             Expanded(
+                        //                                               child: Text('Category & Tags',style: Theme.of(context).textTheme.titleMedium,),
+                        //                                             ),
+                        //                                             // Expanded(child: Text("No Country",style: Theme.of(context).textTheme.bodySmall,overflow: TextOverflow.ellipsis,)),
+                        //                                             // SizedBox(width: 10,),
+                        //                                           ],
+                        //                                         ),
+                        //                                       ),
+                        //
+                        //                                       SizedBox(height: 10,),
+                        //
+                        //                                     ]
+                        //                                 ),
+                        //
+                        //
+                        //                               ],
+                        //                             ),
+                        //                           ),
+                        //                           Divider(),
+                        //                           Expanded(
+                        //                             child: ListView.separated(
+                        //                               // reverse: true,
+                        //                               //  shrinkWrap: true,
+                        //                               padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+                        //                               physics: BouncingScrollPhysics(),
+                        //                               // itemCount: documents.length,
+                        //                               itemCount: documents.length > 30 ? 30 : documents.length,
+                        //                               separatorBuilder: (BuildContext context, int index) {
+                        //                                 return Divider();
+                        //                               },
+                        //                               itemBuilder: (BuildContext context, int index) {
+                        //                                 //print('Images ${documents[index]['Images'].length}');
+                        //                                 //todo Pass this time
+                        //                                 // print("documents[index] : ${documents[index]}");
+                        //                                 return Column(
+                        //                                   children: [
+                        //                                     ChallengesListTile(documents[index], index, documents),
+                        //                                   ],
+                        //                                 );
+                        //
+                        //                               },
+                        //                             ),
+                        //                           ),
+                        //                         ],
+                        //                       );
+                        //
+                        //                     },
+                        //                   )
+                      );
+                    }),
               ],
             ),
           ),
@@ -1650,148 +1734,166 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
   //   }
   //
   // }
-
-  Future<void> fetchDatas() async {
-    QuerySnapshot querySnapshot =
-    await FirebaseFirestore.instance.collection('Keywords').get();
-
-    List<DocumentSnapshot> categories = querySnapshot.docs;
-
-    for (DocumentSnapshot categoryDocument in categories) {
-      String categoryName = categoryDocument['Key'];
-      // print("Category Name"+categoryName);
-
-      var thriversSnapshot = await FirebaseFirestore.instance
-          .collection('Thrivers')
-          .where('Category', isEqualTo: categoryName)
-          .get();
-
-      List<Widget> thriverNodes = [];
-
-      for (QueryDocumentSnapshot thriverDocument in thriversSnapshot.docs) {
-        String thriverName = thriverDocument['Label'];
-        // print("category name"+thriverName);
-        thriverNodes.add(ListTile(title: Text(thriverName,style: TextStyle(color: Colors.black),)));
-      }
-      Widget categoryNode = ExpansionTile(
-        controlAffinity: ListTileControlAffinity.leading,
-        title: Text(categoryName,style: TextStyle(color: Colors.black),),
-        children: thriverNodes,
-      );
-
-
-      if(!categoriesStringList.contains(categoryName)){
-        categoriesStringList.add(categoryName);
-        // Add the parent node to the list
-        nodes.add(categoryNode);
-      }
-    }
-  }
-
-  Future<void> fetchDatasss() async {
-    // Fetch specific document by ID
-    DocumentSnapshot specificDocument = await FirebaseFirestore.instance
-        .collection('Keywords').doc('CUTs7fvcYX2dN9TnDj4c')
-        .get();
-
-    if (specificDocument.exists) {
-      List<dynamic> values = specificDocument['Values'];
-      // print("avluesssss: $values");
-
-      for (var value in values) {
-        // Fetch data from "Thrivers" where category matches
-        var thriversSnapshot = await FirebaseFirestore.instance.collection('Challenges').where('Keywords', arrayContains: value).limit(10).get();
-
-        // print("thriversSnapshot  $thriversSnapshot" );
-
-        List<Widget> thriverNodes = [];
-
-        for (QueryDocumentSnapshot thriverDocument in thriversSnapshot.docs) {
-          String thriverName = thriverDocument['Label'];
-          // print("category nameee $thriverName");
-          thriverNodes.add(
-            ListTile(
-              title: InkWell(
-                  onTap: (){
-                    ViewChallengesDialog(thriverDocument.reference, thriverDocument.id,
-                        thriverDocument['Label'], thriverDocument['Description'], thriverDocument['Category'],
-                        thriverDocument['Keywords'], thriverDocument['Created Date'], thriverDocument['Created By'],
-                        thriverDocument['tags'], thriverDocument['Modified By'], thriverDocument['Modified Date'], thriverDocument['id']);
-                  },
-                  child: Text(thriverName, style: TextStyle(color: Colors.black))),
-            ),
-          );
-        }
-
-        // Create a parent node with child nodes
-        Widget categoryNode = ExpansionTile(
-          controlAffinity: ListTileControlAffinity.leading,
-          title: Text("$value (${thriverNodes.length})", style: TextStyle(color: Colors.black)),
-          children: thriverNodes,
-        );
-
-        if (!categoriesStringList.contains(value)) {
-          categoriesStringList.add(value);
-          // Add the parent node to the list
-          nodes.add(categoryNode);
-        }
-      }
-    }
-  }
-
-  Future<void> fetchbytags() async {
-    // Fetch specific document by ID
-    DocumentSnapshot specificDocument = await FirebaseFirestore.instance
-        .collection('Keywords').doc('GEdua4iCBaakTpNB1NY5')
-        .get();
-
-    if (specificDocument.exists) {
-      List<dynamic> values = specificDocument['Values'];
-      // print("avluesssss: $values");
-
-      for (var value in values) {
-        // Fetch data from "Thrivers" where category matches
-        var thriversSnapshot = await FirebaseFirestore.instance.collection('Challenges').where('tags', arrayContains: value).get();
-
-        // print("thriversSnapshot  $thriversSnapshot" );
-
-        List<Widget> thriverNodes = [];
-
-        for (QueryDocumentSnapshot thriverDocument in thriversSnapshot.docs) {
-          String thriverName = thriverDocument['Label'];
-          // print("category nameee $thriverName");
-          thriverNodes.add(
-            ListTile(
-              title: InkWell(
-                  onTap: (){
-                    // thriversDetails.reference,thriversDetails.id, thriversDetails['Label'], thriversDetails['Description'], thriversDetails['Category']
-                    // ,thriversDetails['Keywords'],thriversDetails['Created Date'],thriversDetails['Created By'],thriversDetails['tags'],thriversDetails['Modified By']
-                    // ,thriversDetails['Modified Date'],thriversDetails['id']
-                    ViewChallengesDialog(thriverDocument.reference, thriverDocument.id,
-                        thriverDocument['Label'], thriverDocument['Description'], thriverDocument['Category'],
-                        thriverDocument['Keywords'], thriverDocument['Created Date'], thriverDocument['Created By'],
-                        thriverDocument['tags'], thriverDocument['Modified By'], thriverDocument['Modified Date'], thriverDocument['id']);
-                  },
-                  child: Text(thriverName, style: TextStyle(color: Colors.black))),
-            ),
-          );
-        }
-
-        // Create a parent node with child nodes
-        Widget categoryNode = ExpansionTile(
-          controlAffinity: ListTileControlAffinity.leading,
-          title: Text("$value (${thriverNodes.length})", style: TextStyle(color: Colors.black)),
-          children: thriverNodes,
-        );
-
-        if (!categoriesStringList.contains(value)) {
-          categoriesStringList.add(value);
-          // Add the parent node to the list
-          tagsnodes.add(categoryNode);
-        }
-      }
-    }
-  }
+  ///
+  // Future<void> fetchDatas() async {
+  //   QuerySnapshot querySnapshot =
+  //   await FirebaseFirestore.instance.collection('Keywords').get();
+  //
+  //   List<DocumentSnapshot> categories = querySnapshot.docs;
+  //
+  //   for (DocumentSnapshot categoryDocument in categories) {
+  //     String categoryName = categoryDocument['Key'];
+  //     // print("Category Name"+categoryName);
+  //
+  //     var thriversSnapshot = await FirebaseFirestore.instance
+  //         .collection('Thrivers')
+  //         .where('Category', isEqualTo: categoryName)
+  //         .get();
+  //
+  //     List<Widget> thriverNodes = [];
+  //
+  //     for (QueryDocumentSnapshot thriverDocument in thriversSnapshot.docs) {
+  //       String thriverName = thriverDocument['Label'];
+  //       // print("category name"+thriverName);
+  //       thriverNodes.add(ListTile(title: Text(thriverName,style: TextStyle(color: Colors.black),)));
+  //     }
+  //     Widget categoryNode = ExpansionTile(
+  //       controlAffinity: ListTileControlAffinity.leading,
+  //       title: Text(categoryName,style: TextStyle(color: Colors.black),),
+  //       children: thriverNodes,
+  //     );
+  //
+  //
+  //     if(!categoriesStringList.contains(categoryName)){
+  //       categoriesStringList.add(categoryName);
+  //       // Add the parent node to the list
+  //       nodes.add(categoryNode);
+  //     }
+  //   }
+  // }
+  ///
+  // Future<void> fetchDatasss() async {
+  //   // Fetch specific document by ID
+  //   DocumentSnapshot specificDocument = await FirebaseFirestore.instance
+  //       .collection('Keywords').doc('CUTs7fvcYX2dN9TnDj4c')
+  //       .get();
+  //
+  //   if (specificDocument.exists) {
+  //     List<dynamic> values = specificDocument['Values'];
+  //     // print("avluesssss: $values");
+  //
+  //     for (var value in values) {
+  //       // Fetch data from "Thrivers" where category matches
+  //       var thriversSnapshot = await FirebaseFirestore.instance.collection('Challenges').where('Keywords', arrayContains: value).limit(10).get();
+  //
+  //       // print("thriversSnapshot  $thriversSnapshot" );
+  //
+  //       List<Widget> thriverNodes = [];
+  //
+  //       for (QueryDocumentSnapshot thriverDocument in thriversSnapshot.docs) {
+  //         String thriverName = thriverDocument['Label'];
+  //         // print("category nameee $thriverName");
+  //         thriverNodes.add(
+  //           ListTile(
+  //             title: InkWell(
+  //                 onTap: (){
+  //                   ViewChallengesDialog(thriverDocument.reference, thriverDocument.id,
+  //                       thriverDocument['Label'], thriverDocument['Description'], thriverDocument['Category'],
+  //                       thriverDocument['Keywords'], thriverDocument['Created Date'], thriverDocument['Created By'],
+  //                       thriverDocument['tags'], thriverDocument['Modified By'], thriverDocument['Modified Date'], thriverDocument['id']);
+  //                 },
+  //                 child: Text(thriverName, style: TextStyle(color: Colors.black))),
+  //           ),
+  //         );
+  //       }
+  //
+  //       // Create a parent node with child nodes
+  //       Widget categoryNode = ExpansionTile(
+  //         controlAffinity: ListTileControlAffinity.leading,
+  //         title: Text("$value (${thriverNodes.length})", style: TextStyle(color: Colors.black)),
+  //         children: thriverNodes,
+  //       );
+  //
+  //       if (!categoriesStringList.contains(value)) {
+  //         categoriesStringList.add(value);
+  //         // Add the parent node to the list
+  //         nodes.add(categoryNode);
+  //       }
+  //     }
+  //   }
+  // }
+  ///
+  // Future<void> fetchbytags() async {
+  //   // Fetch specific document by ID
+  //   DocumentSnapshot specificDocument = await FirebaseFirestore.instance
+  //       // .collection('Keywords').doc('GEdua4iCBaakTpNB1NY5')
+  //       .collection('Keywords').doc('j8jejx508jAec8WOc2nQ')
+  //       .get();
+  //
+  //   if (specificDocument.exists) {
+  //     List<dynamic> values = specificDocument['Values'];
+  //     // print("avluesssss: $values");
+  //
+  //     for (var value in values) {
+  //       // Fetch data from "Thrivers" where category matches
+  //       var thriversSnapshot = await FirebaseFirestore.instance.collection('Challenges').where('tags', arrayContains: value).get();
+  //
+  //       // print("thriversSnapshot  $thriversSnapshot" );
+  //
+  //       List<Widget> thriverNodes = [];
+  //
+  //       for (QueryDocumentSnapshot thriverDocument in thriversSnapshot.docs) {
+  //         String thriverName = thriverDocument['Label'];
+  //         // print("category nameee $thriverName");
+  //         thriverNodes.add(
+  //           ListTile(
+  //             title: Text(thriverName, style: TextStyle(color: Colors.black)),
+  //             trailing: Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //               mainAxisSize: MainAxisSize.min,
+  //               children: [
+  //                 InkWell(
+  //                     onTap: (){
+  //                       // thriversDetails.reference,thriversDetails.id, thriversDetails['Label'], thriversDetails['Description'], thriversDetails['Category']
+  //                       // ,thriversDetails['Keywords'],thriversDetails['Created Date'],thriversDetails['Created By'],thriversDetails['tags'],thriversDetails['Modified By']
+  //                       // ,thriversDetails['Modified Date'],thriversDetails['id']
+  //                       ViewChallengesDialog(thriverDocument.reference, thriverDocument.id,
+  //                           thriverDocument['Label'], thriverDocument['Description'], thriverDocument['Category'],
+  //                           thriverDocument['Keywords'], thriverDocument['Created Date'], thriverDocument['Created By'],
+  //                           thriverDocument['tags'], thriverDocument['Modified By'], thriverDocument['Modified Date'], thriverDocument['id']);
+  //                     },
+  //                     child: Icon(Icons.visibility)
+  //                 ),
+  //                 SizedBox(width: 15,),
+  //                 InkWell(
+  //                     onTap: (){
+  //                       showEditChallengesDialogBox(
+  //                           thriverDocument.reference,thriverDocument.id, thriverDocument['Label'], thriverDocument['Description'], thriverDocument['Category']
+  //                           ,thriverDocument['Keywords'],thriverDocument['Created Date'],thriverDocument['Created By'],thriverDocument['tags'],thriverDocument['Modified By']
+  //                           ,thriverDocument['Modified Date'],thriverDocument['id'],thriverDocument['Linked_solutions']
+  //                       );
+  //                     },
+  //                     child: Icon(Icons.edit)),
+  //               ],),
+  //           ),
+  //         );
+  //       }
+  //
+  //       // Create a parent node with child nodes
+  //       Widget categoryNode = ExpansionTile(
+  //         controlAffinity: ListTileControlAffinity.leading,
+  //         title: Text("$value (${thriverNodes.length})", style: TextStyle(color: Colors.black)),
+  //         children: thriverNodes,
+  //       );
+  //
+  //       if (!categoriesStringList.contains(value)) {
+  //         categoriesStringList.add(value);
+  //         // Add the parent node to the list
+  //         tagsnodes.add(categoryNode);
+  //       }
+  //     }
+  //   }
+  // }
 
 
 
@@ -1905,8 +2007,8 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(width: 10,),
-          Text("CH0${challengesDetails['id']}",style: Theme.of(context).textTheme.bodySmall),
-          SizedBox(width: 20,),
+          Text("${challengesDetails['sr_no']}",style: Theme.of(context).textTheme.bodySmall),
+          SizedBox(width: 40,),
 
           Expanded(
             flex: 3,
@@ -1929,11 +2031,12 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
 
           SizedBox(width: 20),
 
-          Expanded(
-              flex: 2,
-              child: Text("${challengesDetails['Original Description']}",
-              )
-          ),
+          // Expanded(
+          //     flex: 2,
+          //     child: Text("${challengesDetails['Original Description']}",
+          //     )
+          // ),
+
           SizedBox(width: 20,),
 
           Expanded(
@@ -1971,7 +2074,10 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
                 showEditChallengesDialogBox
                   (challengesDetails.reference,challengesDetails.id, challengesDetails['Label'], challengesDetails['Description'], challengesDetails['Category']
                     ,challengesDetails['Keywords'],challengesDetails['Created Date'],challengesDetails['Created By'],challengesDetails['tags'],challengesDetails['Modified By']
-                    ,challengesDetails['Modified Date'],challengesDetails['id']);
+                    ,challengesDetails['Modified Date'],challengesDetails['id'],challengesDetails['Linked_solutions'],
+                   //  challengesDetails['OriginalDescription'],challengesDetails['Description'],challengesDetails['Impact'], challengesDetails['Notes'],
+                   // challengesDetails['Source'],challengesDetails['Challenge Status']
+                );
                 // showEditThriverDialogBox(challengesDetails.id, challengesDetails['Name'], challengesDetails['Description'], challengesDetails['Category'] );
               },
               icon: Icon(Icons.edit,)),
@@ -1979,12 +2085,33 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
               iconSize: 25,
               color: primaryColorOfApp,
               onPressed: () async {
-                ProgressDialog.show(context, "Deleting Users",Icons.person);
-                setState(() async {
+                ProgressDialog.show(context, "Deleting challenge",Icons.person);
+                // setState(() async {
                   await ApiRepository().DeleteSectionPreset(challengesDetails.reference);
-                });
+                // });
+                _challengeProvider.lengthOfdocument = null;
+                searchTextbyCKEditingController.clear();
                 _challengeProvider.loadDataForPage(1);
                 _challengeProvider.setFirstpageNo();
+
+                await _challengeProvider.fetchAllChallenges();
+                // _challengeProvider.listView();
+                await _universalListProvider.fetchUniversalChallengesData();
+                await _universalListProvider.fetchUniversalSolutionsdata();
+
+                if (_challengeProvider.currentToggleIndex == 1) {
+                  // _challengeProvider.showTagView = true;
+                  // _challengeProvider.showTreeView = false;
+                  _challengeProvider.TagView();
+                  _challengeProvider.filterChallengesByTags(ViewChallengesDialog, showEditChallengesDialogBox);
+                }
+                else if (_challengeProvider.currentToggleIndex == 2) {
+                  _challengeProvider.CategoryView();
+                  _challengeProvider.filterChallengesByCategory(ViewChallengesDialog, showEditChallengesDialogBox);
+                }
+                else if (_challengeProvider.currentToggleIndex == 0){
+                  _challengeProvider.listView();
+                }
 
                 ProgressDialog.hide();
               },
@@ -2118,7 +2245,16 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
                                 "Notes" :  Notestextcontroller.text,
                                 'Final_description': finaltextcontroller.text,
                                 'Impact': Impacttextcontroller.text,
-
+                                'OCD': challengesNameTextEditingController.text,
+                                'Linked_solutions':_universalListProvider.OSDlist,
+                                'sr_no':'',
+                                'Related_challenges_tags': [],
+                                'Suggested_solutions_tags': [],
+                                'Impacts_to_Coworkers': '',
+                                'Impacts_to_employee': '',
+                                'Negative_impacts_to_organisation': '',
+                                'Potential Strengths': '',
+                                'Hidden Strengths': '',
 
                                 // 'Associated Thrivers': "",
                                 // 'Associated Challenges': "",
@@ -2139,6 +2275,24 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
                               Impacttextcontroller.clear();
                               Notestextcontroller.clear();
 
+                              await _challengeProvider.fetchAllChallenges();
+                              // _challengeProvider.listView();
+                              await _universalListProvider.fetchUniversalChallengesData();
+                              await _universalListProvider.fetchUniversalSolutionsdata();
+
+                              if (_challengeProvider.currentToggleIndex == 1) {
+                                // _challengeProvider.showTagView = true;
+                                // _challengeProvider.showTreeView = false;
+                                _challengeProvider.TagView();
+                                _challengeProvider.filterChallengesByTags(ViewChallengesDialog, showEditChallengesDialogBox);
+                              }
+                              else if (_challengeProvider.currentToggleIndex == 2) {
+                                _challengeProvider.CategoryView();
+                                _challengeProvider.filterChallengesByCategory(ViewChallengesDialog, showEditChallengesDialogBox);
+                              }
+                              else if (_challengeProvider.currentToggleIndex == 0){
+                                _challengeProvider.listView();
+                              }
                             },
                             child: Container(
                               width: MediaQuery.of(context).size.width * .3,
@@ -3036,6 +3190,106 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
                                 ),
                               ),
 
+                              ///Linked Solutions
+
+                              Consumer<UniversalListProvider>(
+                                  builder: (c,universalListProvider, _){
+                                    return Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Row(
+                                          children: [
+                                            Text("Linked Solutions: (${universalListProvider.editsolutionss.length})",
+                                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),
+                                            ),
+
+                                            SizedBox(width: 50,),
+
+                                            InkWell(
+                                              onTap: (){
+                                                showSolutionSelectors();
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                width: MediaQuery.of(context).size.width * .05,
+                                                // width: MediaQuery.of(context).size.width * .15,
+
+                                                // height: 60,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.black ,
+                                                  border: Border.all(
+                                                      color:Colors.black ,
+                                                      width: 1.0),
+                                                  borderRadius: BorderRadius.circular(8.0),
+                                                ),
+                                                child: Center(
+                                                  // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                  child: Text(
+                                                    'Add',
+                                                    style: GoogleFonts.montserrat(
+                                                      textStyle:
+                                                      Theme
+                                                          .of(context)
+                                                          .textTheme
+                                                          .titleSmall,
+                                                      fontWeight: FontWeight.bold,
+                                                      color:Colors.white ,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        )
+                                    );}),
+
+                              SizedBox(height: 16),
+
+                              Consumer<UniversalListProvider>(
+                                  builder: (c,challengesProvider, _){
+                                    return Padding(
+                                      padding: const EdgeInsets.only(left: 15.0),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Wrap(
+                                          spacing: 10,
+                                          runSpacing: 10,
+                                          crossAxisAlignment: WrapCrossAlignment.start,
+                                          alignment: WrapAlignment.start,
+                                          runAlignment: WrapAlignment.start,
+                                          children: challengesProvider.editsolutionss.map((item){
+                                            return Container(
+                                              height: 50,
+                                              // width: 200,
+                                              padding: EdgeInsets.all(8),
+                                              decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(15),
+                                                  color: Colors.blue
+                                              ),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Text(item.toString(), style: TextStyle(
+                                                      fontWeight: FontWeight.w700
+                                                  ),),
+                                                  IconButton(
+                                                      onPressed: (){
+                                                        // setState(() {
+                                                        challengesProvider.removeeditSolutions(item);
+                                                        // edittags.remove(item);
+                                                        // });
+                                                      },
+                                                      icon: Icon(Icons.close,size: 20, color: Colors.white,)
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                    );
+
+                                  }),
 
                               // Padding( /// Categories
                               //   padding: const EdgeInsets.all(8.0),
@@ -3728,22 +3982,43 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
   }
 
 
-  void showEditChallengesDialogBox(documentReference,Id, Label, Description, newvalues, keywords, createdat,createdby,tags, modifiedBy,modifiedDate,insideId) {
+  void showEditChallengesDialogBox(documentReference,Id, Label, Description, category, keywords, createdat,createdby,tags, modifiedBy,modifiedDate,insideId,linkedsolution,
+      // OriginalDescription,details,Impact, notes,source,status
+      ) {
 
 
-    // DateTime dateTime = createdat.toDate();
-    //
-    //
-    // final DateFormat formatter = DateFormat("MMMM d, yyyy 'at' h:mm:ss a 'UTC'Z");
-    //
-    //
-    // String formattedDate = formatter.format(dateTime);
+
+
+    _universalListProvider.addLinkedsolutions(linkedsolution);
 
 
     List<TextEditingController> textControllers = [];
     for(int i=0;i<6;i++){
       textControllers.add(TextEditingController());
     }
+
+    // editthriverNameTextEditingController.text = Label;
+    // editoriginaltextEditingController.text = OriginalDescription;
+    //
+    // _editcontroller.document = Document()..insert(0, (details=="" ||details==null) ?  "Expanded Description" : details);
+    //
+    // editfinaltextcontroller.text = Description;
+    // editImpacttextcontroller.text = Impact;
+    // editNotestextcontroller.text = notes;
+    //
+    //
+    //
+    // newselectedValue = category;
+    // editsourceValue = (source == "" ||source == null )?"MTH RfA email 20240130":source;
+    // editstatusvalue = status;
+    //
+    // editKeywordssss = keywords;
+    // edittags = tags;
+    //
+    //
+    // _challengeProvider.addkeywordsList(editKeywordssss);
+    // _challengeProvider.addProviderEditTagsList(edittags);
+
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -3759,6 +4034,7 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
                           Navigator.pop(context);
                           editoriginaltextEditingController.clear();
                           editfinaltextcontroller.clear();
+                          _universalListProvider.editsolutionss.clear();
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(horizontal: 15),
@@ -3844,21 +4120,59 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
                               'Category': (_challengeProvider.newselectedValue == null) ? newselectedValue.toString() : _challengeProvider.newselectedValue.toString(),
                               // 'Keywords': addKeywordProvider.newKeywordsList,
                               'Keywords': editKeywordssss,
+                              'Linked_solutions': _universalListProvider.OSDlist,
+                              'OCD': editthriverNameTextEditingController.text,
+                              'Related_challenges_tags': [],
+                              'Suggested_solutions_tags': [],
+                              'Impacts_to_Coworkers': '',
+                              'Impacts_to_employee': '',
+                              'Negative_impacts_to_organisation': '',
+                              'Potential Strengths': '',
+                              'Hidden Strengths': '',
                               // 'Associated Thrivers': "",
                               // 'Associated Challenges': ""
 
                               /// Add more fields as needed
                             }, Id);
-                            _challengeProvider.loadDataForPageFilter(1,'Keywords',_challengeProvider.searchbycategory);
-                            _challengeProvider.loadDataForPage(1);
-                            _challengeProvider.setFirstpageNo();
-                            // addTagListToDocument(edittags);
-                            ProgressDialog.hide();
-                            // print("After Update Description ${editthriverDescTextEditingController.text}");
-                            editoriginaltextEditingController.clear();
-                            editfinaltextcontroller.clear();
-                            Navigator.pop(context);
+                            if (searchTextbyCKEditingController.text != "") {
+                              /// here you perform your search
+                              _challengeProvider.loadDataForPageSearchFilter(searchTextbyCKEditingController.text.toString());
+                              ProgressDialog.hide();
+                              editoriginaltextEditingController.clear();
+                              editfinaltextcontroller.clear();
+                              Navigator.pop(context);
+                            }
+                            else {
+                              _challengeProvider.loadDataForPageFilter(1, 'Keywords', _challengeProvider.searchbycategory);
+                              _challengeProvider.loadDataForPage(1);
+                              _challengeProvider.setFirstpageNo();
+                              // addTagListToDocument(edittags);
+                              ProgressDialog.hide();
+                              // print("After Update Description ${editthriverDescTextEditingController.text}");
+                              editoriginaltextEditingController.clear();
+                              editfinaltextcontroller.clear();
+                              Navigator.pop(context);
+                            }
                           }
+                          await _challengeProvider.fetchAllChallenges();
+                          // _challengeProvider.listView();
+                          await _universalListProvider.fetchUniversalChallengesData();
+                          await _universalListProvider.fetchUniversalSolutionsdata();
+
+                          if (_challengeProvider.currentToggleIndex == 1) {
+                            // _challengeProvider.showTagView = true;
+                            // _challengeProvider.showTreeView = false;
+                            _challengeProvider.TagView();
+                            _challengeProvider.filterChallengesByTags(ViewChallengesDialog, showEditChallengesDialogBox);
+                          }
+                          else if (_challengeProvider.currentToggleIndex == 2) {
+                            _challengeProvider.CategoryView();
+                            _challengeProvider.filterChallengesByCategory(ViewChallengesDialog, showEditChallengesDialogBox);
+                          }
+                          else if (_challengeProvider.currentToggleIndex == 0){
+                            _challengeProvider.listView();
+                          }
+
                           // _addKeywordProvider.newselectedValue = null;
                         },
                         child: Container(
@@ -4006,8 +4320,8 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
 
                                     _challengeProvider.addkeywordsList(editKeywordssss);
                                     _challengeProvider.addProviderEditTagsList(edittags);
-                                    // print("_addKeywordProvider.addProviderEditTagsList(edittags) after: $editstatusvalue");
 
+                                    // print("_addKeywordProvider.addProviderEditTagsList(edittags) after: $editstatusvalue");
                                     //_mandatorySection = doc?.get("mandatory");
 
                                     return SingleChildScrollView(
@@ -5113,53 +5427,56 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
                                             ),
 
 /// LINKED SOLUTIONS
-                                            Padding(
-                                              padding: const EdgeInsets.all(10.0),
-                                              child: Row(
-                                                children: [
-                                                  Text("Linked Solutions: ",
-                                                    style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),
-                                                  ),
 
-                                                  SizedBox(width: 50,),
-
-                                                  InkWell(
-                                                    onTap: (){
-                                                      showChallengesSelector();
-                                                    },
-                                                      child: Container(
-                                                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                                        width: MediaQuery.of(context).size.width * .05,
-                                                        // width: MediaQuery.of(context).size.width * .15,
-
-                                                        // height: 60,
-                                                        decoration: BoxDecoration(
-                                                          color: Colors.blue ,
-                                                          border: Border.all(
-                                                              color:Colors.blue ,
-                                                              width: 1.0),
-                                                          borderRadius: BorderRadius.circular(8.0),
-                                                        ),
-                                                        child: Center(
-                                                          // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                                          child: Text(
-                                                            'Add',
-                                                            style: GoogleFonts.montserrat(
-                                                              textStyle:
-                                                              Theme
-                                                                  .of(context)
-                                                                  .textTheme
-                                                                  .titleSmall,
-                                                              fontWeight: FontWeight.bold,
-                                                              color:Colors.white ,
-                                                            ),
+                                            Consumer<UniversalListProvider>(
+                                                builder: (c,universalListProvider, _){
+                                                  return Padding(
+                                                      padding: const EdgeInsets.all(10.0),
+                                                      child: Row(
+                                                        children: [
+                                                          Text("Linked Solutions: (${universalListProvider.editsolutionss.length})",
+                                                            style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),
                                                           ),
-                                                        ),
-                                                      ),
-                                                  )
-                                                ],
-                                              )
-                                            ),
+
+                                                          SizedBox(width: 50,),
+
+                                                          InkWell(
+                                                            onTap: (){
+                                                              showSolutionSelectors();
+                                                            },
+                                                            child: Container(
+                                                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                              width: MediaQuery.of(context).size.width * .05,
+                                                              // width: MediaQuery.of(context).size.width * .15,
+
+                                                              // height: 60,
+                                                              decoration: BoxDecoration(
+                                                                color: Colors.black ,
+                                                                border: Border.all(
+                                                                    color:Colors.black ,
+                                                                    width: 1.0),
+                                                                borderRadius: BorderRadius.circular(8.0),
+                                                              ),
+                                                              child: Center(
+                                                                // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                child: Text(
+                                                                  'Add',
+                                                                  style: GoogleFonts.montserrat(
+                                                                    textStyle:
+                                                                    Theme
+                                                                        .of(context)
+                                                                        .textTheme
+                                                                        .titleSmall,
+                                                                    fontWeight: FontWeight.bold,
+                                                                    color:Colors.white ,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      )
+                                                  );}),
 
                                             SizedBox(height: 16),
 
@@ -5175,7 +5492,7 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
                                                         crossAxisAlignment: WrapCrossAlignment.start,
                                                         alignment: WrapAlignment.start,
                                                         runAlignment: WrapAlignment.start,
-                                                        children: challengesProvider.editchallengess.map((item){
+                                                        children: challengesProvider.editsolutionss.map((item){
                                                           return Container(
                                                             height: 50,
                                                             // width: 200,
@@ -5188,14 +5505,14 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
                                                               mainAxisSize: MainAxisSize.min,
                                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                               children: [
-                                                                Text(item.label, style: TextStyle(
+                                                                Text(item.toString(), style: TextStyle(
                                                                     fontWeight: FontWeight.w700
                                                                 ),),
                                                                 IconButton(
                                                                     onPressed: (){
                                                                       // setState(() {
-                                                                      challengesProvider.removeedittags(item);
-                                                                      edittags.remove(item);
+                                                                      challengesProvider.removeeditSolutions(item);
+                                                                      // edittags.remove(item);
                                                                       // });
                                                                     },
                                                                     icon: Icon(Icons.close,size: 20, color: Colors.white,)
@@ -5245,7 +5562,7 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
               InkWell(
                   onTap: (){
                     _universalListProvider.lengthOfdocumentSolutions = null;
-                    _universalListProvider.filterSolutionsData("");
+                    _universalListProvider.filterSolutionsAdminData("");
                     Navigator.pop(context);
                   },
                   child: Icon(Icons.close))
@@ -5256,6 +5573,8 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
             child: Consumer<UniversalListProvider>(
                 builder: (c,universalListProvider, _){
                   return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 10),
@@ -5267,13 +5586,13 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
                             _debounce = Timer(Duration(milliseconds: _debouncetime), () {
                               if (searchbyCatcontroller.text != "") {
                                 ///here you perform your search
-                                universalListProvider.filterSolutionsData(searchbyCatcontroller.text);
+                                universalListProvider.filterSolutionsAdminData(searchbyCatcontroller.text);
 
                                 // _handleTabSelection();
                               }
                               else {
 
-                                universalListProvider.filterSolutionsData("");
+                                universalListProvider.filterSolutionsAdminData("");
 
                               }
                             });
@@ -5291,7 +5610,7 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
                                 InkWell(
                                   onTap: () {
                                     searchbyCatcontroller.clear();
-                                    universalListProvider.filterSolutionsData("");
+                                    universalListProvider.filterSolutionsAdminData("");
                                     universalListProvider.lengthOfdocumentSolutions = null;
                                   },
                                   child: Icon(Icons.close),
@@ -5337,14 +5656,21 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
                                   // challengesProvider.searchbytag.clear();
                                   // challengesProvider.searchbycategory.clear();
                                   searchbyCatcontroller.clear();
-                                  universalListProvider.filterSolutionsData("");
+                                  universalListProvider.filterSolutionsAdminData("");
                                 },
                                 child: Text("..clear all",style: TextStyle(color: Colors.blue))),
+
                           ],
                         ),
                       ) :
 
                       SizedBox(height: 10,),
+
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 8),
+                        child: Text('Selected solutions : ${universalListProvider.editsolutionss.length}',style: Theme.of(context).textTheme.bodyMedium),
+                      ),
+
                       Divider(
                         color: Colors.black,
                         height: 10,
@@ -5362,7 +5688,7 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
                             return Divider();
                           },
                           itemBuilder: (BuildContext context, int index) {
-                            return ThriversListTile(index, universalListProvider.getUniversalSolutionsdata);
+                            return AddThriversListTile(index, universalListProvider.getUniversalSolutionsdata);
                           },
                         ),
                       ),
@@ -5376,7 +5702,8 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
       },
     );
   } ///this
-
+  ///
+  ///
   Widget AddThriversListTile(i, documentsss) {
 
     return Consumer<UniversalListProvider>(
@@ -5399,8 +5726,8 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(documentsss![i]['Label'],style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis),
-                      Text(documentsss![i]['Final_description'],style: Theme.of(context).textTheme.subtitle1?.copyWith(color: Colors.grey,overflow: TextOverflow.ellipsis),maxLines: 2,),
+                      Text(documentsss![i]['OSD'],style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis),
+                      Text(documentsss![i]['Label'],style: Theme.of(context).textTheme.subtitle1?.copyWith(color: Colors.grey,overflow: TextOverflow.ellipsis),maxLines: 2,),
                       SizedBox(height: 10),
 
                     ],
@@ -5413,7 +5740,9 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
                 Row(
                   children: [
 
-                    (userAboutMEProvider.isEditSolutionListAdded[documentsss![i]['id']] == true) ? Text(
+                    // (userAboutMEProvider.isEditSolutionListAdded[documentsss![i]['id']] == true) ?
+                    (userAboutMEProvider.editsolutionss.contains(documentsss![i]["Label"])) ?
+                    Text(
                       'Added',
                       style: GoogleFonts.montserrat(
                         textStyle:
@@ -5426,7 +5755,7 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
                       ),
                     ) : InkWell(
                       onTap: (){
-                        userAboutMEProvider.EditRecommendedSolutionAdd(true,documentsss![i]);
+                        userAboutMEProvider.EditRecommendedSolutionAdd(documentsss![i]["Label"],documentsss![i]["OSD"]);
                         toastification.show(context: context,
                             title: Text('${documentsss![i]['Label']} added to basket'),
                             autoCloseDuration: Duration(milliseconds: 2500),
@@ -5479,7 +5808,6 @@ class _AddChallengesScreenState extends State<AddChallengesScreen> {
 
 
   }
-
 
   void ViewChallengesDialog(documentReference,Id, Name, Description, newvalues, keywords, createdat,createdby,tags, modifiedBy,modifiedDate,insideId) {
 
@@ -6216,7 +6544,8 @@ class TagServices {
     // print("Getting Suggestion For " + query);
 
     try {
-      DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('Keywords').doc("GEdua4iCBaakTpNB1NY5").get();
+      // DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('Keywords').doc("GEdua4iCBaakTpNB1NY5").get();
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('Keywords').doc("j8jejx508jAec8WOc2nQ").get();
 
       if (snapshot.exists) {
         dynamic data = snapshot.data();

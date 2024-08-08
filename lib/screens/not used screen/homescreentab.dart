@@ -3,16 +3,16 @@ import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:thrivers/screens/CategoryView.dart';
-import 'package:thrivers/screens/addchallengesScreen.dart';
-import 'package:thrivers/screens/new%20added%20screens/AddKeywordsScreen.dart';
-import 'package:thrivers/screens/new%20added%20screens/chatgptSettings.dart';
-import 'package:thrivers/screens/new%20added%20screens/chatgptscreen.dart';
+import 'package:thrivers/screens/not%20used%20screen/CategoryView.dart';
+import 'package:thrivers/screens/admin_screens/addchallengesScreen.dart';
+import 'package:thrivers/screens/admin_screens/addthriverscreen.dart';
+import 'package:thrivers/screens/admin_screens/AddKeywordsScreen.dart';
+import 'package:thrivers/screens/admin_screens/chatgptSettings.dart';
+import 'package:thrivers/screens/admin_screens/chatgptscreen.dart';
 
-import '../core/apphelper.dart';
-import '../core/constants.dart';
-import 'BrevoScreen.dart';
-import 'addthriverscreen.dart';
+import '../../core/apphelper.dart';
+import '../../core/constants.dart';
+import '../admin_screens/BrevoScreen.dart';
 
 
 

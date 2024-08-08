@@ -14,7 +14,7 @@ import 'package:thrivers/core/progress_dialog.dart';
 import 'package:thrivers/model/soluton_table_model.dart';
 import 'package:toastification/toastification.dart';
 
-import '../model/challenges_table_model.dart';
+import '../../model/challenges_table_model.dart';
 
 class EditAboutMe{
 

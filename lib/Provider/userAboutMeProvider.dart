@@ -161,13 +161,13 @@ class UserAboutMEProvider with ChangeNotifier{
 
   updatenewprovider(value,id){
     newprovider[id] = value;
-    print("newprovider: $newprovider");
+    // print("newprovider: $newprovider");
     // notifyListeners();
   }
 
   updatenewInplace(value,id){
     newInplace[id] = value;
-    print("newInplace: $newInplace");
+    // print("newInplace: $newInplace");
     // notifyListeners();
   }
 
@@ -177,6 +177,7 @@ class UserAboutMEProvider with ChangeNotifier{
   List<dynamic> editpreviewtags = [];
   List<dynamic> editpreviewRelatedChallengesTag = [];
   List<dynamic> editpreviewSuggestedChallengesTag = [];
+  List<dynamic> editLinked = [];
 
   var previewname, previewDescription, previewFinalDescription, previewImpact, previewId, preview;
 
@@ -218,7 +219,9 @@ class UserAboutMEProvider with ChangeNotifier{
   bool editborderColor = false;
 
   updateEditChallengePreview(name, Description, FinalDescription, Impact,Keywordssss,tags,Id,isTrueOrFalse, document,isborderColor,
-      ImpactToCoworker,ImpactToEmployee,NegativeImpactToOrganisation,RelatedChallengesTag, SuggestedChallengesTag){
+      ImpactToCoworker,ImpactToEmployee,NegativeImpactToOrganisation,RelatedChallengesTag, SuggestedChallengesTag,Linked){
+    print("updateEditChallengePreview");
+    print("updateEditChallengePreview Keywordssss: ${Keywordssss}");
     editpreviewname = name;
     editpreviewDescription = Description;
     editpreviewFinalDescription = FinalDescription;
@@ -234,11 +237,15 @@ class UserAboutMEProvider with ChangeNotifier{
     editpreviewNegativeImpactToOrganisation = NegativeImpactToOrganisation;
     editpreviewRelatedChallengesTag = RelatedChallengesTag;
     editpreviewSuggestedChallengesTag = SuggestedChallengesTag;
+    editLinked = Linked;
+    print("editLinked: ${editLinked}");
     notifyListeners();
   }
 
   updateEditSolutionPreview(name, Description, FinalDescription, Impact,Keywordssss,tags,Id,isTrueOrFalse, document,isborderColor,
-      Help,PositiveImpactstoEmployee,PositiveImpactstoOrganisation,RelatedSolutionsTags,SuggestedChallengesTags){
+      Help,PositiveImpactstoEmployee,PositiveImpactstoOrganisation,RelatedSolutionsTags,SuggestedChallengesTags,Linked){
+    print("updateEditSolutionPreview");
+    print("updateEditSolutionPreview Keywordssss: ${Keywordssss}");
     editpreviewname = name;
     editpreviewDescription = Description;
     editpreviewFinalDescription = FinalDescription;
@@ -254,6 +261,7 @@ class UserAboutMEProvider with ChangeNotifier{
     editpreviewNegativeImpactToOrganisation = PositiveImpactstoOrganisation;
     editpreviewRelatedChallengesTag = RelatedSolutionsTags;
     editpreviewSuggestedChallengesTag = SuggestedChallengesTags;
+    editLinked = Linked;
     notifyListeners();
   }
 
@@ -505,18 +513,20 @@ class UserAboutMEProvider with ChangeNotifier{
     return combinedSolutionsResults.toList();
   }
 
-  Future<Set<DocumentSnapshot<Object?>>> getRelatedSolutions(List<dynamic> tags, List<dynamic> keywords) async {
+  Future<Set<DocumentSnapshot<Object?>>> getRelatedSolutions(List<dynamic> tags, List<dynamic> keywords,List<dynamic>? linkedSolutions) async {
     CollectionReference solutionsCollection = FirebaseFirestore.instance.collection('Thrivers');
 
     // isLoadingMore = false;
+    // Convert tags and keywords to lowercase
+    List<String> normalizedTags = tags.map((tag) => tag.toString().toLowerCase()).toList();
+    List<String> normalizedKeywords = keywords.map((keyword) => keyword.toString().toLowerCase()).toList();
+    List<String>? normalizedLinkedSolutions = linkedSolutions?.map((solution) => solution.toString().toLowerCase()).toList();
+
     List<QuerySnapshot> allQueries = [];
 
-    print("search tagsss: $tags");
-    print("search keywords: $keywords");
-
     // Split the tags and keywords arrays into chunks of 30 elements each
-    List<List<dynamic>> tagChunks = _splitList(tags, 30);
-    List<List<dynamic>> keywordChunks = _splitList(keywords, 30);
+    List<List<dynamic>> tagChunks = _splitList(normalizedTags, 30);
+    List<List<dynamic>> keywordChunks = _splitList(normalizedKeywords, 30);
 
     print("search tagChunkssssss: $tagChunks");
     // print("search keywordChunkssssss: $keywordChunks");
@@ -528,11 +538,12 @@ class UserAboutMEProvider with ChangeNotifier{
       print("searching relevant tags: $tagChunk");
 
       QuerySnapshot tagsQuery = await solutionsCollection
-          // .where('tags', arrayContainsAny: tagChunk)
-          .where('Related_solution_tags', arrayContainsAny: tagChunk)
+          .where('tags', arrayContainsAny: tagChunk)
+          // .where('Related_solution_tags', arrayContainsAny: tagChunk)
           // .limit(10)
           .get();
       allQueries.add(tagsQuery);
+      print("allQueries.add(tagsQuery): ${allQueries}");
     }
 
     // for (var keywordChunk in keywordChunks) {
@@ -552,6 +563,17 @@ class UserAboutMEProvider with ChangeNotifier{
     for (var query in allQueries) {
       combinedSolutionsResults= Set.from(query.docs);
     }
+
+    QuerySnapshot allDocuments = await solutionsCollection.get();
+
+    // Filter the documents based on linked solutions
+    List<DocumentSnapshot> linkedSolutionList = allDocuments.docs.where((doc) {
+      var ocdValue = doc['OSD'];
+      return normalizedLinkedSolutions!.contains(ocdValue.toString().toLowerCase());
+    }).toList();
+
+    // Add the linked solutions to the combined results
+    combinedSolutionsResults.addAll(linkedSolutionList);
 
     // Remove duplicates if necessary
     combinedSolutionsResults = combinedSolutionsResults.toSet();
@@ -897,6 +919,9 @@ class UserAboutMEProvider with ChangeNotifier{
           PotentialStrengths: ChallengesDetails['Potential Strengths'],
           HiddenStrengths: ChallengesDetails['Hidden Strengths'],
         attachment: ChallengesDetails['Attachment'],
+        LinkedSolution: ChallengesDetails['Linked_solutions'],
+        newLinkedSolution: ChallengesDetails['new_linked_solutions'],
+        OCD: ChallengesDetails['OCD'],
         ));
         isEditChallengeListAdded[ChallengesDetails['id']] = true;
 
@@ -943,10 +968,13 @@ class UserAboutMEProvider with ChangeNotifier{
         'Impact_on_me':challenge.notes,
         'Attachment_link':challenge.attachment_link,
         'Attachment':challenge.attachment,
+        'Linked_solutions':challenge.LinkedSolution,
+        'new_linked_solutions':challenge.newLinkedSolution,
+        'OCD':challenge.OCD,
       };
       mainList.add(solutionData);
-      print("EditChallengeListadd challenge: ${mainList.length}");
-      print("EditChallengeListadd challenge: ${mainList}");
+      // print("EditChallengeListadd challenge: ${mainList.length}");
+      // print("EditChallengeListadd challenge: ${mainList}");
       print("EditChallengeListadd");
       // notifyListeners();
     }
@@ -981,13 +1009,15 @@ class UserAboutMEProvider with ChangeNotifier{
         PositiveImpactstoOrganisation: SolutionDetails['Positive_impacts_to_organisation'],
         RelatedSolutionsTags: SolutionDetails['Related_solution_tags'],
         SuggestedChallengesTags: SolutionDetails['Suggested_challenges_tags'],
+        LinkedChallenges:  SolutionDetails['Linked_challenges'],
+        OSD:  SolutionDetails['OSD'],
         ));
       isEditSolutionListAdded[SolutionDetails['id']] = true;
 
 
-        print("isEditSolutionListAdded: $editsolutionss");
+        // print("isEditSolutionListAdded: $editsolutionss");
 
-        print("isEditSolutionListAddedADDING: $isEditSolutionListAdded");
+        // print("isEditSolutionListAddedADDING: $isEditSolutionListAdded");
       // notifyListeners();
 
     }
@@ -1025,6 +1055,9 @@ class UserAboutMEProvider with ChangeNotifier{
         "Positive_impacts_to_organisation": solution.PositiveImpactstoOrganisation,
         "Related_solution_tags": solution.RelatedSolutionsTags,
         "Suggested_challenges_tags": solution.SuggestedChallengesTags,
+        "Linked_challenges": solution.LinkedChallenges,
+        "OSD": solution.OSD,
+
         // 'confirmed': false, // Add a 'confirmed' field
       };
 
@@ -1034,8 +1067,8 @@ class UserAboutMEProvider with ChangeNotifier{
       mainList.add(solutionData);
       updatenewprovider(solutionData["Provider"], solutionData["id"]);
       updatenewInplace(solutionData["InPlace"], solutionData["id"]);
-      print("mainList.length: ${mainList.length}");
-      print("mainList: ${mainList}");
+      // print("mainList.length: ${mainList.length}");
+      // print("mainList: ${mainList}");
       // notifyListeners();
 
     }
@@ -1072,6 +1105,9 @@ class UserAboutMEProvider with ChangeNotifier{
         "Positive_impacts_to_organisation": solution.PositiveImpactstoOrganisation,
         "Related_solution_tags": solution.RelatedSolutionsTags,
         "Suggested_challenges_tags": solution.SuggestedChallengesTags,
+        "Linked_challenges": solution.LinkedChallenges,
+        "OSD": solution.OSD,
+
         // 'confirmed': false, // Add a 'confirmed' field
       };
       if(solutionData["Provider"]=="My Responsibilty"){
@@ -1115,6 +1151,9 @@ class UserAboutMEProvider with ChangeNotifier{
         "Positive_impacts_to_organisation": solution.PositiveImpactstoOrganisation,
         "Related_solution_tags": solution.RelatedSolutionsTags,
         "Suggested_challenges_tags": solution.SuggestedChallengesTags,
+        "Linked_challenges": solution.LinkedChallenges,
+        "OSD": solution.OSD,
+
         // 'confirmed': false, // Add a 'confirmed' field
       };
       if(solutionData["InPlace"]=='Yes (Still Needed)'){
@@ -1160,6 +1199,9 @@ class UserAboutMEProvider with ChangeNotifier{
         Keywords: ChallengesDetails['Keywords'],
         PotentialStrengths: ChallengesDetails['Potential Strengths'],
         HiddenStrengths: ChallengesDetails['Hidden Strengths'],
+        LinkedSolution: ChallengesDetails['Linked_solutions'],
+        newLinkedSolution: ChallengesDetails['new_linked_solutions'],
+        OCD:  ChallengesDetails['OCD'],
       ));
       isEditChallengeListAdded[ChallengesDetails['id']] = value;
 
@@ -1198,6 +1240,8 @@ class UserAboutMEProvider with ChangeNotifier{
         PositiveImpactstoOrganisation: SolutionDetails['Positive_impacts_to_organisation'],
         RelatedSolutionsTags: SolutionDetails['Related_solution_tags'],
         SuggestedChallengesTags: SolutionDetails['Suggested_challenges_tags'],
+        LinkedChallenges: SolutionDetails['Linked_challenges'],
+       OSD: SolutionDetails['OSD'],
       ));
       isEditSolutionListAdded[SolutionDetails['id']] = value;
 
@@ -1236,6 +1280,9 @@ class UserAboutMEProvider with ChangeNotifier{
       ImpactToCoworker: ChallengesDetails['Impacts_to_Coworkers'],
       ImpactToEmployee: ChallengesDetails['Impacts_to_employee'],
       NegativeImpactToOrganisation: ChallengesDetails['Negative_impacts_to_organisation'],
+      LinkedSolution: ChallengesDetails['Linked_solutions'],
+      newLinkedSolution: ChallengesDetails['new_linked_solutions'],
+      OCD: ChallengesDetails['OCD'],
     ));
 
     print("ChallengesData:${challengess.first.Keywords}");
@@ -1271,6 +1318,9 @@ class UserAboutMEProvider with ChangeNotifier{
       ImpactToCoworker: ChallengesDetails['Impacts_to_Coworkers'],
       ImpactToEmployee: ChallengesDetails['Impacts_to_employee'],
       NegativeImpactToOrganisation: ChallengesDetails['Negative_impacts_to_organisation'],
+      LinkedSolution: ChallengesDetails['Linked_solutions'],
+      newLinkedSolution: ChallengesDetails['new_linked_solutions'],
+      OCD: ChallengesDetails['OCD'],
     ));
 
     print("ChallengesData:${editchallengess}");
@@ -1303,6 +1353,8 @@ class UserAboutMEProvider with ChangeNotifier{
       PositiveImpactstoOrganisation: SolutionDetails['Positive_impacts_to_organisation'],
       RelatedSolutionsTags: SolutionDetails['Related_solution_tags'],
       SuggestedChallengesTags: SolutionDetails['Suggested_challenges_tags'],
+      LinkedChallenges:  SolutionDetails['Linked_challenges'],
+     OSD: SolutionDetails['OSD'],
     ));
 
     print("SolutionsData:${solutionss}");
@@ -1335,6 +1387,8 @@ class UserAboutMEProvider with ChangeNotifier{
       PositiveImpactstoOrganisation: SolutionDetails['Positive_impacts_to_organisation'],
       RelatedSolutionsTags: SolutionDetails['Related_solution_tags'],
       SuggestedChallengesTags: SolutionDetails['Suggested_challenges_tags'],
+      LinkedChallenges:  SolutionDetails['Linked_challenges'],
+      OSD: SolutionDetails['OSD'],
     ));
     print("SolutionsData:${editsolutionss}");
     isEditSolutionListAdded[SolutionDetails['id']] = true;

@@ -16,10 +16,9 @@ import 'package:thrivers/core/constants.dart';
 import 'package:thrivers/core/progress_dialog.dart';
 import 'package:thrivers/main.dart';
 import 'package:thrivers/model/soluton_table_model.dart';
-import 'package:thrivers/screens/addthriverscreen.dart';
-import 'package:thrivers/screens/new%20added%20screens/UserLoginPage.dart';
+import 'package:thrivers/screens/user_screen/UserLoginPage.dart';
 import 'package:thrivers/screens/not%20used%20screen/DashboardCommonWidgets.dart';
-import 'package:thrivers/screens/userLoginAboutME/UserLogedInAboutMePage.dart';
+import 'package:thrivers/screens/user_screen/userLoginAboutME/UserLogedInAboutMePage.dart';
 
 import '../../widget/progressbar_widget.dart';
 

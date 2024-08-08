@@ -13,20 +13,19 @@ import 'package:thrivers/Provider/RegisterAndLoginProvider.dart';
 import 'package:thrivers/Provider/UniversalListProvider.dart';
 import 'package:thrivers/Provider/provider_for_challenges.dart';
 import 'package:thrivers/Provider/userAboutMeProvider.dart';
-import 'package:thrivers/screens/addchallengesScreen.dart';
-import 'package:thrivers/screens/addthriverscreen.dart';
-import 'package:thrivers/screens/authenticateloginscreen.dart';
-import 'package:thrivers/screens/homescreentab.dart';
-import 'package:thrivers/screens/new%20added%20screens/AdminAboutMePage.dart';
-import 'package:thrivers/screens/new%20added%20screens/NewHomeScreen.dart';
-import 'package:thrivers/screens/new%20added%20screens/NewSolutionsLandingScreen.dart';
-import 'package:thrivers/screens/new%20added%20screens/UserAboutMePage.dart';
-import 'package:thrivers/screens/new%20added%20screens/UserLoginPage.dart';
-import 'package:thrivers/screens/new%20added%20screens/UserRegisterPage.dart';
-import 'package:thrivers/screens/new%20added%20screens/forgetPasswordScreen.dart';
+import 'package:thrivers/screens/admin_screens/addchallengesScreen.dart';
+import 'package:thrivers/screens/new%20added%20screens/authenticateloginscreen.dart';
+import 'package:thrivers/screens/not%20used%20screen/homescreentab.dart';
+import 'package:thrivers/screens/landing_screen/NewSolutionsLandingScreen.dart';
+import 'package:thrivers/screens/admin_screens/AdminAboutMePage.dart';
+import 'package:thrivers/screens/admin_screens/NewHomeScreen.dart';
+import 'package:thrivers/screens/user_screen/UserProfileDetails.dart';
+import 'package:thrivers/screens/user_screen/UserLoginPage.dart';
+import 'package:thrivers/screens/user_screen/UserRegisterPage.dart';
+import 'package:thrivers/screens/user_screen/forgetPasswordScreen.dart';
 import 'package:thrivers/screens/not%20used%20screen/landingscreen.dart';
 import 'package:thrivers/screens/not%20used%20screen/loginscreen.dart';
-import 'package:thrivers/screens/new%20added%20screens/SuperAdminLoginScreen.dart';
+import 'package:thrivers/screens/admin_screens/SuperAdminLoginScreen.dart';
 import 'package:thrivers/screens/new%20added%20screens/thriverLandingScreen.dart';
 import 'package:thrivers/screens/not%20used%20screen/newscreens.dart';
 import 'package:thrivers/socketConnection.dart';
@@ -35,6 +34,7 @@ import 'package:url_strategy/url_strategy.dart';
 import 'Network/FirebaseApi.dart';
 import 'Network/my_http_overrides.dart';
 import 'Provider/AboutMeProvider.dart';
+import 'Provider/importDataProvider.dart';
 import 'Provider/previewProvider.dart';
 import 'firebase_options.dart';
 
@@ -81,6 +81,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => LoginRegisterProvider()),
         ChangeNotifierProvider(create: (_) => AboutMeProvider()),
         ChangeNotifierProvider(create: (_) => SolutionsListProvider()),
+        ChangeNotifierProvider(create: (_) => ImportDataProvider()),
       ],
         child: const MyApp())
       );

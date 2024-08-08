@@ -25,6 +25,10 @@ class ChallengesProvider with ChangeNotifier{
 
   bool _isLoadingMore = false;
   bool get isLoadingMore => _isLoadingMore;
+  bool showTreeView = false;
+  bool showTagView = false;
+  bool get getshowTreeView => showTreeView;
+  bool get getshowTagView => showTagView;
 
   int _perPage = 30;
   int currentPage = 1; // Current page number
@@ -65,18 +69,95 @@ class ChallengesProvider with ChangeNotifier{
   }
 
   getdatasearch() async {
+    print("inside getdatasearch");
     querySnapshotsss = await productsCollection.get();
-    docssssss  = querySnapshotsss?.docs;
+    docssssss?.clear();
+    print("docssssss.clear(): $docssssss");
+    docssssss  = await querySnapshotsss?.docs;
+    print("docssssss: $docssssss");
+
   }
 
-  void loadDataForPage(int page) {
+  List<QueryDocumentSnapshot<Object?>> allChallenges = [];
+  List<String> tagValues = [];
+  List<String> categoryValues = [];
+
+   fetchAllChallenges() async {
+    try {
+      _isLoadingMore = true;
+
+      allChallenges.clear();
+      tagValues.clear();
+      categoryValues.clear();
+      // Fetch all data once when the screen appears
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Challenges').orderBy('id').get();
+      allChallenges = querySnapshot.docs;
+      print('Fetched ${allChallenges.length} challenges');
+
+      DocumentSnapshot specificDocument = await FirebaseFirestore.instance.collection('Keywords').doc('j8jejx508jAec8WOc2nQ').get();
+      DocumentSnapshot specificDocuments = await FirebaseFirestore.instance.collection('Keywords').doc('CUTs7fvcYX2dN9TnDj4c').get();
+
+      if (specificDocument.exists) {
+        tagValues = List<String>.from(specificDocument['Values']);
+      }
+      if (specificDocuments.exists) {
+        categoryValues = List<String>.from(specificDocuments['Values']);
+      }
+
+     await loadDataForPage(currentPage);
+      _isLoadingMore = false;
+
+      // Notify listeners if needed
+      // notifyListeners();
+    } catch (error) {
+      print('Error fetching all challenges: $error');
+    }
+  }
+
+   loadDataForPage(int page) {
+    int startIndex = (page - 1) * _perPage;
+
+    _isLoadingMore = true;
+
+    int totalCount = allChallenges.length;
+    print('Total challenges: $totalCount');
+
+    totalPages = (totalCount / _perPage).ceil();
+    print('Total totalPages: $totalPages');
+
+    // Handle the case where totalCount is 0
+    if (totalCount == 0) {
+      challengesdocuments.clear();
+      _isLoadingMore = false;
+      notifyListeners();
+      return;
+    }
+
+    // Ensure currentPage does not exceed totalPages
+    if (currentPage > totalPages) {
+      currentPage = totalPages;
+    }
+
+    // Adjust the startIndex to ensure it doesn't exceed totalCount
+    if (startIndex >= totalCount) {
+      startIndex = (totalCount - 1).clamp(0, totalCount - 1);
+    }
+
+    // Load data for the page from the locally stored data
+    challengesdocuments.clear();
+    challengesdocuments.addAll(allChallenges.sublist(startIndex, (startIndex + _perPage).clamp(0, totalCount)));
+
+    _isLoadingMore = false;
+    notifyListeners();
+  } /// new this
+
+  void loadDataForPagee(int page) {
     int startIndex = (page - 1) * _perPage;
 
     _isLoadingMore = true;
 
 
-    FirebaseFirestore.instance
-        .collection('Challenges')
+    FirebaseFirestore.instance.collection('Challenges')
         .get()
         .then((QuerySnapshot querySnapshot) {
       int totalCount = querySnapshot.docs.length;
@@ -112,7 +193,7 @@ class ChallengesProvider with ChangeNotifier{
     }).catchError((error) {
       print('Error retrieving document count: $error');
     });
-  }
+  } /// old this
 
   void setFirstpageNo(){
     currentPage = 1;
@@ -132,8 +213,11 @@ class ChallengesProvider with ChangeNotifier{
   List<ChallengesModel> selectedChallenges = [];
 
 
+
   Future<void> loadDataForPageSearchFilter(search) async   {
     try {
+      // loadDataForPage(1);
+      // getdatasearch();
       _isLoadingMore = true;
 
       print("_addKeywordProvider.searchbycategory ${search}");
@@ -149,9 +233,15 @@ class ChallengesProvider with ChangeNotifier{
         loadDataForPage(1);
       } else {
         challengesdocuments.clear();
-
-        docssssss?.map((e) => print("$e"));
-        final dc = docssssss?.where((element) {
+        List<QueryDocumentSnapshot<Object?>>? docssssss = [];
+        docssssss?.clear();
+        querySnapshotsss = await productsCollection.get();
+        print("docssssss.clear(): $docssssss");
+        docssssss  = await querySnapshotsss?.docs;
+        docssssss?.map((e) => print("eeeee : $e"));
+        print("inside loadDataForPageSearchFilter allChallenges : ${allChallenges.length}");
+        // final dc = docssssss?.where((element) {
+        final dc = allChallenges?.where((element) {
           var name = element.get("Label").toLowerCase();
           var description = element.get("Description").toLowerCase();
           var tags = element.get('tags').toString().toLowerCase();
@@ -196,7 +286,7 @@ class ChallengesProvider with ChangeNotifier{
       });
       notifyListeners();
     }
-  }
+  }  ///this
 
   // Future<void> loadDataForPageSearchFilter(search,isall) async {
   //
@@ -313,10 +403,30 @@ class ChallengesProvider with ChangeNotifier{
     }
   }
 
+  void loadDataForPageFilter(int page, String mainkey,  keywordArray) {
+    _isLoadingMore = true;
 
+    if (keywordArray.isEmpty) {
+      loadDataForPage(1);
+    } else {
+      final filteredDocuments = allChallenges.where((element) {
+        var fieldValue = element.get(mainkey).toString().toLowerCase();
+        return keywordArray.any((keyword) => fieldValue.contains(keyword.toLowerCase()));
+      }).toList();
 
+      challengesdocuments.clear();
+      challengesdocuments.addAll(filteredDocuments);
 
-  void loadDataForPageFilter(int page,mainkey, keywordArray) {
+      Future.delayed(Duration(seconds: 1), () {
+        _isLoadingMore = false;
+        lengthOfdocument = challengesdocuments.length;
+        print("length of documents: ${lengthOfdocument}");
+        notifyListeners();
+      });
+    }
+  } /// new this
+
+  void loadDataForPageFilterr(int page,mainkey, keywordArray) {
 
     _isLoadingMore = true;
 
@@ -329,15 +439,11 @@ class ChallengesProvider with ChangeNotifier{
     if(keywordArray.length == 0){
       loadDataForPage(1);
     }else {
-      FirebaseFirestore.instance
-          .collection('Challenges')
-          .orderBy('id')
-          .where(mainkey, arrayContainsAny: keywordArray)
+      FirebaseFirestore.instance.collection('Challenges').orderBy('id').where(mainkey, arrayContainsAny: keywordArray)
       // .where(mainkey, arrayContains: keywordArray)
       // .startAfter([1])
       // .limit(_perPage)
-          .get()
-          .then((QuerySnapshot querySnapshot) {
+          .get().then((QuerySnapshot querySnapshot) {
         // print("querySnapshot.docs ${querySnapshot.docs}");
         challengesdocuments.clear();
         challengesdocuments.addAll(querySnapshot.docs);
@@ -359,6 +465,194 @@ class ChallengesProvider with ChangeNotifier{
         notifyListeners();
       });
     }
+  }  /// old this
+
+  List<Widget> tagsnodes = [];
+  List<Widget> categorynodes = [];
+
+  void filterChallengesByTags(ViewChallengesDialog,showEditChallengesDialogBox) {
+
+    tagsnodes.clear();
+
+    for (var tag in tagValues) {
+      List<Widget> thriverNodes = [];
+
+      for (var document in allChallenges) {
+        if (document['tags'].contains(tag)) {
+          String thriverName = document['Label'];
+          thriverNodes.add(
+            ListTile(
+              title: Text(thriverName, style: TextStyle(color: Colors.black)),
+              trailing: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      ViewChallengesDialog(
+                        document.reference,
+                        document.id,
+                        document['Label'],
+                        document['Description'],
+                        document['Category'],
+                        document['Keywords'],
+                        document['Created Date'],
+                        document['Created By'],
+                        document['tags'],
+                        document['Modified By'],
+                        document['Modified Date'],
+                        document['id'],
+                      );
+                    },
+                    child: Icon(Icons.visibility),
+                  ),
+                  SizedBox(width: 15),
+                  InkWell(
+                    onTap: () {
+                      showEditChallengesDialogBox(
+                        document.reference,
+                        document.id,
+                        document['Label'],
+                        document['Description'],
+                        document['Category'],
+                        document['Keywords'],
+                        document['Created Date'],
+                        document['Created By'],
+                        document['tags'],
+                        document['Modified By'],
+                        document['Modified Date'],
+                        document['id'],
+                        document['Linked_solutions'],
+                      );
+                    },
+                    child: Icon(Icons.edit),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+      }
+
+      if (thriverNodes.isNotEmpty) {
+        tagsnodes.add(
+          ExpansionTile(
+            controlAffinity: ListTileControlAffinity.leading,
+            title: Text("$tag (${thriverNodes.length})", style: TextStyle(color: Colors.black)),
+            children: thriverNodes,
+          ),
+        );
+      }
+    }
+
+    notifyListeners();
+  }
+
+  void filterChallengesByCategory(ViewChallengesDialog,showEditChallengesDialogBox) {
+
+
+    categorynodes.clear();
+
+    for (var tag in categoryValues) {
+      List<Widget> thriverNodes = [];
+
+      for (var document in allChallenges) {
+        if (document['Keywords'].contains(tag)) {
+          String thriverName = document['Label'];
+          thriverNodes.add(
+            ListTile(
+              title: Text(thriverName, style: TextStyle(color: Colors.black)),
+              trailing: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      ViewChallengesDialog(
+                        document.reference,
+                        document.id,
+                        document['Label'],
+                        document['Description'],
+                        document['Category'],
+                        document['Keywords'],
+                        document['Created Date'],
+                        document['Created By'],
+                        document['tags'],
+                        document['Modified By'],
+                        document['Modified Date'],
+                        document['id'],
+                      );
+                    },
+                    child: Icon(Icons.visibility),
+                  ),
+                  SizedBox(width: 15),
+                  InkWell(
+                    onTap: () {
+                      showEditChallengesDialogBox(
+                        document.reference,
+                        document.id,
+                        document['Label'],
+                        document['Description'],
+                        document['Category'],
+                        document['Keywords'],
+                        document['Created Date'],
+                        document['Created By'],
+                        document['tags'],
+                        document['Modified By'],
+                        document['Modified Date'],
+                        document['id'],
+                        document['Linked_solutions'],
+                      );
+                    },
+                    child: Icon(Icons.edit),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+      }
+
+      if (thriverNodes.isNotEmpty) {
+        categorynodes.add(
+          ExpansionTile(
+            controlAffinity: ListTileControlAffinity.leading,
+            title: Text("$tag (${thriverNodes.length})", style: TextStyle(color: Colors.black)),
+            children: thriverNodes,
+          ),
+        );
+      }
+    }
+
+    notifyListeners();
+  }
+
+  int currentToggleIndex = 0;
+
+  indexValue (index) {
+  currentToggleIndex = index;
+  notifyListeners();
+  }
+
+  listView(){
+  showTreeView = false;
+  showTagView = false;
+  currentToggleIndex = 0;
+  notifyListeners();
+  }
+
+  TagView(){
+    showTagView = true;
+    showTreeView = false;
+  currentToggleIndex = 1;
+  notifyListeners();
+  }
+
+  CategoryView(){
+    showTreeView = true;
+    showTagView = false;
+  currentToggleIndex = 2;
+  notifyListeners();
   }
 
   void addkeywordsList(tags){

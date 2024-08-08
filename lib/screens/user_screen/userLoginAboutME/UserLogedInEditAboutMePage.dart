@@ -177,8 +177,8 @@ Date
     _challengesProvider = Provider.of<ChallengesProvider>(context, listen: false);
     _previewProvider = Provider.of<PreviewProvider>(context, listen: false);
     _universalListProvider = Provider.of<UniversalListProvider>(context, listen: false);
-    _addKeywordProvider.loadDataForPage(_addKeywordProvider.currentPage);
-    _challengesProvider.loadDataForPage(_challengesProvider.currentPage);
+    // _addKeywordProvider.loadDataForPage(_addKeywordProvider.currentPage);
+    // _challengesProvider.loadDataForPage(_challengesProvider.currentPage);
     _universalListProvider.fetchUniversalChallengesData();
     _universalListProvider.fetchUniversalSolutionsdata();
     // _loadDataForChallengesPage(_currentPage);
@@ -668,10 +668,12 @@ Thank you for being open to understanding me better and for considering my reque
 
     // String solutionJson = json.encode(AboutMEDatas);
     // print("solutionJson: $solutionJson");
+    List<dynamic> linkedsolutions = [];
 
     for(var i in challengesList){
       // print("challengesList Challenges ${i['tags']}");
       generatedsolutionstags.addAll(i['tags']);
+      linkedsolutions.addAll(i['Linked_solutions']);
 
       print("challengesList generatedsolutionstags.length ${generatedsolutionstags.length}");
       print("challengesList generatedsolutionstags ${generatedsolutionstags}");
@@ -683,7 +685,8 @@ Thank you for being open to understanding me better and for considering my reque
       print("_userAboutMEProvider.combinedSolutionsResults.isEmpty");
       Future.delayed(
           Duration(seconds: 1),() async {
-          await _userAboutMEProvider.getRelatedSolutions(generatedsolutionstags, generatedsolutionscategory);
+          await _userAboutMEProvider.getRelatedSolutions(generatedsolutionstags, generatedsolutionscategory,linkedsolutions);
+          _universalListProvider.filterSolutions(generatedsolutionstags);
           _userAboutMEProvider.updateisLoadingMoree(true);
       },
       );
@@ -705,6 +708,7 @@ Thank you for being open to understanding me better and for considering my reque
     // ProgressDialog.show(context, "Saving", Icons.save);
     await ApiRepository().updateAboutMe(AboutMEDatas,documentId);
   }
+
   Future<void> newResponsefromInsightABme(defaulttext) async {
     _userAboutMEProvider.issuggestedloading = false;
     _universalListProvider.issuggestedloading = false;
@@ -6402,7 +6406,7 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("Suggested challenges (${universalListProvider.combinedResults.length}):",
+                                    Text("Possible challenges (${universalListProvider.combinedResults.length}):",
                                       overflow: TextOverflow.ellipsis,
                                       style: GoogleFonts.montserrat(
                                           textStyle: Theme.of(context).textTheme.titleLarge,
@@ -6658,11 +6662,17 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                                             children: [
                                                               IconButton(
                                                                 onPressed: () {
+                                                                  userAboutMEProvider.updateEditChallengePreview(
+                                                                      challenge.label,challenge.description, challenge.Final_description, challenge.Impact, challenge.Keywords,
+                                                                      challenge.tags,challenge.id, userAboutMEProvider.isEditChallengeListAdded, challenge, false, challenge.ImpactToCoworker,
+                                                                      challenge.ImpactToEmployee,challenge.NegativeImpactToOrganisation,challenge.RelatedChallengesTag,challenge.SuggestedChallengesTag,challenge.LinkedSolution
+                                                                  );
                                                                   NewViewDialog(challenge.label,challenge.description,challenge.Impact,challenge.Final_description, challenge.Keywords,challenge.tags,challenge.id,challenge, userAboutMEProvider.isEditChallengeListAdded,userAboutMEProvider.EditRecommendedChallengeAdd,
-                                                                    challenge.ImpactToCoworker,challenge.ImpactToEmployee,challenge.NegativeImpactToOrganisation,challenge.RelatedChallengesTag,challenge.SuggestedChallengesTag,);
+                                                                    challenge.ImpactToCoworker,challenge.ImpactToEmployee,challenge.NegativeImpactToOrganisation,challenge.RelatedChallengesTag,challenge.SuggestedChallengesTag,challenge.LinkedSolution);
                                                                   print("challenge.isConfirmed: ${challenge.isConfirmed}");
                                                                   universalListProvider.filterChallenges(challenge.tags);
                                                                   universalListProvider.filterSolutions(challenge.tags);
+                                                                  universalListProvider.filterLinkedSolutions(challenge.LinkedSolution,challenge.tags);
                                                                 },
                                                                 icon: Icon(Icons.visibility, color: Colors.blue),
                                                               ),
@@ -6672,7 +6682,7 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                                                     challenge.CreatedDate,challenge.ModifiedBy,challenge.ModifiedDate,challenge.OriginalDescription,challenge.Impact,challenge.Final_description,
                                                                     challenge.Category,challenge.Keywords,challenge.PotentialStrengths,challenge.HiddenStrengths, index,userAboutMEProvider.editchallengess,challenge.notes,challenge.attachment,
                                                                     challenge.ImpactToCoworker,challenge.ImpactToEmployee,challenge.NegativeImpactToOrganisation,
-                                                                    challenge.RelatedChallengesTag,challenge.SuggestedChallengesTag,);
+                                                                    challenge.RelatedChallengesTag,challenge.SuggestedChallengesTag,challenge.LinkedSolution,challenge.OCD);
                                                                   print("challenge.isConfirmed: ${challenge.isConfirmed}");
                                                                 },
                                                                 icon: Icon(Icons.edit, color: Colors.green),
@@ -6699,11 +6709,17 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                                         children: [
                                                           IconButton(
                                                             onPressed: () {
+                                                              userAboutMEProvider.updateEditChallengePreview(
+                                                                  challenge.label,challenge.description, challenge.Final_description, challenge.Impact, challenge.Keywords,
+                                                                  challenge.tags,challenge.id, userAboutMEProvider.isEditChallengeListAdded, challenge, false, challenge.ImpactToCoworker,
+                                                                  challenge.ImpactToEmployee,challenge.NegativeImpactToOrganisation,challenge.RelatedChallengesTag,challenge.SuggestedChallengesTag,challenge.LinkedSolution
+                                                              );
                                                               NewViewDialog(challenge.label,challenge.description,challenge.Impact,challenge.Final_description, challenge.Keywords,challenge.tags,challenge.id,challenge, userAboutMEProvider.isEditChallengeListAdded,userAboutMEProvider.EditRecommendedChallengeAdd,
-                                                                challenge.ImpactToCoworker,challenge.ImpactToEmployee,challenge.NegativeImpactToOrganisation,challenge.RelatedChallengesTag,challenge.SuggestedChallengesTag,);
+                                                                challenge.ImpactToCoworker,challenge.ImpactToEmployee,challenge.NegativeImpactToOrganisation,challenge.RelatedChallengesTag,challenge.SuggestedChallengesTag,challenge.LinkedSolution);
                                                               print("challenge.isConfirmed: ${challenge.isConfirmed}");
                                                               universalListProvider.filterChallenges(challenge.tags);
                                                               universalListProvider.filterSolutions(challenge.tags);
+                                                              universalListProvider.filterLinkedSolutions(challenge.LinkedSolution,challenge.tags);
 
                                                             },
                                                             icon: Icon(Icons.visibility, color: Colors.blue),
@@ -6716,7 +6732,7 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                                                 challenge.Category,challenge.Keywords,challenge.PotentialStrengths,challenge.HiddenStrengths,
                                                                 index,userAboutMEProvider.editchallengess,challenge.notes,challenge.attachment,
                                                                 challenge.ImpactToCoworker,challenge.ImpactToEmployee,challenge.NegativeImpactToOrganisation,
-                                                                challenge.RelatedChallengesTag,challenge.SuggestedChallengesTag,);
+                                                                challenge.RelatedChallengesTag,challenge.SuggestedChallengesTag,challenge.LinkedSolution,challenge.OCD);
                                                               print("challenge.isConfirmed: ${challenge.isConfirmed}");
                                                             },
                                                             icon: Icon(Icons.check, color: Colors.green),
@@ -7172,7 +7188,7 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-                                      child: Text("Suggested solutions (${userAboutMEProvider.combinedSolutionsResults.length}):",
+                                      child: Text("Possible solutions (${userAboutMEProvider.combinedSolutionsResults.length}):",
                                         style: GoogleFonts.montserrat(
                                             textStyle: Theme.of(context).textTheme.titleLarge,
                                             fontWeight: FontWeight.bold,
@@ -7421,10 +7437,20 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                                                 children: [
                                                                   IconButton(
                                                                     onPressed: () {
-                                                                      NewSolViewDialog(solution.label, solution.description, solution.Impact, solution.Final_description, solution.Keywords, solution.tags, solution.id,solution,userAboutMEProvider.isEditSolutionListAdded,userAboutMEProvider.EditRecommendedSolutionAdd,
-                                                                          solution.Help,solution.PositiveImpactstoEmployee,solution.PositiveImpactstoOrganisation,solution.RelatedSolutionsTags,solution.SuggestedChallengesTags,);
+                                                                      userAboutMEProvider.updateEditSolutionPreview(
+                                                                          solution.label, solution.description, solution.Final_description, solution.Impact,
+                                                                          solution.Keywords, solution.tags, solution.id, userAboutMEProvider.isEditSolutionListAdded, solution,
+                                                                          false, solution.Help, solution.PositiveImpactstoEmployee, solution.PositiveImpactstoOrganisation,
+                                                                          solution.RelatedSolutionsTags, solution.SuggestedChallengesTags, solution.LinkedChallenges
+                                                                      );
+                                                                      NewSolViewDialog(solution.label, solution.description, solution.Impact, solution.Final_description, solution.Keywords, solution.tags,
+                                                                          solution.id,solution,userAboutMEProvider.isEditSolutionListAdded,userAboutMEProvider.EditRecommendedSolutionAdd,
+                                                                          solution.Help,solution.PositiveImpactstoEmployee,solution.PositiveImpactstoOrganisation,
+                                                                          solution.RelatedSolutionsTags,solution.SuggestedChallengesTags,solution.LinkedChallenges);
                                                                       _universalListProvider.filterChallenges(solution.tags);
                                                                       _universalListProvider.filterSolutions(solution.tags);
+                                                                      _universalListProvider.filterLinkedChallenges(solution.LinkedChallenges,solution.tags);
+
                                                                     },
                                                                     icon: Icon(Icons.visibility, color: Colors.blue),
                                                                   ),
@@ -7433,7 +7459,8 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                                                       showEditconfirmSolutionsDialogBox(solution.id, solution.label,solution.description, solution.Source, solution.Status,solution.tags,solution.CreatedBy,
                                                                           solution.CreatedDate,solution.ModifiedBy,solution.ModifiedDate,solution.OriginalDescription,solution.Impact,solution.Final_description,
                                                                           solution.Category,solution.Keywords,"","",userAboutMEProvider.editsolutionss,solution.notes,solution.Provider,solution.InPlace,
-                                                                          solution.attachment,solution.Help,solution.PositiveImpactstoEmployee,solution.PositiveImpactstoOrganisation,solution.RelatedSolutionsTags,solution.SuggestedChallengesTags);
+                                                                          solution.attachment,solution.Help,solution.PositiveImpactstoEmployee,solution.PositiveImpactstoOrganisation,
+                                                                          solution.RelatedSolutionsTags,solution.SuggestedChallengesTags,solution.LinkedChallenges,solution.OSD);
                                                                       print("solution.InPlace: ${solution.InPlace}");
                                                                       print("solution.Provider: ${solution.Provider}");
                                                                     },
@@ -7485,11 +7512,18 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                                             children: [
                                                               IconButton(
                                                                 onPressed: () {
+                                                                  userAboutMEProvider.updateEditSolutionPreview(
+                                                                      solution.label, solution.description, solution.Final_description, solution.Impact,
+                                                                      solution.Keywords, solution.tags, solution.id, userAboutMEProvider.isEditSolutionListAdded, solution,
+                                                                      false, solution.Help, solution.PositiveImpactstoEmployee, solution.PositiveImpactstoOrganisation,
+                                                                      solution.RelatedSolutionsTags, solution.SuggestedChallengesTags, solution.LinkedChallenges
+                                                                  );
                                                                   NewSolViewDialog(solution.label, solution.description, solution.Impact, solution.Final_description, solution.Keywords, solution.tags, solution.id,solution,userAboutMEProvider.isEditSolutionListAdded,userAboutMEProvider.EditRecommendedSolutionAdd,
-                                                                    solution.Help,solution.PositiveImpactstoEmployee,solution.PositiveImpactstoOrganisation,solution.RelatedSolutionsTags,solution.SuggestedChallengesTags,);
+                                                                    solution.Help,solution.PositiveImpactstoEmployee,solution.PositiveImpactstoOrganisation,solution.RelatedSolutionsTags,solution.SuggestedChallengesTags,solution.LinkedChallenges);
                                                                   _universalListProvider.filterChallenges(solution.tags);
                                                                   _universalListProvider.filterSolutions(solution.tags);
-                                                                  },
+                                                                  _universalListProvider.filterLinkedChallenges(solution.LinkedChallenges,solution.tags);
+                                                                },
                                                                 icon: Icon(Icons.visibility, color: Colors.blue),
                                                               ),
                                                               IconButton(
@@ -7497,7 +7531,8 @@ Use these tags to match with relevant Solutions and/or Challenges.""";
                                                                   showconfirmSolutionsDialogBox(solution.id, solution.label,solution.description, solution.Source, solution.Status,solution.tags,solution.CreatedBy,
                                                                       solution.CreatedDate,solution.ModifiedBy,solution.ModifiedDate,solution.OriginalDescription,solution.Impact,solution.Final_description,
                                                                       solution.Category,solution.Keywords,"","", index,userAboutMEProvider.editsolutionss,solution.notes,solution.attachment,solution.InPlace,solution.Provider,
-                                                                      solution.Help,solution.PositiveImpactstoEmployee,solution.PositiveImpactstoOrganisation,solution.RelatedSolutionsTags,solution.SuggestedChallengesTags);
+                                                                      solution.Help,solution.PositiveImpactstoEmployee,solution.PositiveImpactstoOrganisation,solution.RelatedSolutionsTags,solution.SuggestedChallengesTags,
+                                                                      solution.LinkedChallenges,solution.OSD);
                                                                   print("solution.isConfirmed: ${solution.isConfirmed}");
                                                                 },
                                                                 icon: Icon(Icons.check, color: Colors.green),
@@ -8667,7 +8702,7 @@ Thank you for being open to understanding me better and for considering my reque
                                                                         solution['Hidden Strengths'], index, solution, solution['Impact_on_me'],solution['Attachment'],
                                                                       solution['Impacts_to_Coworkers'],solution['Impacts_to_employee'],
                                                                       solution['Negative_impacts_to_organisation'],solution['Related_challenges_tags'],
-                                                                      solution['Suggested_solutions_tags'],);
+                                                                      solution['Suggested_solutions_tags'],solution['Linked_solutions'],solution['OCD'],);
                                                                   },
                                                                 ),
                                                                 IconButton(
@@ -8998,7 +9033,9 @@ Thank you for being open to understanding me better and for considering my reque
                                                                           solution['Category'], solution['Keywords'], solution['Potential Strengths'],
                                                                           solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],
                                                                           solution['InPlace'],solution['Attachment'],solution['Helps'],solution['Positive_impacts_to_employee'],
-                                                                        solution['Positive_impacts_to_organisation'],solution['Related_solution_tags'],solution['Suggested_challenges_tags'],);
+                                                                        solution['Positive_impacts_to_organisation'],solution['Related_solution_tags'],
+                                                                        solution['Suggested_challenges_tags'],solution['Linked_challenges'],solution['OSD'],
+                                                                      );
                                                                     },
                                                                   ),
                                                                   IconButton(
@@ -9214,7 +9251,8 @@ Thank you for being open to understanding me better and for considering my reque
                                                                           solution['Category'], solution['Keywords'], solution['Potential Strengths'],
                                                                           solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace'],
                                                                         solution['Attachment'],solution['Helps'],solution['Positive_impacts_to_employee'],
-                                                                        solution['Positive_impacts_to_organisation'],solution['Related_solution_tags'],solution['Suggested_challenges_tags'],);
+                                                                        solution['Positive_impacts_to_organisation'],solution['Related_solution_tags'],solution['Suggested_challenges_tags'],
+                                                                        solution['Linked_challenges'],solution['OSD'],);
                                                                     },
                                                                   ),
                                                                   IconButton(
@@ -9413,7 +9451,8 @@ Thank you for being open to understanding me better and for considering my reque
                                                                           solution['Category'], solution['Keywords'], solution['Potential Strengths'],
                                                                           solution['Hidden Strengths'],solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace']
                                                                         ,solution['Attachment'],solution['Helps'],solution['Positive_impacts_to_employee'],
-                                                                        solution['Positive_impacts_to_organisation'],solution['Related_solution_tags'],solution['Suggested_challenges_tags'],);
+                                                                        solution['Positive_impacts_to_organisation'],solution['Related_solution_tags'],solution['Suggested_challenges_tags'],
+                                                                        solution['Linked_challenges'],solution['OSD'],);
                                                                     },
                                                                   ),
                                                                   IconButton(
@@ -9612,7 +9651,8 @@ Thank you for being open to understanding me better and for considering my reque
                                                                           solution['Category'], solution['Keywords'], solution['Potential Strengths'],
                                                                           solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace'],
                                                                         solution['Attachment'],solution['Helps'],solution['Positive_impacts_to_employee'],
-                                                                        solution['Positive_impacts_to_organisation'],solution['Related_solution_tags'],solution['Suggested_challenges_tags'],);
+                                                                        solution['Positive_impacts_to_organisation'],solution['Related_solution_tags'],solution['Suggested_challenges_tags'],
+                                                                        solution['Linked_challenges'],solution['OSD'],);
                                                                     },
                                                                   ),
                                                                   IconButton(
@@ -9810,7 +9850,8 @@ Thank you for being open to understanding me better and for considering my reque
                                                                           solution['Category'], solution['Keywords'], solution['Potential Strengths'],
                                                                           solution['Hidden Strengths'], solution, solution['AboutMe_Notes'],solution['Provider'],solution['InPlace'],
                                                                         solution['Attachment'],solution['Helps'],solution['Positive_impacts_to_employee'],
-                                                                        solution['Positive_impacts_to_organisation'],solution['Related_solution_tags'],solution['Suggested_challenges_tags'],);
+                                                                        solution['Positive_impacts_to_organisation'],solution['Related_solution_tags'],solution['Suggested_challenges_tags'],
+                                                                        solution['Linked_challenges'],solution['OSD'],);
                                                                     },
                                                                   ),
                                                                   IconButton(
@@ -12344,7 +12385,8 @@ Thank you for being open to understanding me better and for considering my reque
                     ),
                   ),
                   pw.Text(
-                    "${AboutMeDatetextController.text}",
+                    // "${AboutMeDatetextController.text}",
+                    "${DateFormat('dd MMMM yyyy').format(DateTime.now())}",
                     style: pw.TextStyle(font: bodyfont1),
                   ),
                 ],
@@ -12568,7 +12610,7 @@ Thank you for being open to understanding me better and for considering my reque
                           style: pw.TextStyle(
                               font: Reportansfont, fontSize: 10)),
                       pw.SizedBox(width: 70),
-                      pw.Text("${AboutMeDatetextController.text}",
+                      pw.Text("${DateFormat('dd MMMM yyyy').format(DateTime.now())}",
                           style: pw.TextStyle(
                               font: Reportansfont, fontSize: 10)),
                       pw.SizedBox(width: 120),
@@ -12722,7 +12764,7 @@ Thank you for being open to understanding me better and for considering my reque
                           style: pw.TextStyle(
                               font: Reportansfont, fontSize: 10)),
                       pw.SizedBox(width: 70),
-                      pw.Text("${AboutMeDatetextController.text}",
+                      pw.Text("${DateFormat('dd MMMM yyyy').format(DateTime.now())}",
                           style: pw.TextStyle(
                               font: Reportansfont, fontSize: 10)),
                       pw.SizedBox(width: 120),
@@ -12818,7 +12860,7 @@ Thank you for being open to understanding me better and for considering my reque
 
                             pw.SizedBox(width: 70,),
 
-                            pw.Text("${AboutMeDatetextController.text}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+                            pw.Text("${DateFormat('dd MMMM yyyy').format(DateTime.now())}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
                             pw.SizedBox(width: 120,),
 
@@ -12996,7 +13038,7 @@ Thank you for being open to understanding me better and for considering my reque
 
                           pw.SizedBox(width: 70,),
 
-                          pw.Text("${AboutMeDatetextController.text}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+                          pw.Text("${DateFormat('dd MMMM yyyy').format(DateTime.now())}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
                           pw.SizedBox(width: 120,),
 
@@ -13139,7 +13181,7 @@ Thank you for being open to understanding me better and for considering my reque
 
                           pw.SizedBox(width: 70,),
 
-                          pw.Text("${AboutMeDatetextController.text}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+                          pw.Text("${DateFormat('dd MMMM yyyy').format(DateTime.now())}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
                           pw.SizedBox(width: 120,),
 
@@ -13196,7 +13238,7 @@ Thank you for being open to understanding me better and for considering my reque
                                   style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
                               )) : pw.SizedBox(),
 
-                          (SolutiontableRows2.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+                          (SolutiontableRows2.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
 
                           (SolutiontableRows2.isNotEmpty) ? pw.Padding(
                               padding: const pw.EdgeInsets.symmetric(horizontal: 30),
@@ -13294,7 +13336,7 @@ Thank you for being open to understanding me better and for considering my reque
 
                           pw.SizedBox(width: 70,),
 
-                          pw.Text("${AboutMeDatetextController.text}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+                          pw.Text("${DateFormat('dd MMMM yyyy').format(DateTime.now())}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
                           pw.SizedBox(width: 120,),
 
@@ -13418,7 +13460,7 @@ Thank you for being open to understanding me better and for considering my reque
 
                           pw.SizedBox(width: 70,),
 
-                          pw.Text("${AboutMeDatetextController.text}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+                          pw.Text("${DateFormat('dd MMMM yyyy').format(DateTime.now())}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
                           pw.SizedBox(width: 120,),
 
@@ -13453,16 +13495,16 @@ Thank you for being open to understanding me better and for considering my reque
                 ),
               ) : pw.SizedBox(),
 
-              (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 20,) : pw.SizedBox(),
+              (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
               //pw.Padding(padding: pw.EdgeInsets.all(20)),
 
               (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.Padding(
                   padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                  child: pw.Text("Here are things that can help me, for which I can and want to take",
+                  child: pw.Text("Here are things that can help me that i wish to disscuss",
                       style: pw.TextStyle(font: headingfont1,fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),)
                   )) : pw.SizedBox(),
 
-              (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+              // (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
 
 
               (SolutiontableRows4.isNotEmpty) ? pw.Padding(
@@ -13471,7 +13513,7 @@ Thank you for being open to understanding me better and for considering my reque
                       style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
                   )) : pw.SizedBox(),
 
-              (SolutiontableRows4.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+              (SolutiontableRows4.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
 
               (SolutiontableRows4.isNotEmpty) ? pw.Padding(
                   padding: const pw.EdgeInsets.symmetric(horizontal: 30),
@@ -13568,7 +13610,7 @@ Thank you for being open to understanding me better and for considering my reque
 
                             pw.SizedBox(width: 70,),
 
-                            pw.Text("${AboutMeDatetextController.text}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
+                            pw.Text("${DateFormat('dd MMMM yyyy').format(DateTime.now())}",style: pw.TextStyle(font: Reportansfont,fontSize: 10)),
 
                             pw.SizedBox(width: 120,),
 
@@ -13603,16 +13645,16 @@ Thank you for being open to understanding me better and for considering my reque
                   ),
                 ) : pw.SizedBox(),
 
-                (SolutiontableRows5.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 20,) : pw.SizedBox(),
+                (SolutiontableRows5.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
                 //pw.Padding(padding: pw.EdgeInsets.all(20)),
 
                 (SolutiontableRows5.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.Padding(
                     padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                    child: pw.Text("Here are things that can help me, for which I can and want to take",
+                    child: pw.Text("Here are things that can help me that i wish to disscuss",
                         style: pw.TextStyle(font: headingfont1,fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),)
                     )) : pw.SizedBox(),
 
-                (SolutiontableRows5.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+                // (SolutiontableRows5.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
 
 
                 (SolutiontableRows5.isNotEmpty) ? pw.Padding(
@@ -13621,7 +13663,7 @@ Thank you for being open to understanding me better and for considering my reque
                         style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
                     )) : pw.SizedBox(),
 
-                (SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+                (SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
 
                 (SolutiontableRows5.isNotEmpty) ? pw.Padding(
                     padding: const pw.EdgeInsets.symmetric(horizontal: 30),
@@ -14677,10 +14719,17 @@ Thank you for being open to understanding me better and for considering my reque
                         children: [
                           IconButton(
                               onPressed: (){
+                                userAboutMEProvider.updateEditChallengePreview(
+                                    challengesData['Label'], challengesData['Description'], challengesData['Final_description'], challengesData['Impact'], challengesData['Keywords'],
+                                    challengesData['tags'], challengesData['id'], userAboutMEProvider.isEditChallengeListAdded, challengesData, false, challengesData['Impacts_to_Coworkers'], challengesData['Impacts_to_employee'],
+                                    challengesData['Negative_impacts_to_organisation'], challengesData['Related_challenges_tags'], challengesData['Suggested_solutions_tags'], challengesData['Linked_solutions']
+                                );
                                 NewViewDialog(challengesData['Label'],challengesData['Description'],challengesData['Impact'],challengesData['Final_description'], challengesData['Keywords'],challengesData['tags'],challengesData['id'],challengesData,userAboutMEProvider.isEditChallengeListAdded,userAboutMEProvider.EditRecommendedChallengeAdd
-                                  ,challengesData['Impacts_to_Coworkers'],challengesData['Impacts_to_employee'],challengesData['Negative_impacts_to_organisation'],challengesData['Related_challenges_tags'],challengesData['Suggested_solutions_tags'],);
+                                  ,challengesData['Impacts_to_Coworkers'],challengesData['Impacts_to_employee'],challengesData['Negative_impacts_to_organisation'],challengesData['Related_challenges_tags'],challengesData['Suggested_solutions_tags'],challengesData['Linked_solutions']);
                                 _universalListProvider.filterChallenges(challengesData['tags']);
                                 _universalListProvider.filterSolutions(challengesData['tags']);
+                                _universalListProvider.filterLinkedSolutions(challengesData['Linked_solutions'],challengesData['tags']);
+
                               },
                               icon: Icon(Icons.visibility, color: Colors.blue,)
                           ),
@@ -14906,11 +14955,20 @@ Thank you for being open to understanding me better and for considering my reque
                         children: [
                           IconButton(
                               onPressed: (){
-                                NewSolViewDialog(solutionsData['Label'],solutionsData['Description'],solutionsData['Impact'],solutionsData['Final_description'], solutionsData['Keywords'],solutionsData['tags'],solutionsData['id'],solutionsData,userAboutMEProvider.isEditSolutionListAdded,userAboutMEProvider.EditRecommendedSolutionAdd,
-                                  solutionsData['Helps'],solutionsData['Positive_impacts_to_employee'],solutionsData['Positive_impacts_to_organisation'],solutionsData['Related_solution_tags'],solutionsData['Suggested_challenges_tags'],);
+                                userAboutMEProvider.updateEditSolutionPreview(
+                                    solutionsData['Label'], solutionsData['Description'], solutionsData['Final_description'], solutionsData['Impact'],
+                                    solutionsData['Keywords'], solutionsData['tags'], solutionsData['id'], userAboutMEProvider.isEditSolutionListAdded, solutionsData,
+                                    false, solutionsData['Helps'], solutionsData['Positive_impacts_to_employee'], solutionsData['Positive_impacts_to_organisation'],
+                                    solutionsData['Related_solution_tags'], solutionsData['Suggested_challenges_tags'], solutionsData['Linked_challenges']
+                                );
+                                NewSolViewDialog(solutionsData['Label'],solutionsData['Description'],solutionsData['Impact'],solutionsData['Final_description'], solutionsData['Keywords'],
+                                    solutionsData['tags'],solutionsData['id'],solutionsData,userAboutMEProvider.isEditSolutionListAdded,userAboutMEProvider.EditRecommendedSolutionAdd,
+                                  solutionsData['Helps'],solutionsData['Positive_impacts_to_employee'],solutionsData['Positive_impacts_to_organisation'],solutionsData['Related_solution_tags'],solutionsData['Suggested_challenges_tags'],solutionsData['Linked_challenges']);
                                 _universalListProvider.filterChallenges(solutionsData['tags']);
                                 _universalListProvider.filterSolutions(solutionsData['tags']);
-                                },
+                                _universalListProvider.filterLinkedChallenges(solutionsData['Linked_challenges'],solutionsData['tags']);
+
+                              },
                               icon: Icon(Icons.visibility, color: Colors.blue,)
                           ),
                           SizedBox(width: 8),
@@ -15232,7 +15290,14 @@ Thank you for being open to understanding me better and for considering my reque
                       (universalListProvider.isLoadingMore) ?
                       Center(child: CircularProgressIndicator()) :
                       Flexible(
-                        child: ListView.separated(
+                        child:universalListProvider.getUniversalChallengesdata.isEmpty
+                            ? Center(
+                          child: Text(
+                            'No challenges found',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        )
+                            : ListView.separated(
                           padding:
                           EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                           shrinkWrap: true,
@@ -15506,7 +15571,14 @@ Thank you for being open to understanding me better and for considering my reque
                       (universalListProvider.isLoadingMore) ?
                       Center(child: CircularProgressIndicator()) :
                       Flexible(
-                        child: ListView.separated(
+                        child: universalListProvider.getUniversalSolutionsdata.isEmpty
+                            ? Center(
+                          child: Text(
+                            'No solutions found',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        )
+                            :  ListView.separated(
                           padding:
                           EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                           shrinkWrap: true,
@@ -17769,7 +17841,7 @@ Thank you for being open to understanding me better and for considering my reque
 
     return Consumer<UserAboutMEProvider>(
         builder: (c,userAboutMEProvider, _){
-          print("documents![i]: ${documents![i]}");
+          // print("documents![i]: ${documents![i]}");
           return Container(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -17810,11 +17882,18 @@ Thank you for being open to understanding me better and for considering my reque
                   children: [
                     IconButton(
                         onPressed: (){
+                          print("documents![i]['Keywords']: ${documents![i]['Keywords']}");
+                          print("documents![i]['Label']: ${documents![i]['Label']}");
+                          userAboutMEProvider.updateEditChallengePreview(
+                              documents![i]['Label'], documents![i]['Description'], documents![i]['Final_description'], documents![i]['Impact'], documents![i]['Keywords'],
+                              documents![i]['tags'], documents![i]['id'], userAboutMEProvider.isEditChallengeListAdded, documents![i], false, documents![i]['Impacts_to_Coworkers'], documents![i]['Impacts_to_employee'],
+                              documents![i]['Negative_impacts_to_organisation'], documents![i]['Related_challenges_tags'], documents![i]['Suggested_solutions_tags'], documents![i]['Linked_solutions']
+                          );
                           NewViewDialog(documents![i]['Label'],documents![i]['Description'],documents![i]['Impact'],documents![i]['Final_description'], documents![i]['Keywords'],documents![i]['tags'],documents![i]['id'],documents![i], userAboutMEProvider.isEditChallengeListAdded,userAboutMEProvider.EditRecommendedChallengeAdd,
-                            documents![i]['Impacts_to_Coworkers'],documents![i]['Impacts_to_employee'],documents![i]['Negative_impacts_to_organisation'],documents![i]['Related_challenges_tags'],documents![i]['Suggested_solutions_tags'],);
+                            documents![i]['Impacts_to_Coworkers'],documents![i]['Impacts_to_employee'],documents![i]['Negative_impacts_to_organisation'],documents![i]['Related_challenges_tags'],documents![i]['Suggested_solutions_tags'],documents![i]['Linked_solutions']);
                           _universalListProvider.filterChallenges(documents![i]['tags']);
                           _universalListProvider.filterSolutions(documents![i]['tags']);
-
+                          _universalListProvider.filterLinkedSolutions(documents![i]['Linked_solutions'],documents![i]['tags']);
                         },
                         icon: Icon(Icons.visibility, color: Colors.blue,)
                     ),
@@ -17921,10 +18000,17 @@ Thank you for being open to understanding me better and for considering my reque
                   children: [
                     IconButton(
                         onPressed: (){
+                          userAboutMEProvider.updateEditSolutionPreview(
+                              documentsss![i]['Label'], documentsss![i]['Description'], documentsss![i]['Final_description'], documentsss![i]['Impact'],
+                              documentsss![i]['Keywords'], documentsss![i]['tags'], documentsss![i]['id'], userAboutMEProvider.isEditSolutionListAdded, documentsss![i],
+                              false, documentsss![i]['Helps'], documentsss![i]['Positive_impacts_to_employee'], documentsss![i]['Positive_impacts_to_organisation'],
+                              documentsss![i]['Related_solution_tags'], documentsss![i]['Suggested_challenges_tags'], documentsss![i]['Linked_challenges']
+                          );
                           NewSolViewDialog(documentsss![i]['Label'],documentsss![i]['Description'],documentsss![i]['Impact'],documentsss![i]['Final_description'], documentsss![i]['Keywords'],documentsss![i]['tags'],documentsss![i]['id'],documentsss![i], userAboutMEProvider.isEditSolutionListAdded,userAboutMEProvider.EditRecommendedSolutionAdd,
-                            documentsss![i]['Helps'],documentsss![i]['Positive_impacts_to_employee'],documentsss![i]['Positive_impacts_to_organisation'],documentsss![i]['Related_solution_tags'],documentsss![i]['Suggested_challenges_tags'],);
+                            documentsss![i]['Helps'],documentsss![i]['Positive_impacts_to_employee'],documentsss![i]['Positive_impacts_to_organisation'],documentsss![i]['Related_solution_tags'],documentsss![i]['Suggested_challenges_tags'],documentsss![i]['Linked_challenges']);
                           _universalListProvider.filterChallenges(documentsss![i]['tags']);
                           _universalListProvider.filterSolutions(documentsss![i]['tags']);
+                          _universalListProvider.filterLinkedChallenges(documentsss![i]['Linked_challenges'],documentsss![i]['tags']);
                         },
                         icon: Icon(Icons.visibility, color: Colors.blue,)
                     ),
@@ -18005,7 +18091,7 @@ Thank you for being open to understanding me better and for considering my reque
 
   void showconfirmChallengeDialogBox(Id,label,description,source,ChallengeStatus,tags,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,OriginalDescription,
       Impact,Final_description,Category ,Keywords ,PotentialStrengths, HiddenStrengths, index, listname, Notes,Attachment,
-      ImpactToCoworker,ImpactToEmployee,NegativeImpactToOrganisation,RelatedChallengesTag, SuggestedChallengesTag){
+      ImpactToCoworker,ImpactToEmployee,NegativeImpactToOrganisation,RelatedChallengesTag, SuggestedChallengesTag,LinkedSolution, OCD){
 
     print("CreatedDate: $CreatedDate");
 
@@ -18139,6 +18225,8 @@ Thank you for being open to understanding me better and for considering my reque
                                 Map<String, dynamic> solutionData = {
                                   'id': Id,
                                   'Label': label,
+                                  'OCD': OCD,
+                                  'Linked_solutions': LinkedSolution,
                                   'Description': description,
                                   'Source': source,
                                   'Challenge Status': ChallengeStatus,
@@ -18170,22 +18258,31 @@ Thank you for being open to understanding me better and for considering my reque
                                 Map<String, dynamic> challengeData = {
                                   'id': Id,
                                   'Label': label,
+                                  'OCD': OCD,
+                                  'Linked_solutions': LinkedSolution,
                                   'Description': description,
                                   'Source': source,
                                   'Challenge Status': ChallengeStatus,
                                   'tags': tags,
+                                  'Related_challenges_tags': RelatedChallengesTag,
+                                  'Suggested_solutions_tags': SuggestedChallengesTag,
                                   'Created By': CreatedBy,
                                   'Created Date': createdDate,
                                   'Modified By': ModifiedBy,
                                   'Modified Date': ModifiedDate,
                                   'Original Description': OriginalDescription,
                                   'Impact': Impact,
+                                  'Impacts_to_Coworkers': ImpactToCoworker,
+                                  'Impacts_to_employee': ImpactToEmployee,
+                                  'Negative_impacts_to_organisation': NegativeImpactToOrganisation,
                                   'Final_description': Final_description,
                                   'Category': Category,
                                   'Keywords': Keywords,
                                   'Potential Strengths': PotentialStrengths,
                                   'Hidden Strengths': HiddenStrengths,
-                                  'Notes': Notes,
+                                  'Impact_on_me': NotesController.text,
+                                  'Attachment_link': userAboutMEProvider.downloadURL==null ? Attachment != null ? Attachment : "" : userAboutMEProvider.downloadURL,
+                                  'Attachment': userAboutMEProvider.aadhar== null ? Attachment != null ? Attachment : "" : userAboutMEProvider.aadhar
                                 };
 
                                 QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -18220,22 +18317,31 @@ Thank you for being open to understanding me better and for considering my reque
                                   Map<String, dynamic> challengeNewData = {
                                     'id': newId,
                                     'Label': label,
+                                    'OCD': OCD,
+                                    'Linked_solutions': LinkedSolution,
                                     'Description': description,
                                     'Source': source,
                                     'Challenge Status': ChallengeStatus,
                                     'tags': tags,
+                                    'Related_challenges_tags': RelatedChallengesTag,
+                                    'Suggested_solutions_tags': SuggestedChallengesTag,
                                     'Created By': CreatedBy,
                                     'Created Date': createdDate,
                                     'Modified By': ModifiedBy,
                                     'Modified Date': ModifiedDate,
                                     'Original Description': OriginalDescription,
                                     'Impact': Impact,
+                                    'Impacts_to_Coworkers': ImpactToCoworker,
+                                    'Impacts_to_employee': ImpactToEmployee,
+                                    'Negative_impacts_to_organisation': NegativeImpactToOrganisation,
                                     'Final_description': Final_description,
                                     'Category': Category,
                                     'Keywords': Keywords,
                                     'Potential Strengths': PotentialStrengths,
                                     'Hidden Strengths': HiddenStrengths,
-                                    'Notes': Notes,
+                                    'Impact_on_me': NotesController.text,
+                                    'Attachment_link': userAboutMEProvider.downloadURL==null ? Attachment != null ? Attachment : "" : userAboutMEProvider.downloadURL,
+                                    'Attachment': userAboutMEProvider.aadhar== null ? Attachment != null ? Attachment : "" : userAboutMEProvider.aadhar
                                   };
 
                                   print("challengeNewData To Add Challenge: ${challengeNewData['id']}");
@@ -18504,10 +18610,9 @@ Thank you for being open to understanding me better and for considering my reque
 
   void showEditconfirmChallengeDialogBox(Id,label,description,source,ChallengeStatus,tags,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,OriginalDescription,
       Impact,Final_description,Category ,Keywords ,PotentialStrengths, HiddenStrengths, index, listname, Notes,Attachment,
-      ImpactToCoworker,ImpactToEmployee,NegativeImpactToOrganisation,RelatedChallengesTag, SuggestedChallengesTag) {
+      ImpactToCoworker,ImpactToEmployee,NegativeImpactToOrganisation,RelatedChallengesTag, SuggestedChallengesTag,LinkedSolution, OCD) {
 
     print("CreatedDate: $CreatedDate");
-
 
     NotesController.text = Notes;
 
@@ -18635,6 +18740,8 @@ Thank you for being open to understanding me better and for considering my reque
                                   Map<String, dynamic> updatedSolutionData = {
                                     'id': Id,
                                     'Label': label,
+                                    'OCD': OCD,
+                                    'Linked_solutions': LinkedSolution,
                                     'Description': description,
                                     'Source': source,
                                     'Challenge Status': ChallengeStatus,
@@ -18899,7 +19006,7 @@ Thank you for being open to understanding me better and for considering my reque
 
   void showconfirmSolutionsDialogBox(Id,label,description,source,ChallengeStatus,tags,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,OriginalDescription,
       Impact,Final_description,Category ,Keywords ,PotentialStrengths, HiddenStrengths, index, listname,Notes,Attachment, InPlace, Provider,
-      Help,PositiveImpactstoEmployee,PositiveImpactstoOrganisation,RelatedSolutionsTags,SuggestedChallengesTags){
+      Help,PositiveImpactstoEmployee,PositiveImpactstoOrganisation,RelatedSolutionsTags,SuggestedChallengesTags,LinkedChallenges, OSD){
 
     // DateTime dateTime = CreatedDate.toDate();
     //
@@ -19040,6 +19147,8 @@ Thank you for being open to understanding me better and for considering my reque
                                   Map<String, dynamic> solutionData = {
                                     'id': Id,
                                     'Label': label,
+                                    'OSD': OSD,
+                                    'Linked_challenges': LinkedChallenges,
                                     'Description': description,
                                     'Source': source,
                                     'Challenge Status': ChallengeStatus,
@@ -19063,7 +19172,6 @@ Thank you for being open to understanding me better and for considering my reque
                                     'AboutMe_Notes': NotesController.text,
                                     'Provider': userAboutMEProvider.selectedProvider,
                                     'InPlace': userAboutMEProvider.selectedInPlace,
-                                    // 'Priority': userAboutMEProvider.selectedPriority,
                                     // 'Attachment': downloadURLs,
                                     'Attachment_link': userAboutMEProvider.downloadURL==null ? Attachment != null ? Attachment : "" : userAboutMEProvider.downloadURL,
                                     'Attachment': userAboutMEProvider.aadhar== null ? Attachment != null ? Attachment : "" : userAboutMEProvider.aadhar
@@ -19073,9 +19181,11 @@ Thank you for being open to understanding me better and for considering my reque
                                   Map<String, dynamic> solutionDataSaved = {
                                     'id': Id,
                                     'Label': label,
+                                    'OSD': OSD,
+                                    'Linked_challenges': LinkedChallenges,
                                     'Description': description,
                                     'Source': source,
-                                    'Thirver Status': ChallengeStatus,
+                                    'Challenge Status': ChallengeStatus,
                                     'tags': tags,
                                     'Created By': CreatedBy,
                                     'Created Date': createdDate,
@@ -19086,7 +19196,20 @@ Thank you for being open to understanding me better and for considering my reque
                                     'Final_description': Final_description,
                                     'Category': Category,
                                     'Keywords': Keywords,
-                                    'Notes': Notes,
+                                    'Helps': Help,
+                                    'Positive_impacts_to_employee': PositiveImpactstoEmployee,
+                                    'Positive_impacts_to_organisation': PositiveImpactstoOrganisation,
+                                    'Related_solution_tags': RelatedSolutionsTags,
+                                    'Suggested_challenges_tags': SuggestedChallengesTags,
+                                    'Potential Strengths': PotentialStrengths,
+                                    'Hidden Strengths': HiddenStrengths,
+                                    'AboutMe_Notes': NotesController.text,
+                                    'Provider': userAboutMEProvider.selectedProvider,
+                                    'InPlace': userAboutMEProvider.selectedInPlace,
+                                    // 'Attachment': downloadURLs,
+                                    'Attachment_link': userAboutMEProvider.downloadURL==null ? Attachment != null ? Attachment : "" : userAboutMEProvider.downloadURL,
+                                    'Attachment': userAboutMEProvider.aadhar== null ? Attachment != null ? Attachment : "" : userAboutMEProvider.aadhar
+                                    // 'confirmed': false, // Add a 'confirmed' field
                                   };
 
                                   QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -19120,6 +19243,8 @@ Thank you for being open to understanding me better and for considering my reque
                                     Map<String, dynamic> solutionNewDataSaved = {
                                       'id': newId,
                                       'Label': label,
+                                      'OSD': OSD,
+                                      'Linked_challenges': LinkedChallenges,
                                       'Description': description,
                                       'Source': source,
                                       'Challenge Status': ChallengeStatus,
@@ -19133,7 +19258,20 @@ Thank you for being open to understanding me better and for considering my reque
                                       'Final_description': Final_description,
                                       'Category': Category,
                                       'Keywords': Keywords,
-                                      'Notes': Notes,
+                                      'Helps': Help,
+                                      'Positive_impacts_to_employee': PositiveImpactstoEmployee,
+                                      'Positive_impacts_to_organisation': PositiveImpactstoOrganisation,
+                                      'Related_solution_tags': RelatedSolutionsTags,
+                                      'Suggested_challenges_tags': SuggestedChallengesTags,
+                                      'Potential Strengths': PotentialStrengths,
+                                      'Hidden Strengths': HiddenStrengths,
+                                      'AboutMe_Notes': NotesController.text,
+                                      'Provider': userAboutMEProvider.selectedProvider,
+                                      'InPlace': userAboutMEProvider.selectedInPlace,
+                                      // 'Attachment': downloadURLs,
+                                      'Attachment_link': userAboutMEProvider.downloadURL==null ? Attachment != null ? Attachment : "" : userAboutMEProvider.downloadURL,
+                                      'Attachment': userAboutMEProvider.aadhar== null ? Attachment != null ? Attachment : "" : userAboutMEProvider.aadhar
+                                      // 'confirmed': false, // Add a 'confirmed' field
                                     };
 
                                     print("solutionNewDataSaved To Add Solution: ${solutionNewDataSaved['id']}");
@@ -19542,7 +19680,7 @@ Thank you for being open to understanding me better and for considering my reque
 
   void showEditconfirmSolutionsDialogBox(Id,label,description,source,ChallengeStatus,tags,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,OriginalDescription,
       Impact,Final_description,Category ,Keywords ,PotentialStrengths, HiddenStrengths, listname,Notes,Provider,InPlace,
-      Attachment,Help,PositiveImpactstoEmployee,PositiveImpactstoOrganisation,RelatedSolutionsTags,SuggestedChallengesTags)  {
+      Attachment,Help,PositiveImpactstoEmployee,PositiveImpactstoOrganisation,RelatedSolutionsTags,SuggestedChallengesTags,LinkedChallenges, OSD)  {
 
 
     NotesController.text = Notes;
@@ -19686,6 +19824,8 @@ Thank you for being open to understanding me better and for considering my reque
                                   Map<String, dynamic> solutionData = {
                                     'id': Id,
                                     'Label': label,
+                                    'OSD': OSD,
+                                    'Linked_challenges': LinkedChallenges,
                                     'Description': description,
                                     'Source': source,
                                     'Challenge Status': ChallengeStatus,
@@ -20251,7 +20391,7 @@ Thank you for being open to understanding me better and for considering my reque
 
   void OSEditconfirmSolutionsBox(Id,label,description,source,ChallengeStatus,tags,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,OriginalDescription,
       Impact,Final_description,Category ,Keywords ,PotentialStrengths, HiddenStrengths, listname,Notes,Provider,InPlace,
-      Attachment,Help,PositiveImpactstoEmployee,PositiveImpactstoOrganisation,RelatedSolutionsTags,SuggestedChallengesTags)  {
+      Attachment,Help,PositiveImpactstoEmployee,PositiveImpactstoOrganisation,RelatedSolutionsTags,SuggestedChallengesTags,LinkedChallenges, OSD)  {
 
 
     NotesController.text = Notes;
@@ -20395,6 +20535,8 @@ Thank you for being open to understanding me better and for considering my reque
                                   Map<String, dynamic> solutionData = {
                                     'id': Id,
                                     'Label': label,
+                                    'OSD': OSD,
+                                    'Linked_challenges': LinkedChallenges,
                                     'Description': description,
                                     'Source': source,
                                     'Challenge Status': ChallengeStatus,
@@ -20955,7 +21097,7 @@ Thank you for being open to understanding me better and for considering my reque
 
   void OSEditChallengeDialogBox(Id,label,description,source,ChallengeStatus,tags,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,OriginalDescription,
       Impact,Final_description,Category ,Keywords ,PotentialStrengths, HiddenStrengths, index, listname, Notes,Attachment,
-      ImpactToCoworker,ImpactToEmployee,NegativeImpactToOrganisation,RelatedChallengesTag, SuggestedChallengesTag) {
+      ImpactToCoworker,ImpactToEmployee,NegativeImpactToOrganisation,RelatedChallengesTag, SuggestedChallengesTag,LinkedSolution, OCD) {
 
     print("CreatedDate: $CreatedDate");
 
@@ -21084,6 +21226,8 @@ Thank you for being open to understanding me better and for considering my reque
                                   Map<String, dynamic> updatedSolutionData = {
                                     'id': Id,
                                     'Label': label,
+                                    'OCD': OCD,
+                                    'Linked_solutions': LinkedSolution,
                                     'Description': description,
                                     'Source': source,
                                     'Challenge Status': ChallengeStatus,
@@ -21346,9 +21490,14 @@ Thank you for being open to understanding me better and for considering my reque
   ScrollController _scrollController4 = ScrollController();
 
   void NewViewDialog(Label, Description, Impact, FinalDescription, keywords, tags, insideId,document,isTrueOrFalse,AddButton,
-      ImpactToCoworker,ImpactToEmployee,NegativeImpactToOrganisation,RelatedChallengesTag, SuggestedChallengesTag)  {
+      ImpactToCoworker,ImpactToEmployee,NegativeImpactToOrganisation,RelatedChallengesTag, SuggestedChallengesTag,LinkedSolution)  {
 
 try{
+
+  // _userAboutMEProvider.updateEditChallengePreview(Label, Description, FinalDescription, Impact,keywords,tags,insideId,isTrueOrFalse, document,false,
+  //     ImpactToCoworker,ImpactToEmployee,NegativeImpactToOrganisation,RelatedChallengesTag, SuggestedChallengesTag,LinkedSolution);
+
+  print("NewViewDialog");
   final DateFormat formatter = DateFormat("MMMM d, yyyy 'at' h:mm:ss a 'UTC'Z");
 
   // String formattedDate = formatter.format(dateTime);
@@ -21372,7 +21521,7 @@ try{
                       userAboutMEProvider.editpreviewtags.isNotEmpty || userAboutMEProvider.editpreview !=null ||
                       userAboutMEProvider.editpreviewImpactToCoworker !=null || userAboutMEProvider.editpreviewImpactToEmployee !=null ||
                       userAboutMEProvider.editpreviewNegativeImpactToOrganisation !=null || userAboutMEProvider.editpreviewRelatedChallengesTag.isNotEmpty ||
-                      userAboutMEProvider.editpreviewSuggestedChallengesTag.isNotEmpty
+                      userAboutMEProvider.editpreviewSuggestedChallengesTag.isNotEmpty || userAboutMEProvider.editLinked.isNotEmpty
                   ){
                     Label = userAboutMEProvider.editpreviewname;
                     Description = userAboutMEProvider.editpreviewDescription;
@@ -21387,10 +21536,25 @@ try{
                     NegativeImpactToOrganisation = userAboutMEProvider.editpreviewNegativeImpactToOrganisation;
                     RelatedChallengesTag = userAboutMEProvider.editpreviewRelatedChallengesTag;
                     SuggestedChallengesTag = userAboutMEProvider.editpreviewSuggestedChallengesTag;
+                    LinkedSolution = userAboutMEProvider.editLinked;
                   }
                   _challengesProvider.addkeywordsList(keywords);
                   _challengesProvider.addProviderEditTagsList(tags);
 
+                  print("After Prrovider Label: ${Label}");
+                  print("After Prrovider Description: ${Description}");
+                  print("After Prrovider FinalDescription: ${FinalDescription}");
+                  print("After Prrovider insideId: ${insideId}");
+                  print("After Prrovider Impact: ${Impact}");
+                  print("After Prrovider keywords.length: ${keywords.length}");
+                  print("After Prrovider tags.length: ${tags.length}");
+                  // print("After Prrovider document: ${document}");
+                  print("After Prrovider ImpactToCoworker: ${ImpactToCoworker}");
+                  print("After Prrovider ImpactToEmployee: ${ImpactToEmployee}");
+                  print("After Prrovider NegativeImpactToOrganisation: ${NegativeImpactToOrganisation}");
+                  print("After Prrovider RelatedChallengesTag.length: ${RelatedChallengesTag.length}");
+                  print("After Prrovider SuggestedChallengesTag.length: ${SuggestedChallengesTag.length}");
+                  print("After Prrovider LinkedSolution.length: ${LinkedSolution.length}");
                   return AlertDialog(
                       insetPadding: EdgeInsets.symmetric(
                           horizontal: MediaQuery.of(context).size.width * 0.08,
@@ -21401,20 +21565,21 @@ try{
                         children: [
                           InkWell(
                               onTap: (){
-                                userAboutMEProvider.editpreviewname = null;
-                                userAboutMEProvider.editpreviewDescription = null;
-                                userAboutMEProvider.editpreviewFinalDescription = null;
-                                userAboutMEProvider.editpreviewId = null;
-                                userAboutMEProvider.editpreviewImpact = null;
-                                userAboutMEProvider.editpreviewKeywordssss.clear();
-                                userAboutMEProvider.editpreviewtags.clear();
-                                userAboutMEProvider.editpreviewRelatedChallengesTag.clear();
-                                userAboutMEProvider.editpreviewSuggestedChallengesTag.clear();
-                                userAboutMEProvider.editpreview = null;
-                                userAboutMEProvider.editpreviewImpactToCoworker = null;
-                                userAboutMEProvider.editpreviewImpactToEmployee = null;
-                                userAboutMEProvider.editpreviewNegativeImpactToOrganisation = null;
-                                userAboutMEProvider.editborderColor = false;
+                                // userAboutMEProvider.editpreviewname = null;
+                                // userAboutMEProvider.editpreviewDescription = null;
+                                // userAboutMEProvider.editpreviewFinalDescription = null;
+                                // userAboutMEProvider.editpreviewId = null;
+                                // userAboutMEProvider.editpreviewImpact = null;
+                                // userAboutMEProvider.editpreviewKeywordssss.clear();
+                                // userAboutMEProvider.editpreviewtags.clear();
+                                // userAboutMEProvider.editpreviewRelatedChallengesTag.clear();
+                                // userAboutMEProvider.editpreviewSuggestedChallengesTag.clear();
+                                // userAboutMEProvider.editLinked.clear();
+                                // userAboutMEProvider.editpreview = null;
+                                // userAboutMEProvider.editpreviewImpactToCoworker = null;
+                                // userAboutMEProvider.editpreviewImpactToEmployee = null;
+                                // userAboutMEProvider.editpreviewNegativeImpactToOrganisation = null;
+                                // userAboutMEProvider.editborderColor = false;
                                 Navigator.pop(context);
                               },
                               child: Icon(Icons.close)),
@@ -21572,7 +21737,7 @@ try{
                                           SizedBox(height: 5,),
 
                                           (ImpactToEmployee==""|| ImpactToEmployee==null) ? Container() :  Row(
-                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            mainAxisAlignment: MainAxisAlignment.start,
                                             crossAxisAlignment: CrossAxisAlignment.end,
                                             children: [
                                               // Text("Impact: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
@@ -21583,25 +21748,44 @@ try{
                                               //     fontSize: 20,
                                               //     color: Colors.grey),
                                               //   maxLines: null,)),
-                                              Image.asset("assets/images/sad.png", height: 45,width: 45),
-
-                                              Flexible(
-                                                child: BubbleSpecialThree(
-                                                  text: ImpactToEmployee,
-                                                  color: userAboutMEProvider.editborderColor==false ? Colors.orange : Colors.green,
-                                                  tail: true,
-                                                  isSender: false,
-                                                  textStyle: GoogleFonts.montserrat(
-                                                    // fontWeight: FontWeight.w500,
-                                                      fontStyle: FontStyle.italic,
-                                                      fontSize: 16,
-                                                      color: Colors.white),
-                                                ),
+                                              Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                                child: Image.asset("assets/images/sad.png", height: 32,width: 32),
                                               ),
+                                              SizedBox(width: 10,),
+
+                                              // Flexible(
+                                              //   child: BubbleSpecialThree(
+                                              //     text: ImpactToEmployee,
+                                              //     color: userAboutMEProvider.editborderColor==false ? Colors.blue : Colors.green,
+                                              //     tail: false,
+                                              //     isSender: false,
+                                              //     textStyle: GoogleFonts.montserrat(
+                                              //       // fontWeight: FontWeight.w500,
+                                              //         fontStyle: FontStyle.italic,
+                                              //         fontSize: 16,
+                                              //         color: Colors.white),
+                                              //   ),
+                                              // ),
+                                              Flexible(
+                                                  child: Container(
+                                                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.blue,
+                                                        borderRadius:BorderRadius.circular(10),
+                                                      ),
+                                                      child: Text(ImpactToEmployee,style: GoogleFonts.montserrat(
+                                                        // fontWeight: FontWeight.w600,
+                                                          fontSize: 16,
+                                                          color: Colors.white),
+                                                        maxLines: null,)
+                                                  )
+                                              ),
+
                                             ],
                                           ),
 
-                                          // SizedBox(height: 5,),
+                                          SizedBox(height: 5,),
 
                                           (NegativeImpactToOrganisation==""|| NegativeImpactToOrganisation==null) ? Container() :  Row(
                                             mainAxisAlignment: MainAxisAlignment.start,
@@ -21615,9 +21799,14 @@ try{
                                               //     fontSize: 20,
                                               //     color: Colors.grey),
                                               //   maxLines: null,)),
-                                              Image.asset("assets/images/request2.png", height: 45,width: 45),
 
-                                              SizedBox(width: 10,),
+                                              Padding(
+                                                padding: const EdgeInsets.all(5.0),
+                                                child: Icon(Icons.business,color: Color(0xff1c4a98),size: 30 ),
+                                              ),
+                                              // Image.asset("assets/images/request2.png", height: 45,width: 45),
+
+                                              SizedBox(width: 11,),
 
                                               Flexible(
                                                   child: Container(
@@ -21653,7 +21842,7 @@ try{
                                               //   maxLines: null,)),
                                               Image.asset("assets/images/request2.png", height: 45,width: 45),
 
-                                              SizedBox(width: 10,),
+                                              SizedBox(width: 5,),
 
                                               Flexible(
                                                   child: Container(
@@ -21690,8 +21879,8 @@ try{
                                                         alignment: WrapAlignment.start,
                                                         runAlignment: WrapAlignment.start,
                                                         children: addKeywordProvider.keywords.map((item){
-                                                          print("item: $item");
-                                                          print("addKeywordProvider.keywords: ${addKeywordProvider.keywords}");
+                                                          // print("item: $item");
+                                                          // print("addKeywordProvider.keywords: ${addKeywordProvider.keywords}");
                                                           return InkWell(
                                                             onTap: (){
                                                               if(_tabController.index == 4){
@@ -21901,9 +22090,9 @@ try{
                                                           var challengesData = relatedChallenges[i];
                                                           var matchedTags = challengesData['matchedTags'] ?? [];
 
-                                                          print("challengesData Related_challenges_tags: ${challengesData['Related_challenges_tags']}");
+                                                          // print("challengesData Related_challenges_tags: ${challengesData['Label']}");
                                                           // print("challengesData Suggested_solutions_tags: ${challengesData['Suggested_solutions_tags']}");
-                                                          print("challengesData Keywords: ${challengesData['Keywords']}");
+                                                          // print("challengesData Keywords: ${challengesData['Keywords']}");
                                                           return Container(
                                                             margin: EdgeInsets.symmetric(horizontal: 15),
                                                             padding: EdgeInsets.only(left: 12,right: 12,bottom: 16,top: 6),
@@ -21968,25 +22157,15 @@ try{
                                                                         children: [
                                                                           IconButton(
                                                                               onPressed: (){
-                                                                                userAboutMEProvider.updateEditChallengePreview(
-                                                                                  challengesData['Label'],
-                                                                                  challengesData['Description'],
-                                                                                  challengesData['Final_description'],
-                                                                                  challengesData['Impact'],
-                                                                                  challengesData['Keywords'],
-                                                                                  challengesData['tags'],
-                                                                                  challengesData['id'],
-                                                                                  isTrueOrFalse,
-                                                                                  challengesData,
-                                                                                  false,
-                                                                                  challengesData['Impacts_to_Coworkers'],
-                                                                                  challengesData['Impacts_to_employee'],
-                                                                                  challengesData['Negative_impacts_to_organisation'],
-                                                                                  challengesData['Related_challenges_tags'],
-                                                                                  challengesData['Suggested_solutions_tags'],
+                                                                                print("challengesData['Linked_solutions']: ${challengesData['Linked_solutions']}");
+                                                                                userAboutMEProvider.updateEditChallengePreview(challengesData['Label'], challengesData['Description'], challengesData['Final_description'],
+                                                                                  challengesData['Impact'], challengesData['Keywords'], challengesData['tags'], challengesData['id'], isTrueOrFalse,
+                                                                                  challengesData, false, challengesData['Impacts_to_Coworkers'], challengesData['Impacts_to_employee'], challengesData['Negative_impacts_to_organisation'],
+                                                                                  challengesData['Related_challenges_tags'], challengesData['Suggested_solutions_tags'], challengesData['Linked_solutions']
                                                                                 );
                                                                                 _universalListProvider.filterChallenges(challengesData['tags']);
                                                                                 _universalListProvider.filterSolutions(challengesData['tags']);
+                                                                                _universalListProvider.filterLinkedSolutions(challengesData['Linked_solutions'],challengesData['tags']);
                                                                               },
                                                                               icon: Icon(Icons.visibility, color: Colors.blue,)
                                                                           ),
@@ -22160,562 +22339,1149 @@ try{
                                 ),
                               ),
                               SizedBox(height: 10,),
-                              Flexible(
-                                // flex: 1,
-                                child: Container(
-                                  // height: 400,
-                                  padding: EdgeInsets.all(15),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.green, width: 4),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Container(
-                                          // height: 205 ,
-                                          height:  MediaQuery.of(context).size.height * 0.22,
-                                          width: MediaQuery.of(context).size.width,
-                                          child:  Consumer<UniversalListProvider>(
-                                            builder: (context, provider, child) {
-                                              var relatedSolutions = provider.getRelatedSolutionList;
-                                              return Column(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets.symmetric(horizontal: 16.0,),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                      children: [
-                                                        Text("Suggested solutions (${relatedSolutions?.length}):",
-                                                            style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                                                                fontSize: 20,
-                                                                color: Colors.black)
-                                                        ),
-
-                                                        Row(
+                              Row(
+                                children: [
+                                  Flexible(
+                                    // flex: 1,
+                                    child: Container(
+                                      // height: 400,
+                                      padding: EdgeInsets.all(15),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.green, width: 4),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: SingleChildScrollView(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Container(
+                                              // height: 205 ,
+                                              height:  MediaQuery.of(context).size.height * 0.22,
+                                              width: MediaQuery.of(context).size.width,
+                                              child:  Consumer<UniversalListProvider>(
+                                                builder: (context, provider, child) {
+                                                  // var linkedsolutions = provider.getLinkedSolutionList;
+                                                  var linkedsolutions = provider.getcombinedSolutionList;
+                                                  return Column(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Padding(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 16.0,),
+                                                        child: Row(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                           children: [
-                                                            IconButton(
-                                                              onPressed: () {
-                                                                // Scroll the ListView.builder to the left
-                                                                // You can adjust the scroll distance according to your requirement
-                                                                // by changing the offset value
-                                                                _scrollController2.animateTo(
-                                                                  _scrollController2.offset - 200,
-                                                                  curve: Curves.linear,
-                                                                  duration: Duration(milliseconds: 300),
-                                                                );
-                                                              },
-                                                              icon: Icon(Icons.arrow_back),
-                                                            ),
-                                                            SizedBox(width: 10,),
-                                                            IconButton(
-                                                              onPressed: () {
-                                                                // Scroll the ListView.builder to the right
-                                                                // You can adjust the scroll distance according to your requirement
-                                                                // by changing the offset value
-                                                                _scrollController2.animateTo(
-                                                                  _scrollController2.offset + 200,
-                                                                  curve: Curves.linear,
-                                                                  duration: Duration(milliseconds: 300),
-                                                                );
-                                                              },
-                                                              icon: Icon(Icons.arrow_forward),
+                                                            Text("Possible solutions (${linkedsolutions?.length}):",
+                                                                style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                                                    fontSize: 20,
+                                                                    color: Colors.black)
                                                             ),
 
-                                                          ],
-                                                        ),
-
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 8,),
-                                                  Expanded(
-                                                    child: ListView.builder(
-                                                      scrollDirection: Axis.horizontal,
-                                                      controller: _scrollController2,
-                                                      shrinkWrap: true,
-                                                      itemCount: relatedSolutions?.length,
-                                                      itemBuilder: (c, i) {
-                                                        // relatedSolutionlength = relatedSolutions?.length;
-                                                        // print("relatedSolutionlength: $relatedSolutionlength");
-
-                                                        var solutionData = relatedSolutions[i];
-                                                        var matchedTags = solutionData['matchedTags'] ?? [];
-
-                                                        print("solutionData: ${solutionData}");
-                                                        return Container(
-                                                          margin: EdgeInsets.symmetric(horizontal: 15),
-                                                          padding: EdgeInsets.all(12),
-                                                          // width: 330,
-                                                          // width: MediaQuery.of(context).size.width * 0.17,
-                                                          width: MediaQuery.of(context).size.width * 0.19,
-                                                          // height: MediaQuery.of(context).size.height * 0.08,
-                                                          decoration: BoxDecoration(
-                                                            border: Border.all(color: Colors.green,width : 2),
-                                                            borderRadius: BorderRadius.circular(20),
-                                                          ),
-                                                          child: SingleChildScrollView(
-                                                            child: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.start,
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                            Row(
                                                               children: [
-                                                                Row(
-                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                                  children: [
-                                                                    Flexible(
-                                                                      child: Text("${solutionData['Label']}",
-                                                                          maxLines: 2,
-                                                                          style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                                                                              fontSize: 15,
-                                                                              color: Colors.black)),
-                                                                    ),
-                                                                    SizedBox(width: 5,),
-                                                                    // InkWell(
-                                                                    //   onTap: (){
-                                                                    //     _userAboutMEProvider.isRecommendedAddedSolutions(true, relatedSolutions![i]);
-                                                                    //   },
-                                                                    //   child: Container(
-                                                                    //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                                                    //     width: MediaQuery.of(context).size.width * .05,
-                                                                    //     // width: MediaQuery.of(context).size.width * .15,
-                                                                    //
-                                                                    //     // height: 60,
-                                                                    //     decoration: BoxDecoration(
-                                                                    //       color:Colors.blue ,
-                                                                    //       border: Border.all(
-                                                                    //           color:Colors.blue ,
-                                                                    //           width: 1.0),
-                                                                    //       borderRadius: BorderRadius.circular(8.0),
-                                                                    //     ),
-                                                                    //     child: Center(
-                                                                    //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                                                    //       child: Text(
-                                                                    //         'Add',
-                                                                    //         style: GoogleFonts.montserrat(
-                                                                    //           textStyle:
-                                                                    //           Theme
-                                                                    //               .of(context)
-                                                                    //               .textTheme
-                                                                    //               .titleSmall,
-                                                                    //           fontWeight: FontWeight.bold,
-                                                                    //           color:Colors.white ,
-                                                                    //         ),
-                                                                    //       ),
-                                                                    //     ),
-                                                                    //   ),
-                                                                    // ),
-                                                                    Row(
-                                                                      children: [
-                                                                        IconButton(
-                                                                            onPressed: (){
-                                                                              Navigator.pop(context);
-                                                                              NewSolViewDialog(solutionData['Label'],
-                                                                                solutionData['Description'],
-                                                                                solutionData['Impact'],
-                                                                                solutionData['Final_description'],
-                                                                                solutionData['Keywords'],
-                                                                                solutionData['tags'],
-                                                                                solutionData['id'],
-                                                                                solutionData,
-                                                                                userAboutMEProvider.isEditSolutionListAdded,
-                                                                                userAboutMEProvider.EditRecommendedSolutionAdd,
-                                                                                solutionData['Helps'],solutionData['Positive_impacts_to_employee'],solutionData['Positive_impacts_to_organisation'],solutionData['Related_solution_tags'],solutionData['Suggested_challenges_tags'],);
-
-                                                                              _universalListProvider.filterChallenges(solutionData['tags']);
-                                                                              _universalListProvider.filterSolutions(solutionData['tags']);
-                                                                              // userAboutMEProvider.updateEditSolutionPreview(
-                                                                              //     solutionData['Label'],
-                                                                              //     solutionData['Description'],
-                                                                              //     solutionData['Final_description'],
-                                                                              //     solutionData['Impact'],
-                                                                              //     solutionData['Keywords'],
-                                                                              //     solutionData['tags'],
-                                                                              //     solutionData['id'],
-                                                                              //     isTrueOrFalse,
-                                                                              //     solutionData,
-                                                                              //   true
-                                                                              // );
-                                                                            },
-
-                                                                            icon: Icon(Icons.visibility, color: Colors.blue,)
-                                                                        ),
-                                                                        SizedBox(width: 5,),
-
-                                                                        (userAboutMEProvider.isEditSolutionListAdded[solutionData['id']] == true) ? Text(
-                                                                          'Added',
-                                                                          style: GoogleFonts.montserrat(
-                                                                            textStyle:
-                                                                            Theme
-                                                                                .of(context)
-                                                                                .textTheme
-                                                                                .titleSmall,
-                                                                            fontStyle: FontStyle.italic,
-                                                                            color:Colors.green ,
-                                                                          ),
-                                                                        ) : InkWell(
-                                                                            onTap: (){
-                                                                              // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
-                                                                              userAboutMEProvider.EditRecommendedSolutionAdd(true, relatedSolutions![i]);
-                                                                              toastification.show(context: context,
-                                                                                  title: Text('${solutionData['Label']} added to basket'),
-                                                                                  autoCloseDuration: Duration(milliseconds: 2500),
-                                                                                  alignment: Alignment.center,
-                                                                                  backgroundColor: Colors.green,
-                                                                                  foregroundColor: Colors.white,
-                                                                                  icon: Icon(Icons.check_circle, color: Colors.white,),
-                                                                                  animationDuration: Duration(milliseconds: 1000),
-                                                                                  showProgressBar: false
-                                                                              );
-                                                                            },
-                                                                            child: Icon(Icons.add_circle, color: Colors.blue,)
-                                                                          // child: Container(
-                                                                          //   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                                                          //   width: MediaQuery.of(context).size.width * .05,
-                                                                          //   // width: MediaQuery.of(context).size.width * .15,
-                                                                          //
-                                                                          //   // height: 60,
-                                                                          //   decoration: BoxDecoration(
-                                                                          //     color:Colors.blue ,
-                                                                          //     border: Border.all(
-                                                                          //         color:Colors.blue ,
-                                                                          //         width: 1.0),
-                                                                          //     borderRadius: BorderRadius.circular(8.0),
-                                                                          //   ),
-                                                                          //   child: Center(
-                                                                          //     // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                                                          //     child: Text(
-                                                                          //       'Add',
-                                                                          //       style: GoogleFonts.montserrat(
-                                                                          //         textStyle:
-                                                                          //         Theme
-                                                                          //             .of(context)
-                                                                          //             .textTheme
-                                                                          //             .titleSmall,
-                                                                          //         fontWeight: FontWeight.bold,
-                                                                          //         color:Colors.white ,
-                                                                          //       ),
-                                                                          //     ),
-                                                                          //   ),
-                                                                          // ),
-                                                                        ),
-                                                                      ],
-                                                                    )
-                                                                  ],
+                                                                IconButton(
+                                                                  onPressed: () {
+                                                                    // Scroll the ListView.builder to the left
+                                                                    // You can adjust the scroll distance according to your requirement
+                                                                    // by changing the offset value
+                                                                    _scrollController2.animateTo(
+                                                                      _scrollController2.offset - 200,
+                                                                      curve: Curves.linear,
+                                                                      duration: Duration(milliseconds: 300),
+                                                                    );
+                                                                  },
+                                                                  icon: Icon(Icons.arrow_back),
                                                                 ),
-                                                                SizedBox(height: 5,),
-                                                                // Icon(Icons.add, color: Colors.blue, size: 24,),
-                                                                Text("${solutionData['Final_description']}",
-                                                                    maxLines: 2,
-                                                                    style: GoogleFonts.montserrat(
-                                                                        fontSize: 15,
-                                                                        color: Colors.black)),
-
-                                                                SizedBox(height: 5,),
-
-                                                                Align(
-                                                                  alignment: Alignment.bottomLeft,
-                                                                  child: Wrap(
-                                                                      spacing: 10,
-                                                                      runSpacing: 10,
-                                                                      crossAxisAlignment: WrapCrossAlignment.end,
-                                                                      alignment: WrapAlignment.end,
-                                                                      runAlignment: WrapAlignment.end,
-                                                                      children: [
-                                                                        ...matchedTags.take(2).map<Widget>((item) =>
-                                                                            Container(
-                                                                              height: 25,
-                                                                              // width: 200,
-                                                                              padding: EdgeInsets.all(5),
-                                                                              decoration: BoxDecoration(
-                                                                                  borderRadius: BorderRadius.circular(15),
-                                                                                  // color: Colors.teal
-                                                                                  gradient: LinearGradient(colors: [
-                                                                                    Color(0xe7e4dfee),
-                                                                                    Color(0xffe5d5fc),
-                                                                                  ]),
-                                                                                  color: Colors.grey
-                                                                              ),
-                                                                              child: GradientText("${item}",
-                                                                                style: TextStyle(
-                                                                                  fontWeight: FontWeight.w700,
-                                                                                  fontSize: 10,
-                                                                                ),
-                                                                                gradientType: GradientType.linear,
-                                                                                colors: [Colors.purple, Colors.deepPurple],
-                                                                              ),
-                                                                            ),
-                                                                        ).toList(),
-                                                                        if (matchedTags.length > 2)
-                                                                          InkWell(
-                                                                            onTap: () {
-                                                                              // Handle "more" button click;
-                                                                            },
-                                                                            child: Text(
-                                                                              '...more (${matchedTags.length - 2})',
-                                                                              style: TextStyle(
-                                                                                color: Colors.blue,
-                                                                                fontSize: 12,
-                                                                                fontWeight: FontWeight.bold,
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                      ]
-                                                                    // children: matchedTags.map<Widget>((item){
-                                                                    //   return Row(
-                                                                    //     mainAxisSize: MainAxisSize.min,
-                                                                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                    //     children: [
-                                                                    //       GradientText(item,
-                                                                    //         style: TextStyle(
-                                                                    //           fontWeight: FontWeight.w700,
-                                                                    //           fontSize: 10,
-                                                                    //           // color: Colors.white,
-                                                                    //         ),
-                                                                    //         gradientType: GradientType.linear,
-                                                                    //         colors: [
-                                                                    //           Colors.purple,
-                                                                    //           Colors.deepPurple,
-                                                                    //         ],
-                                                                    //       ),
-                                                                    //     ],
-                                                                    //   );
-                                                                    // }).toList() as List<Widget>,
-                                                                  ),
+                                                                SizedBox(width: 10,),
+                                                                IconButton(
+                                                                  onPressed: () {
+                                                                    // Scroll the ListView.builder to the right
+                                                                    // You can adjust the scroll distance according to your requirement
+                                                                    // by changing the offset value
+                                                                    _scrollController2.animateTo(
+                                                                      _scrollController2.offset + 200,
+                                                                      curve: Curves.linear,
+                                                                      duration: Duration(milliseconds: 300),
+                                                                    );
+                                                                  },
+                                                                  icon: Icon(Icons.arrow_forward),
                                                                 ),
 
                                                               ],
                                                             ),
-                                                          ),
-                                                        );
-                                                      },
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 8,),
 
-                                                ],
-                                              );
-                                            },
-                                          ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 8,),
+                                                      Expanded(
+                                                        child: ListView.builder(
+                                                          scrollDirection: Axis.horizontal,
+                                                          controller: _scrollController2,
+                                                          shrinkWrap: true,
+                                                          itemCount: linkedsolutions?.length,
+                                                          itemBuilder: (c, i) {
+                                                            // relatedSolutionlength = relatedSolutions?.length;
+                                                            // print("relatedSolutionlength: $relatedSolutionlength");
+
+                                                            var solutionData = linkedsolutions[i];
+                                                            var matchedTags = solutionData['matchedTags'] ?? [];
+
+                                                            print("matchedTags: ${matchedTags}");
+                                                            return Container(
+                                                              margin: EdgeInsets.symmetric(horizontal: 15),
+                                                              padding: EdgeInsets.all(12),
+                                                              // width: 330,
+                                                              // width: MediaQuery.of(context).size.width * 0.17,
+                                                              width: MediaQuery.of(context).size.width * 0.19,
+                                                              // height: MediaQuery.of(context).size.height * 0.08,
+                                                              decoration: BoxDecoration(
+                                                                border: Border.all(color: Colors.green,width : 2),
+                                                                borderRadius: BorderRadius.circular(20),
+                                                              ),
+                                                              child: SingleChildScrollView(
+                                                                child: Column(
+                                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Row(
+                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                                      children: [
+                                                                        Flexible(
+                                                                          child: Text("${solutionData['Label']}",
+                                                                              maxLines: 2,
+                                                                              style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                                                                  fontSize: 15,
+                                                                                  color: Colors.black)),
+                                                                        ),
+                                                                        SizedBox(width: 5,),
+                                                                        // InkWell(
+                                                                        //   onTap: (){
+                                                                        //     _userAboutMEProvider.isRecommendedAddedSolutions(true, relatedSolutions![i]);
+                                                                        //   },
+                                                                        //   child: Container(
+                                                                        //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                        //     width: MediaQuery.of(context).size.width * .05,
+                                                                        //     // width: MediaQuery.of(context).size.width * .15,
+                                                                        //
+                                                                        //     // height: 60,
+                                                                        //     decoration: BoxDecoration(
+                                                                        //       color:Colors.blue ,
+                                                                        //       border: Border.all(
+                                                                        //           color:Colors.blue ,
+                                                                        //           width: 1.0),
+                                                                        //       borderRadius: BorderRadius.circular(8.0),
+                                                                        //     ),
+                                                                        //     child: Center(
+                                                                        //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                        //       child: Text(
+                                                                        //         'Add',
+                                                                        //         style: GoogleFonts.montserrat(
+                                                                        //           textStyle:
+                                                                        //           Theme
+                                                                        //               .of(context)
+                                                                        //               .textTheme
+                                                                        //               .titleSmall,
+                                                                        //           fontWeight: FontWeight.bold,
+                                                                        //           color:Colors.white ,
+                                                                        //         ),
+                                                                        //       ),
+                                                                        //     ),
+                                                                        //   ),
+                                                                        // ),
+                                                                        Row(
+                                                                          children: [
+                                                                            IconButton(
+                                                                                onPressed: (){
+                                                                                  Navigator.pop(context);
+                                                                                  userAboutMEProvider.updateEditSolutionPreview(
+                                                                                      solutionData['Label'], solutionData['Description'], solutionData['Final_description'], solutionData['Impact'],
+                                                                                      solutionData['Keywords'], solutionData['tags'], solutionData['id'], isTrueOrFalse, solutionData,
+                                                                                      false, solutionData['Helps'], solutionData['Positive_impacts_to_employee'], solutionData['Positive_impacts_to_organisation'],
+                                                                                      solutionData['Related_solution_tags'], solutionData['Suggested_challenges_tags'], solutionData['Linked_challenges']
+                                                                                  );
+                                                                                  NewSolViewDialog(solutionData['Label'],
+                                                                                    solutionData['Description'],
+                                                                                    solutionData['Impact'],
+                                                                                    solutionData['Final_description'],
+                                                                                    solutionData['Keywords'],
+                                                                                    solutionData['tags'],
+                                                                                    solutionData['id'],
+                                                                                    solutionData,
+                                                                                    userAboutMEProvider.isEditSolutionListAdded,
+                                                                                    userAboutMEProvider.EditRecommendedSolutionAdd,
+                                                                                    solutionData['Helps'],solutionData['Positive_impacts_to_employee'],
+                                                                                    solutionData['Positive_impacts_to_organisation'],
+                                                                                    solutionData['Related_solution_tags'],
+                                                                                    solutionData['Suggested_challenges_tags'],
+                                                                                      solutionData['Linked_challenges']);
+
+                                                                                  _universalListProvider.filterChallenges(solutionData['tags']);
+                                                                                  _universalListProvider.filterSolutions(solutionData['tags']);
+                                                                                  _universalListProvider.filterLinkedChallenges(solutionData['Linked_challenges'],solutionData['tags']);
+
+                                                                                  // userAboutMEProvider.updateEditSolutionPreview(
+                                                                                  //     solutionData['Label'],
+                                                                                  //     solutionData['Description'],
+                                                                                  //     solutionData['Final_description'],
+                                                                                  //     solutionData['Impact'],
+                                                                                  //     solutionData['Keywords'],
+                                                                                  //     solutionData['tags'],
+                                                                                  //     solutionData['id'],
+                                                                                  //     isTrueOrFalse,
+                                                                                  //     solutionData,
+                                                                                  //   true
+                                                                                  // );
+                                                                                },
+
+                                                                                icon: Icon(Icons.visibility, color: Colors.blue,)
+                                                                            ),
+                                                                            SizedBox(width: 5,),
+
+                                                                            (userAboutMEProvider.isEditSolutionListAdded[solutionData['id']] == true) ? Text(
+                                                                              'Added',
+                                                                              style: GoogleFonts.montserrat(
+                                                                                textStyle:
+                                                                                Theme
+                                                                                    .of(context)
+                                                                                    .textTheme
+                                                                                    .titleSmall,
+                                                                                fontStyle: FontStyle.italic,
+                                                                                color:Colors.green ,
+                                                                              ),
+                                                                            ) : InkWell(
+                                                                                onTap: (){
+                                                                                  // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
+                                                                                  userAboutMEProvider.EditRecommendedSolutionAdd(true, linkedsolutions![i]);
+                                                                                  toastification.show(context: context,
+                                                                                      title: Text('${solutionData['Label']} added to basket'),
+                                                                                      autoCloseDuration: Duration(milliseconds: 2500),
+                                                                                      alignment: Alignment.center,
+                                                                                      backgroundColor: Colors.green,
+                                                                                      foregroundColor: Colors.white,
+                                                                                      icon: Icon(Icons.check_circle, color: Colors.white,),
+                                                                                      animationDuration: Duration(milliseconds: 1000),
+                                                                                      showProgressBar: false
+                                                                                  );
+                                                                                },
+                                                                                child: Icon(Icons.add_circle, color: Colors.blue,)
+                                                                              // child: Container(
+                                                                              //   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                              //   width: MediaQuery.of(context).size.width * .05,
+                                                                              //   // width: MediaQuery.of(context).size.width * .15,
+                                                                              //
+                                                                              //   // height: 60,
+                                                                              //   decoration: BoxDecoration(
+                                                                              //     color:Colors.blue ,
+                                                                              //     border: Border.all(
+                                                                              //         color:Colors.blue ,
+                                                                              //         width: 1.0),
+                                                                              //     borderRadius: BorderRadius.circular(8.0),
+                                                                              //   ),
+                                                                              //   child: Center(
+                                                                              //     // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                              //     child: Text(
+                                                                              //       'Add',
+                                                                              //       style: GoogleFonts.montserrat(
+                                                                              //         textStyle:
+                                                                              //         Theme
+                                                                              //             .of(context)
+                                                                              //             .textTheme
+                                                                              //             .titleSmall,
+                                                                              //         fontWeight: FontWeight.bold,
+                                                                              //         color:Colors.white ,
+                                                                              //       ),
+                                                                              //     ),
+                                                                              //   ),
+                                                                              // ),
+                                                                            ),
+                                                                          ],
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                    SizedBox(height: 5,),
+                                                                    // Icon(Icons.add, color: Colors.blue, size: 24,),
+                                                                    Text("${solutionData['Final_description']}",
+                                                                        maxLines: 2,
+                                                                        style: GoogleFonts.montserrat(
+                                                                            fontSize: 15,
+                                                                            color: Colors.black)),
+
+                                                                    SizedBox(height: 5,),
+
+                                                                    Align(
+                                                                      alignment: Alignment.bottomLeft,
+                                                                      child: Wrap(
+                                                                          spacing: 10,
+                                                                          runSpacing: 10,
+                                                                          crossAxisAlignment: WrapCrossAlignment.end,
+                                                                          alignment: WrapAlignment.end,
+                                                                          runAlignment: WrapAlignment.end,
+                                                                          children: [
+                                                                            ...matchedTags.take(2).map<Widget>((item) =>
+                                                                                Container(
+                                                                                  height: 25,
+                                                                                  // width: 200,
+                                                                                  padding: EdgeInsets.all(5),
+                                                                                  decoration: BoxDecoration(
+                                                                                      borderRadius: BorderRadius.circular(15),
+                                                                                      // color: Colors.teal
+                                                                                      gradient: LinearGradient(colors: [
+                                                                                        Color(0xe7e4dfee),
+                                                                                        Color(0xffe5d5fc),
+                                                                                      ]),
+                                                                                      color: Colors.grey
+                                                                                  ),
+                                                                                  child: GradientText("${item}",
+                                                                                    style: TextStyle(
+                                                                                      fontWeight: FontWeight.w700,
+                                                                                      fontSize: 10,
+                                                                                    ),
+                                                                                    gradientType: GradientType.linear,
+                                                                                    colors: [Colors.purple, Colors.deepPurple],
+                                                                                  ),
+                                                                                ),
+                                                                            ).toList(),
+                                                                            if (matchedTags.length > 2)
+                                                                              InkWell(
+                                                                                onTap: () {
+                                                                                  // Handle "more" button click;
+                                                                                },
+                                                                                child: Text(
+                                                                                  '...more (${matchedTags.length - 2})',
+                                                                                  style: TextStyle(
+                                                                                    color: Colors.blue,
+                                                                                    fontSize: 12,
+                                                                                    fontWeight: FontWeight.bold,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                          ]
+                                                                        // children: matchedTags.map<Widget>((item){
+                                                                        //   return Row(
+                                                                        //     mainAxisSize: MainAxisSize.min,
+                                                                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                        //     children: [
+                                                                        //       GradientText(item,
+                                                                        //         style: TextStyle(
+                                                                        //           fontWeight: FontWeight.w700,
+                                                                        //           fontSize: 10,
+                                                                        //           // color: Colors.white,
+                                                                        //         ),
+                                                                        //         gradientType: GradientType.linear,
+                                                                        //         colors: [
+                                                                        //           Colors.purple,
+                                                                        //           Colors.deepPurple,
+                                                                        //         ],
+                                                                        //       ),
+                                                                        //     ],
+                                                                        //   );
+                                                                        // }).toList() as List<Widget>,
+                                                                      ),
+                                                                    ),
+
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 8,),
+
+                                                    ],
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                            // SizedBox(height: 20,),
+                                            // Container(
+                                            //   height: 170 ,
+                                            //   child: FutureBuilder(
+                                            //     future: getRelatedChallenges(tags, keywords),
+                                            //     builder: (context, snapshot) {
+                                            //       if (snapshot.connectionState == ConnectionState.waiting) {
+                                            //         return Container(
+                                            //             width: 330,
+                                            //             child: Container(
+                                            //                 height: 20, // Adjust the height as needed
+                                            //                 width: 20,
+                                            //                 child: Center(
+                                            //                     child: CircularProgressIndicator()
+                                            //                 )
+                                            //             )
+                                            //         ); // Display a loading indicator while fetching data
+                                            //       } else if (snapshot.hasError) {
+                                            //         return Text('Error: ${snapshot.error}');
+                                            //       } else {
+                                            //         // List<DocumentSnapshot<Object?>>? relatedSolutions = snapshot.data;
+                                            //         List<DocumentSnapshot<Map<String, dynamic>>>? relatedChallenges = snapshot.data?.cast<DocumentSnapshot<Map<String, dynamic>>>();
+                                            //
+                                            //         // print("relatedSolutions: $relatedSolutions");
+                                            //
+                                            //         return Column(
+                                            //           mainAxisAlignment: MainAxisAlignment.start,
+                                            //           crossAxisAlignment: CrossAxisAlignment.start,
+                                            //           children: [
+                                            //             Padding(
+                                            //               padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+                                            //               child: Text("Related Challenges (${relatedChallenges?.length})",
+                                            //                   style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                            //                       fontSize: 20,
+                                            //                       color: Colors.black)
+                                            //               ),
+                                            //             ),
+                                            //             Expanded(
+                                            //               child: ListView.builder(
+                                            //                 scrollDirection: Axis.horizontal,
+                                            //                 shrinkWrap: true,
+                                            //                 itemCount: relatedChallenges?.length,
+                                            //                 itemBuilder: (c, i) {
+                                            //                   // relatedSolutionlength = relatedChallenges?.length;
+                                            //                   // print("relatedSolutionlength: $relatedSolutionlength");
+                                            //                   var challengesData = relatedChallenges?[i].data() as Map<String, dynamic>;
+                                            //                   print("solutionData: ${challengesData}");
+                                            //                   return Container(
+                                            //                     margin: EdgeInsets.symmetric(horizontal: 15),
+                                            //                     padding: EdgeInsets.all(12),
+                                            //                     width: 330,
+                                            //                     decoration: BoxDecoration(
+                                            //                       border: Border.all(color: Colors.orange),
+                                            //                       borderRadius: BorderRadius.circular(20),
+                                            //                     ),
+                                            //                     child: SingleChildScrollView(
+                                            //                       child: Column(
+                                            //                         mainAxisAlignment: MainAxisAlignment.start,
+                                            //                         crossAxisAlignment: CrossAxisAlignment.start,
+                                            //                         children: [
+                                            //                           Row(
+                                            //                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            //                             crossAxisAlignment: CrossAxisAlignment.start,
+                                            //                             children: [
+                                            //                               Flexible(
+                                            //                                 child: Text("${challengesData['Label']}",
+                                            //                                     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                            //                                         fontSize: 18,
+                                            //                                         color: Colors.black)),
+                                            //                               ),
+                                            //                               // InkWell(
+                                            //                               //   onTap: (){
+                                            //                               //     _userAboutMEProvider.isRecommendedAddedChallenge(true,  relatedChallenges![i]);
+                                            //                               //   },
+                                            //                               //   child: Container(
+                                            //                               //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                            //                               //     width: MediaQuery.of(context).size.width * .05,
+                                            //                               //     // width: MediaQuery.of(context).size.width * .15,
+                                            //                               //
+                                            //                               //     // height: 60,
+                                            //                               //     decoration: BoxDecoration(
+                                            //                               //       color:Colors.blue ,
+                                            //                               //       border: Border.all(
+                                            //                               //           color:Colors.blue ,
+                                            //                               //           width: 1.0),
+                                            //                               //       borderRadius: BorderRadius.circular(8.0),
+                                            //                               //     ),
+                                            //                               //     child: Center(
+                                            //                               //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                            //                               //       child: Text(
+                                            //                               //         'Add',
+                                            //                               //         style: GoogleFonts.montserrat(
+                                            //                               //           textStyle:
+                                            //                               //           Theme
+                                            //                               //               .of(context)
+                                            //                               //               .textTheme
+                                            //                               //               .titleSmall,
+                                            //                               //           fontWeight: FontWeight.bold,
+                                            //                               //           color:Colors.white ,
+                                            //                               //         ),
+                                            //                               //       ),
+                                            //                               //     ),
+                                            //                               //   ),
+                                            //                               // ),
+                                            //
+                                            //                               Row(
+                                            //                                 children: [
+                                            //                                   IconButton(
+                                            //                                       onPressed: (){
+                                            //                                         userAboutMEProvider.updateEditChallengePreview(
+                                            //                                             challengesData['Label'],
+                                            //                                             challengesData['Description'],
+                                            //                                             challengesData['Final_Description'],
+                                            //                                             challengesData['Impact'],
+                                            //                                             challengesData['Keywords'],
+                                            //                                             challengesData['tags'],
+                                            //                                             challengesData['id'],
+                                            //                                             isTrueOrFalse,
+                                            //                                             challengesData
+                                            //                                         );
+                                            //                                       },
+                                            //                                       icon: Icon(Icons.visibility, color: Colors.orange,)
+                                            //                                   ),
+                                            //                                   SizedBox(width: 5,),
+                                            //                                   (userAboutMEProvider.isEditChallengeListAdded[challengesData['id']] == true) ? Text(
+                                            //                                             'Added',
+                                            //                                             style: GoogleFonts.montserrat(
+                                            //                                               textStyle:
+                                            //                                               Theme
+                                            //                                                   .of(context)
+                                            //                                                   .textTheme
+                                            //                                                   .titleSmall,
+                                            //                                               fontStyle: FontStyle.italic,
+                                            //                                               color:Colors.orange ,
+                                            //                                             ),
+                                            //                                           ) : InkWell(
+                                            //                                             onTap: (){
+                                            //                                               // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
+                                            //                                               userAboutMEProvider.EditRecommendedChallengeAdd(true, relatedChallenges![i]);
+                                            //                                               toastification.show(context: context,
+                                            //                                                   title: Text('${challengesData['Label']} added to basket'),
+                                            //                                                   autoCloseDuration: Duration(milliseconds: 2500),
+                                            //                                                   alignment: Alignment.center,
+                                            //                                                   backgroundColor: Colors.orange,
+                                            //                                                   foregroundColor: Colors.white,
+                                            //                                                   icon: Icon(Icons.check_circle, color: Colors.white,),
+                                            //                                                   animationDuration: Duration(milliseconds: 1000),
+                                            //                                                   showProgressBar: false
+                                            //                                               );
+                                            //
+                                            //                                             },
+                                            //                                             child: Container(
+                                            //                                               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                            //                                               width: MediaQuery.of(context).size.width * .05,
+                                            //                                               // width: MediaQuery.of(context).size.width * .15,
+                                            //
+                                            //                                               // height: 60,
+                                            //                                               decoration: BoxDecoration(
+                                            //                                                 color:Colors.orange ,
+                                            //                                                 border: Border.all(
+                                            //                                                     color:Colors.orange ,
+                                            //                                                     width: 1.0),
+                                            //                                                 borderRadius: BorderRadius.circular(8.0),
+                                            //                                               ),
+                                            //                                               child: Center(
+                                            //                                                 // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                            //                                                 child: Text(
+                                            //                                                   'Add',
+                                            //                                                   style: GoogleFonts.montserrat(
+                                            //                                                     textStyle:
+                                            //                                                     Theme
+                                            //                                                         .of(context)
+                                            //                                                         .textTheme
+                                            //                                                         .titleSmall,
+                                            //                                                     fontWeight: FontWeight.bold,
+                                            //                                                     color:Colors.white ,
+                                            //                                                   ),
+                                            //                                                 ),
+                                            //                                               ),
+                                            //                                             ),
+                                            //                                           ),
+                                            //                                 ],
+                                            //                               ),
+                                            //
+                                            //                             ],
+                                            //                           ),
+                                            //                           SizedBox(height: 5,),
+                                            //                           // Text("${challengesData['Label']}",
+                                            //                           //     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                            //                           //         fontSize: 18,
+                                            //                           //         color: Colors.black)),
+                                            //                           Text("${challengesData['Final_description']}",
+                                            //                               maxLines: 3,
+                                            //                               style: GoogleFonts.montserrat(
+                                            //                                   fontSize: 15,
+                                            //                                   color: Colors.black)),
+                                            //                         ],
+                                            //                       ),
+                                            //                     ),
+                                            //                   );
+                                            //                 },
+                                            //               ),
+                                            //             ),
+                                            //           ],
+                                            //         );
+                                            //       }
+                                            //     },
+                                            //   ),
+                                            // ),
+                                          ],
                                         ),
-                                        // SizedBox(height: 20,),
-                                        // Container(
-                                        //   height: 170 ,
-                                        //   child: FutureBuilder(
-                                        //     future: getRelatedChallenges(tags, keywords),
-                                        //     builder: (context, snapshot) {
-                                        //       if (snapshot.connectionState == ConnectionState.waiting) {
-                                        //         return Container(
-                                        //             width: 330,
-                                        //             child: Container(
-                                        //                 height: 20, // Adjust the height as needed
-                                        //                 width: 20,
-                                        //                 child: Center(
-                                        //                     child: CircularProgressIndicator()
-                                        //                 )
-                                        //             )
-                                        //         ); // Display a loading indicator while fetching data
-                                        //       } else if (snapshot.hasError) {
-                                        //         return Text('Error: ${snapshot.error}');
-                                        //       } else {
-                                        //         // List<DocumentSnapshot<Object?>>? relatedSolutions = snapshot.data;
-                                        //         List<DocumentSnapshot<Map<String, dynamic>>>? relatedChallenges = snapshot.data?.cast<DocumentSnapshot<Map<String, dynamic>>>();
-                                        //
-                                        //         // print("relatedSolutions: $relatedSolutions");
-                                        //
-                                        //         return Column(
-                                        //           mainAxisAlignment: MainAxisAlignment.start,
-                                        //           crossAxisAlignment: CrossAxisAlignment.start,
-                                        //           children: [
-                                        //             Padding(
-                                        //               padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-                                        //               child: Text("Related Challenges (${relatedChallenges?.length})",
-                                        //                   style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                                        //                       fontSize: 20,
-                                        //                       color: Colors.black)
-                                        //               ),
-                                        //             ),
-                                        //             Expanded(
-                                        //               child: ListView.builder(
-                                        //                 scrollDirection: Axis.horizontal,
-                                        //                 shrinkWrap: true,
-                                        //                 itemCount: relatedChallenges?.length,
-                                        //                 itemBuilder: (c, i) {
-                                        //                   // relatedSolutionlength = relatedChallenges?.length;
-                                        //                   // print("relatedSolutionlength: $relatedSolutionlength");
-                                        //                   var challengesData = relatedChallenges?[i].data() as Map<String, dynamic>;
-                                        //                   print("solutionData: ${challengesData}");
-                                        //                   return Container(
-                                        //                     margin: EdgeInsets.symmetric(horizontal: 15),
-                                        //                     padding: EdgeInsets.all(12),
-                                        //                     width: 330,
-                                        //                     decoration: BoxDecoration(
-                                        //                       border: Border.all(color: Colors.orange),
-                                        //                       borderRadius: BorderRadius.circular(20),
-                                        //                     ),
-                                        //                     child: SingleChildScrollView(
-                                        //                       child: Column(
-                                        //                         mainAxisAlignment: MainAxisAlignment.start,
-                                        //                         crossAxisAlignment: CrossAxisAlignment.start,
-                                        //                         children: [
-                                        //                           Row(
-                                        //                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        //                             crossAxisAlignment: CrossAxisAlignment.start,
-                                        //                             children: [
-                                        //                               Flexible(
-                                        //                                 child: Text("${challengesData['Label']}",
-                                        //                                     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                                        //                                         fontSize: 18,
-                                        //                                         color: Colors.black)),
-                                        //                               ),
-                                        //                               // InkWell(
-                                        //                               //   onTap: (){
-                                        //                               //     _userAboutMEProvider.isRecommendedAddedChallenge(true,  relatedChallenges![i]);
-                                        //                               //   },
-                                        //                               //   child: Container(
-                                        //                               //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                        //                               //     width: MediaQuery.of(context).size.width * .05,
-                                        //                               //     // width: MediaQuery.of(context).size.width * .15,
-                                        //                               //
-                                        //                               //     // height: 60,
-                                        //                               //     decoration: BoxDecoration(
-                                        //                               //       color:Colors.blue ,
-                                        //                               //       border: Border.all(
-                                        //                               //           color:Colors.blue ,
-                                        //                               //           width: 1.0),
-                                        //                               //       borderRadius: BorderRadius.circular(8.0),
-                                        //                               //     ),
-                                        //                               //     child: Center(
-                                        //                               //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                        //                               //       child: Text(
-                                        //                               //         'Add',
-                                        //                               //         style: GoogleFonts.montserrat(
-                                        //                               //           textStyle:
-                                        //                               //           Theme
-                                        //                               //               .of(context)
-                                        //                               //               .textTheme
-                                        //                               //               .titleSmall,
-                                        //                               //           fontWeight: FontWeight.bold,
-                                        //                               //           color:Colors.white ,
-                                        //                               //         ),
-                                        //                               //       ),
-                                        //                               //     ),
-                                        //                               //   ),
-                                        //                               // ),
-                                        //
-                                        //                               Row(
-                                        //                                 children: [
-                                        //                                   IconButton(
-                                        //                                       onPressed: (){
-                                        //                                         userAboutMEProvider.updateEditChallengePreview(
-                                        //                                             challengesData['Label'],
-                                        //                                             challengesData['Description'],
-                                        //                                             challengesData['Final_Description'],
-                                        //                                             challengesData['Impact'],
-                                        //                                             challengesData['Keywords'],
-                                        //                                             challengesData['tags'],
-                                        //                                             challengesData['id'],
-                                        //                                             isTrueOrFalse,
-                                        //                                             challengesData
-                                        //                                         );
-                                        //                                       },
-                                        //                                       icon: Icon(Icons.visibility, color: Colors.orange,)
-                                        //                                   ),
-                                        //                                   SizedBox(width: 5,),
-                                        //                                   (userAboutMEProvider.isEditChallengeListAdded[challengesData['id']] == true) ? Text(
-                                        //                                             'Added',
-                                        //                                             style: GoogleFonts.montserrat(
-                                        //                                               textStyle:
-                                        //                                               Theme
-                                        //                                                   .of(context)
-                                        //                                                   .textTheme
-                                        //                                                   .titleSmall,
-                                        //                                               fontStyle: FontStyle.italic,
-                                        //                                               color:Colors.orange ,
-                                        //                                             ),
-                                        //                                           ) : InkWell(
-                                        //                                             onTap: (){
-                                        //                                               // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
-                                        //                                               userAboutMEProvider.EditRecommendedChallengeAdd(true, relatedChallenges![i]);
-                                        //                                               toastification.show(context: context,
-                                        //                                                   title: Text('${challengesData['Label']} added to basket'),
-                                        //                                                   autoCloseDuration: Duration(milliseconds: 2500),
-                                        //                                                   alignment: Alignment.center,
-                                        //                                                   backgroundColor: Colors.orange,
-                                        //                                                   foregroundColor: Colors.white,
-                                        //                                                   icon: Icon(Icons.check_circle, color: Colors.white,),
-                                        //                                                   animationDuration: Duration(milliseconds: 1000),
-                                        //                                                   showProgressBar: false
-                                        //                                               );
-                                        //
-                                        //                                             },
-                                        //                                             child: Container(
-                                        //                                               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                        //                                               width: MediaQuery.of(context).size.width * .05,
-                                        //                                               // width: MediaQuery.of(context).size.width * .15,
-                                        //
-                                        //                                               // height: 60,
-                                        //                                               decoration: BoxDecoration(
-                                        //                                                 color:Colors.orange ,
-                                        //                                                 border: Border.all(
-                                        //                                                     color:Colors.orange ,
-                                        //                                                     width: 1.0),
-                                        //                                                 borderRadius: BorderRadius.circular(8.0),
-                                        //                                               ),
-                                        //                                               child: Center(
-                                        //                                                 // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                        //                                                 child: Text(
-                                        //                                                   'Add',
-                                        //                                                   style: GoogleFonts.montserrat(
-                                        //                                                     textStyle:
-                                        //                                                     Theme
-                                        //                                                         .of(context)
-                                        //                                                         .textTheme
-                                        //                                                         .titleSmall,
-                                        //                                                     fontWeight: FontWeight.bold,
-                                        //                                                     color:Colors.white ,
-                                        //                                                   ),
-                                        //                                                 ),
-                                        //                                               ),
-                                        //                                             ),
-                                        //                                           ),
-                                        //                                 ],
-                                        //                               ),
-                                        //
-                                        //                             ],
-                                        //                           ),
-                                        //                           SizedBox(height: 5,),
-                                        //                           // Text("${challengesData['Label']}",
-                                        //                           //     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                                        //                           //         fontSize: 18,
-                                        //                           //         color: Colors.black)),
-                                        //                           Text("${challengesData['Final_description']}",
-                                        //                               maxLines: 3,
-                                        //                               style: GoogleFonts.montserrat(
-                                        //                                   fontSize: 15,
-                                        //                                   color: Colors.black)),
-                                        //                         ],
-                                        //                       ),
-                                        //                     ),
-                                        //                   );
-                                        //                 },
-                                        //               ),
-                                        //             ),
-                                        //           ],
-                                        //         );
-                                        //       }
-                                        //     },
-                                        //   ),
-                                        // ),
-                                      ],
+                                      ),
                                     ),
                                   ),
-                                ),
+                                  // SizedBox(width:10),
+                                  // Flexible(
+                                  //   // flex: 1,
+                                  //   child: Container(
+                                  //     // height: 400,
+                                  //     padding: EdgeInsets.all(15),
+                                  //     decoration: BoxDecoration(
+                                  //       border: Border.all(color: Colors.green, width: 4),
+                                  //       borderRadius: BorderRadius.circular(20),
+                                  //     ),
+                                  //     child: SingleChildScrollView(
+                                  //       child: Column(
+                                  //         mainAxisAlignment: MainAxisAlignment.start,
+                                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                                  //         mainAxisSize: MainAxisSize.max,
+                                  //         children: [
+                                  //           Container(
+                                  //             // height: 205 ,
+                                  //             height:  MediaQuery.of(context).size.height * 0.22,
+                                  //             width: MediaQuery.of(context).size.width,
+                                  //             child:  Consumer<UniversalListProvider>(
+                                  //               builder: (context, provider, child) {
+                                  //                 var relatedSolutions = provider.getRelatedSolutionList;
+                                  //                 return Column(
+                                  //                   mainAxisAlignment: MainAxisAlignment.start,
+                                  //                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  //                   children: [
+                                  //                     Padding(
+                                  //                       padding: const EdgeInsets.symmetric(horizontal: 16.0,),
+                                  //                       child: Row(
+                                  //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  //                         children: [
+                                  //                           Text("Suggested solutions (${relatedSolutions?.length}):",
+                                  //                               style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                  //                                   fontSize: 20,
+                                  //                                   color: Colors.black)
+                                  //                           ),
+                                  //
+                                  //                           Row(
+                                  //                             children: [
+                                  //                               IconButton(
+                                  //                                 onPressed: () {
+                                  //                                   // Scroll the ListView.builder to the left
+                                  //                                   // You can adjust the scroll distance according to your requirement
+                                  //                                   // by changing the offset value
+                                  //                                   _scrollController2.animateTo(
+                                  //                                     _scrollController2.offset - 200,
+                                  //                                     curve: Curves.linear,
+                                  //                                     duration: Duration(milliseconds: 300),
+                                  //                                   );
+                                  //                                 },
+                                  //                                 icon: Icon(Icons.arrow_back),
+                                  //                               ),
+                                  //                               SizedBox(width: 10,),
+                                  //                               IconButton(
+                                  //                                 onPressed: () {
+                                  //                                   // Scroll the ListView.builder to the right
+                                  //                                   // You can adjust the scroll distance according to your requirement
+                                  //                                   // by changing the offset value
+                                  //                                   _scrollController2.animateTo(
+                                  //                                     _scrollController2.offset + 200,
+                                  //                                     curve: Curves.linear,
+                                  //                                     duration: Duration(milliseconds: 300),
+                                  //                                   );
+                                  //                                 },
+                                  //                                 icon: Icon(Icons.arrow_forward),
+                                  //                               ),
+                                  //
+                                  //                             ],
+                                  //                           ),
+                                  //
+                                  //                         ],
+                                  //                       ),
+                                  //                     ),
+                                  //                     SizedBox(height: 8,),
+                                  //                     Expanded(
+                                  //                       child: ListView.builder(
+                                  //                         scrollDirection: Axis.horizontal,
+                                  //                         controller: _scrollController2,
+                                  //                         shrinkWrap: true,
+                                  //                         itemCount: relatedSolutions?.length,
+                                  //                         itemBuilder: (c, i) {
+                                  //                           // relatedSolutionlength = relatedSolutions?.length;
+                                  //                           // print("relatedSolutionlength: $relatedSolutionlength");
+                                  //
+                                  //                           var solutionData = relatedSolutions[i];
+                                  //                           var matchedTags = solutionData['matchedTags'] ?? [];
+                                  //
+                                  //                           // print("solutionData: ${solutionData}");
+                                  //                           return Container(
+                                  //                             margin: EdgeInsets.symmetric(horizontal: 15),
+                                  //                             padding: EdgeInsets.all(12),
+                                  //                             // width: 330,
+                                  //                             // width: MediaQuery.of(context).size.width * 0.17,
+                                  //                             width: MediaQuery.of(context).size.width * 0.19,
+                                  //                             // height: MediaQuery.of(context).size.height * 0.08,
+                                  //                             decoration: BoxDecoration(
+                                  //                               border: Border.all(color: Colors.green,width : 2),
+                                  //                               borderRadius: BorderRadius.circular(20),
+                                  //                             ),
+                                  //                             child: SingleChildScrollView(
+                                  //                               child: Column(
+                                  //                                 mainAxisAlignment: MainAxisAlignment.start,
+                                  //                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                  //                                 children: [
+                                  //                                   Row(
+                                  //                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  //                                     crossAxisAlignment: CrossAxisAlignment.center,
+                                  //                                     children: [
+                                  //                                       Flexible(
+                                  //                                         child: Text("${solutionData['Label']}",
+                                  //                                             maxLines: 2,
+                                  //                                             style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                  //                                                 fontSize: 15,
+                                  //                                                 color: Colors.black)),
+                                  //                                       ),
+                                  //                                       SizedBox(width: 5,),
+                                  //                                       // InkWell(
+                                  //                                       //   onTap: (){
+                                  //                                       //     _userAboutMEProvider.isRecommendedAddedSolutions(true, relatedSolutions![i]);
+                                  //                                       //   },
+                                  //                                       //   child: Container(
+                                  //                                       //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                  //                                       //     width: MediaQuery.of(context).size.width * .05,
+                                  //                                       //     // width: MediaQuery.of(context).size.width * .15,
+                                  //                                       //
+                                  //                                       //     // height: 60,
+                                  //                                       //     decoration: BoxDecoration(
+                                  //                                       //       color:Colors.blue ,
+                                  //                                       //       border: Border.all(
+                                  //                                       //           color:Colors.blue ,
+                                  //                                       //           width: 1.0),
+                                  //                                       //       borderRadius: BorderRadius.circular(8.0),
+                                  //                                       //     ),
+                                  //                                       //     child: Center(
+                                  //                                       //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                  //                                       //       child: Text(
+                                  //                                       //         'Add',
+                                  //                                       //         style: GoogleFonts.montserrat(
+                                  //                                       //           textStyle:
+                                  //                                       //           Theme
+                                  //                                       //               .of(context)
+                                  //                                       //               .textTheme
+                                  //                                       //               .titleSmall,
+                                  //                                       //           fontWeight: FontWeight.bold,
+                                  //                                       //           color:Colors.white ,
+                                  //                                       //         ),
+                                  //                                       //       ),
+                                  //                                       //     ),
+                                  //                                       //   ),
+                                  //                                       // ),
+                                  //                                       Row(
+                                  //                                         children: [
+                                  //                                           IconButton(
+                                  //                                               onPressed: (){
+                                  //                                                 Navigator.pop(context);
+                                  //                                                 userAboutMEProvider.updateEditSolutionPreview(
+                                  //                                                     solutionData['Label'], solutionData['Description'], solutionData['Final_description'], solutionData['Impact'],
+                                  //                                                     solutionData['Keywords'], solutionData['tags'], solutionData['id'], isTrueOrFalse, solutionData,
+                                  //                                                     false, solutionData['Helps'], solutionData['Positive_impacts_to_employee'], solutionData['Positive_impacts_to_organisation'],
+                                  //                                                     solutionData['Related_solution_tags'], solutionData['Suggested_challenges_tags'], solutionData['Linked_challenges']
+                                  //                                                 );
+                                  //                                                 NewSolViewDialog(solutionData['Label'],
+                                  //                                                   solutionData['Description'],
+                                  //                                                   solutionData['Impact'],
+                                  //                                                   solutionData['Final_description'],
+                                  //                                                   solutionData['Keywords'],
+                                  //                                                   solutionData['tags'],
+                                  //                                                   solutionData['id'],
+                                  //                                                   solutionData,
+                                  //                                                   userAboutMEProvider.isEditSolutionListAdded,
+                                  //                                                   userAboutMEProvider.EditRecommendedSolutionAdd,
+                                  //                                                   solutionData['Helps'],
+                                  //                                                     solutionData['Positive_impacts_to_employee'],
+                                  //                                                     solutionData['Positive_impacts_to_organisation'],
+                                  //                                                     solutionData['Related_solution_tags'],
+                                  //                                                     solutionData['Suggested_challenges_tags'],
+                                  //                                                     solutionData['Linked_challenges']);
+                                  //
+                                  //                                                 _universalListProvider.filterChallenges(solutionData['tags']);
+                                  //                                                 _universalListProvider.filterSolutions(solutionData['tags']);
+                                  //                                                 _universalListProvider.filterLinkedChallenges(solutionData['Linked_challenges'],solutionData['tags']);
+                                  //                                                 // userAboutMEProvider.updateEditSolutionPreview(
+                                  //                                                 //     solutionData['Label'],
+                                  //                                                 //     solutionData['Description'],
+                                  //                                                 //     solutionData['Final_description'],
+                                  //                                                 //     solutionData['Impact'],
+                                  //                                                 //     solutionData['Keywords'],
+                                  //                                                 //     solutionData['tags'],
+                                  //                                                 //     solutionData['id'],
+                                  //                                                 //     isTrueOrFalse,
+                                  //                                                 //     solutionData,
+                                  //                                                 //   true
+                                  //                                                 // );
+                                  //                                               },
+                                  //
+                                  //                                               icon: Icon(Icons.visibility, color: Colors.blue,)
+                                  //                                           ),
+                                  //                                           SizedBox(width: 5,),
+                                  //
+                                  //                                           (userAboutMEProvider.isEditSolutionListAdded[solutionData['id']] == true) ? Text(
+                                  //                                             'Added',
+                                  //                                             style: GoogleFonts.montserrat(
+                                  //                                               textStyle:
+                                  //                                               Theme
+                                  //                                                   .of(context)
+                                  //                                                   .textTheme
+                                  //                                                   .titleSmall,
+                                  //                                               fontStyle: FontStyle.italic,
+                                  //                                               color:Colors.green ,
+                                  //                                             ),
+                                  //                                           ) : InkWell(
+                                  //                                               onTap: (){
+                                  //                                                 // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
+                                  //                                                 userAboutMEProvider.EditRecommendedSolutionAdd(true, relatedSolutions![i]);
+                                  //                                                 toastification.show(context: context,
+                                  //                                                     title: Text('${solutionData['Label']} added to basket'),
+                                  //                                                     autoCloseDuration: Duration(milliseconds: 2500),
+                                  //                                                     alignment: Alignment.center,
+                                  //                                                     backgroundColor: Colors.green,
+                                  //                                                     foregroundColor: Colors.white,
+                                  //                                                     icon: Icon(Icons.check_circle, color: Colors.white,),
+                                  //                                                     animationDuration: Duration(milliseconds: 1000),
+                                  //                                                     showProgressBar: false
+                                  //                                                 );
+                                  //                                               },
+                                  //                                               child: Icon(Icons.add_circle, color: Colors.blue,)
+                                  //                                             // child: Container(
+                                  //                                             //   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                  //                                             //   width: MediaQuery.of(context).size.width * .05,
+                                  //                                             //   // width: MediaQuery.of(context).size.width * .15,
+                                  //                                             //
+                                  //                                             //   // height: 60,
+                                  //                                             //   decoration: BoxDecoration(
+                                  //                                             //     color:Colors.blue ,
+                                  //                                             //     border: Border.all(
+                                  //                                             //         color:Colors.blue ,
+                                  //                                             //         width: 1.0),
+                                  //                                             //     borderRadius: BorderRadius.circular(8.0),
+                                  //                                             //   ),
+                                  //                                             //   child: Center(
+                                  //                                             //     // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                  //                                             //     child: Text(
+                                  //                                             //       'Add',
+                                  //                                             //       style: GoogleFonts.montserrat(
+                                  //                                             //         textStyle:
+                                  //                                             //         Theme
+                                  //                                             //             .of(context)
+                                  //                                             //             .textTheme
+                                  //                                             //             .titleSmall,
+                                  //                                             //         fontWeight: FontWeight.bold,
+                                  //                                             //         color:Colors.white ,
+                                  //                                             //       ),
+                                  //                                             //     ),
+                                  //                                             //   ),
+                                  //                                             // ),
+                                  //                                           ),
+                                  //                                         ],
+                                  //                                       )
+                                  //                                     ],
+                                  //                                   ),
+                                  //                                   SizedBox(height: 5,),
+                                  //                                   // Icon(Icons.add, color: Colors.blue, size: 24,),
+                                  //                                   Text("${solutionData['Final_description']}",
+                                  //                                       maxLines: 2,
+                                  //                                       style: GoogleFonts.montserrat(
+                                  //                                           fontSize: 15,
+                                  //                                           color: Colors.black)),
+                                  //
+                                  //                                   SizedBox(height: 5,),
+                                  //
+                                  //                                   Align(
+                                  //                                     alignment: Alignment.bottomLeft,
+                                  //                                     child: Wrap(
+                                  //                                         spacing: 10,
+                                  //                                         runSpacing: 10,
+                                  //                                         crossAxisAlignment: WrapCrossAlignment.end,
+                                  //                                         alignment: WrapAlignment.end,
+                                  //                                         runAlignment: WrapAlignment.end,
+                                  //                                         children: [
+                                  //                                           ...matchedTags.take(2).map<Widget>((item) =>
+                                  //                                               Container(
+                                  //                                                 height: 25,
+                                  //                                                 // width: 200,
+                                  //                                                 padding: EdgeInsets.all(5),
+                                  //                                                 decoration: BoxDecoration(
+                                  //                                                     borderRadius: BorderRadius.circular(15),
+                                  //                                                     // color: Colors.teal
+                                  //                                                     gradient: LinearGradient(colors: [
+                                  //                                                       Color(0xe7e4dfee),
+                                  //                                                       Color(0xffe5d5fc),
+                                  //                                                     ]),
+                                  //                                                     color: Colors.grey
+                                  //                                                 ),
+                                  //                                                 child: GradientText("${item}",
+                                  //                                                   style: TextStyle(
+                                  //                                                     fontWeight: FontWeight.w700,
+                                  //                                                     fontSize: 10,
+                                  //                                                   ),
+                                  //                                                   gradientType: GradientType.linear,
+                                  //                                                   colors: [Colors.purple, Colors.deepPurple],
+                                  //                                                 ),
+                                  //                                               ),
+                                  //                                           ).toList(),
+                                  //                                           if (matchedTags.length > 2)
+                                  //                                             InkWell(
+                                  //                                               onTap: () {
+                                  //                                                 // Handle "more" button click;
+                                  //                                               },
+                                  //                                               child: Text(
+                                  //                                                 '...more (${matchedTags.length - 2})',
+                                  //                                                 style: TextStyle(
+                                  //                                                   color: Colors.blue,
+                                  //                                                   fontSize: 12,
+                                  //                                                   fontWeight: FontWeight.bold,
+                                  //                                                 ),
+                                  //                                               ),
+                                  //                                             ),
+                                  //                                         ]
+                                  //                                       // children: matchedTags.map<Widget>((item){
+                                  //                                       //   return Row(
+                                  //                                       //     mainAxisSize: MainAxisSize.min,
+                                  //                                       //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  //                                       //     children: [
+                                  //                                       //       GradientText(item,
+                                  //                                       //         style: TextStyle(
+                                  //                                       //           fontWeight: FontWeight.w700,
+                                  //                                       //           fontSize: 10,
+                                  //                                       //           // color: Colors.white,
+                                  //                                       //         ),
+                                  //                                       //         gradientType: GradientType.linear,
+                                  //                                       //         colors: [
+                                  //                                       //           Colors.purple,
+                                  //                                       //           Colors.deepPurple,
+                                  //                                       //         ],
+                                  //                                       //       ),
+                                  //                                       //     ],
+                                  //                                       //   );
+                                  //                                       // }).toList() as List<Widget>,
+                                  //                                     ),
+                                  //                                   ),
+                                  //
+                                  //                                 ],
+                                  //                               ),
+                                  //                             ),
+                                  //                           );
+                                  //                         },
+                                  //                       ),
+                                  //                     ),
+                                  //                     SizedBox(height: 8,),
+                                  //
+                                  //                   ],
+                                  //                 );
+                                  //               },
+                                  //             ),
+                                  //           ),
+                                  //           // SizedBox(height: 20,),
+                                  //           // Container(
+                                  //           //   height: 170 ,
+                                  //           //   child: FutureBuilder(
+                                  //           //     future: getRelatedChallenges(tags, keywords),
+                                  //           //     builder: (context, snapshot) {
+                                  //           //       if (snapshot.connectionState == ConnectionState.waiting) {
+                                  //           //         return Container(
+                                  //           //             width: 330,
+                                  //           //             child: Container(
+                                  //           //                 height: 20, // Adjust the height as needed
+                                  //           //                 width: 20,
+                                  //           //                 child: Center(
+                                  //           //                     child: CircularProgressIndicator()
+                                  //           //                 )
+                                  //           //             )
+                                  //           //         ); // Display a loading indicator while fetching data
+                                  //           //       } else if (snapshot.hasError) {
+                                  //           //         return Text('Error: ${snapshot.error}');
+                                  //           //       } else {
+                                  //           //         // List<DocumentSnapshot<Object?>>? relatedSolutions = snapshot.data;
+                                  //           //         List<DocumentSnapshot<Map<String, dynamic>>>? relatedChallenges = snapshot.data?.cast<DocumentSnapshot<Map<String, dynamic>>>();
+                                  //           //
+                                  //           //         // print("relatedSolutions: $relatedSolutions");
+                                  //           //
+                                  //           //         return Column(
+                                  //           //           mainAxisAlignment: MainAxisAlignment.start,
+                                  //           //           crossAxisAlignment: CrossAxisAlignment.start,
+                                  //           //           children: [
+                                  //           //             Padding(
+                                  //           //               padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+                                  //           //               child: Text("Related Challenges (${relatedChallenges?.length})",
+                                  //           //                   style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                  //           //                       fontSize: 20,
+                                  //           //                       color: Colors.black)
+                                  //           //               ),
+                                  //           //             ),
+                                  //           //             Expanded(
+                                  //           //               child: ListView.builder(
+                                  //           //                 scrollDirection: Axis.horizontal,
+                                  //           //                 shrinkWrap: true,
+                                  //           //                 itemCount: relatedChallenges?.length,
+                                  //           //                 itemBuilder: (c, i) {
+                                  //           //                   // relatedSolutionlength = relatedChallenges?.length;
+                                  //           //                   // print("relatedSolutionlength: $relatedSolutionlength");
+                                  //           //                   var challengesData = relatedChallenges?[i].data() as Map<String, dynamic>;
+                                  //           //                   print("solutionData: ${challengesData}");
+                                  //           //                   return Container(
+                                  //           //                     margin: EdgeInsets.symmetric(horizontal: 15),
+                                  //           //                     padding: EdgeInsets.all(12),
+                                  //           //                     width: 330,
+                                  //           //                     decoration: BoxDecoration(
+                                  //           //                       border: Border.all(color: Colors.orange),
+                                  //           //                       borderRadius: BorderRadius.circular(20),
+                                  //           //                     ),
+                                  //           //                     child: SingleChildScrollView(
+                                  //           //                       child: Column(
+                                  //           //                         mainAxisAlignment: MainAxisAlignment.start,
+                                  //           //                         crossAxisAlignment: CrossAxisAlignment.start,
+                                  //           //                         children: [
+                                  //           //                           Row(
+                                  //           //                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  //           //                             crossAxisAlignment: CrossAxisAlignment.start,
+                                  //           //                             children: [
+                                  //           //                               Flexible(
+                                  //           //                                 child: Text("${challengesData['Label']}",
+                                  //           //                                     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                  //           //                                         fontSize: 18,
+                                  //           //                                         color: Colors.black)),
+                                  //           //                               ),
+                                  //           //                               // InkWell(
+                                  //           //                               //   onTap: (){
+                                  //           //                               //     _userAboutMEProvider.isRecommendedAddedChallenge(true,  relatedChallenges![i]);
+                                  //           //                               //   },
+                                  //           //                               //   child: Container(
+                                  //           //                               //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                  //           //                               //     width: MediaQuery.of(context).size.width * .05,
+                                  //           //                               //     // width: MediaQuery.of(context).size.width * .15,
+                                  //           //                               //
+                                  //           //                               //     // height: 60,
+                                  //           //                               //     decoration: BoxDecoration(
+                                  //           //                               //       color:Colors.blue ,
+                                  //           //                               //       border: Border.all(
+                                  //           //                               //           color:Colors.blue ,
+                                  //           //                               //           width: 1.0),
+                                  //           //                               //       borderRadius: BorderRadius.circular(8.0),
+                                  //           //                               //     ),
+                                  //           //                               //     child: Center(
+                                  //           //                               //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                  //           //                               //       child: Text(
+                                  //           //                               //         'Add',
+                                  //           //                               //         style: GoogleFonts.montserrat(
+                                  //           //                               //           textStyle:
+                                  //           //                               //           Theme
+                                  //           //                               //               .of(context)
+                                  //           //                               //               .textTheme
+                                  //           //                               //               .titleSmall,
+                                  //           //                               //           fontWeight: FontWeight.bold,
+                                  //           //                               //           color:Colors.white ,
+                                  //           //                               //         ),
+                                  //           //                               //       ),
+                                  //           //                               //     ),
+                                  //           //                               //   ),
+                                  //           //                               // ),
+                                  //           //
+                                  //           //                               Row(
+                                  //           //                                 children: [
+                                  //           //                                   IconButton(
+                                  //           //                                       onPressed: (){
+                                  //           //                                         userAboutMEProvider.updateEditChallengePreview(
+                                  //           //                                             challengesData['Label'],
+                                  //           //                                             challengesData['Description'],
+                                  //           //                                             challengesData['Final_Description'],
+                                  //           //                                             challengesData['Impact'],
+                                  //           //                                             challengesData['Keywords'],
+                                  //           //                                             challengesData['tags'],
+                                  //           //                                             challengesData['id'],
+                                  //           //                                             isTrueOrFalse,
+                                  //           //                                             challengesData
+                                  //           //                                         );
+                                  //           //                                       },
+                                  //           //                                       icon: Icon(Icons.visibility, color: Colors.orange,)
+                                  //           //                                   ),
+                                  //           //                                   SizedBox(width: 5,),
+                                  //           //                                   (userAboutMEProvider.isEditChallengeListAdded[challengesData['id']] == true) ? Text(
+                                  //           //                                             'Added',
+                                  //           //                                             style: GoogleFonts.montserrat(
+                                  //           //                                               textStyle:
+                                  //           //                                               Theme
+                                  //           //                                                   .of(context)
+                                  //           //                                                   .textTheme
+                                  //           //                                                   .titleSmall,
+                                  //           //                                               fontStyle: FontStyle.italic,
+                                  //           //                                               color:Colors.orange ,
+                                  //           //                                             ),
+                                  //           //                                           ) : InkWell(
+                                  //           //                                             onTap: (){
+                                  //           //                                               // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
+                                  //           //                                               userAboutMEProvider.EditRecommendedChallengeAdd(true, relatedChallenges![i]);
+                                  //           //                                               toastification.show(context: context,
+                                  //           //                                                   title: Text('${challengesData['Label']} added to basket'),
+                                  //           //                                                   autoCloseDuration: Duration(milliseconds: 2500),
+                                  //           //                                                   alignment: Alignment.center,
+                                  //           //                                                   backgroundColor: Colors.orange,
+                                  //           //                                                   foregroundColor: Colors.white,
+                                  //           //                                                   icon: Icon(Icons.check_circle, color: Colors.white,),
+                                  //           //                                                   animationDuration: Duration(milliseconds: 1000),
+                                  //           //                                                   showProgressBar: false
+                                  //           //                                               );
+                                  //           //
+                                  //           //                                             },
+                                  //           //                                             child: Container(
+                                  //           //                                               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                  //           //                                               width: MediaQuery.of(context).size.width * .05,
+                                  //           //                                               // width: MediaQuery.of(context).size.width * .15,
+                                  //           //
+                                  //           //                                               // height: 60,
+                                  //           //                                               decoration: BoxDecoration(
+                                  //           //                                                 color:Colors.orange ,
+                                  //           //                                                 border: Border.all(
+                                  //           //                                                     color:Colors.orange ,
+                                  //           //                                                     width: 1.0),
+                                  //           //                                                 borderRadius: BorderRadius.circular(8.0),
+                                  //           //                                               ),
+                                  //           //                                               child: Center(
+                                  //           //                                                 // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                  //           //                                                 child: Text(
+                                  //           //                                                   'Add',
+                                  //           //                                                   style: GoogleFonts.montserrat(
+                                  //           //                                                     textStyle:
+                                  //           //                                                     Theme
+                                  //           //                                                         .of(context)
+                                  //           //                                                         .textTheme
+                                  //           //                                                         .titleSmall,
+                                  //           //                                                     fontWeight: FontWeight.bold,
+                                  //           //                                                     color:Colors.white ,
+                                  //           //                                                   ),
+                                  //           //                                                 ),
+                                  //           //                                               ),
+                                  //           //                                             ),
+                                  //           //                                           ),
+                                  //           //                                 ],
+                                  //           //                               ),
+                                  //           //
+                                  //           //                             ],
+                                  //           //                           ),
+                                  //           //                           SizedBox(height: 5,),
+                                  //           //                           // Text("${challengesData['Label']}",
+                                  //           //                           //     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                  //           //                           //         fontSize: 18,
+                                  //           //                           //         color: Colors.black)),
+                                  //           //                           Text("${challengesData['Final_description']}",
+                                  //           //                               maxLines: 3,
+                                  //           //                               style: GoogleFonts.montserrat(
+                                  //           //                                   fontSize: 15,
+                                  //           //                                   color: Colors.black)),
+                                  //           //                         ],
+                                  //           //                       ),
+                                  //           //                     ),
+                                  //           //                   );
+                                  //           //                 },
+                                  //           //               ),
+                                  //           //             ),
+                                  //           //           ],
+                                  //           //         );
+                                  //           //       }
+                                  //           //     },
+                                  //           //   ),
+                                  //           // ),
+                                  //         ],
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                ],
                               ),
                             ],
                           ),
@@ -22735,8 +23501,12 @@ catch(e){
   }
 
   void NewSolViewDialog(Label, Description, Impact, FinalDescription, keywords, tags, insideId,document,isTrueOrFalse,AddButton,
-      Help,PositiveImpactstoEmployee,PositiveImpactstoOrganisation,RelatedSolutionsTags,SuggestedChallengesTags) {
+      Help,PositiveImpactstoEmployee,PositiveImpactstoOrganisation,RelatedSolutionsTags,SuggestedChallengesTags,Linked) {
 
+    print("NewSolViewDialog");
+
+    // _userAboutMEProvider.updateEditSolutionPreview(Label, Description, FinalDescription, Impact,keywords,tags,insideId,isTrueOrFalse, document,false,
+    //     Help,PositiveImpactstoEmployee,PositiveImpactstoOrganisation,RelatedSolutionsTags,SuggestedChallengesTags,Linked);
 
     final DateFormat formatter = DateFormat("MMMM d, yyyy 'at' h:mm:ss a 'UTC'Z");
 
@@ -22749,6 +23519,9 @@ catch(e){
     for(int i=0;i<6;i++){
       textControllers.add(TextEditingController());
     }
+
+
+
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -22761,7 +23534,7 @@ catch(e){
                       userAboutMEProvider.editpreviewtags.isNotEmpty || userAboutMEProvider.editpreview !=null ||
                   userAboutMEProvider.editpreviewImpactToCoworker !=null || userAboutMEProvider.editpreviewImpactToEmployee !=null ||
                   userAboutMEProvider.editpreviewNegativeImpactToOrganisation !=null || userAboutMEProvider.editpreviewRelatedChallengesTag.isNotEmpty ||
-                  userAboutMEProvider.editpreviewSuggestedChallengesTag.isNotEmpty){
+                  userAboutMEProvider.editpreviewSuggestedChallengesTag.isNotEmpty||userAboutMEProvider.editLinked.isNotEmpty){
                     Label = userAboutMEProvider.editpreviewname;
                     Description = userAboutMEProvider.editpreviewDescription;
                     FinalDescription = userAboutMEProvider.editpreviewFinalDescription;
@@ -22775,10 +23548,25 @@ catch(e){
                     PositiveImpactstoOrganisation = userAboutMEProvider.editpreviewNegativeImpactToOrganisation;
                     RelatedSolutionsTags = userAboutMEProvider.editpreviewRelatedChallengesTag;
                     SuggestedChallengesTags = userAboutMEProvider.editpreviewSuggestedChallengesTag;
-
+                    Linked = userAboutMEProvider.editLinked;
                   }
                   _challengesProvider.addkeywordsList(keywords);
                   _challengesProvider.addProviderEditTagsList(tags);
+
+                  print("After Prrovider Label: ${Label}");
+                  print("After Prrovider Description: ${Description}");
+                  print("After Prrovider FinalDescription: ${FinalDescription}");
+                  print("After Prrovider insideId: ${insideId}");
+                  print("After Prrovider Impact: ${Impact}");
+                  print("After Prrovider keywords.length: ${keywords.length}");
+                  print("After Prrovider tags.length: ${tags.length}");
+                  // print("After Prrovider document: ${document}");
+                  print("After Prrovider Help: ${Help}");
+                  print("After Prrovider PositiveImpactstoEmployee: ${PositiveImpactstoEmployee}");
+                  print("After Prrovider PositiveImpactstoOrganisation: ${PositiveImpactstoOrganisation}");
+                  print("After Prrovider RelatedSolutionsTags.length: ${RelatedSolutionsTags.length}");
+                  print("After Prrovider SuggestedChallengesTags.length: ${SuggestedChallengesTags.length}");
+                  print("After Prrovider Linked.length: ${Linked.length}");
 
                   return AlertDialog(
                       insetPadding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.08,
@@ -22788,15 +23576,15 @@ catch(e){
                         children: [
                           InkWell(
                               onTap: (){
-                                userAboutMEProvider.editpreviewname = null;
-                                userAboutMEProvider.editpreviewDescription = null;
-                                userAboutMEProvider.editpreviewFinalDescription = null;
-                                userAboutMEProvider.editpreviewId = null;
-                                userAboutMEProvider.editpreviewImpact = null;
-                                userAboutMEProvider.editpreviewKeywordssss.clear();
-                                userAboutMEProvider.editpreviewtags.clear();
-                                userAboutMEProvider.editpreview = null;
-                                userAboutMEProvider.editborderColor = false;
+                                // userAboutMEProvider.editpreviewname = null;
+                                // userAboutMEProvider.editpreviewDescription = null;
+                                // userAboutMEProvider.editpreviewFinalDescription = null;
+                                // userAboutMEProvider.editpreviewId = null;
+                                // userAboutMEProvider.editpreviewImpact = null;
+                                // userAboutMEProvider.editpreviewKeywordssss.clear();
+                                // userAboutMEProvider.editpreviewtags.clear();
+                                // userAboutMEProvider.editpreview = null;
+                                // userAboutMEProvider.editborderColor = false;
                                 Navigator.pop(context);
                               },
                               child: Icon(Icons.close)),
@@ -22979,9 +23767,9 @@ catch(e){
                                                 //     fontSize: 20,
                                                 //     color: Colors.grey),
                                                 //   maxLines: null,)),
-                                                Image.asset("assets/images/request1.png", height: 45,width: 45),
+                                                Image.asset("assets/images/request1.png", height: 37,width: 37),
 
-                                                SizedBox(width: 10,),
+                                                SizedBox(width: 15.5,),
 
                                                 Flexible(
                                                     child: Container(
@@ -23016,7 +23804,7 @@ catch(e){
                                                 //   maxLines: null,)),
                                                 Image.asset("assets/images/request2.png", height: 45,width: 45),
 
-                                                SizedBox(width: 10,),
+                                                SizedBox(width: 8,),
                                                 Flexible(
                                                     child: Container(
                                                         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
@@ -23053,8 +23841,8 @@ catch(e){
                                                         alignment: WrapAlignment.start,
                                                         runAlignment: WrapAlignment.start,
                                                         children: addKeywordProvider.keywords.map((item){
-                                                          print("item: $item");
-                                                          print("addKeywordProvider.keywords: ${addKeywordProvider.keywords}");
+                                                          // print("item: $item");
+                                                          // print("addKeywordProvider.keywords: ${addKeywordProvider.keywords}");
                                                           return InkWell(
                                                             onTap: (){
                                                               if(_tabController.index == 4){
@@ -23272,7 +24060,7 @@ catch(e){
                                                             var solutionData = relatedSolutions[i];
                                                             var matchedTags = solutionData['matchedTags'] ?? [];
 
-                                                            print("solutionData: ${solutionData}");
+                                                            // print("solutionData: ${solutionData}");
                                                             return Container(
                                                               margin: EdgeInsets.symmetric(horizontal: 15),
                                                               padding: EdgeInsets.all(12),
@@ -23353,10 +24141,12 @@ catch(e){
                                                                                     solutionData['Positive_impacts_to_organisation'],
                                                                                     solutionData['Related_solution_tags'],
                                                                                     solutionData['Suggested_challenges_tags'],
+                                                                                      solutionData['Linked_challenges']
 
                                                                                   );
                                                                                   _universalListProvider.filterChallenges(solutionData['tags']);
                                                                                   _universalListProvider.filterSolutions(solutionData['tags']);
+                                                                                  _universalListProvider.filterLinkedChallenges(solutionData['Linked_challenges'],solutionData['tags']);
                                                                                 },
 
                                                                                 icon: Icon(Icons.visibility, color: Colors.blue,)
@@ -23527,366 +24317,387 @@ catch(e){
                                 ),
                               ),
                               SizedBox(height: 10,),
-                              Flexible(
-                                // flex: 1,
-                                child: Container(
-                                  // height: 400,
-                                  padding: EdgeInsets.all(15),
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.orange, width: 4),
-                                      borderRadius: BorderRadius.circular(20)
-                                  ),
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        // Container(
-                                        //   height: 170 ,
-                                        //   child: FutureBuilder(
-                                        //     future: getRelatedSolutions(tags, keywords),
-                                        //     builder: (context, snapshot) {
-                                        //       if (snapshot.connectionState == ConnectionState.waiting) {
-                                        //         return Container(
-                                        //             width: 330,
-                                        //             child: Container(
-                                        //                 height: 20, // Adjust the height as needed
-                                        //                 width: 20,
-                                        //                 child: Center(
-                                        //                     child: CircularProgressIndicator()
-                                        //                 )
-                                        //             )
-                                        //         ); // Display a loading indicator while fetching data
-                                        //       } else if (snapshot.hasError) {
-                                        //         return Text('Error: ${snapshot.error}');
-                                        //       } else {
-                                        //         // List<DocumentSnapshot<Object?>>? relatedSolutions = snapshot.data;
-                                        //         List<DocumentSnapshot<Map<String, dynamic>>>? relatedSolutions = snapshot.data?.cast<DocumentSnapshot<Map<String, dynamic>>>();
-                                        //
-                                        //         // print("relatedSolutions: $relatedSolutions");
-                                        //
-                                        //         return Column(
-                                        //           mainAxisAlignment: MainAxisAlignment.start,
-                                        //           crossAxisAlignment: CrossAxisAlignment.start,
-                                        //           children: [
-                                        //             Padding(
-                                        //               padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-                                        //               child: Text("Suggested Solutions (${relatedSolutions?.length})",
-                                        //                   style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                                        //                       fontSize: 20,
-                                        //                       color: Colors.black)
-                                        //               ),
-                                        //             ),
-                                        //             Expanded(
-                                        //               child: ListView.builder(
-                                        //                 scrollDirection: Axis.horizontal,
-                                        //                 shrinkWrap: true,
-                                        //                 itemCount: relatedSolutions?.length,
-                                        //                 itemBuilder: (c, i) {
-                                        //                   // relatedSolutionlength = relatedSolutions?.length;
-                                        //                   // print("relatedSolutionlength: $relatedSolutionlength");
-                                        //                   var solutionData = relatedSolutions?[i].data() as Map<String, dynamic>;
-                                        //                   print("solutionData: ${solutionData}");
-                                        //                   return Container(
-                                        //                     margin: EdgeInsets.symmetric(horizontal: 15),
-                                        //                     padding: EdgeInsets.all(12),
-                                        //                     width: 330,
-                                        //                     decoration: BoxDecoration(
-                                        //                       border: Border.all(color: Colors.green),
-                                        //                       borderRadius: BorderRadius.circular(20),
-                                        //                     ),
-                                        //                     child: SingleChildScrollView(
-                                        //                       child: Column(
-                                        //                         mainAxisAlignment: MainAxisAlignment.start,
-                                        //                         crossAxisAlignment: CrossAxisAlignment.start,
-                                        //                         children: [
-                                        //                           Row(
-                                        //                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        //                             crossAxisAlignment: CrossAxisAlignment.start,
-                                        //                             children: [
-                                        //                               Flexible(
-                                        //                                 child: Text("${solutionData['Name']}",
-                                        //                                     maxLines: null,
-                                        //                                     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                                        //                                         fontSize: 18,
-                                        //                                         color: Colors.black)),
-                                        //                               ),
-                                        //                               SizedBox(width: 5,),
-                                        //                               // InkWell(
-                                        //                               //   onTap: (){
-                                        //                               //     _userAboutMEProvider.isRecommendedAddedSolutions(true, relatedSolutions![i]);
-                                        //                               //   },
-                                        //                               //   child: Container(
-                                        //                               //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                        //                               //     width: MediaQuery.of(context).size.width * .05,
-                                        //                               //     // width: MediaQuery.of(context).size.width * .15,
-                                        //                               //
-                                        //                               //     // height: 60,
-                                        //                               //     decoration: BoxDecoration(
-                                        //                               //       color:Colors.blue ,
-                                        //                               //       border: Border.all(
-                                        //                               //           color:Colors.blue ,
-                                        //                               //           width: 1.0),
-                                        //                               //       borderRadius: BorderRadius.circular(8.0),
-                                        //                               //     ),
-                                        //                               //     child: Center(
-                                        //                               //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                        //                               //       child: Text(
-                                        //                               //         'Add',
-                                        //                               //         style: GoogleFonts.montserrat(
-                                        //                               //           textStyle:
-                                        //                               //           Theme
-                                        //                               //               .of(context)
-                                        //                               //               .textTheme
-                                        //                               //               .titleSmall,
-                                        //                               //           fontWeight: FontWeight.bold,
-                                        //                               //           color:Colors.white ,
-                                        //                               //         ),
-                                        //                               //       ),
-                                        //                               //     ),
-                                        //                               //   ),
-                                        //                               // ),
-                                        //                               Row(
-                                        //                                 children: [
-                                        //                                   IconButton(
-                                        //                                       onPressed: (){
-                                        //                                         userAboutMEProvider.updateEditSolutionPreview(
-                                        //                                             solutionData['Name'],
-                                        //                                             solutionData['Description'],
-                                        //                                             solutionData['Final_Description'],
-                                        //                                             solutionData['Impact'],
-                                        //                                             solutionData['Keywords'],
-                                        //                                             solutionData['tags'],
-                                        //                                             solutionData['id'],
-                                        //                                             isTrueOrFalse,
-                                        //                                             solutionData
-                                        //                                         );
-                                        //                                       },
-                                        //
-                                        //                                       icon: Icon(Icons.visibility, color: Colors.green,)
-                                        //                                   ),
-                                        //                                   SizedBox(width: 5,),
-                                        //
-                                        //                                   (userAboutMEProvider.isEditSolutionListAdded[solutionData['id']] == true) ? Text(
-                                        //                                     'Added',
-                                        //                                     style: GoogleFonts.montserrat(
-                                        //                                       textStyle:
-                                        //                                       Theme
-                                        //                                           .of(context)
-                                        //                                           .textTheme
-                                        //                                           .titleSmall,
-                                        //                                       fontStyle: FontStyle.italic,
-                                        //                                       color:Colors.green ,
-                                        //                                     ),
-                                        //                                   ) : InkWell(
-                                        //                                     onTap: (){
-                                        //                                       // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
-                                        //                                       userAboutMEProvider.EditRecommendedSolutionAdd(true, relatedSolutions![i]);
-                                        //                                       toastification.show(context: context,
-                                        //                                           title: Text('${solutionData['Name']} added to basket'),
-                                        //                                           autoCloseDuration: Duration(milliseconds: 2500),
-                                        //                                           alignment: Alignment.center,
-                                        //                                           backgroundColor: Colors.green,
-                                        //                                           foregroundColor: Colors.white,
-                                        //                                           icon: Icon(Icons.check_circle, color: Colors.white,),
-                                        //                                           animationDuration: Duration(milliseconds: 1000),
-                                        //                                           showProgressBar: false
-                                        //                                       );
-                                        //                                     },
-                                        //                                     child: Container(
-                                        //                                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                        //                                       width: MediaQuery.of(context).size.width * .05,
-                                        //                                       // width: MediaQuery.of(context).size.width * .15,
-                                        //
-                                        //                                       // height: 60,
-                                        //                                       decoration: BoxDecoration(
-                                        //                                         color:Colors.green ,
-                                        //                                         border: Border.all(
-                                        //                                             color:Colors.green ,
-                                        //                                             width: 1.0),
-                                        //                                         borderRadius: BorderRadius.circular(8.0),
-                                        //                                       ),
-                                        //                                       child: Center(
-                                        //                                         // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                        //                                         child: Text(
-                                        //                                           'Add',
-                                        //                                           style: GoogleFonts.montserrat(
-                                        //                                             textStyle:
-                                        //                                             Theme
-                                        //                                                 .of(context)
-                                        //                                                 .textTheme
-                                        //                                                 .titleSmall,
-                                        //                                             fontWeight: FontWeight.bold,
-                                        //                                             color:Colors.white ,
-                                        //                                           ),
-                                        //                                         ),
-                                        //                                       ),
-                                        //                                     ),
-                                        //                                   ),
-                                        //                                 ],
-                                        //                               )
-                                        //                             ],
-                                        //                           ),
-                                        //                           SizedBox(height: 5,),
-                                        //                           // Icon(Icons.add, color: Colors.blue, size: 24,),
-                                        //                           Text("${solutionData['Final_description']}",
-                                        //                               maxLines: 3,
-                                        //                               style: GoogleFonts.montserrat(
-                                        //                                   fontSize: 15,
-                                        //                                   color: Colors.black)),
-                                        //                         ],
-                                        //                       ),
-                                        //                     ),
-                                        //                   );
-                                        //                 },
-                                        //               ),
-                                        //             ),
-                                        //           ],
-                                        //         );
-                                        //       }
-                                        //     },
-                                        //   ),
-                                        // ),
-                                        // SizedBox(height: 20,),
-                                        Container(
-                                          // height: 180 ,
-                                          height:  MediaQuery.of(context).size.height * 0.21,
-                                          width: MediaQuery.of(context).size.width,
-                                          child: Consumer<UniversalListProvider>(
-                                            builder: (context, provider, child) {
-                                              var relatedChallenges = provider.getRelatedChallengesList;
-
-                                                return Column(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets.symmetric(horizontal: 15.0, ),
-                                                      child: Row(
-                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                        children: [
-                                                          Text("Suggested challenges (${relatedChallenges?.length}):",
-                                                              style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                                                                  fontSize: 20,
-                                                                  color: Colors.black)
-                                                          ),
-                                                          Row(
-                                                            children: [
-                                                              IconButton(
-                                                                onPressed: () {
-                                                                  // Scroll the ListView.builder to the left
-                                                                  // You can adjust the scroll distance according to your requirement
-                                                                  // by changing the offset value
-                                                                  _scrollController4.animateTo(
-                                                                    _scrollController4.offset - 200,
-                                                                    curve: Curves.linear,
-                                                                    duration: Duration(milliseconds: 300),
-                                                                  );
-                                                                },
-                                                                icon: Icon(Icons.arrow_back),
-                                                              ),
-                                                              SizedBox(width: 10,),
-                                                              IconButton(
-                                                                onPressed: () {
-                                                                  // Scroll the ListView.builder to the right
-                                                                  // You can adjust the scroll distance according to your requirement
-                                                                  // by changing the offset value
-                                                                  _scrollController4.animateTo(
-                                                                    _scrollController4.offset + 200,
-                                                                    curve: Curves.linear,
-                                                                    duration: Duration(milliseconds: 300),
-                                                                  );
-                                                                },
-                                                                icon: Icon(Icons.arrow_forward),
-                                                              ),
-
-                                                            ],
-                                                          ),
-
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    SizedBox(height: 5,),
-                                                    Flexible(
-                                                      child: ListView.builder(
-                                                        scrollDirection: Axis.horizontal,
-                                                        controller: _scrollController4,
-                                                        shrinkWrap: true,
-                                                        itemCount: relatedChallenges?.length,
-                                                        itemBuilder: (c, i) {
-                                                          // relatedSolutionlength = relatedChallenges?.length;
-                                                          // print("relatedSolutionlength: $relatedSolutionlength");
-                                                          var challengesData = relatedChallenges[i];
-                                                          var matchedTags = challengesData['matchedTags'] ?? [];
-
-                                                          print("solutionData: ${challengesData}");
-                                                          return Container(
-                                                            margin: EdgeInsets.symmetric(horizontal: 15),
-                                                            padding: EdgeInsets.all(12),
-                                                            // width: 330,
-                                                            width: MediaQuery.of(context).size.width * .17,
-                                                            decoration: BoxDecoration(
-                                                              border: Border.all(color: Colors.orange,width : 2),
-                                                              borderRadius: BorderRadius.circular(20),
+                              Row(
+                                children: [
+                                  Flexible(
+                                    // flex: 1,
+                                    child: Container(
+                                      // height: 400,
+                                      padding: EdgeInsets.all(15),
+                                      decoration: BoxDecoration(
+                                          border: Border.all(color: Colors.orange, width: 4),
+                                          borderRadius: BorderRadius.circular(20)
+                                      ),
+                                      child: SingleChildScrollView(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            // Container(
+                                            //   height: 170 ,
+                                            //   child: FutureBuilder(
+                                            //     future: getRelatedSolutions(tags, keywords),
+                                            //     builder: (context, snapshot) {
+                                            //       if (snapshot.connectionState == ConnectionState.waiting) {
+                                            //         return Container(
+                                            //             width: 330,
+                                            //             child: Container(
+                                            //                 height: 20, // Adjust the height as needed
+                                            //                 width: 20,
+                                            //                 child: Center(
+                                            //                     child: CircularProgressIndicator()
+                                            //                 )
+                                            //             )
+                                            //         ); // Display a loading indicator while fetching data
+                                            //       } else if (snapshot.hasError) {
+                                            //         return Text('Error: ${snapshot.error}');
+                                            //       } else {
+                                            //         // List<DocumentSnapshot<Object?>>? relatedSolutions = snapshot.data;
+                                            //         List<DocumentSnapshot<Map<String, dynamic>>>? relatedSolutions = snapshot.data?.cast<DocumentSnapshot<Map<String, dynamic>>>();
+                                            //
+                                            //         // print("relatedSolutions: $relatedSolutions");
+                                            //
+                                            //         return Column(
+                                            //           mainAxisAlignment: MainAxisAlignment.start,
+                                            //           crossAxisAlignment: CrossAxisAlignment.start,
+                                            //           children: [
+                                            //             Padding(
+                                            //               padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+                                            //               child: Text("Suggested Solutions (${relatedSolutions?.length})",
+                                            //                   style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                            //                       fontSize: 20,
+                                            //                       color: Colors.black)
+                                            //               ),
+                                            //             ),
+                                            //             Expanded(
+                                            //               child: ListView.builder(
+                                            //                 scrollDirection: Axis.horizontal,
+                                            //                 shrinkWrap: true,
+                                            //                 itemCount: relatedSolutions?.length,
+                                            //                 itemBuilder: (c, i) {
+                                            //                   // relatedSolutionlength = relatedSolutions?.length;
+                                            //                   // print("relatedSolutionlength: $relatedSolutionlength");
+                                            //                   var solutionData = relatedSolutions?[i].data() as Map<String, dynamic>;
+                                            //                   print("solutionData: ${solutionData}");
+                                            //                   return Container(
+                                            //                     margin: EdgeInsets.symmetric(horizontal: 15),
+                                            //                     padding: EdgeInsets.all(12),
+                                            //                     width: 330,
+                                            //                     decoration: BoxDecoration(
+                                            //                       border: Border.all(color: Colors.green),
+                                            //                       borderRadius: BorderRadius.circular(20),
+                                            //                     ),
+                                            //                     child: SingleChildScrollView(
+                                            //                       child: Column(
+                                            //                         mainAxisAlignment: MainAxisAlignment.start,
+                                            //                         crossAxisAlignment: CrossAxisAlignment.start,
+                                            //                         children: [
+                                            //                           Row(
+                                            //                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            //                             crossAxisAlignment: CrossAxisAlignment.start,
+                                            //                             children: [
+                                            //                               Flexible(
+                                            //                                 child: Text("${solutionData['Name']}",
+                                            //                                     maxLines: null,
+                                            //                                     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                            //                                         fontSize: 18,
+                                            //                                         color: Colors.black)),
+                                            //                               ),
+                                            //                               SizedBox(width: 5,),
+                                            //                               // InkWell(
+                                            //                               //   onTap: (){
+                                            //                               //     _userAboutMEProvider.isRecommendedAddedSolutions(true, relatedSolutions![i]);
+                                            //                               //   },
+                                            //                               //   child: Container(
+                                            //                               //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                            //                               //     width: MediaQuery.of(context).size.width * .05,
+                                            //                               //     // width: MediaQuery.of(context).size.width * .15,
+                                            //                               //
+                                            //                               //     // height: 60,
+                                            //                               //     decoration: BoxDecoration(
+                                            //                               //       color:Colors.blue ,
+                                            //                               //       border: Border.all(
+                                            //                               //           color:Colors.blue ,
+                                            //                               //           width: 1.0),
+                                            //                               //       borderRadius: BorderRadius.circular(8.0),
+                                            //                               //     ),
+                                            //                               //     child: Center(
+                                            //                               //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                            //                               //       child: Text(
+                                            //                               //         'Add',
+                                            //                               //         style: GoogleFonts.montserrat(
+                                            //                               //           textStyle:
+                                            //                               //           Theme
+                                            //                               //               .of(context)
+                                            //                               //               .textTheme
+                                            //                               //               .titleSmall,
+                                            //                               //           fontWeight: FontWeight.bold,
+                                            //                               //           color:Colors.white ,
+                                            //                               //         ),
+                                            //                               //       ),
+                                            //                               //     ),
+                                            //                               //   ),
+                                            //                               // ),
+                                            //                               Row(
+                                            //                                 children: [
+                                            //                                   IconButton(
+                                            //                                       onPressed: (){
+                                            //                                         userAboutMEProvider.updateEditSolutionPreview(
+                                            //                                             solutionData['Name'],
+                                            //                                             solutionData['Description'],
+                                            //                                             solutionData['Final_Description'],
+                                            //                                             solutionData['Impact'],
+                                            //                                             solutionData['Keywords'],
+                                            //                                             solutionData['tags'],
+                                            //                                             solutionData['id'],
+                                            //                                             isTrueOrFalse,
+                                            //                                             solutionData
+                                            //                                         );
+                                            //                                       },
+                                            //
+                                            //                                       icon: Icon(Icons.visibility, color: Colors.green,)
+                                            //                                   ),
+                                            //                                   SizedBox(width: 5,),
+                                            //
+                                            //                                   (userAboutMEProvider.isEditSolutionListAdded[solutionData['id']] == true) ? Text(
+                                            //                                     'Added',
+                                            //                                     style: GoogleFonts.montserrat(
+                                            //                                       textStyle:
+                                            //                                       Theme
+                                            //                                           .of(context)
+                                            //                                           .textTheme
+                                            //                                           .titleSmall,
+                                            //                                       fontStyle: FontStyle.italic,
+                                            //                                       color:Colors.green ,
+                                            //                                     ),
+                                            //                                   ) : InkWell(
+                                            //                                     onTap: (){
+                                            //                                       // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
+                                            //                                       userAboutMEProvider.EditRecommendedSolutionAdd(true, relatedSolutions![i]);
+                                            //                                       toastification.show(context: context,
+                                            //                                           title: Text('${solutionData['Name']} added to basket'),
+                                            //                                           autoCloseDuration: Duration(milliseconds: 2500),
+                                            //                                           alignment: Alignment.center,
+                                            //                                           backgroundColor: Colors.green,
+                                            //                                           foregroundColor: Colors.white,
+                                            //                                           icon: Icon(Icons.check_circle, color: Colors.white,),
+                                            //                                           animationDuration: Duration(milliseconds: 1000),
+                                            //                                           showProgressBar: false
+                                            //                                       );
+                                            //                                     },
+                                            //                                     child: Container(
+                                            //                                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                            //                                       width: MediaQuery.of(context).size.width * .05,
+                                            //                                       // width: MediaQuery.of(context).size.width * .15,
+                                            //
+                                            //                                       // height: 60,
+                                            //                                       decoration: BoxDecoration(
+                                            //                                         color:Colors.green ,
+                                            //                                         border: Border.all(
+                                            //                                             color:Colors.green ,
+                                            //                                             width: 1.0),
+                                            //                                         borderRadius: BorderRadius.circular(8.0),
+                                            //                                       ),
+                                            //                                       child: Center(
+                                            //                                         // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                            //                                         child: Text(
+                                            //                                           'Add',
+                                            //                                           style: GoogleFonts.montserrat(
+                                            //                                             textStyle:
+                                            //                                             Theme
+                                            //                                                 .of(context)
+                                            //                                                 .textTheme
+                                            //                                                 .titleSmall,
+                                            //                                             fontWeight: FontWeight.bold,
+                                            //                                             color:Colors.white ,
+                                            //                                           ),
+                                            //                                         ),
+                                            //                                       ),
+                                            //                                     ),
+                                            //                                   ),
+                                            //                                 ],
+                                            //                               )
+                                            //                             ],
+                                            //                           ),
+                                            //                           SizedBox(height: 5,),
+                                            //                           // Icon(Icons.add, color: Colors.blue, size: 24,),
+                                            //                           Text("${solutionData['Final_description']}",
+                                            //                               maxLines: 3,
+                                            //                               style: GoogleFonts.montserrat(
+                                            //                                   fontSize: 15,
+                                            //                                   color: Colors.black)),
+                                            //                         ],
+                                            //                       ),
+                                            //                     ),
+                                            //                   );
+                                            //                 },
+                                            //               ),
+                                            //             ),
+                                            //           ],
+                                            //         );
+                                            //       }
+                                            //     },
+                                            //   ),
+                                            // ),
+                                            // SizedBox(height: 20,),
+                                            Container(
+                                              // height: 180 ,
+                                              height:  MediaQuery.of(context).size.height * 0.21,
+                                              width: MediaQuery.of(context).size.width,
+                                              child: Consumer<UniversalListProvider>(
+                                                builder: (context, provider, child) {
+                                                  // var linkedChallenges = provider.getRelatedChallengesList;
+                                                  // var linkedChallenges = provider.getLinkedChallengesList;
+                                                  var linkedChallenges = provider.getcombinedChallengeList;
+                                                  return Column(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Padding(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 15.0, ),
+                                                        child: Row(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          children: [
+                                                            Text("Possible challenges (${linkedChallenges?.length}):",
+                                                                style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                                                    fontSize: 20,
+                                                                    color: Colors.black)
                                                             ),
-                                                            child: SingleChildScrollView(
-                                                              child: Column(
-                                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                children: [
-                                                                  Row(
-                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                    children: [
-                                                                      Flexible(
-                                                                        child: Text("${challengesData['Label']}",
-                                                                            maxLines: 2,
-                                                                            style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                                                                                fontSize: 15,
-                                                                                color: Colors.black)),
-                                                                      ),
-                                                                      // InkWell(
-                                                                      //   onTap: (){
-                                                                      //     _userAboutMEProvider.isRecommendedAddedChallenge(true,  relatedChallenges![i]);
-                                                                      //   },
-                                                                      //   child: Container(
-                                                                      //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                                                      //     width: MediaQuery.of(context).size.width * .05,
-                                                                      //     // width: MediaQuery.of(context).size.width * .15,
-                                                                      //
-                                                                      //     // height: 60,
-                                                                      //     decoration: BoxDecoration(
-                                                                      //       color:Colors.blue ,
-                                                                      //       border: Border.all(
-                                                                      //           color:Colors.blue ,
-                                                                      //           width: 1.0),
-                                                                      //       borderRadius: BorderRadius.circular(8.0),
-                                                                      //     ),
-                                                                      //     child: Center(
-                                                                      //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                                                      //       child: Text(
-                                                                      //         'Add',
-                                                                      //         style: GoogleFonts.montserrat(
-                                                                      //           textStyle:
-                                                                      //           Theme
-                                                                      //               .of(context)
-                                                                      //               .textTheme
-                                                                      //               .titleSmall,
-                                                                      //           fontWeight: FontWeight.bold,
-                                                                      //           color:Colors.white ,
-                                                                      //         ),
-                                                                      //       ),
-                                                                      //     ),
-                                                                      //   ),
-                                                                      // ),
+                                                            Row(
+                                                              children: [
+                                                                IconButton(
+                                                                  onPressed: () {
+                                                                    // Scroll the ListView.builder to the left
+                                                                    // You can adjust the scroll distance according to your requirement
+                                                                    // by changing the offset value
+                                                                    _scrollController4.animateTo(
+                                                                      _scrollController4.offset - 200,
+                                                                      curve: Curves.linear,
+                                                                      duration: Duration(milliseconds: 300),
+                                                                    );
+                                                                  },
+                                                                  icon: Icon(Icons.arrow_back),
+                                                                ),
+                                                                SizedBox(width: 10,),
+                                                                IconButton(
+                                                                  onPressed: () {
+                                                                    // Scroll the ListView.builder to the right
+                                                                    // You can adjust the scroll distance according to your requirement
+                                                                    // by changing the offset value
+                                                                    _scrollController4.animateTo(
+                                                                      _scrollController4.offset + 200,
+                                                                      curve: Curves.linear,
+                                                                      duration: Duration(milliseconds: 300),
+                                                                    );
+                                                                  },
+                                                                  icon: Icon(Icons.arrow_forward),
+                                                                ),
 
-                                                                      Row(
-                                                                        children: [
-                                                                          IconButton(
-                                                                              onPressed: (){
-                                                                                Navigator.pop(context);
-                                                                                NewViewDialog(challengesData['Label'],
+                                                              ],
+                                                            ),
+
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 5,),
+                                                      Flexible(
+                                                        child: ListView.builder(
+                                                          scrollDirection: Axis.horizontal,
+                                                          controller: _scrollController4,
+                                                          shrinkWrap: true,
+                                                          itemCount: linkedChallenges?.length,
+                                                          itemBuilder: (c, i) {
+                                                            // relatedSolutionlength = relatedChallenges?.length;
+                                                            // print("relatedSolutionlength: $relatedSolutionlength");
+                                                            var challengesData = linkedChallenges[i];
+                                                            var matchedTags = challengesData['matchedTags'] ?? [];
+
+                                                            print("challenges matchedTags: ${matchedTags}");
+                                                            return Container(
+                                                              margin: EdgeInsets.symmetric(horizontal: 15),
+                                                              padding: EdgeInsets.all(12),
+                                                              // width: 330,
+                                                              width: MediaQuery.of(context).size.width * .17,
+                                                              decoration: BoxDecoration(
+                                                                border: Border.all(color: Colors.orange,width : 2),
+                                                                borderRadius: BorderRadius.circular(20),
+                                                              ),
+                                                              child: SingleChildScrollView(
+                                                                child: Column(
+                                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Row(
+                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                      children: [
+                                                                        Flexible(
+                                                                          child: Text("${challengesData['Label']}",
+                                                                              maxLines: 2,
+                                                                              style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                                                                  fontSize: 15,
+                                                                                  color: Colors.black)),
+                                                                        ),
+                                                                        // InkWell(
+                                                                        //   onTap: (){
+                                                                        //     _userAboutMEProvider.isRecommendedAddedChallenge(true,  relatedChallenges![i]);
+                                                                        //   },
+                                                                        //   child: Container(
+                                                                        //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                        //     width: MediaQuery.of(context).size.width * .05,
+                                                                        //     // width: MediaQuery.of(context).size.width * .15,
+                                                                        //
+                                                                        //     // height: 60,
+                                                                        //     decoration: BoxDecoration(
+                                                                        //       color:Colors.blue ,
+                                                                        //       border: Border.all(
+                                                                        //           color:Colors.blue ,
+                                                                        //           width: 1.0),
+                                                                        //       borderRadius: BorderRadius.circular(8.0),
+                                                                        //     ),
+                                                                        //     child: Center(
+                                                                        //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                        //       child: Text(
+                                                                        //         'Add',
+                                                                        //         style: GoogleFonts.montserrat(
+                                                                        //           textStyle:
+                                                                        //           Theme
+                                                                        //               .of(context)
+                                                                        //               .textTheme
+                                                                        //               .titleSmall,
+                                                                        //           fontWeight: FontWeight.bold,
+                                                                        //           color:Colors.white ,
+                                                                        //         ),
+                                                                        //       ),
+                                                                        //     ),
+                                                                        //   ),
+                                                                        // ),
+
+                                                                        Row(
+                                                                          children: [
+                                                                            IconButton(
+                                                                                onPressed: (){
+                                                                                  Navigator.pop(context);
+                                                                                  userAboutMEProvider.updateEditChallengePreview(
+                                                                                      challengesData['Label'],
+                                                                                      challengesData['Description'],
+                                                                                      challengesData['Final_description'],
+                                                                                      challengesData['Impact'],
+                                                                                      challengesData['Keywords'],
+                                                                                      challengesData['tags'],
+                                                                                      challengesData['id'],
+                                                                                      isTrueOrFalse,
+                                                                                      challengesData,
+                                                                                      false,
+                                                                                      challengesData['Impacts_to_Coworkers'],
+                                                                                      challengesData['Impacts_to_employee'],
+                                                                                      challengesData['Negative_impacts_to_organisation'],
+                                                                                      challengesData['Related_challenges_tags'],
+                                                                                      challengesData['Suggested_solutions_tags'],
+                                                                                      challengesData['Linked_solutions']
+                                                                                  );
+                                                                                  NewViewDialog(challengesData['Label'],
                                                                                     challengesData['Description'],
                                                                                     challengesData['Impact'],
                                                                                     challengesData['Final_description'],
@@ -23896,200 +24707,787 @@ catch(e){
                                                                                     challengesData,
                                                                                     userAboutMEProvider.isEditChallengeListAdded,
                                                                                     userAboutMEProvider.EditRecommendedChallengeAdd,
-                                                                                  challengesData['Impacts_to_Coworkers'],
-                                                                                  challengesData['Impacts_to_employee'],
-                                                                                  challengesData['Negative_impacts_to_organisation'],
-                                                                                  challengesData['Related_challenges_tags'],
-                                                                                  challengesData['Suggested_solutions_tags'],);
-                                                                                _universalListProvider.filterChallenges(challengesData['tags']);
-                                                                                _universalListProvider.filterSolutions(challengesData['tags']);
+                                                                                    challengesData['Impacts_to_Coworkers'],
+                                                                                    challengesData['Impacts_to_employee'],
+                                                                                    challengesData['Negative_impacts_to_organisation'],
+                                                                                    challengesData['Related_challenges_tags'],
+                                                                                    challengesData['Suggested_solutions_tags'],
+                                                                                      challengesData['Linked_solutions']);
+                                                                                  _universalListProvider.filterChallenges(challengesData['tags']);
+                                                                                  _universalListProvider.filterSolutions(challengesData['tags']);
+                                                                                  _universalListProvider.filterLinkedSolutions(challengesData['Linked_solutions'],challengesData['tags']);
 
 
-                                                                                // userAboutMEProvider.updateEditChallengePreview(
-                                                                                //     challengesData['Label'],
-                                                                                //     challengesData['Description'],
-                                                                                //     challengesData['Final_description'],
-                                                                                //     challengesData['Impact'],
-                                                                                //     challengesData['Keywords'],
-                                                                                //     challengesData['tags'],
-                                                                                //     challengesData['id'],
-                                                                                //     isTrueOrFalse,
-                                                                                //     challengesData,
-                                                                                //   true
-                                                                                // );
-                                                                              },
-                                                                              icon: Icon(Icons.visibility, color: Colors.blue,)
-                                                                          ),
-                                                                          SizedBox(width: 5,),
-                                                                          (userAboutMEProvider.isEditChallengeListAdded[challengesData['id']] == true) ? Text(
-                                                                                    'Added',
-                                                                                    style: GoogleFonts.montserrat(
-                                                                                      textStyle:
-                                                                                      Theme
-                                                                                          .of(context)
-                                                                                          .textTheme
-                                                                                          .titleSmall,
-                                                                                      fontStyle: FontStyle.italic,
-                                                                                      color:Colors.green ,
-                                                                                    ),
-                                                                                  ) : InkWell(
-                                                                                    onTap: (){
-                                                                                      // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
-                                                                                      userAboutMEProvider.EditRecommendedChallengeAdd(true, relatedChallenges![i]);
-                                                                                      toastification.show(context: context,
-                                                                                          title: Text('${challengesData['Label']} added to basket'),
-                                                                                          autoCloseDuration: Duration(milliseconds: 2500),
-                                                                                          alignment: Alignment.center,
-                                                                                          backgroundColor: Colors.green,
-                                                                                          foregroundColor: Colors.white,
-                                                                                          icon: Icon(Icons.check_circle, color: Colors.white,),
-                                                                                          animationDuration: Duration(milliseconds: 1000),
-                                                                                          showProgressBar: false
-                                                                                      );
+                                                                                  // userAboutMEProvider.updateEditChallengePreview(
+                                                                                  //     challengesData['Label'],
+                                                                                  //     challengesData['Description'],
+                                                                                  //     challengesData['Final_description'],
+                                                                                  //     challengesData['Impact'],
+                                                                                  //     challengesData['Keywords'],
+                                                                                  //     challengesData['tags'],
+                                                                                  //     challengesData['id'],
+                                                                                  //     isTrueOrFalse,
+                                                                                  //     challengesData,
+                                                                                  //   true
+                                                                                  // );
+                                                                                },
+                                                                                icon: Icon(Icons.visibility, color: Colors.blue,)
+                                                                            ),
+                                                                            SizedBox(width: 5,),
+                                                                            (userAboutMEProvider.isEditChallengeListAdded[challengesData['id']] == true) ? Text(
+                                                                              'Added',
+                                                                              style: GoogleFonts.montserrat(
+                                                                                textStyle:
+                                                                                Theme
+                                                                                    .of(context)
+                                                                                    .textTheme
+                                                                                    .titleSmall,
+                                                                                fontStyle: FontStyle.italic,
+                                                                                color:Colors.green ,
+                                                                              ),
+                                                                            ) : InkWell(
+                                                                                onTap: (){
+                                                                                  // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
+                                                                                  userAboutMEProvider.EditRecommendedChallengeAdd(true, linkedChallenges![i]);
+                                                                                  toastification.show(context: context,
+                                                                                      title: Text('${challengesData['Label']} added to basket'),
+                                                                                      autoCloseDuration: Duration(milliseconds: 2500),
+                                                                                      alignment: Alignment.center,
+                                                                                      backgroundColor: Colors.green,
+                                                                                      foregroundColor: Colors.white,
+                                                                                      icon: Icon(Icons.check_circle, color: Colors.white,),
+                                                                                      animationDuration: Duration(milliseconds: 1000),
+                                                                                      showProgressBar: false
+                                                                                  );
 
-                                                                                    },
+                                                                                },
                                                                                 child: Icon(Icons.add_circle, color: Colors.blue)
 
-                                                                            // child: Container(
-                                                                                    //   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                                                                    //   width: MediaQuery.of(context).size.width * .05,
-                                                                                    //   // width: MediaQuery.of(context).size.width * .15,
-                                                                                    //
-                                                                                    //   // height: 60,
-                                                                                    //   decoration: BoxDecoration(
-                                                                                    //     color:Colors.blue ,
-                                                                                    //     border: Border.all(
-                                                                                    //         color:Colors.blue ,
-                                                                                    //         width: 1.0),
-                                                                                    //     borderRadius: BorderRadius.circular(8.0),
-                                                                                    //   ),
-                                                                                    //   child: Center(
-                                                                                    //     // child: Icon(Icons.add, size: 30,color: Colors.white,),
-                                                                                    //     child: Text(
-                                                                                    //       'Add',
-                                                                                    //       style: GoogleFonts.montserrat(
-                                                                                    //         textStyle:
-                                                                                    //         Theme
-                                                                                    //             .of(context)
-                                                                                    //             .textTheme
-                                                                                    //             .titleSmall,
-                                                                                    //         fontWeight: FontWeight.bold,
-                                                                                    //         color:Colors.white ,
-                                                                                    //       ),
-                                                                                    //     ),
-                                                                                    //   ),
-                                                                                    // ),
-                                                                                  ),
-                                                                        ],
-                                                                      ),
+                                                                              // child: Container(
+                                                                              //   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                              //   width: MediaQuery.of(context).size.width * .05,
+                                                                              //   // width: MediaQuery.of(context).size.width * .15,
+                                                                              //
+                                                                              //   // height: 60,
+                                                                              //   decoration: BoxDecoration(
+                                                                              //     color:Colors.blue ,
+                                                                              //     border: Border.all(
+                                                                              //         color:Colors.blue ,
+                                                                              //         width: 1.0),
+                                                                              //     borderRadius: BorderRadius.circular(8.0),
+                                                                              //   ),
+                                                                              //   child: Center(
+                                                                              //     // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                              //     child: Text(
+                                                                              //       'Add',
+                                                                              //       style: GoogleFonts.montserrat(
+                                                                              //         textStyle:
+                                                                              //         Theme
+                                                                              //             .of(context)
+                                                                              //             .textTheme
+                                                                              //             .titleSmall,
+                                                                              //         fontWeight: FontWeight.bold,
+                                                                              //         color:Colors.white ,
+                                                                              //       ),
+                                                                              //     ),
+                                                                              //   ),
+                                                                              // ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
 
-                                                                    ],
-                                                                  ),
-                                                                  SizedBox(height: 5,),
-                                                                  // Text("${challengesData['Label']}",
-                                                                  //     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
-                                                                  //         fontSize: 18,
-                                                                  //         color: Colors.black)),
-                                                                  Text("${challengesData['Final_description']}",
-                                                                      maxLines: 2,
-                                                                      style: GoogleFonts.montserrat(
-                                                                          fontSize: 15,
-                                                                          color: Colors.black)),
+                                                                      ],
+                                                                    ),
+                                                                    SizedBox(height: 5,),
+                                                                    // Text("${challengesData['Label']}",
+                                                                    //     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                                                    //         fontSize: 18,
+                                                                    //         color: Colors.black)),
+                                                                    Text("${challengesData['Final_description']}",
+                                                                        maxLines: 2,
+                                                                        style: GoogleFonts.montserrat(
+                                                                            fontSize: 15,
+                                                                            color: Colors.black)),
 
-                                                                  SizedBox(height: 5,),
+                                                                    SizedBox(height: 5,),
 
-                                                                  Align(
-                                                                    alignment: Alignment.bottomLeft,
-                                                                    child:  SingleChildScrollView(
-                                                                      scrollDirection: Axis.horizontal,
-                                                                      child: Row(
-                                                                        // spacing: 10,
-                                                                        // runSpacing: 10,
-                                                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                                          // runAlignment: WrapAlignment.end,
-                                                                          children: [
-                                                                            ...matchedTags.take(2).map<Widget>((item) =>
-                                                                                Container(
-                                                                                  height: 25,
-                                                                                  // width: 200,
-                                                                                  padding: EdgeInsets.all(5),
-                                                                                  decoration: BoxDecoration(
-                                                                                      borderRadius: BorderRadius.circular(15),
-                                                                                      // color: Colors.teal
-                                                                                      gradient: LinearGradient(colors: [
-                                                                                        Color(0xe7e4dfee),
-                                                                                        Color(0xffe5d5fc),
-                                                                                      ]),
-                                                                                      color: Colors.grey
-                                                                                  ),
-                                                                                  child: GradientText("${item}",
-                                                                                    style: TextStyle(
-                                                                                      fontWeight: FontWeight.w700,
-                                                                                      fontSize: 10,
+                                                                    Align(
+                                                                      alignment: Alignment.bottomLeft,
+                                                                      child:  SingleChildScrollView(
+                                                                        scrollDirection: Axis.horizontal,
+                                                                        child: Row(
+                                                                          // spacing: 10,
+                                                                          // runSpacing: 10,
+                                                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                                            // runAlignment: WrapAlignment.end,
+                                                                            children: [
+                                                                              ...matchedTags.take(2).map<Widget>((item) =>
+                                                                                  Container(
+                                                                                    height: 25,
+                                                                                    // width: 200,
+                                                                                    padding: EdgeInsets.all(5),
+                                                                                    decoration: BoxDecoration(
+                                                                                        borderRadius: BorderRadius.circular(15),
+                                                                                        // color: Colors.teal
+                                                                                        gradient: LinearGradient(colors: [
+                                                                                          Color(0xe7e4dfee),
+                                                                                          Color(0xffe5d5fc),
+                                                                                        ]),
+                                                                                        color: Colors.grey
                                                                                     ),
-                                                                                    gradientType: GradientType.linear,
-                                                                                    colors: [Colors.purple, Colors.deepPurple],
+                                                                                    child: GradientText("${item}",
+                                                                                      style: TextStyle(
+                                                                                        fontWeight: FontWeight.w700,
+                                                                                        fontSize: 10,
+                                                                                      ),
+                                                                                      gradientType: GradientType.linear,
+                                                                                      colors: [Colors.purple, Colors.deepPurple],
+                                                                                    ),
+                                                                                  ),
+                                                                              ).toList(),
+                                                                              if (matchedTags.length > 2)
+                                                                                InkWell(
+                                                                                  onTap: () {
+                                                                                    // Handle "more" button click;
+                                                                                  },
+                                                                                  child: Text(
+                                                                                    '...more (${matchedTags.length - 2})',
+                                                                                    style: TextStyle(
+                                                                                      color: Colors.blue,
+                                                                                      fontSize: 12,
+                                                                                      fontWeight: FontWeight.bold,
+                                                                                    ),
                                                                                   ),
                                                                                 ),
-                                                                            ).toList(),
-                                                                            if (matchedTags.length > 2)
-                                                                              InkWell(
-                                                                                onTap: () {
-                                                                                  // Handle "more" button click;
-                                                                                },
-                                                                                child: Text(
-                                                                                  '...more (${matchedTags.length - 2})',
-                                                                                  style: TextStyle(
-                                                                                    color: Colors.blue,
-                                                                                    fontSize: 12,
-                                                                                    fontWeight: FontWeight.bold,
-                                                                                  ),
-                                                                                ),
-                                                                              ),
-                                                                          ]
-                                                                        // children: matchedTags.map<Widget>((item){
-                                                                        //   return Row(
-                                                                        //     mainAxisSize: MainAxisSize.min,
-                                                                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                        //     children: [
-                                                                        //       GradientText(item,
-                                                                        //         style: TextStyle(
-                                                                        //           fontWeight: FontWeight.w700,
-                                                                        //           fontSize: 10,
-                                                                        //           // color: Colors.white,
-                                                                        //         ),
-                                                                        //         gradientType: GradientType.linear,
-                                                                        //         colors: [
-                                                                        //           Colors.purple,
-                                                                        //           Colors.deepPurple,
-                                                                        //         ],
-                                                                        //       ),
-                                                                        //     ],
-                                                                        //   );
-                                                                        // }).toList() as List<Widget>,
+                                                                            ]
+                                                                          // children: matchedTags.map<Widget>((item){
+                                                                          //   return Row(
+                                                                          //     mainAxisSize: MainAxisSize.min,
+                                                                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                          //     children: [
+                                                                          //       GradientText(item,
+                                                                          //         style: TextStyle(
+                                                                          //           fontWeight: FontWeight.w700,
+                                                                          //           fontSize: 10,
+                                                                          //           // color: Colors.white,
+                                                                          //         ),
+                                                                          //         gradientType: GradientType.linear,
+                                                                          //         colors: [
+                                                                          //           Colors.purple,
+                                                                          //           Colors.deepPurple,
+                                                                          //         ],
+                                                                          //       ),
+                                                                          //     ],
+                                                                          //   );
+                                                                          // }).toList() as List<Widget>,
+                                                                        ),
                                                                       ),
                                                                     ),
-                                                                  ),
 
-                                                                ],
+                                                                  ],
+                                                                ),
                                                               ),
-                                                            ),
-                                                          );
-                                                        },
+                                                            );
+                                                          },
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                );
+                                                    ],
+                                                  );
 
-                                            },
-                                          ),
+                                                },
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              )
+                                  // SizedBox(width: 10,),
+                                  // Flexible(
+                                  //   // flex: 1,
+                                  //   child: Container(
+                                  //     // height: 400,
+                                  //     padding: EdgeInsets.all(15),
+                                  //     decoration: BoxDecoration(
+                                  //         border: Border.all(color: Colors.orange, width: 4),
+                                  //         borderRadius: BorderRadius.circular(20)
+                                  //     ),
+                                  //     child: SingleChildScrollView(
+                                  //       child: Column(
+                                  //         mainAxisAlignment: MainAxisAlignment.start,
+                                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                                  //         mainAxisSize: MainAxisSize.max,
+                                  //         children: [
+                                  //           // Container(
+                                  //           //   height: 170 ,
+                                  //           //   child: FutureBuilder(
+                                  //           //     future: getRelatedSolutions(tags, keywords),
+                                  //           //     builder: (context, snapshot) {
+                                  //           //       if (snapshot.connectionState == ConnectionState.waiting) {
+                                  //           //         return Container(
+                                  //           //             width: 330,
+                                  //           //             child: Container(
+                                  //           //                 height: 20, // Adjust the height as needed
+                                  //           //                 width: 20,
+                                  //           //                 child: Center(
+                                  //           //                     child: CircularProgressIndicator()
+                                  //           //                 )
+                                  //           //             )
+                                  //           //         ); // Display a loading indicator while fetching data
+                                  //           //       } else if (snapshot.hasError) {
+                                  //           //         return Text('Error: ${snapshot.error}');
+                                  //           //       } else {
+                                  //           //         // List<DocumentSnapshot<Object?>>? relatedSolutions = snapshot.data;
+                                  //           //         List<DocumentSnapshot<Map<String, dynamic>>>? relatedSolutions = snapshot.data?.cast<DocumentSnapshot<Map<String, dynamic>>>();
+                                  //           //
+                                  //           //         // print("relatedSolutions: $relatedSolutions");
+                                  //           //
+                                  //           //         return Column(
+                                  //           //           mainAxisAlignment: MainAxisAlignment.start,
+                                  //           //           crossAxisAlignment: CrossAxisAlignment.start,
+                                  //           //           children: [
+                                  //           //             Padding(
+                                  //           //               padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+                                  //           //               child: Text("Suggested Solutions (${relatedSolutions?.length})",
+                                  //           //                   style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                  //           //                       fontSize: 20,
+                                  //           //                       color: Colors.black)
+                                  //           //               ),
+                                  //           //             ),
+                                  //           //             Expanded(
+                                  //           //               child: ListView.builder(
+                                  //           //                 scrollDirection: Axis.horizontal,
+                                  //           //                 shrinkWrap: true,
+                                  //           //                 itemCount: relatedSolutions?.length,
+                                  //           //                 itemBuilder: (c, i) {
+                                  //           //                   // relatedSolutionlength = relatedSolutions?.length;
+                                  //           //                   // print("relatedSolutionlength: $relatedSolutionlength");
+                                  //           //                   var solutionData = relatedSolutions?[i].data() as Map<String, dynamic>;
+                                  //           //                   print("solutionData: ${solutionData}");
+                                  //           //                   return Container(
+                                  //           //                     margin: EdgeInsets.symmetric(horizontal: 15),
+                                  //           //                     padding: EdgeInsets.all(12),
+                                  //           //                     width: 330,
+                                  //           //                     decoration: BoxDecoration(
+                                  //           //                       border: Border.all(color: Colors.green),
+                                  //           //                       borderRadius: BorderRadius.circular(20),
+                                  //           //                     ),
+                                  //           //                     child: SingleChildScrollView(
+                                  //           //                       child: Column(
+                                  //           //                         mainAxisAlignment: MainAxisAlignment.start,
+                                  //           //                         crossAxisAlignment: CrossAxisAlignment.start,
+                                  //           //                         children: [
+                                  //           //                           Row(
+                                  //           //                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  //           //                             crossAxisAlignment: CrossAxisAlignment.start,
+                                  //           //                             children: [
+                                  //           //                               Flexible(
+                                  //           //                                 child: Text("${solutionData['Name']}",
+                                  //           //                                     maxLines: null,
+                                  //           //                                     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                  //           //                                         fontSize: 18,
+                                  //           //                                         color: Colors.black)),
+                                  //           //                               ),
+                                  //           //                               SizedBox(width: 5,),
+                                  //           //                               // InkWell(
+                                  //           //                               //   onTap: (){
+                                  //           //                               //     _userAboutMEProvider.isRecommendedAddedSolutions(true, relatedSolutions![i]);
+                                  //           //                               //   },
+                                  //           //                               //   child: Container(
+                                  //           //                               //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                  //           //                               //     width: MediaQuery.of(context).size.width * .05,
+                                  //           //                               //     // width: MediaQuery.of(context).size.width * .15,
+                                  //           //                               //
+                                  //           //                               //     // height: 60,
+                                  //           //                               //     decoration: BoxDecoration(
+                                  //           //                               //       color:Colors.blue ,
+                                  //           //                               //       border: Border.all(
+                                  //           //                               //           color:Colors.blue ,
+                                  //           //                               //           width: 1.0),
+                                  //           //                               //       borderRadius: BorderRadius.circular(8.0),
+                                  //           //                               //     ),
+                                  //           //                               //     child: Center(
+                                  //           //                               //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                  //           //                               //       child: Text(
+                                  //           //                               //         'Add',
+                                  //           //                               //         style: GoogleFonts.montserrat(
+                                  //           //                               //           textStyle:
+                                  //           //                               //           Theme
+                                  //           //                               //               .of(context)
+                                  //           //                               //               .textTheme
+                                  //           //                               //               .titleSmall,
+                                  //           //                               //           fontWeight: FontWeight.bold,
+                                  //           //                               //           color:Colors.white ,
+                                  //           //                               //         ),
+                                  //           //                               //       ),
+                                  //           //                               //     ),
+                                  //           //                               //   ),
+                                  //           //                               // ),
+                                  //           //                               Row(
+                                  //           //                                 children: [
+                                  //           //                                   IconButton(
+                                  //           //                                       onPressed: (){
+                                  //           //                                         userAboutMEProvider.updateEditSolutionPreview(
+                                  //           //                                             solutionData['Name'],
+                                  //           //                                             solutionData['Description'],
+                                  //           //                                             solutionData['Final_Description'],
+                                  //           //                                             solutionData['Impact'],
+                                  //           //                                             solutionData['Keywords'],
+                                  //           //                                             solutionData['tags'],
+                                  //           //                                             solutionData['id'],
+                                  //           //                                             isTrueOrFalse,
+                                  //           //                                             solutionData
+                                  //           //                                         );
+                                  //           //                                       },
+                                  //           //
+                                  //           //                                       icon: Icon(Icons.visibility, color: Colors.green,)
+                                  //           //                                   ),
+                                  //           //                                   SizedBox(width: 5,),
+                                  //           //
+                                  //           //                                   (userAboutMEProvider.isEditSolutionListAdded[solutionData['id']] == true) ? Text(
+                                  //           //                                     'Added',
+                                  //           //                                     style: GoogleFonts.montserrat(
+                                  //           //                                       textStyle:
+                                  //           //                                       Theme
+                                  //           //                                           .of(context)
+                                  //           //                                           .textTheme
+                                  //           //                                           .titleSmall,
+                                  //           //                                       fontStyle: FontStyle.italic,
+                                  //           //                                       color:Colors.green ,
+                                  //           //                                     ),
+                                  //           //                                   ) : InkWell(
+                                  //           //                                     onTap: (){
+                                  //           //                                       // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
+                                  //           //                                       userAboutMEProvider.EditRecommendedSolutionAdd(true, relatedSolutions![i]);
+                                  //           //                                       toastification.show(context: context,
+                                  //           //                                           title: Text('${solutionData['Name']} added to basket'),
+                                  //           //                                           autoCloseDuration: Duration(milliseconds: 2500),
+                                  //           //                                           alignment: Alignment.center,
+                                  //           //                                           backgroundColor: Colors.green,
+                                  //           //                                           foregroundColor: Colors.white,
+                                  //           //                                           icon: Icon(Icons.check_circle, color: Colors.white,),
+                                  //           //                                           animationDuration: Duration(milliseconds: 1000),
+                                  //           //                                           showProgressBar: false
+                                  //           //                                       );
+                                  //           //                                     },
+                                  //           //                                     child: Container(
+                                  //           //                                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                  //           //                                       width: MediaQuery.of(context).size.width * .05,
+                                  //           //                                       // width: MediaQuery.of(context).size.width * .15,
+                                  //           //
+                                  //           //                                       // height: 60,
+                                  //           //                                       decoration: BoxDecoration(
+                                  //           //                                         color:Colors.green ,
+                                  //           //                                         border: Border.all(
+                                  //           //                                             color:Colors.green ,
+                                  //           //                                             width: 1.0),
+                                  //           //                                         borderRadius: BorderRadius.circular(8.0),
+                                  //           //                                       ),
+                                  //           //                                       child: Center(
+                                  //           //                                         // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                  //           //                                         child: Text(
+                                  //           //                                           'Add',
+                                  //           //                                           style: GoogleFonts.montserrat(
+                                  //           //                                             textStyle:
+                                  //           //                                             Theme
+                                  //           //                                                 .of(context)
+                                  //           //                                                 .textTheme
+                                  //           //                                                 .titleSmall,
+                                  //           //                                             fontWeight: FontWeight.bold,
+                                  //           //                                             color:Colors.white ,
+                                  //           //                                           ),
+                                  //           //                                         ),
+                                  //           //                                       ),
+                                  //           //                                     ),
+                                  //           //                                   ),
+                                  //           //                                 ],
+                                  //           //                               )
+                                  //           //                             ],
+                                  //           //                           ),
+                                  //           //                           SizedBox(height: 5,),
+                                  //           //                           // Icon(Icons.add, color: Colors.blue, size: 24,),
+                                  //           //                           Text("${solutionData['Final_description']}",
+                                  //           //                               maxLines: 3,
+                                  //           //                               style: GoogleFonts.montserrat(
+                                  //           //                                   fontSize: 15,
+                                  //           //                                   color: Colors.black)),
+                                  //           //                         ],
+                                  //           //                       ),
+                                  //           //                     ),
+                                  //           //                   );
+                                  //           //                 },
+                                  //           //               ),
+                                  //           //             ),
+                                  //           //           ],
+                                  //           //         );
+                                  //           //       }
+                                  //           //     },
+                                  //           //   ),
+                                  //           // ),
+                                  //           // SizedBox(height: 20,),
+                                  //           Container(
+                                  //             // height: 180 ,
+                                  //             height:  MediaQuery.of(context).size.height * 0.21,
+                                  //             width: MediaQuery.of(context).size.width,
+                                  //             child: Consumer<UniversalListProvider>(
+                                  //               builder: (context, provider, child) {
+                                  //                 var relatedChallenges = provider.getRelatedChallengesList;
+                                  //
+                                  //                 return Column(
+                                  //                   mainAxisAlignment: MainAxisAlignment.start,
+                                  //                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  //                   children: [
+                                  //                     Padding(
+                                  //                       padding: const EdgeInsets.symmetric(horizontal: 15.0, ),
+                                  //                       child: Row(
+                                  //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  //                         children: [
+                                  //                           Text("Suggested challenges (${relatedChallenges?.length}):",
+                                  //                               style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                  //                                   fontSize: 20,
+                                  //                                   color: Colors.black)
+                                  //                           ),
+                                  //                           Row(
+                                  //                             children: [
+                                  //                               IconButton(
+                                  //                                 onPressed: () {
+                                  //                                   // Scroll the ListView.builder to the left
+                                  //                                   // You can adjust the scroll distance according to your requirement
+                                  //                                   // by changing the offset value
+                                  //                                   _scrollController4.animateTo(
+                                  //                                     _scrollController4.offset - 200,
+                                  //                                     curve: Curves.linear,
+                                  //                                     duration: Duration(milliseconds: 300),
+                                  //                                   );
+                                  //                                 },
+                                  //                                 icon: Icon(Icons.arrow_back),
+                                  //                               ),
+                                  //                               SizedBox(width: 10,),
+                                  //                               IconButton(
+                                  //                                 onPressed: () {
+                                  //                                   // Scroll the ListView.builder to the right
+                                  //                                   // You can adjust the scroll distance according to your requirement
+                                  //                                   // by changing the offset value
+                                  //                                   _scrollController4.animateTo(
+                                  //                                     _scrollController4.offset + 200,
+                                  //                                     curve: Curves.linear,
+                                  //                                     duration: Duration(milliseconds: 300),
+                                  //                                   );
+                                  //                                 },
+                                  //                                 icon: Icon(Icons.arrow_forward),
+                                  //                               ),
+                                  //
+                                  //                             ],
+                                  //                           ),
+                                  //
+                                  //                         ],
+                                  //                       ),
+                                  //                     ),
+                                  //                     SizedBox(height: 5,),
+                                  //                     Flexible(
+                                  //                       child: ListView.builder(
+                                  //                         scrollDirection: Axis.horizontal,
+                                  //                         controller: _scrollController4,
+                                  //                         shrinkWrap: true,
+                                  //                         itemCount: relatedChallenges?.length,
+                                  //                         itemBuilder: (c, i) {
+                                  //                           // relatedSolutionlength = relatedChallenges?.length;
+                                  //                           // print("relatedSolutionlength: $relatedSolutionlength");
+                                  //                           var challengesData = relatedChallenges[i];
+                                  //                           var matchedTags = challengesData['matchedTags'] ?? [];
+                                  //
+                                  //                           // print("solutionData: ${challengesData}");
+                                  //                           return Container(
+                                  //                             margin: EdgeInsets.symmetric(horizontal: 15),
+                                  //                             padding: EdgeInsets.all(12),
+                                  //                             // width: 330,
+                                  //                             width: MediaQuery.of(context).size.width * .17,
+                                  //                             decoration: BoxDecoration(
+                                  //                               border: Border.all(color: Colors.orange,width : 2),
+                                  //                               borderRadius: BorderRadius.circular(20),
+                                  //                             ),
+                                  //                             child: SingleChildScrollView(
+                                  //                               child: Column(
+                                  //                                 mainAxisAlignment: MainAxisAlignment.start,
+                                  //                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                  //                                 children: [
+                                  //                                   Row(
+                                  //                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  //                                     crossAxisAlignment: CrossAxisAlignment.start,
+                                  //                                     children: [
+                                  //                                       Flexible(
+                                  //                                         child: Text("${challengesData['Label']}",
+                                  //                                             maxLines: 2,
+                                  //                                             style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                  //                                                 fontSize: 15,
+                                  //                                                 color: Colors.black)),
+                                  //                                       ),
+                                  //                                       // InkWell(
+                                  //                                       //   onTap: (){
+                                  //                                       //     _userAboutMEProvider.isRecommendedAddedChallenge(true,  relatedChallenges![i]);
+                                  //                                       //   },
+                                  //                                       //   child: Container(
+                                  //                                       //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                  //                                       //     width: MediaQuery.of(context).size.width * .05,
+                                  //                                       //     // width: MediaQuery.of(context).size.width * .15,
+                                  //                                       //
+                                  //                                       //     // height: 60,
+                                  //                                       //     decoration: BoxDecoration(
+                                  //                                       //       color:Colors.blue ,
+                                  //                                       //       border: Border.all(
+                                  //                                       //           color:Colors.blue ,
+                                  //                                       //           width: 1.0),
+                                  //                                       //       borderRadius: BorderRadius.circular(8.0),
+                                  //                                       //     ),
+                                  //                                       //     child: Center(
+                                  //                                       //       // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                  //                                       //       child: Text(
+                                  //                                       //         'Add',
+                                  //                                       //         style: GoogleFonts.montserrat(
+                                  //                                       //           textStyle:
+                                  //                                       //           Theme
+                                  //                                       //               .of(context)
+                                  //                                       //               .textTheme
+                                  //                                       //               .titleSmall,
+                                  //                                       //           fontWeight: FontWeight.bold,
+                                  //                                       //           color:Colors.white ,
+                                  //                                       //         ),
+                                  //                                       //       ),
+                                  //                                       //     ),
+                                  //                                       //   ),
+                                  //                                       // ),
+                                  //
+                                  //                                       Row(
+                                  //                                         children: [
+                                  //                                           IconButton(
+                                  //                                               onPressed: (){
+                                  //                                                 Navigator.pop(context);
+                                  //                                                 userAboutMEProvider.updateEditChallengePreview(
+                                  //                                                     challengesData['Label'],
+                                  //                                                     challengesData['Description'],
+                                  //                                                     challengesData['Final_description'],
+                                  //                                                     challengesData['Impact'],
+                                  //                                                     challengesData['Keywords'],
+                                  //                                                     challengesData['tags'],
+                                  //                                                     challengesData['id'],
+                                  //                                                     isTrueOrFalse,
+                                  //                                                     challengesData,
+                                  //                                                     false,
+                                  //                                                     challengesData['Impacts_to_Coworkers'],
+                                  //                                                     challengesData['Impacts_to_employee'],
+                                  //                                                     challengesData['Negative_impacts_to_organisation'],
+                                  //                                                     challengesData['Related_challenges_tags'],
+                                  //                                                     challengesData['Suggested_solutions_tags'],
+                                  //                                                     challengesData['Linked_solutions']
+                                  //                                                 );
+                                  //                                                 NewViewDialog(challengesData['Label'],
+                                  //                                                   challengesData['Description'],
+                                  //                                                   challengesData['Impact'],
+                                  //                                                   challengesData['Final_description'],
+                                  //                                                   challengesData['Keywords'],
+                                  //                                                   challengesData['tags'],
+                                  //                                                   challengesData['id'],
+                                  //                                                   challengesData,
+                                  //                                                   userAboutMEProvider.isEditChallengeListAdded,
+                                  //                                                   userAboutMEProvider.EditRecommendedChallengeAdd,
+                                  //                                                   challengesData['Impacts_to_Coworkers'],
+                                  //                                                   challengesData['Impacts_to_employee'],
+                                  //                                                   challengesData['Negative_impacts_to_organisation'],
+                                  //                                                   challengesData['Related_challenges_tags'],
+                                  //                                                   challengesData['Suggested_solutions_tags'],
+                                  //                                                     challengesData['Linked_solutions']);
+                                  //                                                 _universalListProvider.filterChallenges(challengesData['tags']);
+                                  //                                                 _universalListProvider.filterSolutions(challengesData['tags']);
+                                  //                                                 _universalListProvider.filterLinkedSolutions(challengesData['Linked_solutions'],challengesData['tags']);
+                                  //
+                                  //                                                 // userAboutMEProvider.updateEditChallengePreview(
+                                  //                                                 //     challengesData['Label'],
+                                  //                                                 //     challengesData['Description'],
+                                  //                                                 //     challengesData['Final_description'],
+                                  //                                                 //     challengesData['Impact'],
+                                  //                                                 //     challengesData['Keywords'],
+                                  //                                                 //     challengesData['tags'],
+                                  //                                                 //     challengesData['id'],
+                                  //                                                 //     isTrueOrFalse,
+                                  //                                                 //     challengesData,
+                                  //                                                 //   true
+                                  //                                                 // );
+                                  //                                               },
+                                  //                                               icon: Icon(Icons.visibility, color: Colors.blue,)
+                                  //                                           ),
+                                  //                                           SizedBox(width: 5,),
+                                  //                                           (userAboutMEProvider.isEditChallengeListAdded[challengesData['id']] == true) ? Text(
+                                  //                                             'Added',
+                                  //                                             style: GoogleFonts.montserrat(
+                                  //                                               textStyle:
+                                  //                                               Theme
+                                  //                                                   .of(context)
+                                  //                                                   .textTheme
+                                  //                                                   .titleSmall,
+                                  //                                               fontStyle: FontStyle.italic,
+                                  //                                               color:Colors.green ,
+                                  //                                             ),
+                                  //                                           ) : InkWell(
+                                  //                                               onTap: (){
+                                  //                                                 // userAboutMEProvider.isRecommendedAddedChallenge(true, documents);
+                                  //                                                 userAboutMEProvider.EditRecommendedChallengeAdd(true, relatedChallenges![i]);
+                                  //                                                 toastification.show(context: context,
+                                  //                                                     title: Text('${challengesData['Label']} added to basket'),
+                                  //                                                     autoCloseDuration: Duration(milliseconds: 2500),
+                                  //                                                     alignment: Alignment.center,
+                                  //                                                     backgroundColor: Colors.green,
+                                  //                                                     foregroundColor: Colors.white,
+                                  //                                                     icon: Icon(Icons.check_circle, color: Colors.white,),
+                                  //                                                     animationDuration: Duration(milliseconds: 1000),
+                                  //                                                     showProgressBar: false
+                                  //                                                 );
+                                  //
+                                  //                                               },
+                                  //                                               child: Icon(Icons.add_circle, color: Colors.blue)
+                                  //
+                                  //                                             // child: Container(
+                                  //                                             //   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                  //                                             //   width: MediaQuery.of(context).size.width * .05,
+                                  //                                             //   // width: MediaQuery.of(context).size.width * .15,
+                                  //                                             //
+                                  //                                             //   // height: 60,
+                                  //                                             //   decoration: BoxDecoration(
+                                  //                                             //     color:Colors.blue ,
+                                  //                                             //     border: Border.all(
+                                  //                                             //         color:Colors.blue ,
+                                  //                                             //         width: 1.0),
+                                  //                                             //     borderRadius: BorderRadius.circular(8.0),
+                                  //                                             //   ),
+                                  //                                             //   child: Center(
+                                  //                                             //     // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                  //                                             //     child: Text(
+                                  //                                             //       'Add',
+                                  //                                             //       style: GoogleFonts.montserrat(
+                                  //                                             //         textStyle:
+                                  //                                             //         Theme
+                                  //                                             //             .of(context)
+                                  //                                             //             .textTheme
+                                  //                                             //             .titleSmall,
+                                  //                                             //         fontWeight: FontWeight.bold,
+                                  //                                             //         color:Colors.white ,
+                                  //                                             //       ),
+                                  //                                             //     ),
+                                  //                                             //   ),
+                                  //                                             // ),
+                                  //                                           ),
+                                  //                                         ],
+                                  //                                       ),
+                                  //
+                                  //                                     ],
+                                  //                                   ),
+                                  //                                   SizedBox(height: 5,),
+                                  //                                   // Text("${challengesData['Label']}",
+                                  //                                   //     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,
+                                  //                                   //         fontSize: 18,
+                                  //                                   //         color: Colors.black)),
+                                  //                                   Text("${challengesData['Final_description']}",
+                                  //                                       maxLines: 2,
+                                  //                                       style: GoogleFonts.montserrat(
+                                  //                                           fontSize: 15,
+                                  //                                           color: Colors.black)),
+                                  //
+                                  //                                   SizedBox(height: 5,),
+                                  //
+                                  //                                   Align(
+                                  //                                     alignment: Alignment.bottomLeft,
+                                  //                                     child:  SingleChildScrollView(
+                                  //                                       scrollDirection: Axis.horizontal,
+                                  //                                       child: Row(
+                                  //                                         // spacing: 10,
+                                  //                                         // runSpacing: 10,
+                                  //                                           crossAxisAlignment: CrossAxisAlignment.end,
+                                  //                                           mainAxisAlignment: MainAxisAlignment.start,
+                                  //                                           // runAlignment: WrapAlignment.end,
+                                  //                                           children: [
+                                  //                                             ...matchedTags.take(2).map<Widget>((item) =>
+                                  //                                                 Container(
+                                  //                                                   height: 25,
+                                  //                                                   // width: 200,
+                                  //                                                   padding: EdgeInsets.all(5),
+                                  //                                                   decoration: BoxDecoration(
+                                  //                                                       borderRadius: BorderRadius.circular(15),
+                                  //                                                       // color: Colors.teal
+                                  //                                                       gradient: LinearGradient(colors: [
+                                  //                                                         Color(0xe7e4dfee),
+                                  //                                                         Color(0xffe5d5fc),
+                                  //                                                       ]),
+                                  //                                                       color: Colors.grey
+                                  //                                                   ),
+                                  //                                                   child: GradientText("${item}",
+                                  //                                                     style: TextStyle(
+                                  //                                                       fontWeight: FontWeight.w700,
+                                  //                                                       fontSize: 10,
+                                  //                                                     ),
+                                  //                                                     gradientType: GradientType.linear,
+                                  //                                                     colors: [Colors.purple, Colors.deepPurple],
+                                  //                                                   ),
+                                  //                                                 ),
+                                  //                                             ).toList(),
+                                  //                                             if (matchedTags.length > 2)
+                                  //                                               InkWell(
+                                  //                                                 onTap: () {
+                                  //                                                   // Handle "more" button click;
+                                  //                                                 },
+                                  //                                                 child: Text(
+                                  //                                                   '...more (${matchedTags.length - 2})',
+                                  //                                                   style: TextStyle(
+                                  //                                                     color: Colors.blue,
+                                  //                                                     fontSize: 12,
+                                  //                                                     fontWeight: FontWeight.bold,
+                                  //                                                   ),
+                                  //                                                 ),
+                                  //                                               ),
+                                  //                                           ]
+                                  //                                         // children: matchedTags.map<Widget>((item){
+                                  //                                         //   return Row(
+                                  //                                         //     mainAxisSize: MainAxisSize.min,
+                                  //                                         //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  //                                         //     children: [
+                                  //                                         //       GradientText(item,
+                                  //                                         //         style: TextStyle(
+                                  //                                         //           fontWeight: FontWeight.w700,
+                                  //                                         //           fontSize: 10,
+                                  //                                         //           // color: Colors.white,
+                                  //                                         //         ),
+                                  //                                         //         gradientType: GradientType.linear,
+                                  //                                         //         colors: [
+                                  //                                         //           Colors.purple,
+                                  //                                         //           Colors.deepPurple,
+                                  //                                         //         ],
+                                  //                                         //       ),
+                                  //                                         //     ],
+                                  //                                         //   );
+                                  //                                         // }).toList() as List<Widget>,
+                                  //                                       ),
+                                  //                                     ),
+                                  //                                   ),
+                                  //
+                                  //                                 ],
+                                  //                               ),
+                                  //                             ),
+                                  //                           );
+                                  //                         },
+                                  //                       ),
+                                  //                     ),
+                                  //                   ],
+                                  //                 );
+                                  //
+                                  //               },
+                                  //             ),
+                                  //           ),
+                                  //         ],
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                ],
+                              ),
                             ],
                           ),
                         ),
@@ -24270,7 +25668,7 @@ catch(e){
           await getSolutionsKeywordsResponse(defaulttext1,defaulttextq2);
           //
           // await _userAboutMEProvider.getRelatedChallenges(generatedtags, generatedcategory);
-          await _userAboutMEProvider.getRelatedSolutions(generatedsolutionstags, generatedsolutionscategory);
+          await _userAboutMEProvider.getRelatedSolutions(generatedsolutionstags, generatedsolutionscategory,null);
 
         });
         print("isRefinetextChange: ${_userAboutMEProvider.isRefinetextChange}");

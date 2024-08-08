@@ -1,10 +1,11 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:thrivers/Network/FirebaseApi.dart';
-import 'package:thrivers/screens/homescreentab.dart';
-import 'package:thrivers/screens/new%20added%20screens/NewHomeScreen.dart';
+import 'package:thrivers/screens/not%20used%20screen/homescreentab.dart';
+import 'package:thrivers/screens/admin_screens/NewHomeScreen.dart';
 
 
 
@@ -116,7 +117,9 @@ class _SuperAdminLoginScreenState extends State<SuperAdminLoginScreen> {
 
                             },
                             style: GoogleFonts.poppins(textStyle: Theme.of(context).textTheme.bodyLarge,fontWeight:FontWeight.w400,color: Colors.white) ,
-
+                            inputFormatters: [
+                              FilteringTextInputFormatter.deny(RegExp(r'\s')), // Deny spaces
+                            ],
                             decoration: InputDecoration(
                               prefixIcon: Icon(
                                 Icons.person,color: Colors.white,
@@ -144,6 +147,9 @@ class _SuperAdminLoginScreenState extends State<SuperAdminLoginScreen> {
                             onChanged: (value) {
 
                             },
+                            inputFormatters: [
+                            FilteringTextInputFormatter.deny(RegExp(r'\s')), // Deny spaces
+                          ],
                             obscuringCharacter: "*",
                             obscureText: shouldObscurePassword,
                             style: GoogleFonts.poppins(textStyle: Theme.of(context).textTheme.bodyLarge,fontWeight:FontWeight.w400,color: Colors.white) ,

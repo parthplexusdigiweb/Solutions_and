@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:go_router_paths/go_router_paths.dart';
-import 'package:thrivers/screens/addchallengesScreen.dart';
-import 'package:thrivers/screens/addthriverscreen.dart';
-import 'package:thrivers/screens/new%20added%20screens/AdminAboutMePage.dart';
-import 'package:thrivers/screens/new%20added%20screens/NewHomeScreen.dart';
-import 'package:thrivers/screens/new%20added%20screens/SuperAdminLoginScreen.dart';
-import 'package:thrivers/screens/new%20added%20screens/UserLoginPage.dart';
-import 'package:thrivers/screens/new%20added%20screens/UserRegisterPage.dart';
+import 'package:thrivers/screens/admin_screens/addchallengesScreen.dart';
+import 'package:thrivers/screens/admin_screens/addthriverscreen.dart';
+import 'package:thrivers/screens/admin_screens/AdminAboutMePage.dart';
+import 'package:thrivers/screens/admin_screens/NewHomeScreen.dart';
+import 'package:thrivers/screens/admin_screens/SuperAdminLoginScreen.dart';
+import 'package:thrivers/screens/user_screen/UserLoginPage.dart';
+import 'package:thrivers/screens/user_screen/UserRegisterPage.dart';
 import 'package:thrivers/screens/new%20added%20screens/thriverLandingScreen.dart';
 
-import '../screens/authenticateloginscreen.dart';
+import '../screens/new added screens/authenticateloginscreen.dart';
 
 class AppPaths {
 

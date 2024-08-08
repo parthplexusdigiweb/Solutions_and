@@ -4,11 +4,11 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:thrivers/screens/authenticateloginscreen.dart';
-import 'package:thrivers/screens/new%20added%20screens/SuperAdminLoginScreen.dart';
-import 'package:thrivers/screens/new%20added%20screens/UserAboutMePage.dart';
-import 'package:thrivers/screens/new%20added%20screens/UserLoginPage.dart';
-import 'package:thrivers/screens/new%20added%20screens/UserRegisterPage.dart';
+import 'package:thrivers/screens/new%20added%20screens/authenticateloginscreen.dart';
+import 'package:thrivers/screens/admin_screens/SuperAdminLoginScreen.dart';
+import 'package:thrivers/screens/user_screen/UserProfileDetails.dart';
+import 'package:thrivers/screens/user_screen/UserLoginPage.dart';
+import 'package:thrivers/screens/user_screen/UserRegisterPage.dart';
 import 'package:thrivers/screens/not%20used%20screen/landingscreen.dart';
 
 

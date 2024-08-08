@@ -26,7 +26,7 @@ class ChallengesModel {
   var SuggestedChallengesTag;
   var LinkedSolution;
   var newLinkedSolution;
-  var OSD;
+  var OCD;
   bool isConfirmed; // Add a boolean for confirmation status
   bool isChecked; // Add a boolean for confirmation status
 
@@ -63,7 +63,7 @@ class ChallengesModel {
     this.SuggestedChallengesTag,
     this.LinkedSolution,
     this.newLinkedSolution,
-    this.OSD,
+    this.OCD,
     this.isConfirmed = false, // Default to false for not confirmed
     this.isChecked = false, // Default to false for not confirmed
     // required this.attachments,

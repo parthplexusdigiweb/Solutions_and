@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:thrivers/Network/FirebaseApi.dart';
 
-import '../core/constants.dart';
-import '../core/progress_dialog.dart';
+import '../../core/constants.dart';
+import '../../core/progress_dialog.dart';
 
 class BrevoScreen extends StatefulWidget {
   const BrevoScreen({Key? key}) : super(key: key);

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -11,7 +12,7 @@ import 'package:thrivers/Network/FirebaseApi.dart';
 import 'package:thrivers/core/apphelper.dart';
 import 'package:thrivers/core/constants.dart';
 import 'package:thrivers/core/progress_dialog.dart';
-import 'package:thrivers/screens/new%20added%20screens/UserLoginPage.dart';
+import 'package:thrivers/screens/user_screen/UserLoginPage.dart';
 import 'package:thrivers/screens/new%20added%20screens/thriverLandingScreen.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -315,8 +316,6 @@ class _RegisterPageState extends State<RegisterPage> {
                             maxLines: null,
                             controller: nameTextEditingController,
                             cursorColor: Colors.white,
-
-
                             style: GoogleFonts.montserrat(
                                 textStyle: Theme
                                     .of(context)
@@ -374,8 +373,9 @@ class _RegisterPageState extends State<RegisterPage> {
                             maxLines: null,
                             controller: emailTextEditingController,
                             cursorColor: Colors.white,
-
-
+                            inputFormatters: [
+                              FilteringTextInputFormatter.deny(RegExp(r'\s')), // Deny spaces
+                            ],
                             style: GoogleFonts.montserrat(
                                 textStyle: Theme
                                     .of(context)
@@ -431,6 +431,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: TextFormField(
                             controller: passwordTextEditingController,
                             cursorColor: Colors.white,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.deny(RegExp(r'\s')), // Deny spaces
+                            ],
                             style: GoogleFonts.montserrat(
                                 textStyle: Theme
                                     .of(context)

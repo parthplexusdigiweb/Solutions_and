@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:thrivers/Provider/AddKeywordsProvider.dart';
-import 'package:thrivers/screens/demo.dart';
+import 'package:thrivers/screens/import_master/demo.dart';
 class AddKeywordsScreen extends StatefulWidget {
   const AddKeywordsScreen({super.key});
 

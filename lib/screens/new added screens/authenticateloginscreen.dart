@@ -5,15 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:thrivers/screens/homescreentab.dart';
-import 'package:thrivers/screens/new%20added%20screens/NewHomeScreen.dart';
-import 'package:thrivers/screens/new%20added%20screens/UserAboutMePage.dart';
+import 'package:thrivers/screens/not%20used%20screen/homescreentab.dart';
+import 'package:thrivers/screens/admin_screens/NewHomeScreen.dart';
+import 'package:thrivers/screens/user_screen/UserProfileDetails.dart';
 
 
-import '../core/EncryptDecrypt.dart';
-import '../core/constants.dart';
-import '../main.dart';
-import 'not used screen/landingscreen.dart';
+import '../../core/EncryptDecrypt.dart';
+import '../../core/constants.dart';
+import '../../main.dart';
+import '../not used screen/landingscreen.dart';
 
 
 class AuthenticateLogin extends StatefulWidget {

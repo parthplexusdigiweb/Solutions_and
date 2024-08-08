@@ -26,7 +26,7 @@ import 'package:thrivers/core/progress_dialog.dart';
 import 'package:thrivers/model/soluton_table_model.dart';
 import 'package:toastification/toastification.dart';
 
-import '../model/challenges_table_model.dart';
+import '../../model/challenges_table_model.dart';
 
 class EditAboutMEScreen extends StatefulWidget {
   var aboutMeData, refreshPage, AdminName, tabindex, page,showAddAddAboutMeDialogBox,duplicateDocument,showReportViewPageDialogBox,navigateToTab;
@@ -267,7 +267,10 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
   @override
   Widget build(BuildContext context) {
     // print("widget.tabindex: ${widget.tabindex}");
-    return  NewTabBar();
+    ///
+    // return  NewTabBar();
+    return  MyLibrary();
+    ///
     //   Theme(
     //     data: Theme.of(context).copyWith(dialogBackgroundColor: Colors.white),
     //     child:  Consumer<UserAboutMEProvider>(
@@ -1611,7 +1614,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       // mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text("My reports", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.headlineMedium,)),
+                        Text("Users reports library", style: GoogleFonts.montserrat(textStyle: Theme.of(context).textTheme.headlineMedium,)),
                         Row(
                           children: [
                             // IconButton(
@@ -1620,25 +1623,26 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                             //     },
                             //     icon: Icon(Icons.add)),
                             ///
-                            InkWell(
-                              onTap: () async {
-                                // await widget.showAddAddAboutMeDialogBox();
-                                // widget.page.jumpToPage(1);
-                                // widget.navigateToTab(1);
-                              },
-                              child: Container(
-                                  width: MediaQuery.of(context).size.width * 0.15,
-                                  padding: EdgeInsets.all(10),
-                                  margin: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Text('Create new report',textAlign: TextAlign.center,style: GoogleFonts.montserrat(
-                                      textStyle: Theme.of(context).textTheme.titleSmall,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),)),
-                            ),
+                        ///this
+                        //     InkWell(
+                        //       onTap: () async {
+                        //         // await widget.showAddAddAboutMeDialogBox();
+                        //         // widget.page.jumpToPage(1);
+                        //         // widget.navigateToTab(1);
+                        //       },
+                        //       child: Container(
+                        //           width: MediaQuery.of(context).size.width * 0.15,
+                        //           padding: EdgeInsets.all(10),
+                        //           margin: EdgeInsets.all(10),
+                        //           decoration: BoxDecoration(
+                        //             color: Colors.blue,
+                        //             borderRadius: BorderRadius.circular(10),
+                        //           ),
+                        //           child: Text('Create new report',textAlign: TextAlign.center,style: GoogleFonts.montserrat(
+                        //               textStyle: Theme.of(context).textTheme.titleSmall,
+                        //               fontWeight: FontWeight.bold,
+                        //               color: Colors.white),)),
+                        //     ),
                             ///
                             //  SizedBox(width: 5,),
 
@@ -1736,15 +1740,15 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                           ),
                           SizedBox(width: 4,),
 
-                          Container(
-                            // color: Colors.green,
-
-                            width: MediaQuery.of(context).size.width * 0.08,
-                            child: Center(
-                                child: Text('Purpose',style: Theme.of(context).textTheme.titleMedium)
-                            ),
-                          ),
-                          SizedBox(width: 4,),
+                          // Container(
+                          //   // color: Colors.green,
+                          //
+                          //   width: MediaQuery.of(context).size.width * 0.08,
+                          //   child: Center(
+                          //       child: Text('Purpose',style: Theme.of(context).textTheme.titleMedium)
+                          //   ),
+                          // ),
+                          // SizedBox(width: 4,),
 
                           Container(
                             // color: Colors.red,
@@ -1932,11 +1936,11 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                   width: MediaQuery.of(context).size.width * 0.13,
                                                   child: Center(child: Text(dataList[i]['AB_Status'].toString(),style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
 
-                                              Container(
-                                                // color: Colors.lime,
-
-                                                  width: MediaQuery.of(context).size.width * 0.08,
-                                                  child: Center(child: Text(dataList[i]['Purpose'].toString(),style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
+                                              // Container(
+                                              //   // color: Colors.lime,
+                                              //
+                                              //     width: MediaQuery.of(context).size.width * 0.08,
+                                              //     child: Center(child: Text(dataList[i]['Purpose'].toString(),style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis))),
 
                                               Column(
                                                 children: [
@@ -1984,64 +1988,63 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                                                   child: Center(child: Row(
                                                     mainAxisAlignment: MainAxisAlignment.center,
                                                     children: [
-
-                                                      IconButton(
-                                                          iconSize: 25,
-                                                          color: primaryColorOfApp,
-                                                          onPressed: () async {
-                                                            // showDuplicateDialogBox(dataList[i]);
-///
-                                                            // QuerySnapshot querySnapshott = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
-                                                            //
-                                                            // // Check if there are any documents
-                                                            //
-                                                            // print("querySnapshot :${querySnapshott}");
-                                                            // print("querySnapshot :${querySnapshott.docs.length}");
-                                                            //
-                                                            // if (querySnapshott.docs.isNotEmpty) {
-                                                            //   // Get the last document
-                                                            //   DocumentSnapshot lastDocument = querySnapshott.docs.first;
-                                                            //   print("Duplicate Opened :${lastDocument.id}");
-                                                            //   await showEditAboutMeDialogBox(lastDocument,6);
-                                                            // }
-
-                                                          },
-                                                          icon: Icon(Icons.file_copy,)),
-
-                                                      (dataList[i]['AB_Status'].toString()=="Complete" || dataList[i]['AB_Status'].toString()=="Complete and Sent") ?
-                                                      IconButton(
-                                                          iconSize: 25,
-                                                          color: primaryColorOfApp,
-                                                          onPressed: () async {
-                                                            // widget.showReportViewPageDialogBox(dataList[i]);
-                                                          },
-                                                          icon: Icon(Icons.visibility,)) :
-
-                                                      IconButton(
-                                                          iconSize: 25,
-                                                          color: primaryColorOfApp,
-                                                          onPressed: () async {
-                                                            // showEditAboutMeDialogBox(dataList[i],0);
-                                                          },
-                                                          icon: Icon(Icons.edit,)),
-
-                                                      IconButton(
-                                                          iconSize: 25,
-                                                          color: primaryColorOfApp,
-                                                          onPressed: () async {
-                                                            QuerySnapshot userData = await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: dataList[i]["Email"]).get();
-                                                            var userdocs = await userData.docs.first.id;
-                                                            ProgressDialog.show(context, "Deleting report",Icons.person);
-                                                            await ApiRepository().DeleteSectionPreset(dataList[i].reference);
-                                                            if(dataList[i]["AB_Status"]=="main"){
-                                                              await ApiRepository().updateUserDetail({"isPPS": false},userdocs);
-                                                            }
-                                                            setState(() {});
-                                                            // _addKeywordProvider.loadDataForPage(1);
-                                                            // _addKeywordProvider.setFirstpageNo();
-                                                            ProgressDialog.hide();
-                                                          },
-                                                          icon: Icon(Icons.delete,)),
+                                                    //                                                       IconButton(
+//                                                           iconSize: 25,
+//                                                           color: primaryColorOfApp,
+//                                                           onPressed: () async {
+//                                                             // showDuplicateDialogBox(dataList[i]);
+// ///
+//                                                             // QuerySnapshot querySnapshott = await FirebaseFirestore.instance.collection('AboutMe').where('AB_Status', isEqualTo: 'Draft').orderBy('AB_id', descending: true).limit(1).get();
+//                                                             //
+//                                                             // // Check if there are any documents
+//                                                             //
+//                                                             // print("querySnapshot :${querySnapshott}");
+//                                                             // print("querySnapshot :${querySnapshott.docs.length}");
+//                                                             //
+//                                                             // if (querySnapshott.docs.isNotEmpty) {
+//                                                             //   // Get the last document
+//                                                             //   DocumentSnapshot lastDocument = querySnapshott.docs.first;
+//                                                             //   print("Duplicate Opened :${lastDocument.id}");
+//                                                             //   await showEditAboutMeDialogBox(lastDocument,6);
+//                                                             // }
+//
+//                                                           },
+//                                                           icon: Icon(Icons.file_copy,)),
+//
+//                                                       (dataList[i]['AB_Status'].toString()=="Complete" || dataList[i]['AB_Status'].toString()=="Complete and Sent") ?
+//                                                       IconButton(
+//                                                           iconSize: 25,
+//                                                           color: primaryColorOfApp,
+//                                                           onPressed: () async {
+//                                                             // widget.showReportViewPageDialogBox(dataList[i]);
+//                                                           },
+//                                                           icon: Icon(Icons.visibility,)) :
+//
+//                                                       IconButton(
+//                                                           iconSize: 25,
+//                                                           color: primaryColorOfApp,
+//                                                           onPressed: () async {
+//                                                             // showEditAboutMeDialogBox(dataList[i],0);
+//                                                           },
+//                                                           icon: Icon(Icons.edit,)),
+//
+//                                                       IconButton(
+//                                                           iconSize: 25,
+//                                                           color: primaryColorOfApp,
+//                                                           onPressed: () async {
+//                                                             QuerySnapshot userData = await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: dataList[i]["Email"]).get();
+//                                                             var userdocs = await userData.docs.first.id;
+//                                                             ProgressDialog.show(context, "Deleting report",Icons.person);
+//                                                             await ApiRepository().DeleteSectionPreset(dataList[i].reference);
+//                                                             if(dataList[i]["AB_Status"]=="main"){
+//                                                               await ApiRepository().updateUserDetail({"isPPS": false},userdocs);
+//                                                             }
+//                                                             setState(() {});
+//                                                             // _addKeywordProvider.loadDataForPage(1);
+//                                                             // _addKeywordProvider.setFirstpageNo();
+//                                                             ProgressDialog.hide();
+//                                                           },
+//                                                           icon: Icon(Icons.delete,)),
                                                       // SizedBox(width: 20,),
                                                     ],
                                                   ),
@@ -4467,7 +4470,7 @@ class _EditAboutMEScreenState extends State<EditAboutMEScreen> with TickerProvid
                               InkWell(
                                 onTap: () async{
 
-                                  await userAboutMEProvider.getRelatedSolutions(generatedsolutionstags, generatedsolutionscategory);
+                                  await userAboutMEProvider.getRelatedSolutions(generatedsolutionstags, generatedsolutionscategory,null);
 
 
                                   Map<String, dynamic> AboutMEDatas = {
@@ -17731,6 +17734,7 @@ Thank you for being open to understanding me better and for considering my reque
                                                                                           challengesData['Negative_impacts_to_organisation'],
                                                                                           challengesData['Related_challenges_tags'],
                                                                                           challengesData['Suggested_solutions_tags'],
+                                                                                            challengesData['Linked_solutions']
                                                                                         );
                                                                                       },
                                                                                       icon: Icon(Icons.visibility, color: Colors.blue,)
@@ -18840,6 +18844,7 @@ Thank you for being open to understanding me better and for considering my reque
                                                                                           solutionData['Positive_impacts_to_organisation'],
                                                                                           solutionData['Related_solution_tags'],
                                                                                           solutionData['Suggested_challenges_tags'],
+                                                                                            solutionData['Linked_challenges']
 
                                                                                         );
                                                                                       },
@@ -19694,8 +19699,8 @@ Thank you for being open to understanding me better and for considering my reque
                                                                             alignment: WrapAlignment.start,
                                                                             runAlignment: WrapAlignment.start,
                                                                             children: addKeywordProvider.keywords.map((item){
-                                                                              print("item: $item");
-                                                                              print("addKeywordProvider.keywords: ${addKeywordProvider.keywords}");
+                                                                              // print("item: $item");
+                                                                              // print("addKeywordProvider.keywords: ${addKeywordProvider.keywords}");
                                                                               return InkWell(
                                                                                 onTap: (){
                                                                                   searchChallengescontroller.text = item;
@@ -19851,7 +19856,7 @@ Thank you for being open to understanding me better and for considering my reque
                                                                             // relatedSolutionlength = relatedSolutions?.length;
                                                                             // print("relatedSolutionlength: $relatedSolutionlength");
                                                                             var solutionData = relatedSolutions?[i].data() as Map<String, dynamic>;
-                                                                            print("solutionData: ${solutionData}");
+                                                                            // print("solutionData: ${solutionData}");
                                                                             return Container(
                                                                               margin: EdgeInsets.symmetric(horizontal: 15),
                                                                               padding: EdgeInsets.all(12),

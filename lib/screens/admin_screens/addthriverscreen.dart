@@ -20,13 +20,17 @@ import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:multi_select_flutter/util/multi_select_list_type.dart';
 import 'package:provider/provider.dart';
+import 'package:thrivers/Network/FirebaseApi.dart';
 import 'package:thrivers/Provider/AddKeywordsProvider.dart';
 import 'package:thrivers/Provider/AdminSolutionListProvider.dart';
-import 'package:thrivers/screens/addthriverscreen.dart';
-import '../Network/FirebaseApi.dart';
-import '../core/apphelper.dart';
-import '../core/constants.dart';
-import '../core/progress_dialog.dart';
+import 'package:thrivers/Provider/UniversalListProvider.dart';
+import 'package:thrivers/core/apphelper.dart';
+import 'package:thrivers/core/constants.dart';
+import 'package:thrivers/core/progress_dialog.dart';
+import 'package:thrivers/screens/admin_screens/addthriverscreen.dart';
+import 'package:toastification/toastification.dart';
+import 'package:toggle_switch/toggle_switch.dart';
+
 import 'addthriverscreen.dart';
 
 class Animal {
@@ -78,8 +82,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
   TextEditingController solutionsTextEditingController = TextEditingController();
   TextEditingController countryTextEditingController = TextEditingController();
   TextEditingController industryTextEditingController = TextEditingController();
-  List<Widget> nodes = [];
-  List<Widget> tagsnodes = [];
+
 
   List<String> categories = [];
 
@@ -99,9 +102,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
 
 
 
-  bool showTreeView = false;
 
-  bool showTagView = false;
 
 
 
@@ -128,9 +129,10 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
   TextEditingController keywordscontroller = TextEditingController();
   TextEditingController searchbyCatcontroller = TextEditingController();
   TextEditingController searchbyTagcontroller = TextEditingController();
+  TextEditingController searchChallengescontroller = TextEditingController();
   late final AddKeywordProvider _addKeywordProvider;
   late final SolutionsListProvider _solutionsListProvider;
-
+  late final UniversalListProvider _universalListProvider;
 
 
 
@@ -456,10 +458,6 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
   String query = "";
   int _debouncetime = 1000;
 
-
-
-
-
      // void main() {
   //   // Replace this with your actual Timestamp
   //   Timestamp timestamp = Timestamp(seconds: 1679725311, nanoseconds: 0);
@@ -488,6 +486,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
     newSelectCategories();
     _addKeywordProvider = Provider.of<AddKeywordProvider>(context, listen: false);
     _solutionsListProvider = Provider.of<SolutionsListProvider>(context, listen: false);
+    _universalListProvider = Provider.of<UniversalListProvider>(context, listen: false);
     _solutionsListProvider.fetchSolutionsdataList();
     // _addKeywordProvider.getcategoryAndKeywords();
     _addKeywordProvider.newgetSource();
@@ -495,7 +494,9 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
    getChatgptSettingsApiKey();
     _addKeywordProvider.getdatasearch();
     _addKeywordProvider.lengthOfdocument = null;
-
+    _universalListProvider.fetchUniversalSolutionsdata();
+    // _addKeywordProvider.loadDataForPage(_addKeywordProvider.currentPage);
+    _addKeywordProvider.fetchAllSolutions();
 
     // FirebaseFirestore.instance
     //     .collection('Thrivers')
@@ -505,7 +506,6 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
     //     _totalPages = (querySnapshot.docs.length / _perPage).ceil();
     //   });
     // });
-    _addKeywordProvider.loadDataForPage(_addKeywordProvider.currentPage);
     // main();
 // _updateIDS();
 
@@ -1051,7 +1051,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
 
                                         Container(
                                           padding:EdgeInsets.all(8),
-                                          width: MediaQuery.of(context).size.width*0.3,
+                                          width: MediaQuery.of(context).size.width*0.25,
                                           child: TextField(
                                             controller: searchTextbyCKEditingController,
                                             onChanged: (val){
@@ -1059,7 +1059,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                                               if (_debounce?.isActive ?? false) _debounce?.cancel();
                                               _debounce = Timer(Duration(milliseconds: _debouncetime), () {
                                                 if (searchTextbyCKEditingController.text != "") {
-                                                  ///here you perform your search
+                                                  /// here you perform your search
                                                   // _loadDataForPageFilter(1,'tags',_addKeywordProvider.searchbytag); //(searchTextbyCKEditingController.text.toString());
                                                   // _loadDataForPageSearchFilter(searchTextbyCKEditingController.text.toString(),selectAllAny);
                                                   addKeywordProvider.loadDataForPageSearchFilter(searchTextbyCKEditingController.text.toString());
@@ -1073,7 +1073,20 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                                                 }
                                               });
                                             },
+                                            onSubmitted: (val){
+                                              if (searchTextbyCKEditingController.text != "") {
+                                                ///here you perform your search
+                                                // _loadDataForPageFilter(1,'tags',_addKeywordProvider.searchbytag); //(searchTextbyCKEditingController.text.toString());
+                                                // _loadDataForPageSearchFilter(searchTextbyCKEditingController.text.toString(),selectAllAny);
+                                                addKeywordProvider.loadDataForPageSearchFilter(searchTextbyCKEditingController.text.toString());
+                                                print("documentssssssss: ${_addKeywordProvider.documents}");
 
+                                              }
+                                              else {
+                                                addKeywordProvider.loadDataForPage(1);
+                                                addKeywordProvider.setFirstpageNo();
+                                              }
+                                            },
                                             decoration: InputDecoration(
                                               contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
                                               hintText: (addKeywordProvider.selectAllAny == "All") ? 'Search All Solutions By (Label, Description, Category, Tags)' : "Search Thrivers By Any",
@@ -1175,237 +1188,273 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                             }),
 
                         Expanded(
-                          child: Container(
-                            height: 80,
-                            child: Center(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  // Container(width: MediaQuery.of(context).size.width*0.01,),
-                                  InkWell(
-                                      onTap: (){
-                                        showTagView = !showTagView;
-                                        setState(() {});
-                                      },
-                                      child: (!showTagView)?FaIcon(FontAwesomeIcons.tag):FaIcon(FontAwesomeIcons.tags)),
-
-                                  SizedBox(width: 30,),
-
-                                  InkWell(
-                                      onTap: (){
-                                        showTreeView = !showTreeView;
-                                        setState(() {});
-                                      },
-                                      child: (!showTreeView)?FaIcon(FontAwesomeIcons.folderTree):FaIcon(FontAwesomeIcons.list)),
-                                      // child: (showTreeView)?Icon(Icons.list):Icon(Icons.menu_open)),
-                                  SizedBox(width: 30,),
-                                  InkWell(
-                                      onTap: (){
-                                        showAddThriverDialogBox();
-                                      },
-                                      child: FaIcon(FontAwesomeIcons.add)),
-                                  // Container(width: MediaQuery.of(context).size.width*0.01,),
-                                ],
-                              ),
-                            ),
-                          ),
+                          child:Consumer<AddKeywordProvider>(
+                              builder: (c,addKeywordProvider, _){
+                                return Container(
+                                  height: 80,
+                                  child: Center(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        // Container(width: MediaQuery.of(context).size.width*0.01,),
+                                        Flexible(
+                                          child: ToggleSwitch(
+                                            // animate: true,
+                                            // changeOnTap: true,
+                                            initialLabelIndex: addKeywordProvider.currentToggleIndex,
+                                            totalSwitches: 3,
+                                            activeBgColor: [Colors.black],
+                                            labels: ['List', 'Tag', 'Category'],
+                                            onToggle: (index) {
+                                              print('switched to: $index');
+                                              // setState(() {
+                                              _addKeywordProvider.indexValue(index);
+                                              if (index == 1) {
+                                                _addKeywordProvider.TagView();
+                                                _addKeywordProvider.filterChallengesByTags(ViewSolutionDialog, showEditThriverDialogBox);
+                                              } else if (index == 2) {
+                                                _addKeywordProvider.CategoryView();
+                                                _addKeywordProvider.filterChallengesByCategory(ViewSolutionDialog, showEditThriverDialogBox);
+                                              } else if (index == 0){
+                                                _addKeywordProvider.listView();
+                                              }
+                                              // });
+                                            },
+                                          ),
+                                        ),
+                                        SizedBox(width: 20,),
+                                        Flexible(
+                                          child: InkWell(
+                                            onTap: (){
+                                              showAddThriverDialogBox();
+                                            },
+                                            child: Container(
+                                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                width: MediaQuery.of(context).size.width * .1,
+                                                height: MediaQuery.of(context).size.height * .035,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.black ,
+                                                  borderRadius: BorderRadius.circular(8.0),
+                                                ), child: Center(child: Text("Add New Solutions",
+                                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600,fontSize: 12),
+                                              overflow: TextOverflow.ellipsis,
+                                            ))),
+                                          ),
+                                        ),
+                                        // InkWell(
+                                        //     onTap: (){
+                                        //       showTagView = !showTagView;
+                                        //       setState(() {});
+                                        //     },
+                                        //     child: (!showTagView)?FaIcon(FontAwesomeIcons.tag):FaIcon(FontAwesomeIcons.tags)),
+                                        //
+                                        // SizedBox(width: 30,),
+                                        //
+                                        // InkWell(
+                                        //     onTap: (){
+                                        //       showTreeView = !showTreeView;
+                                        //       setState(() {});
+                                        //     },
+                                        //     child: (!showTreeView)?FaIcon(FontAwesomeIcons.folderTree):FaIcon(FontAwesomeIcons.list)),
+                                        // // child: (showTreeView)?Icon(Icons.list):Icon(Icons.menu_open)),
+                                        // SizedBox(width: 30,),
+                                        // InkWell(
+                                        //     onTap: (){
+                                        //       showAddThriverDialogBox();
+                                        //     },
+                                        //     child: FaIcon(FontAwesomeIcons.add)),
+                                        // Container(width: MediaQuery.of(context).size.width*0.01,),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              })
                         ),
             
                       ],
                     )
                 ),
-            
-                Container(
-                  height: MediaQuery.of(context).size.height * .65,
-                  margin: EdgeInsets.only(bottom:20, left: 20,right: 20),
-                  // decoration: BoxDecoration(
-                  //   color: Colors.white.withOpacity(0.7),
-                  //   borderRadius: BorderRadius.circular(20),
-                  // ),
-                  child:
-                showTreeView ? FutureBuilder(
-                  future: fetchDatasss(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Container(
-                        child: Center(child: CircularProgressIndicator()),
-                      );
-                    }
-                    if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    }
 
-                    // Reset the list of nodes
-                    // nodes.clear();
-
-                    print("Hola");
-                    print(nodes.length);
-
-                    return Container(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: nodes.length,
-                        itemBuilder: (context, index) {
-                          return nodes[index];
-                        },
-                      ),
-                    );
-                  },
-                ) : showTagView ?
-                FutureBuilder(
-                  future: fetchbytags(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Container(
-                        child: Center(child: CircularProgressIndicator()),
-                      );
-                    }
-                    if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    }
-
-                    // Reset the list of nodes
-                    // nodes.clear();
-
-                    print("tagsnodes");
-                    print(tagsnodes.length);
-
-                    return Container(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: tagsnodes.length,
-                        itemBuilder: (context, index) {
-                          return tagsnodes[index];
-                        },
-                      ),
-                    );
-                  },
-                ) :
                 Consumer<AddKeywordProvider>(
-                    builder: (c,addKeywordProvider, _){
-                      return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SizedBox(width: 10,),
-                                  Text("NO.",style: Theme.of(context).textTheme.titleMedium),
+                    builder: (context, addKeywordProvider, child) {
+                      return Container(
+                          height: MediaQuery.of(context).size.height * .65,
+                          margin: EdgeInsets.only(bottom:20, left: 20,right: 20),
+                          // decoration: BoxDecoration(
+                          //   color: Colors.white.withOpacity(0.7),
+                          //   borderRadius: BorderRadius.circular(20),
+                          // ),
+                          child: addKeywordProvider.getshowTreeView  ? Consumer<AddKeywordProvider>(
+                            builder: (context, addKeywordProvider, child) {
+                              if (addKeywordProvider.isLoadingMore) {
+                                return Center(child: CircularProgressIndicator());
+                              }
+                              // Reset the list of nodes
+                              // nodes.clear();
 
-                                  SizedBox(width: 20,),
+                              print("Hola");
+                              print(addKeywordProvider.categorynodes.length);
 
-                                  Expanded(
-                                    flex: 3,
-                                    // width: MediaQuery.of(context).size.width*0.15,
-                                    child: Text("Label & Description",style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis),
-                                  ),
-                                  SizedBox(width: 20),
+                              return Container(
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: addKeywordProvider.categorynodes.length,
+                                  itemBuilder: (context, index) {
+                                    return addKeywordProvider.categorynodes[index];
+                                  },
+                                ),
+                              );
+                            },
+                          ) :
+                          addKeywordProvider.getshowTagView ?  Consumer<AddKeywordProvider>(
+                            builder: (context, addKeywordProvider, child) {
+                              if (addKeywordProvider.isLoadingMore) {
+                                return Center(child: CircularProgressIndicator());
+                              }
 
-                                  Expanded(
-                                    flex: 1,
-                                    // width: MediaQuery.of(context).size.width*0.15,
-                                    child: Text("Source",textAlign: TextAlign.center,style: Theme.of(context).textTheme.titleMedium),
-                                  ),
+                              // Reset the list of nodes
+                              // nodes.clear();
 
-                                  SizedBox(width: 20),
+                              print("tagsnodes");
+                              print(addKeywordProvider.tagsnodes.length);
 
-                                  Expanded(
-                                    flex: 1,
-                                    // width: MediaQuery.of(context).size.width*0.165,
-                                    child: Text("Status",textAlign: TextAlign.center,style: Theme.of(context).textTheme.titleMedium),
-                                  ),
-
-                                  SizedBox(width: 20),
-
-
-                                  Expanded(
-                                    flex: 3,
-                                    // width: MediaQuery.of(context).size.width*0.33,
-                                    child: Text('Category & Tags',style: Theme.of(context).textTheme.titleMedium,),
-                                  ),
-
-
-
-                                  SizedBox(width: 80,),
-
-
-                                ],
-                              ),
-                            ),
-
-                            Divider(color: Colors.black,),
-
-                            Expanded(
-                              child: SingleChildScrollView(
-                                child: Column(
+                              return Container(
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: addKeywordProvider.tagsnodes.length,
+                                  itemBuilder: (context, index) {
+                                    return addKeywordProvider.tagsnodes[index];
+                                  },
+                                ),
+                              );
+                            },
+                          ) :
+                          Consumer<AddKeywordProvider>(
+                              builder: (c,addKeywordProvider, _){
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-
-                                     (addKeywordProvider.isLoadingMore) ?
-                                      Center(child: CircularProgressIndicator()) :
-                                      ListView.separated(
+                                    Padding(
                                       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                      physics: NeverScrollableScrollPhysics(), // Disable scrolling
-                                      shrinkWrap: true,
-                                      // itemCount: addKeywordProvider.paginatedSolutionsDataList.length,
-                                      itemCount: addKeywordProvider.documents.length,
-                                      separatorBuilder: (BuildContext context, int index) {
-                                        return Divider();
-                                      },
-                                      itemBuilder: (BuildContext context, int index) {
-                                        // print("after search documentssssssss: ${addKeywordProvider.documents}");
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          SizedBox(width: 10,),
+                                          Text("NO.",style: Theme.of(context).textTheme.titleMedium),
 
-                                        // return ThriversListTile(addKeywordProvider.paginatedSolutionsDataList[index], index, addKeywordProvider.paginatedSolutionsDataList);
-                                        return ThriversListTile(addKeywordProvider.documents[index], index, addKeywordProvider.documents);
-                                      },
+                                          SizedBox(width: 40,),
+
+                                          Expanded(
+                                            flex: 3,
+                                            // width: MediaQuery.of(context).size.width*0.15,
+                                            child: Text("Label & Description",style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis),
+                                          ),
+                                          SizedBox(width: 20),
+
+                                          // Expanded(
+                                          //   flex: 1,
+                                          //   // width: MediaQuery.of(context).size.width*0.15,
+                                          //   child: Text("Source",textAlign: TextAlign.center,style: Theme.of(context).textTheme.titleMedium),
+                                          // ),
+
+                                          SizedBox(width: 20),
+
+                                          Expanded(
+                                            flex: 1,
+                                            // width: MediaQuery.of(context).size.width*0.165,
+                                            child: Text("Status",textAlign: TextAlign.center,style: Theme.of(context).textTheme.titleMedium),
+                                          ),
+
+                                          SizedBox(width: 20),
+
+
+                                          Expanded(
+                                            flex: 3,
+                                            // width: MediaQuery.of(context).size.width*0.33,
+                                            child: Text('Category & Tags',style: Theme.of(context).textTheme.titleMedium,),
+                                          ),
+
+
+
+                                          SizedBox(width: 80,),
+
+
+                                        ],
+                                      ),
                                     ),
 
+                                    Divider(color: Colors.black,),
+
+                                    Expanded(
+                                      child: SingleChildScrollView(
+                                        child: Column(
+                                          children: [
+
+                                            (addKeywordProvider.isLoadingMore) ?
+                                            Center(child: CircularProgressIndicator()) :
+                                            ListView.separated(
+                                              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                              physics: NeverScrollableScrollPhysics(), // Disable scrolling
+                                              shrinkWrap: true,
+                                              // itemCount: addKeywordProvider.paginatedSolutionsDataList.length,
+                                              itemCount: addKeywordProvider.documents.length,
+                                              separatorBuilder: (BuildContext context, int index) {
+                                                return Divider();
+                                              },
+                                              itemBuilder: (BuildContext context, int index) {
+                                                // print("after search documentssssssss: ${addKeywordProvider.documents}");
+
+                                                // return ThriversListTile(addKeywordProvider.paginatedSolutionsDataList[index], index, addKeywordProvider.paginatedSolutionsDataList);
+                                                return ThriversListTile(addKeywordProvider.documents[index], index, addKeywordProvider.documents);
+                                              },
+                                            ),
+
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+
+                                    SizedBox(height: 20),
+
+                                    // (addKeywordProvider.paginatedSolutionsDataList.isEmpty) ?
+                                    (addKeywordProvider.documents.isEmpty) ?
+
+                                    Container() :
+
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: addKeywordProvider.loadFirstPage,
+                                          child: Text('1st page'),
+                                        ),
+                                        SizedBox(width: 10),
+                                        ElevatedButton(
+                                          onPressed: addKeywordProvider.loadPreviousPage,
+                                          child: Text('Previous'),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Text('Page ${addKeywordProvider.currentPage} of ${addKeywordProvider.totalPages}'),
+                                        SizedBox(width: 10),
+                                        ElevatedButton(
+                                          onPressed: addKeywordProvider.loadNextPage,
+                                          child: Text('Next'),
+                                        ),
+                                        SizedBox(width: 10),
+                                        ElevatedButton(
+                                          onPressed: addKeywordProvider.loadLastPage,
+                                          child: Text('Last page'),
+                                        ),
+                                      ],
+                                    ),
                                   ],
-                                ),
-                              ),
-                            ),
+                                );
+                              })
 
-                            SizedBox(height: 20),
-
-                            // (addKeywordProvider.paginatedSolutionsDataList.isEmpty) ?
-                            (addKeywordProvider.documents.isEmpty) ?
-
-                            Container() :
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElevatedButton(
-                                  onPressed: addKeywordProvider.loadFirstPage,
-                                  child: Text('1st page'),
-                                ),
-                                SizedBox(width: 10),
-                                ElevatedButton(
-                                  onPressed: addKeywordProvider.loadPreviousPage,
-                                  child: Text('Previous'),
-                                ),
-                                SizedBox(width: 10),
-                                Text('Page ${addKeywordProvider.currentPage} of ${addKeywordProvider.totalPages}'),
-                                SizedBox(width: 10),
-                                ElevatedButton(
-                                  onPressed: addKeywordProvider.loadNextPage,
-                                  child: Text('Next'),
-                                ),
-                                SizedBox(width: 10),
-                                ElevatedButton(
-                                  onPressed: addKeywordProvider.loadLastPage,
-                                  child: Text('Last page'),
-                                ),
-                              ],
-                            ),
-                          ],
-                        );
+                      );
                     })
-
-                ),
             
             
             
@@ -1496,238 +1545,276 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
   }
 
   // Define an async function to fetch data from Firestore
-  Future<void> fetchData() async {
+  /// all are main dont remove
+  // Future<void> fetchData() async {
+  //
+  //   //Fetch Categories Fetch Subcategories and then make a tree
+  //
+  //
+  //
+  //   QuerySnapshot querySnapshot =
+  //   await FirebaseFirestore.instance.collection('Categories').limit(10).get();
+  //
+  //   // Return the list of documents
+  //   List<DocumentSnapshot> categories = querySnapshot.docs;
+  //
+  //
+  //
+  //   for (DocumentSnapshot categoryDocument in categories) {
+  //     String categoryName = categoryDocument['Label'];
+  //     print("Category Label"+categoryName);
+  //
+  //     // Fetch data from "Thrivers" where category matches
+  //     var thriversSnapshot = await FirebaseFirestore.instance
+  //         .collection('Thrivers')
+  //         .where('Category', isEqualTo: categoryName)
+  //         .get();
+  //
+  //     List<Widget> thriverNodes = [];
+  //
+  //     for (QueryDocumentSnapshot thriverDocument in thriversSnapshot.docs) {
+  //       String thriverName = thriverDocument['Label'];
+  //       print("category name"+thriverName);
+  //       thriverNodes.add(ListTile(title: Text(thriverName,style: TextStyle(color: Colors.black),)));
+  //     }
+  //
+  //
+  //
+  //     // Create a parent node with child nodes
+  //     Widget categoryNode = ExpansionTile(
+  //       controlAffinity: ListTileControlAffinity.leading,
+  //       title: Text(categoryName,style: TextStyle(color: Colors.black),),
+  //       children: thriverNodes,
+  //     );
+  //
+  //
+  //     if(!categoriesStringList.contains(categoryName)){
+  //       categoriesStringList.add(categoryName);
+  //       // Add the parent node to the list
+  //       nodes.add(categoryNode);
+  //     }
+  //
+  //
+  //   }
+  //
+  //   // Trigger a rebuild by calling setState
+  //   /*if (mounted) {
+  //     setState(() {});
+  //   }*/
+  // }
+  //
+  // Future<void> fetchDatas() async {
+  //
+  //   //Fetch Categories Fetch Subcategories and then make a tree
+  //   QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Keywords').limit(10).get();
+  //
+  //   // Return the list of documents
+  //   List<DocumentSnapshot> categories = querySnapshot.docs;
+  //
+  //   for (DocumentSnapshot categoryDocument in categories) {
+  //     String categoryName = categoryDocument['Key'];
+  //     List<dynamic> values = categoryDocument['Values'];
+  //
+  //     // var categoryName = categoryDocument['Values'];
+  //     print("Category Label"+categoryName);
+  //     print("Values: $values");
+  //
+  //     // Fetch data from "Thrivers" where category matches
+  //     var thriversSnapshot = await FirebaseFirestore.instance.collection('Thrivers').where('Keywords', isEqualTo: values).limit(10).get();
+  //
+  //     List<Widget> thriverNodes = [];
+  //
+  //     for (QueryDocumentSnapshot thriverDocument in thriversSnapshot.docs) {
+  //       String thriverName = thriverDocument['Label'];
+  //       print("category name"+thriverName);
+  //       thriverNodes.add(ListTile(title: Text(thriverName,style: TextStyle(color: Colors.black),)));
+  //     }
+  //
+  //
+  //
+  //     // Create a parent node with child nodes
+  //     Widget categoryNode = ExpansionTile(
+  //       controlAffinity: ListTileControlAffinity.leading,
+  //       title: Text(categoryName,style: TextStyle(color: Colors.black),),
+  //       children: thriverNodes,
+  //     );
+  //
+  //
+  //     if(!categoriesStringList.contains(categoryName)){
+  //       categoriesStringList.add(categoryName);
+  //       // Add the parent node to the list
+  //       nodes.add(categoryNode);
+  //     }
+  //
+  //
+  //   }
+  //
+  //   // Trigger a rebuild by calling setState
+  //   /*if (mounted) {
+  //     setState(() {});
+  //   }*/
+  // }
+  //
+  // Future<void> fetchDatasss() async {
+  //   // Fetch specific document by ID
+  //   DocumentSnapshot specificDocument = await FirebaseFirestore.instance
+  //       .collection('Keywords').doc('aqTybsZWFxMuHPQt7u1T')
+  //       .get();
+  //
+  //   if (specificDocument.exists) {
+  //     List<dynamic> values = specificDocument['Values'];
+  //     // print("avluesssss: $values");
+  //
+  //     for (var value in values) {
+  //       // Fetch data from "Thrivers" where category matches
+  //       var thriversSnapshot = await FirebaseFirestore.instance.collection('Thrivers').where('Keywords', arrayContains: value).get();
+  //
+  //       // print("thriversSnapshot  $thriversSnapshot" );
+  //
+  //       List<Widget> thriverNodes = [];
+  //
+  //       for (QueryDocumentSnapshot thriverDocument in thriversSnapshot.docs) {
+  //         String thriverName = thriverDocument['Label'];
+  //         // print("category nameee $thriverName");
+  //         thriverNodes.add(
+  //           ListTile(
+  //             title: InkWell(
+  //               onTap: (){
+  //                 // thriversDetails.reference,thriversDetails.id, thriversDetails['Label'], thriversDetails['Description'], thriversDetails['Category']
+  //                 // ,thriversDetails['Keywords'],thriversDetails['Created Date'],thriversDetails['Created By'],thriversDetails['tags'],thriversDetails['Modified By']
+  //                 // ,thriversDetails['Modified Date'],thriversDetails['id']
+  //                 ///
+  //                 ViewSolutionDialog(thriverDocument.reference, thriverDocument.id,
+  //                     thriverDocument['Label'], thriverDocument['Description'], thriverDocument['Category'],
+  //                     thriverDocument['Keywords'], thriverDocument['Created Date'], thriverDocument['Created By'],
+  //                     thriverDocument['tags'], thriverDocument['Modified By'], thriverDocument['Modified Date'], thriverDocument['id']);
+  //                 ///
+  //                 // ViewSolutionDialog(
+  //                 //    thriverDocument['Label'], thriverDocument['Description'], thriverDocument['Category'],
+  //                 //   thriverDocument['Keywords'], thriverDocument['Created Date'], thriverDocument['Created By'], thriverDocument['tags'], thriverDocument['Modified By'],
+  //                 //   thriverDocument['Modified Date'], thriverDocument['id'],thriverDocument['Original Description'],thriverDocument['Source'],thriverDocument['Thirver Status'],
+  //                 // );
+  //               },
+  //                 child: Text(thriverName, style: TextStyle(color: Colors.black))),
+  //           ),
+  //         );
+  //       }
+  //
+  //       // Create a parent node with child nodes
+  //       Widget categoryNode = ExpansionTile(
+  //         controlAffinity: ListTileControlAffinity.leading,
+  //         title: Text("$value (${thriverNodes.length})", style: TextStyle(color: Colors.black)),
+  //         children: thriverNodes,
+  //       );
+  //
+  //       if (!categoriesStringList.contains(value)) {
+  //         categoriesStringList.add(value);
+  //         // Add the parent node to the list
+  //         nodes.add(categoryNode);
+  //       }
+  //     }
+  //   }
+  // }
+  //
+  // Future<void> fetchbytags() async {
+  //   // Fetch specific document by ID
+  //   DocumentSnapshot specificDocument = await FirebaseFirestore.instance
+  //       // .collection('Keywords').doc('GEdua4iCBaakTpNB1NY5')
+  //       .collection('Keywords').doc('IPlEPfH0WnirUjGmu46C')
+  //       .get();
+  //
+  //   if (specificDocument.exists) {
+  //     List<dynamic> values = specificDocument['Values'];
+  //     // print("avluesssss: $values");
+  //
+  //     for (var value in values) {
+  //       // Fetch data from "Thrivers" where category matches
+  //       var thriversSnapshot = await FirebaseFirestore.instance.collection('Thrivers').where('tags', arrayContains: value).get();
+  //
+  //       // print("thriversSnapshot  $thriversSnapshot" );
+  //
+  //       List<Widget> thriverNodes = [];
+  //
+  //       for (QueryDocumentSnapshot thriverDocument in thriversSnapshot.docs) {
+  //         String thriverName = thriverDocument['Label'];
+  //         // print("category nameee $thriverName");
+  //         thriverNodes.add(
+  //           ListTile(
+  //             title: InkWell(
+  //                 onTap: (){
+  //                   // thriversDetails.reference,thriversDetails.id, thriversDetails['Label'], thriversDetails['Description'], thriversDetails['Category']
+  //                   // ,thriversDetails['Keywords'],thriversDetails['Created Date'],thriversDetails['Created By'],thriversDetails['tags'],thriversDetails['Modified By']
+  //                   // ,thriversDetails['Modified Date'],thriversDetails['id']
+  //                   ///
+  //                   ViewSolutionDialog(thriverDocument.reference, thriverDocument.id,
+  //                       thriverDocument['Label'], thriverDocument['Description'], thriverDocument['Category'],
+  //                       thriverDocument['Keywords'], thriverDocument['Created Date'], thriverDocument['Created By'],
+  //                       thriverDocument['tags'], thriverDocument['Modified By'], thriverDocument['Modified Date'], thriverDocument['id']);
+  //                   ///
+  //                   // ViewSolutionDialog(
+  //                   //    thriverDocument['Label'], thriverDocument['Description'], thriverDocument['Category'],
+  //                   //   thriverDocument['Keywords'], thriverDocument['Created Date'], thriverDocument['Created By'], thriverDocument['tags'], thriverDocument['Modified By'],
+  //                   //   thriverDocument['Modified Date'], thriverDocument['id'],thriverDocument['Original Description'],thriverDocument['Source'],thriverDocument['Thirver Status'],
+  //                   // );
+  //                 },
+  //                 child: Text(thriverName, style: TextStyle(color: Colors.black))),
+  //             trailing: Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //               mainAxisSize: MainAxisSize.min,
+  //               children: [
+  //               InkWell(
+  //                   onTap: (){
+  //                     // thriversDetails.reference,thriversDetails.id, thriversDetails['Label'], thriversDetails['Description'], thriversDetails['Category']
+  //                     // ,thriversDetails['Keywords'],thriversDetails['Created Date'],thriversDetails['Created By'],thriversDetails['tags'],thriversDetails['Modified By']
+  //                     // ,thriversDetails['Modified Date'],thriversDetails['id']
+  //                     ///
+  //                     ViewSolutionDialog(thriverDocument.reference, thriverDocument.id,
+  //                         thriverDocument['Label'], thriverDocument['Description'], thriverDocument['Category'],
+  //                         thriverDocument['Keywords'], thriverDocument['Created Date'], thriverDocument['Created By'],
+  //                         thriverDocument['tags'], thriverDocument['Modified By'], thriverDocument['Modified Date'], thriverDocument['id']);
+  //                     ///
+  //
+  //                     // ViewSolutionDialog(
+  //                     //    thriverDocument['Label'], thriverDocument['Description'], thriverDocument['Category'],
+  //                     //   thriverDocument['Keywords'], thriverDocument['Created Date'], thriverDocument['Created By'], thriverDocument['tags'], thriverDocument['Modified By'],
+  //                     //   thriverDocument['Modified Date'], thriverDocument['id'],thriverDocument['Original Description'],thriverDocument['Source'],thriverDocument['Thirver Status'],
+  //                     // );
+  //
+  //                   },
+  //                   child: Icon(Icons.visibility)
+  //               ),
+  //               SizedBox(width: 15,),
+  //               InkWell(
+  //                 onTap: (){
+  //                   showEditThriverDialogBox(
+  //                       thriverDocument.reference, thriverDocument.id, thriverDocument['Label'], thriverDocument['Description'], thriverDocument['Category'],
+  //                       thriverDocument['Keywords'], thriverDocument['Created Date'], thriverDocument['Created By'], thriverDocument['tags'], thriverDocument['Modified By'],
+  //                       thriverDocument['Modified Date'], thriverDocument['id'], thriverDocument['Linked_challenges']
+  //                   );
+  //                 },
+  //                   child: Icon(Icons.edit)),
+  //             ],),
+  //           ),
+  //         );
+  //       }
+  //
+  //       // Create a parent node with child nodes
+  //       Widget categoryNode = ExpansionTile(
+  //         controlAffinity: ListTileControlAffinity.leading,
+  //         title: Text("$value (${thriverNodes.length})", style: TextStyle(color: Colors.black)),
+  //         children: thriverNodes,
+  //       );
+  //
+  //       if (!categoriesStringList.contains(value)) {
+  //         categoriesStringList.add(value);
+  //         // Add the parent node to the list
+  //         tagsnodes.add(categoryNode);
+  //       }
+  //     }
+  //   }
+  // }
 
-    //Fetch Categories Fetch Subcategories and then make a tree
-
-
-
-    QuerySnapshot querySnapshot =
-    await FirebaseFirestore.instance.collection('Categories').limit(10).get();
-
-    // Return the list of documents
-    List<DocumentSnapshot> categories = querySnapshot.docs;
-
-
-
-    for (DocumentSnapshot categoryDocument in categories) {
-      String categoryName = categoryDocument['Label'];
-      print("Category Label"+categoryName);
-
-      // Fetch data from "Thrivers" where category matches
-      var thriversSnapshot = await FirebaseFirestore.instance
-          .collection('Thrivers')
-          .where('Category', isEqualTo: categoryName)
-          .get();
-
-      List<Widget> thriverNodes = [];
-
-      for (QueryDocumentSnapshot thriverDocument in thriversSnapshot.docs) {
-        String thriverName = thriverDocument['Label'];
-        print("category name"+thriverName);
-        thriverNodes.add(ListTile(title: Text(thriverName,style: TextStyle(color: Colors.black),)));
-      }
-
-
-
-      // Create a parent node with child nodes
-      Widget categoryNode = ExpansionTile(
-        controlAffinity: ListTileControlAffinity.leading,
-        title: Text(categoryName,style: TextStyle(color: Colors.black),),
-        children: thriverNodes,
-      );
-
-
-      if(!categoriesStringList.contains(categoryName)){
-        categoriesStringList.add(categoryName);
-        // Add the parent node to the list
-        nodes.add(categoryNode);
-      }
-
-
-    }
-
-    // Trigger a rebuild by calling setState
-    /*if (mounted) {
-      setState(() {});
-    }*/
-  }
-
-  Future<void> fetchDatas() async {
-
-    //Fetch Categories Fetch Subcategories and then make a tree
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Keywords').limit(10).get();
-
-    // Return the list of documents
-    List<DocumentSnapshot> categories = querySnapshot.docs;
-
-    for (DocumentSnapshot categoryDocument in categories) {
-      String categoryName = categoryDocument['Key'];
-      List<dynamic> values = categoryDocument['Values'];
-
-      // var categoryName = categoryDocument['Values'];
-      print("Category Label"+categoryName);
-      print("Values: $values");
-
-      // Fetch data from "Thrivers" where category matches
-      var thriversSnapshot = await FirebaseFirestore.instance.collection('Thrivers').where('Keywords', isEqualTo: values).limit(10).get();
-
-      List<Widget> thriverNodes = [];
-
-      for (QueryDocumentSnapshot thriverDocument in thriversSnapshot.docs) {
-        String thriverName = thriverDocument['Label'];
-        print("category name"+thriverName);
-        thriverNodes.add(ListTile(title: Text(thriverName,style: TextStyle(color: Colors.black),)));
-      }
-
-
-
-      // Create a parent node with child nodes
-      Widget categoryNode = ExpansionTile(
-        controlAffinity: ListTileControlAffinity.leading,
-        title: Text(categoryName,style: TextStyle(color: Colors.black),),
-        children: thriverNodes,
-      );
-
-
-      if(!categoriesStringList.contains(categoryName)){
-        categoriesStringList.add(categoryName);
-        // Add the parent node to the list
-        nodes.add(categoryNode);
-      }
-
-
-    }
-
-    // Trigger a rebuild by calling setState
-    /*if (mounted) {
-      setState(() {});
-    }*/
-  }
-
-  Future<void> fetchDatasss() async {
-    // Fetch specific document by ID
-    DocumentSnapshot specificDocument = await FirebaseFirestore.instance
-        .collection('Keywords').doc('aqTybsZWFxMuHPQt7u1T')
-        .get();
-
-    if (specificDocument.exists) {
-      List<dynamic> values = specificDocument['Values'];
-      // print("avluesssss: $values");
-
-      for (var value in values) {
-        // Fetch data from "Thrivers" where category matches
-        var thriversSnapshot = await FirebaseFirestore.instance.collection('Thrivers').where('Keywords', arrayContains: value).get();
-
-        // print("thriversSnapshot  $thriversSnapshot" );
-
-        List<Widget> thriverNodes = [];
-
-        for (QueryDocumentSnapshot thriverDocument in thriversSnapshot.docs) {
-          String thriverName = thriverDocument['Label'];
-          // print("category nameee $thriverName");
-          thriverNodes.add(
-            ListTile(
-              title: InkWell(
-                onTap: (){
-                  // thriversDetails.reference,thriversDetails.id, thriversDetails['Label'], thriversDetails['Description'], thriversDetails['Category']
-                  // ,thriversDetails['Keywords'],thriversDetails['Created Date'],thriversDetails['Created By'],thriversDetails['tags'],thriversDetails['Modified By']
-                  // ,thriversDetails['Modified Date'],thriversDetails['id']
-                  ///
-                  ViewSolutionDialog(thriverDocument.reference, thriverDocument.id,
-                      thriverDocument['Label'], thriverDocument['Description'], thriverDocument['Category'],
-                      thriverDocument['Keywords'], thriverDocument['Created Date'], thriverDocument['Created By'],
-                      thriverDocument['tags'], thriverDocument['Modified By'], thriverDocument['Modified Date'], thriverDocument['id']);
-                  ///
-                  // ViewSolutionDialog(
-                  //    thriverDocument['Label'], thriverDocument['Description'], thriverDocument['Category'],
-                  //   thriverDocument['Keywords'], thriverDocument['Created Date'], thriverDocument['Created By'], thriverDocument['tags'], thriverDocument['Modified By'],
-                  //   thriverDocument['Modified Date'], thriverDocument['id'],thriverDocument['Original Description'],thriverDocument['Source'],thriverDocument['Thirver Status'],
-                  // );
-                },
-                  child: Text(thriverName, style: TextStyle(color: Colors.black))),
-            ),
-          );
-        }
-
-        // Create a parent node with child nodes
-        Widget categoryNode = ExpansionTile(
-          controlAffinity: ListTileControlAffinity.leading,
-          title: Text("$value (${thriverNodes.length})", style: TextStyle(color: Colors.black)),
-          children: thriverNodes,
-        );
-
-        if (!categoriesStringList.contains(value)) {
-          categoriesStringList.add(value);
-          // Add the parent node to the list
-          nodes.add(categoryNode);
-        }
-      }
-    }
-  }
-
-  Future<void> fetchbytags() async {
-    // Fetch specific document by ID
-    DocumentSnapshot specificDocument = await FirebaseFirestore.instance
-        .collection('Keywords').doc('GEdua4iCBaakTpNB1NY5')
-        .get();
-
-    if (specificDocument.exists) {
-      List<dynamic> values = specificDocument['Values'];
-      // print("avluesssss: $values");
-
-      for (var value in values) {
-        // Fetch data from "Thrivers" where category matches
-        var thriversSnapshot = await FirebaseFirestore.instance.collection('Thrivers').where('tags', arrayContains: value).get();
-
-        // print("thriversSnapshot  $thriversSnapshot" );
-
-        List<Widget> thriverNodes = [];
-
-        for (QueryDocumentSnapshot thriverDocument in thriversSnapshot.docs) {
-          String thriverName = thriverDocument['Label'];
-          // print("category nameee $thriverName");
-          thriverNodes.add(
-            ListTile(
-              title: InkWell(
-                  onTap: (){
-                    // thriversDetails.reference,thriversDetails.id, thriversDetails['Label'], thriversDetails['Description'], thriversDetails['Category']
-                    // ,thriversDetails['Keywords'],thriversDetails['Created Date'],thriversDetails['Created By'],thriversDetails['tags'],thriversDetails['Modified By']
-                    // ,thriversDetails['Modified Date'],thriversDetails['id']
-                    ///
-                    ViewSolutionDialog(thriverDocument.reference, thriverDocument.id,
-                        thriverDocument['Label'], thriverDocument['Description'], thriverDocument['Category'],
-                        thriverDocument['Keywords'], thriverDocument['Created Date'], thriverDocument['Created By'],
-                        thriverDocument['tags'], thriverDocument['Modified By'], thriverDocument['Modified Date'], thriverDocument['id']);
-                    ///
-                    // ViewSolutionDialog(
-                    //    thriverDocument['Label'], thriverDocument['Description'], thriverDocument['Category'],
-                    //   thriverDocument['Keywords'], thriverDocument['Created Date'], thriverDocument['Created By'], thriverDocument['tags'], thriverDocument['Modified By'],
-                    //   thriverDocument['Modified Date'], thriverDocument['id'],thriverDocument['Original Description'],thriverDocument['Source'],thriverDocument['Thirver Status'],
-                    // );
-                  },
-                  child: Text(thriverName, style: TextStyle(color: Colors.black))),
-            ),
-          );
-        }
-
-        // Create a parent node with child nodes
-        Widget categoryNode = ExpansionTile(
-          controlAffinity: ListTileControlAffinity.leading,
-          title: Text("$value (${thriverNodes.length})", style: TextStyle(color: Colors.black)),
-          children: thriverNodes,
-        );
-
-        if (!categoriesStringList.contains(value)) {
-          categoriesStringList.add(value);
-          // Add the parent node to the list
-          tagsnodes.add(categoryNode);
-        }
-      }
-    }
-  }
-
-
+///
   List<DocumentSnapshot<Object?>> filteredDocuments = [];
 
   Widget buildKeywordContainer(String keyword) {
@@ -1876,8 +1963,8 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(width: 10),
-          Text("SH0${thriversDetails['id']}", style: Theme.of(context).textTheme.bodySmall),
-          SizedBox(width: 20),
+          Text("${thriversDetails['sr_no']}", style: Theme.of(context).textTheme.bodySmall),
+          SizedBox(width: 40),
           Expanded(
             flex: 3,
             child: InkWell(
@@ -1907,10 +1994,10 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
 
           SizedBox(width: 20,),
 
-          Expanded(
-            flex: 1,
-            child: Text(thriversDetails['Source'] ?? '-',textAlign: TextAlign.center,),
-          ),
+          // Expanded(
+          //   flex: 1,
+          //   child: Text(thriversDetails['Source'] ?? '-',textAlign: TextAlign.center,),
+          // ),
 
           SizedBox(width: 20),
 
@@ -1950,10 +2037,11 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
             iconSize: 25,
             color: primaryColorOfApp,
             onPressed: () async {
+              print("thriversDetails['Linked_challenges']: ${thriversDetails['Linked_challenges']}");
               showEditThriverDialogBox(
                   thriversDetails.reference, thriversDetails.id, thriversDetails['Label'], thriversDetails['Description'], thriversDetails['Category'],
                   thriversDetails['Keywords'], thriversDetails['Created Date'], thriversDetails['Created By'], thriversDetails['tags'], thriversDetails['Modified By'],
-                  thriversDetails['Modified Date'], thriversDetails['id']
+                  thriversDetails['Modified Date'], thriversDetails['id'], thriversDetails['Linked_challenges']
               );
             },
             icon: Icon(Icons.edit),
@@ -1962,10 +2050,29 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
             iconSize: 25,
             color: primaryColorOfApp,
             onPressed: () async {
-              ProgressDialog.show(context, "Deleting Users",Icons.person);
+              ProgressDialog.show(context, "Deleting solutions",Icons.person);
               await ApiRepository().DeleteSectionPreset(thriversDetails.reference);
+              _addKeywordProvider.lengthOfdocument = null;
+              searchTextbyCKEditingController.clear();
               _addKeywordProvider.loadDataForPage(1);
               _addKeywordProvider.setFirstpageNo();
+              await _addKeywordProvider.fetchAllSolutions();
+              await _universalListProvider.fetchUniversalChallengesData();
+              await _universalListProvider.fetchUniversalSolutionsdata();
+
+              if (_addKeywordProvider.currentToggleIndex == 1) {
+                // _challengeProvider.showTagView = true;
+                // _challengeProvider.showTreeView = false;
+                _addKeywordProvider.TagView();
+                _addKeywordProvider.filterChallengesByTags(ViewSolutionDialog, showEditThriverDialogBox);
+              }
+              else if (_addKeywordProvider.currentToggleIndex == 2) {
+                _addKeywordProvider.CategoryView();
+                _addKeywordProvider.filterChallengesByCategory(ViewSolutionDialog, showEditThriverDialogBox);
+              }
+              else if (_addKeywordProvider.currentToggleIndex == 0){
+                _addKeywordProvider.listView();
+              }
               ProgressDialog.hide();
             },
             icon: Icon(Icons.delete),
@@ -2130,7 +2237,17 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                             // 'Category': addKeywordProvider.selectedValue.toString(),
                             'Category': "Thrivers Category",
                             'Keywords': addKeywordProvider.keywordsssss,
-                            "Notes" :  Notestextcontroller.text
+                            "Notes" :  Notestextcontroller.text,
+                            'Linked_challenges': _universalListProvider.OCDlist,
+                            'OSD': thriverNameTextEditingController.text,
+                            'sr_no': '',
+                            'Helps': '',
+                            'Positive_impacts_to_employee': '',
+                            'Positive_impacts_to_organisation': '',
+                            'Related_solution_tags': [],
+                            'Suggested_challenges_tags': [],
+                            'Potential Strengths': '',
+                            'Hidden Strengths': '',
                             // 'Associated Thrivers': "",
                             // 'Associated Challenges': ""
                           }
@@ -2152,6 +2269,23 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                           addKeywordProvider.selectsourceItems = null;
                           addKeywordProvider.selectThriversStatusItems = null;
                           // controller.clearAllSelection();
+                          await _addKeywordProvider.fetchAllSolutions();
+                          await _universalListProvider.fetchUniversalChallengesData();
+                          await _universalListProvider.fetchUniversalSolutionsdata();
+
+                          if (_addKeywordProvider.currentToggleIndex == 1) {
+                            // _challengeProvider.showTagView = true;
+                            // _challengeProvider.showTreeView = false;
+                            _addKeywordProvider.TagView();
+                            _addKeywordProvider.filterChallengesByTags(ViewSolutionDialog, showEditThriverDialogBox);
+                          }
+                          else if (_addKeywordProvider.currentToggleIndex == 2) {
+                            _addKeywordProvider.CategoryView();
+                            _addKeywordProvider.filterChallengesByCategory(ViewSolutionDialog, showEditThriverDialogBox);
+                          }
+                          else if (_addKeywordProvider.currentToggleIndex == 0){
+                            _addKeywordProvider.listView();
+                          }
                         },
                         child: Container(
                           width: MediaQuery.of(context).size.width * .3,
@@ -3196,6 +3330,106 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                             ),
                           ),
 
+                          /// LINKED CHALLENGES
+                          Consumer<UniversalListProvider>(
+                              builder: (c,universalListProvider, _){
+                                return Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Row(
+                                      children: [
+                                        Text("Linked Challenges: (${universalListProvider.editchallengess.length})",
+                                          style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),
+                                        ),
+
+                                        SizedBox(width: 50,),
+
+                                        InkWell(
+                                          onTap: (){
+                                            showChallengesSelector();
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                            width: MediaQuery.of(context).size.width * .05,
+                                            // width: MediaQuery.of(context).size.width * .15,
+
+                                            // height: 60,
+                                            decoration: BoxDecoration(
+                                              color: Colors.black ,
+                                              border: Border.all(
+                                                  color:Colors.black ,
+                                                  width: 1.0),
+                                              borderRadius: BorderRadius.circular(8.0),
+                                            ),
+                                            child: Center(
+                                              // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                              child: Text(
+                                                'Add',
+                                                style: GoogleFonts.montserrat(
+                                                  textStyle:
+                                                  Theme
+                                                      .of(context)
+                                                      .textTheme
+                                                      .titleSmall,
+                                                  fontWeight: FontWeight.bold,
+                                                  color:Colors.white ,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                );}),
+
+                          SizedBox(height: 16),
+
+                          Consumer<UniversalListProvider>(
+                              builder: (c,challengesProvider, _){
+                                return Padding(
+                                  padding: const EdgeInsets.only(left: 15.0),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Wrap(
+                                      spacing: 10,
+                                      runSpacing: 10,
+                                      crossAxisAlignment: WrapCrossAlignment.start,
+                                      alignment: WrapAlignment.start,
+                                      runAlignment: WrapAlignment.start,
+                                      children: challengesProvider.editchallengess.map((item){
+                                        return Container(
+                                          height: 50,
+                                          // width: 200,
+                                          padding: EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(15),
+                                              color: Colors.blue
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(item.toString(), style: TextStyle(
+                                                  fontWeight: FontWeight.w700
+                                              ),),
+                                              IconButton(
+                                                  onPressed: (){
+                                                    // setState(() {
+                                                    challengesProvider.removeeditChallenges(item);
+                                                    // edittags.remove(item);
+                                                    // });
+                                                  },
+                                                  icon: Icon(Icons.close,size: 20, color: Colors.white,)
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                );
+
+                              }),
+
                         ]
                     ),
                   ),
@@ -4162,7 +4396,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
   //   );
   // }
 
-  void showEditThriverDialogBox(documentReference,Id, Label, Description, newvalues, keywords, createdat,createdby,tags, modifiedBy,modifiedDate,insideId) {
+  void showEditThriverDialogBox(documentReference,Id, Label, Description, newvalues, keywords, createdat,createdby,tags, modifiedBy,modifiedDate,insideId,linkedChallenges) {
 
 
     DateTime dateTime = createdat.toDate();
@@ -4173,7 +4407,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
 
       String formattedDate = formatter.format(dateTime);
 
-
+    _universalListProvider.addLinkedchallenges(linkedChallenges);
     List<TextEditingController> textControllers = [];
     for(int i=0;i<6;i++){
       textControllers.add(TextEditingController());
@@ -4284,18 +4518,57 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                                       'Category': (_addKeywordProvider.newselectedValue == null) ? newselectedValue.toString() : _addKeywordProvider.newselectedValue.toString(),
                                       // 'Keywords': addKeywordProvider.newKeywordsList,
                                       'Keywords': editKeywordssss,
+                                      'Linked_challenges': _universalListProvider.OCDlist,
+                                      'OSD': editthriverNameTextEditingController.text,
+                                      // 'Helps': '',
+                                      // 'Positive_impacts_to_employee': '',
+                                      // 'Positive_impacts_to_organisation': '',
+                                      // 'Related_solution_tags': [],
+                                      // 'Suggested_challenges_tags': [],
+                                      // 'Potential Strengths': '',
+                                      // 'Hidden Strengths': '',
 
 
                                       /// Add more fields as needed
                                     }, Id);
-                                    addTagListToDocument(edittags);
-                                    _addKeywordProvider.loadDataForPage(1);
-                                    _addKeywordProvider.setFirstpageNo();
-                                    ProgressDialog.hide();
-                                    // print("After Update Description ${editthriverDescTextEditingController.text}");
-                                    editoriginaltextEditingController.clear();
-                                    editfinaltextcontroller.clear();
-                                    Navigator.pop(context);
+
+                                    if (searchTextbyCKEditingController.text != "") {
+                                      _addKeywordProvider.loadDataForPageSearchFilter(searchTextbyCKEditingController.text.toString());
+                                      ProgressDialog.hide();
+                                      editoriginaltextEditingController.clear();
+                                      editfinaltextcontroller.clear();
+                                      Navigator.pop(context);
+                                      await _universalListProvider.fetchUniversalChallengesData();
+                                      await _universalListProvider.fetchUniversalSolutionsdata();
+                                     }
+                                    else {
+                                      addTagListToDocument(edittags);
+                                      _addKeywordProvider.loadDataForPage(1);
+                                      _addKeywordProvider.setFirstpageNo();
+                                      ProgressDialog.hide();
+                                      // print("After Update Description ${editthriverDescTextEditingController.text}");
+                                      editoriginaltextEditingController.clear();
+                                      editfinaltextcontroller.clear();
+                                      Navigator.pop(context);
+                                    }
+
+                                    await _addKeywordProvider.fetchAllSolutions();
+                                    await _universalListProvider.fetchUniversalChallengesData();
+                                    await _universalListProvider.fetchUniversalSolutionsdata();
+
+                                    if (_addKeywordProvider.currentToggleIndex == 1) {
+                                      // _challengeProvider.showTagView = true;
+                                      // _challengeProvider.showTreeView = false;
+                                      _addKeywordProvider.TagView();
+                                      _addKeywordProvider.filterChallengesByTags(ViewSolutionDialog, showEditThriverDialogBox);
+                                    }
+                                    else if (_addKeywordProvider.currentToggleIndex == 2) {
+                                      _addKeywordProvider.CategoryView();
+                                      _addKeywordProvider.filterChallengesByCategory(ViewSolutionDialog, showEditThriverDialogBox);
+                                    }
+                                    else if (_addKeywordProvider.currentToggleIndex == 0){
+                                      _addKeywordProvider.listView();
+                                    }
                                   }
                                   // _addKeywordProvider.newselectedValue = null;
                                 },
@@ -5509,112 +5782,61 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                                                           ),
                                                         ),
 
-                                                        /// MOST RELEVANT CHALLENGES
-                                                        Padding(
-                                                          padding: const EdgeInsets.all(10.0),
-                                                          child: TypeAheadField(
-                                                            noItemsFoundBuilder: (c){
-                                                              return Container(
-                                                                  child: Padding(
-                                                                    padding: const EdgeInsets.all(15.0),
-                                                                    child: Text("Add Tag: '${edittagscontroller.text}'",style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),
-                                                                    ),
+                                                        /// LINKED CHALLENGES
+                                                        Consumer<UniversalListProvider>(
+                                                            builder: (c,universalListProvider, _){
+                                                              return Padding(
+                                                                  padding: const EdgeInsets.all(10.0),
+                                                                  child: Row(
+                                                                    children: [
+                                                                      Text("Linked Challenges: (${universalListProvider.editchallengess.length})",
+                                                                        style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),
+                                                                      ),
+
+                                                                      SizedBox(width: 50,),
+
+                                                                      InkWell(
+                                                                        onTap: (){
+                                                                          showChallengesSelector();
+                                                                        },
+                                                                        child: Container(
+                                                                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                                                          width: MediaQuery.of(context).size.width * .05,
+                                                                          // width: MediaQuery.of(context).size.width * .15,
+
+                                                                          // height: 60,
+                                                                          decoration: BoxDecoration(
+                                                                            color: Colors.black ,
+                                                                            border: Border.all(
+                                                                                color:Colors.black ,
+                                                                                width: 1.0),
+                                                                            borderRadius: BorderRadius.circular(8.0),
+                                                                          ),
+                                                                          child: Center(
+                                                                            // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                                                                            child: Text(
+                                                                              'Add',
+                                                                              style: GoogleFonts.montserrat(
+                                                                                textStyle:
+                                                                                Theme
+                                                                                    .of(context)
+                                                                                    .textTheme
+                                                                                    .titleSmall,
+                                                                                fontWeight: FontWeight.bold,
+                                                                                color:Colors.white ,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      )
+                                                                    ],
                                                                   )
-                                                              );
-                                                            },
-                                                            direction: AxisDirection.up,
-                                                            suggestionsBoxDecoration: SuggestionsBoxDecoration(
-                                                                scrollbarTrackAlwaysVisible: true,
-                                                                scrollbarThumbAlwaysVisible: true,
-                                                                hasScrollbar: true,
-                                                                borderRadius: BorderRadius.circular(5),
-                                                                // color: Colors.white,
-                                                                constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.3, )
-                                                            ),
-                                                            suggestionsCallback: (value) async {
-                                                              return await TagServices.getSuggestions(value);
-                                                            },
-
-                                                            itemBuilder: (context, String suggestion) {
-                                                              return Container(
-                                                                // color: Colors.black,
-                                                                child: Padding(
-                                                                  padding: const EdgeInsets.all(15.0),
-                                                                  child: Text(suggestion,style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),),
-                                                                ),
-                                                              );
-                                                            },
-                                                            onSuggestionSelected: (String suggestion) {
-                                                              print("Im selectedf $suggestion" );
-                                                              print("Im selectedf ${tagscontroller.text}" );
-                                                              // setState(() {
-                                                              edittagscontroller.text = suggestion;
-                                                              _addKeywordProvider.addtags(edittagscontroller.text.toString(),edittags);
-                                                              edittagscontroller.clear();
-
-                                                              // });
-                                                            },
-                                                            textFieldConfiguration: TextFieldConfiguration(
-                                                              controller: edittagscontroller,
-                                                              onSubmitted: (text) {
-                                                                _addKeywordProvider.addtags(text,edittags);
-                                                                edittagscontroller.clear();
-                                                                // print("tags: $tags");
-                                                              },
-                                                              style: GoogleFonts.poppins(
-                                                                textStyle: Theme.of(context).textTheme.bodyLarge,
-                                                                color: Colors.black,
-                                                                fontWeight: FontWeight.w400,fontStyle: FontStyle.normal,
-                                                              ),
-                                                              decoration: InputDecoration(
-                                                                //errorText: userAccountSearchErrorText,
-                                                                contentPadding: EdgeInsets.all(25),
-                                                                labelText: "MOST RELEVANT CHALLENGES",
-                                                                hintText: "MOST RELEVANT CHALLENGES",
-                                                                prefixIcon: Padding(
-                                                                  padding: const EdgeInsets.all(8.0),
-                                                                  child: Icon(Icons.tag,color: primaryColorOfApp,),
-                                                                ),
-                                                                suffixIcon: IconButton(
-                                                                  icon: Icon(Icons.add, size: 20, color: primaryColorOfApp,),
-                                                                  onPressed: () {
-                                                                    _addKeywordProvider.addtags(edittagscontroller.text.toString(),edittags);
-                                                                    edittagscontroller.clear();
-
-                                                                  },
-                                                                ),
-                                                                errorStyle: GoogleFonts.montserrat(
-                                                                    textStyle: Theme
-                                                                        .of(context)
-                                                                        .textTheme
-                                                                        .bodyLarge,
-                                                                    fontWeight: FontWeight.w400,
-                                                                    color: Colors.redAccent),
-
-                                                                focusedBorder: OutlineInputBorder(
-                                                                    borderSide: BorderSide(color: Colors.black),
-                                                                    borderRadius: BorderRadius.circular(15)),
-                                                                border: OutlineInputBorder(
-                                                                    borderSide: BorderSide(color: Colors.black12),
-                                                                    borderRadius: BorderRadius.circular(15)),
-                                                                //hintText: "e.g Abouzied",
-                                                                labelStyle: GoogleFonts.montserrat(
-                                                                    textStyle: Theme
-                                                                        .of(context)
-                                                                        .textTheme
-                                                                        .bodyLarge,
-                                                                    fontWeight: FontWeight.w400,
-                                                                    color: Colors.black),
-                                                              ),
-
-                                                            ),
-                                                          ),
-                                                        ),
+                                                              );}),
 
                                                         SizedBox(height: 16),
 
-                                                        Consumer<AddKeywordProvider>(
-                                                            builder: (c,addKeywordProvider, _){
+                                                        Consumer<UniversalListProvider>(
+                                                            builder: (c,challengesProvider, _){
                                                               return Padding(
                                                                 padding: const EdgeInsets.only(left: 15.0),
                                                                 child: Align(
@@ -5625,7 +5847,7 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                                                                     crossAxisAlignment: WrapCrossAlignment.start,
                                                                     alignment: WrapAlignment.start,
                                                                     runAlignment: WrapAlignment.start,
-                                                                    children: addKeywordProvider.ProviderEditTags.map((item){
+                                                                    children: challengesProvider.editchallengess.map((item){
                                                                       return Container(
                                                                         height: 50,
                                                                         // width: 200,
@@ -5638,14 +5860,14 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                                                                           mainAxisSize: MainAxisSize.min,
                                                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                           children: [
-                                                                            Text(item, style: TextStyle(
+                                                                            Text(item.toString(), style: TextStyle(
                                                                                 fontWeight: FontWeight.w700
                                                                             ),),
                                                                             IconButton(
                                                                                 onPressed: (){
                                                                                   // setState(() {
-                                                                                  addKeywordProvider.removeedittags(item);
-                                                                                  edittags.remove(item);
+                                                                                  challengesProvider.removeeditChallenges(item);
+                                                                                  // edittags.remove(item);
                                                                                   // });
                                                                                 },
                                                                                 icon: Icon(Icons.close,size: 20, color: Colors.white,)
@@ -5659,161 +5881,6 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
                                                               );
 
                                                             }),
-
-                                                        SizedBox(height: 16),
-
-                                                       /// MOST RELEVANT SOLUTIONS
-                                                        Padding(
-                                                          padding: const EdgeInsets.all(10.0),
-                                                          child: TypeAheadField(
-                                                            noItemsFoundBuilder: (c){
-                                                              return Container(
-                                                                  child: Padding(
-                                                                    padding: const EdgeInsets.all(15.0),
-                                                                    child: Text("Add Tag: '${edittagscontroller.text}'",style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),
-                                                                    ),
-                                                                  )
-                                                              );
-                                                            },
-                                                            direction: AxisDirection.up,
-                                                            suggestionsBoxDecoration: SuggestionsBoxDecoration(
-                                                                scrollbarTrackAlwaysVisible: true,
-                                                                scrollbarThumbAlwaysVisible: true,
-                                                                hasScrollbar: true,
-                                                                borderRadius: BorderRadius.circular(5),
-                                                                // color: Colors.white,
-                                                                constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.3, )
-                                                            ),
-                                                            suggestionsCallback: (value) async {
-                                                              return await TagServices.getSuggestions(value);
-                                                            },
-
-                                                            itemBuilder: (context, String suggestion) {
-                                                              return Container(
-                                                                // color: Colors.black,
-                                                                child: Padding(
-                                                                  padding: const EdgeInsets.all(15.0),
-                                                                  child: Text(suggestion,style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),),
-                                                                ),
-                                                              );
-                                                            },
-                                                            onSuggestionSelected: (String suggestion) {
-                                                              print("Im selectedf $suggestion" );
-                                                              print("Im selectedf ${tagscontroller.text}" );
-                                                              // setState(() {
-                                                              edittagscontroller.text = suggestion;
-                                                              _addKeywordProvider.addtags(edittagscontroller.text.toString(),edittags);
-                                                              edittagscontroller.clear();
-
-                                                              // });
-                                                            },
-                                                            textFieldConfiguration: TextFieldConfiguration(
-                                                              controller: edittagscontroller,
-                                                              onSubmitted: (text) {
-                                                                _addKeywordProvider.addtags(text,edittags);
-                                                                edittagscontroller.clear();
-                                                                // print("tags: $tags");
-                                                              },
-                                                              style: GoogleFonts.poppins(
-                                                                textStyle: Theme.of(context).textTheme.bodyLarge,
-                                                                color: Colors.black,
-                                                                fontWeight: FontWeight.w400,fontStyle: FontStyle.normal,
-                                                              ),
-                                                              decoration: InputDecoration(
-                                                                //errorText: userAccountSearchErrorText,
-                                                                contentPadding: EdgeInsets.all(25),
-                                                                labelText: "MOST RELEVANT SOLUTIONS",
-                                                                hintText: "MOST RELEVANT SOLUTIONS",
-                                                                prefixIcon: Padding(
-                                                                  padding: const EdgeInsets.all(8.0),
-                                                                  child: Icon(Icons.tag,color: primaryColorOfApp,),
-                                                                ),
-                                                                suffixIcon: IconButton(
-                                                                  icon: Icon(Icons.add, size: 20, color: primaryColorOfApp,),
-                                                                  onPressed: () {
-                                                                    _addKeywordProvider.addtags(edittagscontroller.text.toString(),edittags);
-                                                                    edittagscontroller.clear();
-
-                                                                  },
-                                                                ),
-                                                                errorStyle: GoogleFonts.montserrat(
-                                                                    textStyle: Theme
-                                                                        .of(context)
-                                                                        .textTheme
-                                                                        .bodyLarge,
-                                                                    fontWeight: FontWeight.w400,
-                                                                    color: Colors.redAccent),
-
-                                                                focusedBorder: OutlineInputBorder(
-                                                                    borderSide: BorderSide(color: Colors.black),
-                                                                    borderRadius: BorderRadius.circular(15)),
-                                                                border: OutlineInputBorder(
-                                                                    borderSide: BorderSide(color: Colors.black12),
-                                                                    borderRadius: BorderRadius.circular(15)),
-                                                                //hintText: "e.g Abouzied",
-                                                                labelStyle: GoogleFonts.montserrat(
-                                                                    textStyle: Theme
-                                                                        .of(context)
-                                                                        .textTheme
-                                                                        .bodyLarge,
-                                                                    fontWeight: FontWeight.w400,
-                                                                    color: Colors.black),
-                                                              ),
-
-                                                            ),
-                                                          ),
-                                                        ),
-
-                                                        SizedBox(height: 16),
-
-                                                        Consumer<AddKeywordProvider>(
-                                                            builder: (c,addKeywordProvider, _){
-                                                              return Padding(
-                                                                padding: const EdgeInsets.only(left: 15.0),
-                                                                child: Align(
-                                                                  alignment: Alignment.centerLeft,
-                                                                  child: Wrap(
-                                                                    spacing: 10,
-                                                                    runSpacing: 10,
-                                                                    crossAxisAlignment: WrapCrossAlignment.start,
-                                                                    alignment: WrapAlignment.start,
-                                                                    runAlignment: WrapAlignment.start,
-                                                                    children: addKeywordProvider.ProviderEditTags.map((item){
-                                                                      return Container(
-                                                                        height: 50,
-                                                                        // width: 200,
-                                                                        padding: EdgeInsets.all(8),
-                                                                        decoration: BoxDecoration(
-                                                                            borderRadius: BorderRadius.circular(15),
-                                                                            color: Colors.blue
-                                                                        ),
-                                                                        child: Row(
-                                                                          mainAxisSize: MainAxisSize.min,
-                                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                          children: [
-                                                                            Text(item, style: TextStyle(
-                                                                                fontWeight: FontWeight.w700
-                                                                            ),),
-                                                                            IconButton(
-                                                                                onPressed: (){
-                                                                                  // setState(() {
-                                                                                  addKeywordProvider.removeedittags(item);
-                                                                                  edittags.remove(item);
-                                                                                  // });
-                                                                                },
-                                                                                icon: Icon(Icons.close,size: 20, color: Colors.white,)
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      );
-                                                                    }).toList(),
-                                                                  ),
-                                                                ),
-                                                              );
-
-                                                            }),
-
-                                                        SizedBox(height: 16),
 
                                                       ]
                                                   ),
@@ -5834,6 +5901,282 @@ class _AddThriversScreenState extends State<AddThriversScreen> {
         }
     );
   }
+
+  void showChallengesSelector() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Select Challenges'),
+              InkWell(
+                  onTap: (){
+                    _universalListProvider.lengthOfdocument = null;
+                    _universalListProvider.filterChallengesAdminData("");
+                    Navigator.pop(context);
+                  },
+                  child: Icon(Icons.close))
+            ],
+          ),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: Consumer<UniversalListProvider>(
+                builder: (c,universalListProvider, _){
+
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+
+
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 10),
+                        child: TextField(
+                          controller: searchChallengescontroller,
+
+                          onChanged: (val){
+                            print("valuse ${val}");
+                            if (_debounce?.isActive ?? false) _debounce?.cancel();
+                            _debounce = Timer(Duration(milliseconds: _debouncetime), () {
+                              if (searchChallengescontroller.text != "") {
+                                ///here you perform your search
+                                universalListProvider.filterChallengesAdminData(searchChallengescontroller.text);
+
+                                // _handleTabSelection();
+                              }
+                              else {
+
+                                universalListProvider.filterChallengesAdminData("");
+
+                              }
+                            });
+                          },
+                          style: GoogleFonts.montserrat(
+                              textStyle: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyLarge,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black),
+                          decoration: InputDecoration(
+                            suffixIcon:  Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+
+                                SizedBox(width: 5,),
+                                InkWell(
+                                  onTap: () {
+                                    searchChallengescontroller.clear();
+                                    universalListProvider.filterChallengesAdminData("");
+                                    universalListProvider.lengthOfdocument = null;
+                                  },
+                                  child: Icon(Icons.close),
+                                ),
+                              ],
+                            ),
+                            contentPadding: EdgeInsets.all(10),
+                            labelText: "Search",
+                            hintText: "Search",
+                            errorStyle: GoogleFonts.montserrat(
+                                textStyle: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .bodyLarge,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.redAccent),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                                borderRadius: BorderRadius.circular(15)),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black12),
+                                borderRadius: BorderRadius.circular(15)),
+                            labelStyle: GoogleFonts.montserrat(
+                                textStyle: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .bodyLarge,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black),
+                          ),
+                        ),
+                      ),
+                      (universalListProvider.lengthOfdocument != null) ?
+
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 8),
+                        child: Row(
+                          children: [
+                            Text("Search results: ${universalListProvider.lengthOfdocument}",style: Theme.of(context).textTheme.bodyMedium),
+                            SizedBox(width: 5,),
+                            InkWell(
+                                onTap: (){
+                                  universalListProvider.lengthOfdocument = null;
+                                  // challengesProvider.searchbytag.clear();
+                                  // challengesProvider.searchbycategory.clear();
+                                  searchChallengescontroller.clear();
+                                  universalListProvider.filterChallengesAdminData("");
+                                },
+                                child: Text("..clear all",style: TextStyle(color: Colors.blue))),
+                          ],
+                        ),
+                      ) :
+
+                      SizedBox(height: 10,),
+
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 8),
+                        child: Text('Selected challenges : ${universalListProvider.editchallengess.length}',style: Theme.of(context).textTheme.bodyMedium),
+                      ),
+
+                      Divider(
+                        color: Colors.black,
+                        height: 10,
+                      ),
+
+                      (universalListProvider.isLoadingMore) ?
+                      Center(child: CircularProgressIndicator()) :
+                      Flexible(
+                        child: ListView.separated(
+                          padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          shrinkWrap: true,
+                          itemCount: universalListProvider.getUniversalChallengesdata.length,
+                          separatorBuilder: (BuildContext context, int index) {
+                            return Divider();
+                          },
+                          itemBuilder: (BuildContext context, int index) {
+                            return ADDChallengesListTile(index, universalListProvider.getUniversalChallengesdata);
+                          },
+                        ),
+                      ),
+
+
+
+                    ],
+                  );
+                }),
+          ),
+
+
+        );
+      },
+    );
+  }
+
+
+  Widget ADDChallengesListTile( i, documents) {
+
+    return Consumer<UniversalListProvider>(
+        builder: (c,userAboutMEProvider, _){
+          print("documents![i]: ${documents![i]}");
+          return Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(width: 10,),
+                // Text(documents![i].id,style: Theme.of(context).textTheme.bodySmall),
+                // Text("${i+1}.",style: Theme.of(context).textTheme.bodySmall),
+                // Text("CH0${challengesDetails['id']}",style: Theme.of(context).textTheme.bodySmall),
+                Padding(
+                  padding: const EdgeInsets.only(top: 2.0),
+                  child: Text("${i + 1}.",style: Theme.of(context).textTheme.bodyLarge),
+                ),
+                SizedBox(width: 20,),
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(documents![i]['Label'],style: Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis),
+                      Text(documents![i]['OCD'],style: Theme.of(context).textTheme.subtitle1?.copyWith(color: Colors.grey,overflow: TextOverflow.ellipsis),maxLines: 2,),
+                      SizedBox(height: 10),
+                    ],
+                  ),
+                ),
+                SizedBox(width: 30),
+
+                // Center(
+                //   child: Checkbox(
+                //     activeColor: Colors.blue,
+                //     value: userAboutMEProvider.isCheckedForTileChallenge(documents![i]), // Use the state from the provider
+                //     onChanged: (value) {
+                //       userAboutMEProvider.isClickedBoxChallenge(value, i, documents![i]);
+                //     },
+                //   ),
+                // )
+                Row(
+                  children: [
+                    // (userAboutMEProvider.isEditChallengeListAdded[documents![i]['id']] == true) ?
+                    (userAboutMEProvider.editchallengess.contains(documents![i]["Label"])) ?
+                    Text(
+                      'Added',
+                      style: GoogleFonts.montserrat(
+                        textStyle:
+                        Theme
+                            .of(context)
+                            .textTheme
+                            .titleSmall,
+                        fontStyle: FontStyle.italic,
+                        color:Colors.green ,
+                      ),
+                    ) : InkWell(
+                      onTap: (){
+                        userAboutMEProvider.EditRecommendedChallengesAdd(documents![i]["Label"],documents![i]["OCD"]);
+                        toastification.show(context: context,
+                            title: Text('${documents![i]['Label']} added to basket'),
+                            autoCloseDuration: Duration(milliseconds: 2500),
+                            alignment: Alignment.center,
+                            backgroundColor: Colors.green,
+                            foregroundColor: Colors.white,
+                            icon: Icon(Icons.check_circle, color: Colors.white,),
+                            animationDuration: Duration(milliseconds: 1000),
+                            showProgressBar: false
+                        );
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                        width: MediaQuery.of(context).size.width * .05,
+                        // width: MediaQuery.of(context).size.width * .15,
+
+                        // height: 60,
+                        decoration: BoxDecoration(
+                          color: Colors.blue ,
+                          border: Border.all(
+                              color:Colors.blue ,
+                              width: 1.0),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Center(
+                          // child: Icon(Icons.add, size: 30,color: Colors.white,),
+                          child: Text(
+                            'Add',
+                            style: GoogleFonts.montserrat(
+                              textStyle:
+                              Theme
+                                  .of(context)
+                                  .textTheme
+                                  .titleSmall,
+                              fontWeight: FontWeight.bold,
+                              color:Colors.white ,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+
+              ],
+            ),
+          );
+        });
+  }
+
 
   void ViewSolutionDialog(documentReference,Id, Label, Description, newvalues, keywords, createdat,createdby,tags, modifiedBy,modifiedDate,insideId) {
   // void ViewSolutionDialog( Label, Description, newvalues, keywords, createdat,createdby,tags, modifiedBy,modifiedDate,insideId,OriginalDescription,Source,Status) {

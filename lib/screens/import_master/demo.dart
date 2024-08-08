@@ -72,10 +72,11 @@ class _DSemoState extends State<DSemo> {
   void _loadCSV() async {
     try{
       print("inisde load csv");
-      final _rawData = await rootBundle.loadString("Challenges_import_01082024.csv");
+      final _rawData = await rootBundle.loadString("solution_tags_06082024.csv");
+      // final _rawData = await rootBundle.loadString("challenges_tag_import_list_03082024.csv");
+      // final _rawData = await rootBundle.loadString("Challenges_import_01082024.csv");
       // final _rawData = await rootBundle.loadString("Solutions_import_01082024.csv");
       List<List<dynamic>> _listData = const CsvToListConverter().convert(_rawData);
-
       setState(() {
         _data = _listData;
       });
@@ -455,152 +456,19 @@ class _DSemoState extends State<DSemo> {
                 // },
                 /// 3 add tag list
                 // onTap: () async {
-                //   // for(var i in _data) {
-                //   //
-                //   List<String> TagsList = [
-                //     "access barriers",
-                //     "accessibility",
-                //     "accommodation",
-                //     "accidents",
-                //     "ADHD",
-                //     "administrative inefficiency",
-                //     "anxiety",
-                //     "aphasia",
-                //     "attention issues",
-                //     "auditory processing",
-                //     "biased assessments",
-                //     "burnout",
-                //     "career challenges",
-                //     "chronic illness",
-                //     "chronic pain",
-                //     "cliques",
-                //     "clutter management",
-                //     "cognitive challenges",
-                //     "communication anxiety",
-                //     "communication barriers",
-                //     "comprehension difficulties",
-                //     "computer strain",
-                //     "cultural misunderstandings",
-                //     "deadline pressures",
-                //     "decreased productivity",
-                //     "depression",
-                //     "digital barriers",
-                //     "disability accommodation",
-                //     "discomfort at work",
-                //     "discrimination",
-                //     "dyslexia",
-                //     "dyspraxia",
-                //     "emotional distress",
-                //     "environmental and ergonomic issues",
-                //     "ethical concerns",
-                //     "exclusion",
-                //     "fatigue",
-                //     "gossip",
-                //     "group dynamics",
-                //     "health and well-being",
-                //     "high stress levels",
-                //     "inefficiency",
-                //     "information management issues",
-                //     "integrity concerns",
-                //     "isolation",
-                //     "job rejection",
-                //     "lack of advancement",
-                //     "learning difficulties",
-                //     "memory challenges",
-                //     "mental health",
-                //     "miscommunication",
-                //     "mistakes",
-                //     "mobility challenges",
-                //     "multitasking difficulties",
-                //     "noise distraction",
-                //     "nonverbal communication",
-                //     "organisational inefficiencies",
-                //     "peer relations",
-                //     "performance issues",
-                //     "performance anxiety",
-                //     "physical barriers",
-                //     "physical exertion",
-                //     "poor organisation",
-                //     "procrastination",
-                //     "prolonged screen time",
-                //     "recruitment bias",
-                //     "remote work challenges",
-                //     "repetitive strain injuries",
-                //     "scheduling challenges",
-                //     "sensory challenges",
-                //     "sensory overload",
-                //     "social difficulties",
-                //     "social anxiety",
-                //     "task execution errors",
-                //     "task management difficulties",
-                //     "technology adaptation challenges",
-                //     "time management problems",
-                //     "tokenism",
-                //     "underemployment",
-                //     "visual discomfort",
-                //     "web accessibility",
-                //     "workplace conflicts",
-                //     "workplace culture issues",
-                //     "accessibility and inclusion",
-                //     "accessible formats",
-                //     "adaptable strategies",
-                //     "adjustable furniture",
-                //     "alternative communication",
-                //     "assistive technology",
-                //     "awareness training",
-                //     "career guidance",
-                //     "childcare support",
-                //     "clear communication",
-                //     "cognitive support",
-                //     "comfort and ergonomics",
-                //     "communication tools",
-                //     "custom tools",
-                //     "daily planning",
-                //     "diverse hiring",
-                //     "educational inclusion",
-                //     "efficient workspace",
-                //     "emergency preparedness",
-                //     "emotional support",
-                //     "environmental modifications",
-                //     "equal opportunity",
-                //     "ergonomic adjustments",
-                //     "flexible schedules",
-                //     "wellness programs",
-                //     "inclusive hiring",
-                //     "memory training",
-                //     "mental health support",
-                //     "mentorship programs",
-                //     "neurodiversity inclusion",
-                //     "noise management",
-                //     "organisational tools",
-                //     "peer reviews",
-                //     "physical conditioning",
-                //     "organisation planning",
-                //     "productivity tools",
-                //     "professional counselling",
-                //     "professional development",
-                //     "project management",
-                //     "reliable VPNs",
-                //     "risk management",
-                //     "safe environment",
-                //     "safety training",
-                //     "schedule management",
-                //     "skills workshops",
-                //     "stress management",
-                //     "support networks",
-                //     "task management",
-                //     "time management",
-                //     "visual planning",
-                //     "workflow automation"
-                //   ];
-                //   // SolutionList.addAll(_data[index][0].split(", "));
-                //   //   print("SolutionList: ${TagsList}");
-                //   //   print("SolutionList: ${TagsList.length}");
-                //     // addKeywordProvider.addKeyword(context, "Challenges tags", Challenges);
-                //     // addKeywordProvider.updateKeyword(context,"GEdua4iCBaakTpNB1NY5", "Tag List", TagsList);
-                //   // }
+                //   List TagsList = [];
                 //
+                //   for(var i in _data) {
+                //     TagsList.addAll(i);
+                //   }
+                //   print("SolutionList: ${TagsList}");
+                //   print("SolutionList: ${TagsList.length}");
+                //   // addKeywordProvider.addKeyword(context, "New Challenges tags", TagsList);
+                //   // addKeywordProvider.updateKeyword(context,"GEdua4iCBaakTpNB1NY5", "Tag List", TagsList);
+                //   // addKeywordProvider.updateKeyword(context,"j8jejx508jAec8WOc2nQ", "Challenges tags", TagsList);
+                //   // addKeywordProvider.updateKeyword(context,"IPlEPfH0WnirUjGmu46C", "Solution tags", TagsList);
                 // },
+
                 child: Card(
                   margin: const EdgeInsets.all(3),
                   color: index == 0 ? Colors.amber : Colors.white,
@@ -627,7 +495,7 @@ class _DSemoState extends State<DSemo> {
                     //     Text(_data[index][5]),
                     //   ],
                     // ),
-                    title: Text("${_data[index][12].split(", ")}"),
+                    title: Text("${_data[index][0].split(", ")}"),
                     // subtitle: Text("${_data[index][1].split(", ")}"),
                   ),
                 ),

@@ -9,22 +9,25 @@ import 'package:provider/provider.dart';
 import 'package:thrivers/Network/FirebaseApi.dart';
 import 'package:thrivers/Provider/previewProvider.dart';
 import 'package:thrivers/core/constants.dart';
-import 'package:thrivers/screens/BrevoScreen.dart';
-import 'package:thrivers/screens/CategoryView.dart';
-import 'package:thrivers/screens/addchallengesScreen.dart';
-import 'package:thrivers/screens/addthriverscreen.dart';
-import 'package:thrivers/screens/demo.dart';
-import 'package:thrivers/screens/new%20added%20screens/AddKeywordsScreen.dart';
-import 'package:thrivers/screens/new%20added%20screens/AdminAboutMePage.dart';
-import 'package:thrivers/screens/new%20added%20screens/ReportScreen.dart';
-import 'package:thrivers/screens/new%20added%20screens/SuperAdminLoginScreen.dart';
-import 'package:thrivers/screens/new%20added%20screens/admin_user_setting_screen.dart';
-import 'package:thrivers/screens/new%20added%20screens/chatGptPromptPage.dart';
-import 'package:thrivers/screens/new%20added%20screens/chatgptSettings.dart';
-import 'package:thrivers/screens/new%20added%20screens/chatgptscreen.dart';
+import 'package:thrivers/screens/admin_screens/BrevoScreen.dart';
+import 'package:thrivers/screens/import_master/import_master.dart';
+import 'package:thrivers/screens/import_master/new_import_master.dart';
+import 'package:thrivers/screens/import_master/new_import_master_panel1.dart';
+import 'package:thrivers/screens/not%20used%20screen/CategoryView.dart';
+import 'package:thrivers/screens/admin_screens/addchallengesScreen.dart';
+import 'package:thrivers/screens/admin_screens/addthriverscreen.dart';
+import 'package:thrivers/screens/import_master/demo.dart';
+import 'package:thrivers/screens/admin_screens/AddKeywordsScreen.dart';
+import 'package:thrivers/screens/admin_screens/AdminAboutMePage.dart';
+import 'package:thrivers/screens/admin_screens/ReportScreen.dart';
+import 'package:thrivers/screens/admin_screens/SuperAdminLoginScreen.dart';
+import 'package:thrivers/screens/admin_screens/admin_user_setting_screen.dart';
+import 'package:thrivers/screens/admin_screens/chatGptPromptPage.dart';
+import 'package:thrivers/screens/admin_screens/chatgptSettings.dart';
+import 'package:thrivers/screens/admin_screens/chatgptscreen.dart';
 import 'package:thrivers/screens/new%20added%20screens/thriverLandingScreen.dart';
-import 'package:thrivers/screens/new%20added%20screens/user_list_screen_admin.dart';
-import 'package:thrivers/screens/new%20added%20screens/AdminAboutMePage.dart';
+import 'package:thrivers/screens/admin_screens/user_list_screen_admin.dart';
+import 'package:thrivers/screens/admin_screens/AdminAboutMePage.dart';
 
 
 
@@ -331,8 +334,8 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
                 physics: NeverScrollableScrollPhysics(),
                 children: [
                   // BrevoScreen(),
-                  // DashBoardScreen(),
-                  AdminAboutMePage(AdminName: (widget.AdminName==null) ? "Admin" : widget.AdminName, Pagejump: page),
+                  DashBoardScreen(),
+                  // AdminAboutMePage(AdminName: (widget.AdminName==null) ? "Admin" : widget.AdminName, Pagejump: page),
                   AdminAboutMePage(AdminName: (widget.AdminName==null) ? "Admin" : widget.AdminName, Pagejump: page),
                   AddThriversScreen(AdminName: (widget.AdminName==null) ? "Admin" : widget.AdminName),
                   AddChallengesScreen(AdminName: (widget.AdminName==null) ? "Admin" : widget.AdminName),
@@ -348,7 +351,10 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
                   ChatGptScreen(),
                   ChatGptSettingsScreen(),
                   ChatGptPromptScreen(),
-                  DSemo(),
+                  // DSemo(),
+                  // ImportMasterPanel()
+                  NewImportMasterPanel()
+                  // ImportMasterPanel1()
                   /*AddChallenges(),
                   AddSolutionsScreen,
 
@@ -415,8 +421,8 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
                             Expanded(
                               child: InkWell(
                                 onTap: () async {
-                                  sideMenu.changePage(1);
-                                  page.jumpToPage(1);
+                                  sideMenu.changePage(2);
+                                  page.jumpToPage(2);
                                   // context.go('/admin/report',);
                                 },
                                 child: Container(
@@ -432,12 +438,12 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        Icon(Icons.person,color: Colors.black,size: 30,),
+                                        Icon(Icons.event_note,color: Colors.black,size: 30,),
                                         SizedBox(width: 5,),
                                         Expanded(
                                           child: Text(
                                             // 'Thrivers',
-                                            'Employee',
+                                            'Solutions',
                                             overflow: TextOverflow.ellipsis,
                                             style: GoogleFonts.montserrat(
                                                 textStyle:
@@ -455,7 +461,8 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
                             Expanded(
                               child: InkWell(
                                 onTap: () async {
-                                  // sideMenu.changePage(3);
+                                  page.jumpToPage(3);
+                                  sideMenu.changePage(3);
                                 },
                                 child: Container(
                                   margin: EdgeInsets.all(10),
@@ -470,11 +477,11 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        Icon(Icons.manage_accounts,color: Colors.black,size: 30,),
+                                        Icon(Icons.book_online_sharp,color: Colors.black,size: 30,),
                                         SizedBox(width: 5,),
                                         Expanded(
                                           child: Text(
-                                            'Line manager',
+                                            'Challenges',
                                             overflow: TextOverflow.ellipsis,
                                             style: GoogleFonts.montserrat(
                                                 textStyle:
@@ -493,7 +500,8 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
                               flex: 1,
                               child: InkWell(
                                 onTap: () async {
-                                  // sideMenu.changePage(5);
+                                  page.jumpToPage(1);
+                                  sideMenu.changePage(1);
                                 },
                                 child: Container(
                                   margin: EdgeInsets.all(10),
@@ -510,12 +518,13 @@ class _NewHomeScreenTabsState extends State<NewHomeScreenTabs> {
 
                                       children: [
                                         // Icon(Icons.person_outline_outlined,color: Colors.black,size: 30,),
-                                        Icon(Icons.laptop_chromebook_outlined,color: Colors.black,size: 30,),
+                                        Icon(Icons.library_books,color: Colors.black,size: 30,),
                                         SizedBox(width: 5,),
                                         Expanded(
                                           child: Text(
-                                            // 'User',
-                                            'Client admin',
+                                            // 'Import',
+                                            // 'Client admin',
+                                            'Users reports library',
                                             overflow: TextOverflow.ellipsis,
                                             style: GoogleFonts.montserrat(
                                                 textStyle:

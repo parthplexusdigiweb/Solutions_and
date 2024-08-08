@@ -295,9 +295,9 @@ class PreviewProvider with ChangeNotifier{
         'Attachment':challenge.attachment,
       };
       mainList.add(solutionData);
-      print("EditChallengeListadd challenge: ${mainList.length}");
-      print("EditChallengeListadd challenge: ${mainList}");
-      print("EditChallengeListadd");
+      // print("EditChallengeListadd challenge: ${mainList.length}");
+      // print("EditChallengeListadd challenge: ${mainList}");
+      // print("EditChallengeListadd");
       // notifyListeners();
     }
   }
@@ -335,7 +335,7 @@ class PreviewProvider with ChangeNotifier{
       // isEditSolutionListAdded[SolutionDetails['id']] = true;
 
 
-      print("isEditSolutionListAdded: $OSeditsolutions");
+      // print("isEditSolutionListAdded: $OSeditsolutions");
 
       // print("isEditSolutionListAddedADDING: $isEditSolutionListAdded");
       // notifyListeners();
@@ -384,8 +384,8 @@ class PreviewProvider with ChangeNotifier{
       mainList.add(solutionData);
       // updatenewprovider(solutionData["Provider"], solutionData["id"]);
       // updatenewInplace(solutionData["InPlace"], solutionData["id"]);
-      print("mainList.length: ${mainList.length}");
-      print("mainList: ${mainList}");
+      // print("mainList.length: ${mainList.length}");
+      // print("mainList: ${mainList}");
       // notifyListeners();
 
     }
@@ -1826,7 +1826,7 @@ class PreviewProvider with ChangeNotifier{
                                 style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
                             )) : pw.SizedBox(),
 
-                        (SolutiontableRows2.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+                        (SolutiontableRows2.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
 
                         (SolutiontableRows2.isNotEmpty) ? pw.Padding(
                             padding: const pw.EdgeInsets.symmetric(horizontal: 30),
@@ -2083,16 +2083,16 @@ class PreviewProvider with ChangeNotifier{
                 ),
               ) : pw.SizedBox(),
 
-              (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 20,) : pw.SizedBox(),
+              (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
               //pw.Padding(padding: pw.EdgeInsets.all(20)),
 
               (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.Padding(
                   padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                  child: pw.Text("Here are things that can help me, for which I can and want to take",
+                  child: pw.Text("Here are things that can help me that I wish to discuss",
                       style: pw.TextStyle(font: headingfont1,fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),)
                   )) : pw.SizedBox(),
 
-              (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+              // (SolutiontableRows4.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
 
 
               (SolutiontableRows4.isNotEmpty) ? pw.Padding(
@@ -2101,7 +2101,7 @@ class PreviewProvider with ChangeNotifier{
                       style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
                   )) : pw.SizedBox(),
 
-              (SolutiontableRows4.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+              (SolutiontableRows4.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
 
               (SolutiontableRows4.isNotEmpty) ? pw.Padding(
                   padding: const pw.EdgeInsets.symmetric(horizontal: 30),
@@ -2233,16 +2233,16 @@ class PreviewProvider with ChangeNotifier{
                 ),
               ) : pw.SizedBox(),
 
-              (SolutiontableRows5.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 20,) : pw.SizedBox(),
+              (SolutiontableRows5.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
               //pw.Padding(padding: pw.EdgeInsets.all(20)),
 
               (SolutiontableRows5.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.Padding(
                   padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                  child: pw.Text("Here are things that can help me, for which I can and want to take",
+                  child: pw.Text("Here are things that can help me that I wish to discuss",
                       style: pw.TextStyle(font: headingfont1,fontSize: 14, color: PdfColor.fromInt(0xFF4472c4),)
                   )) : pw.SizedBox(),
 
-              (SolutiontableRows5.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
+              // (SolutiontableRows5.isNotEmpty || SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
 
 
               (SolutiontableRows5.isNotEmpty) ? pw.Padding(
@@ -2251,7 +2251,7 @@ class PreviewProvider with ChangeNotifier{
                       style: pw.TextStyle(font: headingfont1,fontSize: 16, color: PdfColor.fromInt(0xFF4472c4),fontWeight: pw.FontWeight.bold)
                   )) : pw.SizedBox(),
 
-              (SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 25,) : pw.SizedBox(),
+              (SolutiontableRows5.isNotEmpty) ? pw.SizedBox(height: 10,) : pw.SizedBox(),
 
               (SolutiontableRows5.isNotEmpty) ? pw.Padding(
                   padding: const pw.EdgeInsets.symmetric(horizontal: 30),

@@ -91,7 +91,7 @@ class ApiRepository{
    Future<void> createchallenges(Map<String, dynamic> challengesData) async {
      try {
        // Replace 'your_collection' with your actual collection name
-       CollectionReference collectionReference = FirebaseFirestore.instance.collection('Challenges');
+       CollectionReference collectionReference = FirebaseFirestore.instance.collection('COLLECTIONS1');
 
        // Add the document to the collection and get the DocumentReference
        DocumentReference documentReference = await collectionReference.add(challengesData);
@@ -825,7 +825,12 @@ class ApiRepository{
 
 
   Future<void> DeleteSectionPreset(DocumentReference<Object?> documentReference) async {
+    try{
     await documentReference.delete();
+    } catch (error) {
+      // Handle errors
+      print('Error deleting user data: $error');
+    }
   }
 
   Future<void> deleteUserData(DocumentReference<Object?> documentReference, uid) async {
